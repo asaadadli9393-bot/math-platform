@@ -142,7 +142,12 @@ export default function HomePage() {
               </div>
               <div>
                 <div className="font-bold text-lg leading-tight">منصة الرياضيات</div>
-                <div className="text-xs text-muted-foreground leading-tight">
+                <div className="text-xs text-muted-foreground leading-tight flex items-center gap-1">
+                  <img
+                    src="/teachers/adli-asad.jpg"
+                    alt="الأستاذ عدلي أسعد"
+                    className="w-4 h-4 rounded-full object-cover border border-primary/30"
+                  />
                   الأستاذ عدلي أسعد
                 </div>
               </div>
@@ -270,7 +275,11 @@ export default function HomePage() {
               <h4 className="font-bold mb-3 academic-divider">تواصل معنا</h4>
               <ul className="space-y-2 text-sm text-primary-foreground/80">
                 <li className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
+                  <img
+                    src="/teachers/adli-asad.jpg"
+                    alt="الأستاذ عدلي أسعد"
+                    className="w-6 h-6 rounded-full object-cover border border-primary-foreground/30"
+                  />
                   الأستاذ عدلي أسعد — المشرف البيداغوجي
                 </li>
                 <li className="flex items-center gap-2">
@@ -534,11 +543,17 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
       <section>
         <Card className="bg-gradient-to-l from-accent/10 to-transparent border-r-4 border-accent">
           <CardContent className="pt-6">
-            <div className="flex items-start gap-4">
-              <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-bold text-xl flex-shrink-0">
-                ع.أ
+            <div className="flex flex-col md:flex-row items-start gap-6">
+              <div className="flex-shrink-0 mx-auto md:mx-0">
+                <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-accent shadow-md">
+                  <img
+                    src="/teachers/adli-asad.jpg"
+                    alt="الأستاذ عدلي أسعد"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
-              <div>
+              <div className="flex-1">
                 <Quote className="w-6 h-6 text-accent mb-2" />
                 <p className="text-lg leading-relaxed mb-3 italic">
                   &ldquo;الرياضيات ليست عقبة أمام النجاح، بل هي طريقه. كل تمرين تحلّه
@@ -1097,12 +1112,18 @@ function AboutView() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-start gap-4">
-            <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-2xl flex-shrink-0">
-              ع.أ
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="flex-shrink-0 mx-auto md:mx-0">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden border-4 border-primary shadow-lg">
+                <img
+                  src="/teachers/adli-asad.jpg"
+                  alt="الأستاذ عدلي أسعد - المشرف البيداغوجي"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-lg">الأستاذ عدلي أسعد</h3>
+            <div className="flex-1 text-center md:text-right">
+              <h3 className="font-bold text-2xl mb-1 text-primary">الأستاذ عدلي أسعد</h3>
               <p className="text-sm text-muted-foreground mb-3">
                 مشرف بيداغوجي ومؤسس المنصة
               </p>

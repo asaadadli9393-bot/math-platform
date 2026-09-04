@@ -307,10 +307,19 @@ export function ParentPortal() {
       {/* رسالة من الأستاذ عدلي أسعد */}
       <Card className="bg-primary/5 border-r-4 border-primary">
         <CardContent className="pt-6">
-          <div className="flex items-start gap-3">
-            <User className="w-8 h-8 text-primary flex-shrink-0" />
-            <div>
-              <div className="font-bold mb-1">رسالة من الأستاذ عدلي أسعد</div>
+          <div className="flex flex-col md:flex-row items-start gap-4">
+            <div className="flex-shrink-0 mx-auto md:mx-0">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-primary shadow-sm">
+                <img
+                  src="/teachers/adli-asad.jpg"
+                  alt="الأستاذ عدلي أسعد"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <div className="flex-1 text-center md:text-right">
+              <div className="font-bold mb-1 text-primary">رسالة من الأستاذ عدلي أسعد</div>
+              <div className="text-xs text-muted-foreground mb-2">المشرف البيداغوجي والمؤسس</div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 ولي الأمر الكريم، شكراً لمتابعتكم. تعاوننا هو مفتاح نجاح أبنائنا.
                 في حالة وجود أي ملاحظة أو قلق، لا تترددوا في الاتصال بي عبر
