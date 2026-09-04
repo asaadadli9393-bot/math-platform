@@ -74,36 +74,47 @@ type MathPart =
 function parseMathContent(content: string): MathPart[] {
   const parts: MathPart[] = [];
   // نطابق: $$...$$ (display) أولاً، ثم $...$ (inline)
-  const regex = /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$)/g;
+  // ملاحظة مهمة: لا يمكن استخدام regex مباشرة لـ $...$ لأنه قد يطابق $ داخل $$...
+  // لذا نطابق $$ أولاً ثم $ بين $ المتبقية
+  let remaining = content;
   let lastIndex = 0;
+
+  // أولاً نطابق كل $$...$$
+  const displayRegex = /\$\$([\s\S]+?)\$\$/g;
+  let cursor = 0;
   let match: RegExpExecArray | null;
 
-  while ((match = regex.exec(content)) !== null) {
-    // إضافة النص العادي قبل المطابقة
-    if (match.index > lastIndex) {
-      parts.push({ type: "text", content: content.slice(lastIndex, match.index) });
-    }
-
-    const matched = match[0];
-    if (matched.startsWith("$$")) {
-      // display math
-      const inner = matched.slice(2, -2).trim();
-      parts.push({ type: "display", content: inner });
-    } else {
-      // inline math
-      const inner = matched.slice(1, -1).trim();
-      parts.push({ type: "inline", content: inner });
-    }
-
-    lastIndex = match.index + matched.length;
+  while ((match = displayRegex.exec(content)) !== null) {
+    // قبل $$ نحاول مطابقة $...$ inline في النص السابق
+    const textBefore = content.slice(cursor, match.index);
+    pushInlineParts(parts, textBefore);
+    // إضافة display math
+    parts.push({ type: "display", content: match[1].trim() });
+    cursor = match.index + match[0].length;
   }
-
-  // إضافة ما تبقى من نص
-  if (lastIndex < content.length) {
-    parts.push({ type: "text", content: content.slice(lastIndex) });
-  }
+  // ما تبقى بعد آخر $$
+  const textAfter = content.slice(cursor);
+  pushInlineParts(parts, textAfter);
 
   return parts;
+}
+
+function pushInlineParts(parts: MathPart[], text: string) {
+  if (!text) return;
+  // مطابقة $...$ inline (لا يقبل $ متبوع بـ $، ولا ينتهي بـ $)
+  const inlineRegex = /\$([^\$\n]+?)\$/g;
+  let lastIdx = 0;
+  let m: RegExpExecArray | null;
+  while ((m = inlineRegex.exec(text)) !== null) {
+    if (m.index > lastIdx) {
+      parts.push({ type: "text", content: text.slice(lastIdx, m.index) });
+    }
+    parts.push({ type: "inline", content: m[1].trim() });
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) {
+    parts.push({ type: "text", content: text.slice(lastIdx) });
+  }
 }
 
 /**
@@ -238,9 +249,16 @@ function parseMarkdownBlocks(content: string): MarkdownBlock[] {
 
     // Display math
     if (trimmed.startsWith("$$")) {
+      // حالة 1: $$...$$ في نفس السطر
+      if (trimmed.length > 4 && trimmed.endsWith("$$")) {
+        const inner = trimmed.slice(2, -2).trim();
+        blocks.push({ type: "display", content: inner });
+        i++;
+        continue;
+      }
+      // حالة 2: $$ في بداية السطر، نبحث عن $$ في نهاية سطر لاحق
       let blockContent = trimmed.slice(2);
       i++;
-      // متعدد الأسطر
       while (i < lines.length && !lines[i].trim().endsWith("$$")) {
         blockContent += "\n" + lines[i];
         i++;
@@ -249,7 +267,8 @@ function parseMarkdownBlocks(content: string): MarkdownBlock[] {
         blockContent += "\n" + lines[i].trim().slice(0, -2);
         i++;
       } else {
-        blockContent = blockContent.slice(0, -2);
+        // لم نجد $$ نهاية، نحاول قطع آخر $$ من المحتوى
+        blockContent = blockContent.replace(/\$\$$/, "");
       }
       blocks.push({ type: "display", content: blockContent.trim() });
       continue;
@@ -301,7 +320,7 @@ function parseMarkdownBlocks(content: string): MarkdownBlock[] {
       !lines[i].trim().startsWith("#") &&
       !lines[i].trim().startsWith("- ") &&
       !lines[i].trim().startsWith("* ") &&
-      !lines[i].trim().startsWith("$$") &&
+      !lines[i].includes("$$") &&  // توقف عند أي $$ في السطر
       !lines[i].trim().startsWith("|") &&
       !lines[i].trim().startsWith("```")
     ) {
