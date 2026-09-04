@@ -573,4 +573,255 @@ export const quizzes: QuizSeed[] = [
       },
     ],
   },
+
+  // ============================================================
+  //  اختبارات الفصول الإضافية (المحتوى الموسّع)
+  // ============================================================
+  {
+    id: "quiz-sequences-limits",
+    title: "اختبار: نهايات المتتاليات",
+    description: "اختبار حول نهاية المتتاليات والمتتاليات المتجاورة.",
+    durationMin: 15,
+    unitSlug: "numerical-sequences",
+    questions: [
+      {
+        id: "q1",
+        question: "ما نهاية المتتالية $u_n = \\frac{n+1}{n^2}$ عندما $n \\to +\\infty$؟",
+        options: ["$0$", "$1$", "$+\\infty$", "$\\frac{1}{n}$"],
+        correctIdx: 0,
+        explanation:
+          "بالحد الأعلى: 1/n → 0.",
+        points: 1,
+      },
+      {
+        id: "q2",
+        question:
+          "ما نهاية $\\lim_{n \\to +\\infty} (1 + \\frac{1}{n})^n$؟",
+        options: ["$1$", "$e$", "$+\\infty$", "$0$"],
+        correctIdx: 1,
+        explanation:
+          "تعريف العدد e: lim (1 + 1/n)^n = e ≈ 2.718.",
+        points: 1,
+      },
+      {
+        id: "q3",
+        question:
+          "ما نهاية $\\lim_{n \\to +\\infty} \\left(\\frac{2}{3}\\right)^n$؟",
+        options: ["$0$", "$+\\infty$", "$1$", "$\\frac{2}{3}$"],
+        correctIdx: 0,
+        explanation:
+          "|2/3| < 1, إذن (2/3)^n → 0.",
+        points: 1,
+      },
+      {
+        id: "q4",
+        question: "متتاليتان $(u_n)$ و $(v_n)$ متجاورتان إذا تحققت:",
+        options: [
+          "u_n متزايدة و v_n متناقصة و v_n - u_n → 0",
+          "u_n = v_n لكل n",
+          "lim u_n = lim v_n",
+          "u_n و v_n تقاربتان",
+        ],
+        correctIdx: 0,
+        explanation:
+          "ثلاثة شروط للتجاور: u متزايدة، v متناقصة، v - u → 0.",
+        points: 1,
+      },
+      {
+        id: "q5",
+        question:
+          "ما نهاية $\\lim_{n \\to +\\infty} \\frac{3^n}{n^2}$؟",
+        options: ["$0$", "$+\\infty$", "$3$", "$\\frac{1}{2}$"],
+        correctIdx: 1,
+        explanation:
+          "الأسية تتفوق على القوى: 3^n / n^k → +∞ لأي k.",
+        points: 1,
+      },
+    ],
+  },
+  {
+    id: "quiz-probability-trees",
+    title: "اختبار: شجرة الاحتمالات والعدّ",
+    description: "اختبار حول الشجرة، التوافيق، والعدّ.",
+    durationMin: 20,
+    unitSlug: "probability",
+    questions: [
+      {
+        id: "q1",
+        question: "كم عدد التوافيق $\\binom{10}{3}$؟",
+        options: ["$30$", "$120$", "$720$", "$210$"],
+        correctIdx: 1,
+        explanation: "C(10,3) = 10!/(3!·7!) = (10·9·8)/(3·2·1) = 120.",
+        points: 1,
+      },
+      {
+        id: "q2",
+        question:
+          "صندوق فيه 4 كرات حمراء و 6 بيضاء. نسحب كرتين دون إعادة. ما احتمال الحصول على حمراء ثم بيضاء؟",
+        options: [
+          "$\\frac{4}{10} \\times \\frac{6}{9}$",
+          "$\\frac{4}{10} \\times \\frac{6}{10}$",
+          "$\\frac{6}{10} \\times \\frac{4}{10}$",
+          "$\\frac{4}{10} + \\frac{6}{9}$",
+        ],
+        correctIdx: 0,
+        explanation:
+          "P(R₁∩B₂) = P(R₁) · P_{R₁}(B₂) = (4/10) · (6/9).",
+        points: 1,
+      },
+      {
+        id: "q3",
+        question: "كم عدد الترتيبات المختلفة لـ 5 كراسي عليها 5 أشخاص؟",
+        options: ["$5$", "$25$", "$120$", "$720$"],
+        correctIdx: 2,
+        explanation: "5! = 120 ترتيباً.",
+        points: 1,
+      },
+      {
+        id: "q4",
+        question:
+          "في حساب $\\binom{n}{k}$, ما قيمة $\\binom{n}{0}$؟",
+        options: ["$0$", "$1$", "$n$", "$\\frac{1}{n}$"],
+        correctIdx: 1,
+        explanation: "C(n,0) = 1 (طريقة واحدة لاختيار 0 من n).",
+        points: 1,
+      },
+      {
+        id: "q5",
+        question:
+          "كم لجنة من 3 أعضاء يمكن تكوينها من 8 طلاب؟",
+        options: ["$24$", "$56$", "$336$", "$512$"],
+        correctIdx: 1,
+        explanation:
+          "C(8,3) = (8·7·6)/(3·2·1) = 56.",
+        points: 1,
+      },
+    ],
+  },
+  {
+    id: "quiz-arithmetic-congruences",
+    title: "اختبار: المطابقات ونظرية فيرما",
+    description: "اختبار حول الحساب التطابقي وفيرما.",
+    durationMin: 18,
+    unitSlug: "arithmetic-divisibility",
+    questions: [
+      {
+        id: "q1",
+        question: "ما باقي قسمة $2^{10}$ على 11؟",
+        options: ["$1$", "$2$", "$10$", "$0$"],
+        correctIdx: 0,
+        explanation:
+          "نظرية فيرما: 2^10 ≡ 1 (mod 11) (11 أولي و gcd(2,11)=1).",
+        points: 1,
+      },
+      {
+        id: "q2",
+        question:
+          "حل في $\\mathbb{Z}/7\\mathbb{Z}$ المعادلة $3x \\equiv 1 \\pmod 7$.",
+        options: ["$x \\equiv 2$", "$x \\equiv 3$", "$x \\equiv 5$", "$x \\equiv 1$"],
+        correctIdx: 2,
+        explanation:
+          "3 × 5 = 15 = 2×7 + 1 ≡ 1 (mod 7). إذن x ≡ 5.",
+        points: 1,
+      },
+      {
+        id: "q3",
+        question: "ما باقي قسمة $5^{2024}$ على 7؟",
+        options: ["$1$", "$4$", "$2$", "$5$"],
+        correctIdx: 1,
+        explanation:
+          "7 أولي، gcd(5,7)=1, فيرما: 5^6 ≡ 1. 2024 = 6·337 + 2. 5^2024 ≡ 5^2 = 25 ≡ 4 (mod 7).",
+        points: 1,
+      },
+      {
+        id: "q4",
+        question: "هل العدد 7 أولي؟",
+        options: ["نعم", "لا", "أولي لوحده فقط", "غير محدد"],
+        correctIdx: 0,
+        explanation:
+          "7 له قاسمان فقط: 1 و 7. إذن أولي.",
+        points: 1,
+      },
+      {
+        id: "q5",
+        question: "ما قيمة $\\varphi(7)$ (دالة أويلر)؟",
+        options: ["$6$", "$7$", "$1$", "$42$"],
+        correctIdx: 0,
+        explanation: "للعدد الأولي p: φ(p) = p - 1 = 6.",
+        points: 1,
+      },
+    ],
+  },
+  {
+    id: "quiz-functions-convexity",
+    title: "اختبار: التقعر والمقاربات المائلة",
+    description: "اختبار حول f'', التقعر، والمقاربات المائلة.",
+    durationMin: 18,
+    unitSlug: "functions-comprehensive-study",
+    questions: [
+      {
+        id: "q1",
+        question:
+          "إذا كانت $f''(x) > 0$ على مجال $I$, فإن $f$:",
+        options: [
+          "محدّبة على I",
+          "مقعّرة على I",
+          "تزايدية على I",
+          "متناقصة على I",
+        ],
+        correctIdx: 0,
+        explanation: "f'' > 0 ⟺ f محدّبة.",
+        points: 1,
+      },
+      {
+        id: "q2",
+        question:
+          "ما المشتقة الثانية لـ $f(x) = x^3 - 3x^2 + 2x$؟",
+        options: ["$6x - 6$", "$3x^2 - 6x$", "$6x$", "$6$"],
+        correctIdx: 0,
+        explanation: "f' = 3x² - 6x + 2, f'' = 6x - 6.",
+        points: 1,
+      },
+      {
+        id: "q3",
+        question:
+          "ما المقاربة المائلة لـ $f(x) = \\frac{x^2 + 1}{x}$ عند $+\\infty$؟",
+        options: ["$y = x$", "$y = x + 1$", "$y = 0$", "$y = 1$"],
+        correctIdx: 0,
+        explanation:
+          "f(x) = x + 1/x, إذن f(x) - x = 1/x → 0. المقاربة: y = x.",
+        points: 1,
+      },
+      {
+        id: "q4",
+        question:
+          "نقطة الانعطاف هي نقطة:",
+        options: [
+          "يتغير فيها التقعر",
+          "f'(x) = 0 فيها",
+          "f(x) = 0 فيها",
+          "f''(x) > 0 فيها",
+        ],
+        correctIdx: 0,
+        explanation:
+          "نقطة الانعطاف: التغير في التقعر (من محدّب إلى مقعّر أو العكس).",
+        points: 1,
+      },
+      {
+        id: "q5",
+        question:
+          "لإيجاد المقاربة المائلة, نحسب $a = \\lim_{x \\to +\\infty} \\frac{f(x)}{x}$, ثم:",
+        options: [
+          "$b = \\lim [f(x) - ax]$",
+          "$b = \\lim f(x)$",
+          "$b = \\lim f'(x)$",
+          "$b = 0$",
+        ],
+        correctIdx: 0,
+        explanation:
+          "b = lim [f(x) - ax], ثم المقاربة هي y = ax + b (إذا b منتهية).",
+        points: 1,
+      },
+    ],
+  },
 ];

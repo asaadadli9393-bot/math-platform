@@ -1878,6 +1878,33 @@ $$f'(x) = \\frac{x(x-2)}{(x-1)^2}$$
 //  تصدير كل الوحدات
 // ============================================================
 
+import {
+  extraLessonsByChapter,
+  extraExercisesByChapter,
+  extraChaptersByUnit,
+} from "./curriculum-extra";
+
+// دمج المحتوى الإضافي في الفصول الموجودة
+function mergeChapter(chapter: ChapterSeed): ChapterSeed {
+  const slug = chapter.slug;
+  const extraLessons = extraLessonsByChapter[slug] || [];
+  const extraExercises = extraExercisesByChapter[slug] || [];
+  return {
+    ...chapter,
+    lessons: [...chapter.lessons, ...extraLessons],
+    exercises: [...chapter.exercises, ...extraExercises],
+  };
+}
+
+// دمج الفصول الإضافية في الوحدات
+function mergeUnit(unit: UnitSeed): UnitSeed {
+  const extraChapters = extraChaptersByUnit[unit.slug] || [];
+  return {
+    ...unit,
+    chapters: [...unit.chapters.map(mergeChapter), ...extraChapters],
+  };
+}
+
 export const curriculum: UnitSeed[] = [
   unitSequences,
   unitExponentialLogarithm,
@@ -1886,7 +1913,7 @@ export const curriculum: UnitSeed[] = [
   unitSpaceGeometry,
   unitArithmeticDivisibility,
   unitFunctionsStudy,
-];
+].map(mergeUnit);
 
 // ============================================================
 //  إحصائيات المنهاج (لعرضها في الواجهة)
