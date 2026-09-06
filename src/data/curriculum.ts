@@ -1891,6 +1891,7 @@ import {
   extraExercisesByChapter,
   extraChaptersByUnit,
 } from "./curriculum-extra";
+import { completeLessonsByChapter } from "./curriculum-lessons-complete";
 import { bankExercisesByChapter } from "./banks-integration";
 
 // دمج المحتوى الإضافي في الفصول الموجودة
@@ -1898,10 +1899,11 @@ function mergeChapter(chapter: ChapterSeed): ChapterSeed {
   const slug = chapter.slug;
   const extraLessons = extraLessonsByChapter[slug] || [];
   const extraExercises = extraExercisesByChapter[slug] || [];
+  const completeLessons = completeLessonsByChapter[slug] || [];
   const bankExercises = bankExercisesByChapter[slug] || [];
   return {
     ...chapter,
-    lessons: [...chapter.lessons, ...extraLessons],
+    lessons: [...chapter.lessons, ...extraLessons, ...completeLessons],
     exercises: [...chapter.exercises, ...extraExercises, ...bankExercises],
   };
 }
