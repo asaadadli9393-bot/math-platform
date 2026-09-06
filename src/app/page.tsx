@@ -42,6 +42,21 @@ import { BacExamCard } from "@/components/bac-exam-card";
 import { courses, getCoursesStats, courseStreamLabels, courseLevelLabels, type Course } from "@/data/courses";
 import { CourseCard, CourseDetail } from "@/components/course-card";
 import {
+  plans,
+  paymentMethods,
+  digitalProducts,
+  formatPrice,
+  formatPriceMonthly,
+  getPlansStats,
+  getProductsStats,
+  planLabelsAr,
+  productCategoryLabels,
+  type Plan,
+  type PlanTier,
+  type PaymentMethodInfo,
+  type DigitalProduct,
+} from "@/data/monetization";
+import {
   difficultyLabels,
   difficultyColors,
   streamLabels,
@@ -83,6 +98,15 @@ import {
   Layers,
   CheckCircle2,
   Home,
+  CreditCard,
+  ShoppingBag,
+  Lock,
+  Check,
+  X,
+  Download,
+  Zap,
+  ShieldCheck,
+  Gift,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -98,13 +122,15 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "dashboard" | "parent" | "about";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "products" | "dashboard" | "parent" | "about";
 
 export default function HomePage() {
   const [view, setView] = React.useState<MainView>("home");
   const [selectedUnitSlug, setSelectedUnitSlug] = React.useState<string | null>(null);
   const [selectedQuizId, setSelectedQuizId] = React.useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(null);
+  const [selectedPlanId, setSelectedPlanId] = React.useState<"BASIC" | "PREMIUM" | "FAMILY" | null>(null);
+  const [selectedProductSlug, setSelectedProductSlug] = React.useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
   const stats = getCurriculumStats();
@@ -188,6 +214,14 @@ export default function HomePage() {
                 <PlayCircle className="w-4 h-4 ml-2" />
                 الدورات
               </NavButton>
+              <NavButton active={view === "products"} onClick={() => navigateTo("products")}>
+                <ShoppingBag className="w-4 h-4 ml-2" />
+                المتجر
+              </NavButton>
+              <NavButton active={view === "pricing"} onClick={() => navigateTo("pricing")}>
+                <CreditCard className="w-4 h-4 ml-2" />
+                الباقات
+              </NavButton>
               <NavButton active={view === "dashboard"} onClick={() => navigateTo("dashboard")}>
                 <LayoutDashboard className="w-4 h-4 ml-2" />
                 لوحتي
@@ -224,6 +258,12 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("courses")}>
                     <PlayCircle className="w-4 h-4 ml-2" /> الدورات
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("products")}>
+                    <ShoppingBag className="w-4 h-4 ml-2" /> المتجر
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("pricing")}>
+                    <CreditCard className="w-4 h-4 ml-2" /> الباقات والأسعار
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("dashboard")}>
                     <LayoutDashboard className="w-4 h-4 ml-2" /> لوحة التحكم
@@ -266,6 +306,39 @@ export default function HomePage() {
         )}
 
         {view === "exams" && <ExamsView />}
+
+        {view === "pricing" && (
+          <PricingView onSelectPlan={(planId) => {
+            setSelectedPlanId(planId);
+            setView("payment");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }} />
+        )}
+
+        {view === "payment" && selectedPlanId && (
+          <PaymentView
+            planId={selectedPlanId}
+            onBack={() => navigateTo("pricing")}
+            onSuccess={(planId, months) => {
+              const tier = planId as "BASIC" | "PREMIUM" | "FAMILY";
+              useStudentStore.getState().subscribeToPlan(tier, months);
+              toast({
+                title: "تم تفعيل اشتراكك بنجاح! 🎉",
+                description: `أنت الآن في الباقة ${planLabelsAr[tier]} — لمدة ${months} شهر. استمتع بالكامل!`,
+              });
+              setView("dashboard");
+            }}
+          />
+        )}
+
+        {view === "products" && (
+          <ProductsView
+            onPurchase={(slug) => {
+              setSelectedProductSlug(slug);
+              setView("payment-product");
+            }}
+          />
+        )}
 
         {view === "courses" && (
           <CoursesView onSelectCourse={(c) => {
@@ -335,6 +408,24 @@ export default function HomePage() {
                   >
                     <PlayCircle className="w-3 h-3" />
                     الدورات الشاملة
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => navigateTo("products")}
+                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <ShoppingBag className="w-3 h-3" />
+                    المتجر
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => navigateTo("pricing")}
+                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <CreditCard className="w-3 h-3" />
+                    الباقات والأسعار
                   </button>
                 </li>
                 <li>
@@ -505,6 +596,15 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
             >
               <Trophy className="w-5 h-5" />
               مواضيع البكالوريا السابقة
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => onNavigate("pricing")}
+              className="bg-amber-500 text-white border-amber-600 hover:bg-amber-600 gap-2"
+            >
+              <CreditCard className="w-5 h-5" />
+              اشترك الآن
             </Button>
             <Button
               size="lg"
@@ -1933,6 +2033,708 @@ function ExamsView() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+// ===================================================
+//  عرض الباقات والأسعار (Pricing)
+// ===================================================
+
+function PricingView({ onSelectPlan }: { onSelectPlan: (planId: PlanTier) => void }) {
+  const [billingCycle, setBillingCycle] = React.useState<"monthly" | "yearly">("monthly");
+  const stats = getPlansStats();
+  const subscriptionTier = useStudentStore.getState().getSubscriptionTier();
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-primary to-amber-700 mb-3">
+          <CreditCard className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          باقات المنصة
+        </h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          اختر الباقة المناسبة لك. ادفع مرة واحدة وادخل عالم الرياضيات بلا حدود.
+          طرق دفع جزائرية متعددة: CIB، بريدي موب، CCP، تحويل بنكي.
+        </p>
+      </div>
+
+      {/* مفتاح التبديل بين الشهري والسنوي */}
+      <div className="flex justify-center items-center gap-4">
+        <span className={billingCycle === "monthly" ? "font-bold text-primary" : "text-muted-foreground"}>
+          شهري
+        </span>
+        <button
+          onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
+          className={`relative w-14 h-7 rounded-full transition-colors ${
+            billingCycle === "yearly" ? "bg-primary" : "bg-muted"
+          }`}
+        >
+          <span
+            className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-transform ${
+              billingCycle === "yearly" ? "right-1" : "left-1"
+            }`}
+          />
+        </button>
+        <span className={billingCycle === "yearly" ? "font-bold text-primary" : "text-muted-foreground"}>
+          سنوي
+        </span>
+        {billingCycle === "yearly" && (
+          <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 border">
+            <Zap className="w-3 h-3 ml-1" />
+            توفير 33%
+          </Badge>
+        )}
+      </div>
+
+      {/* الباقات */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {plans.map((plan) => {
+          const price = billingCycle === "monthly" ? plan.monthlyPrice : plan.yearlyPrice;
+          const isCurrent = subscriptionTier === plan.id;
+          return (
+            <Card
+              key={plan.id}
+              className={`relative overflow-hidden transition-all ${
+                plan.isMostPopular
+                  ? "border-2 shadow-lg scale-105"
+                  : "hover:shadow-md hover:-translate-y-1"
+              }`}
+              style={plan.isMostPopular ? { borderColor: plan.color } : {}}
+            >
+              {plan.badge && (
+                <div
+                  className="absolute top-0 right-0 left-0 py-1 text-center text-xs font-bold text-white"
+                  style={{ background: plan.color }}
+                >
+                  {plan.badge}
+                </div>
+              )}
+              <CardContent className={`pt-6 space-y-4 ${plan.badge ? "mt-4" : ""}`}>
+                <div>
+                  <h3 className="font-bold text-xl mb-1" style={{ color: plan.color }}>
+                    {plan.nameAr}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed min-h-[40px]">
+                    {plan.description}
+                  </p>
+                </div>
+
+                <div className="py-3 border-y border-border">
+                  <div className="text-3xl font-bold">
+                    {plan.monthlyPrice === 0 ? (
+                      "مجاناً"
+                    ) : (
+                      <>
+                        {price.toLocaleString("en-US")}
+                        <span className="text-base font-normal text-muted-foreground"> دج</span>
+                      </>
+                    )}
+                  </div>
+                  {plan.monthlyPrice > 0 && (
+                    <div className="text-xs text-muted-foreground">
+                      {billingCycle === "monthly" ? "كل شهر" : "كل سنة (توفير " + ((plan.monthlyPrice * 12 - plan.yearlyPrice).toLocaleString("en-US")) + " دج)"}
+                    </div>
+                  )}
+                </div>
+
+                <Button
+                  className={`w-full ${
+                    isCurrent ? "bg-muted text-muted-foreground" : ""
+                  }`}
+                  style={!isCurrent ? { background: plan.color, color: "white" } : {}}
+                  disabled={isCurrent}
+                  onClick={() => onSelectPlan(plan.id)}
+                >
+                  {isCurrent ? "✓ باقتك الحالية" : plan.cta}
+                </Button>
+
+                <ul className="space-y-2 text-sm">
+                  {plan.features.map((feat, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      {feat.included ? (
+                        <Check
+                          className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"
+                        />
+                      ) : (
+                        <X className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      )}
+                      <span
+                        className={
+                          feat.included
+                            ? feat.highlight
+                              ? "font-bold"
+                              : ""
+                            : "text-muted-foreground line-through"
+                        }
+                      >
+                        {feat.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* طرق الدفع المقبولة */}
+      <Card className="bg-gradient-to-l from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+        <CardContent className="pt-6">
+          <div className="text-center">
+            <h3 className="font-bold mb-3 flex items-center justify-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+              طرق الدفع المقبولة (جزائرية 100%)
+            </h3>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {paymentMethods.map((method) => (
+                <div
+                  key={method.id}
+                  className="flex items-center gap-2 bg-card border-2 rounded-lg px-3 py-2"
+                >
+                  <span className="text-2xl">{method.icon}</span>
+                  <div className="text-right">
+                    <div className="font-bold text-sm">{method.nameAr}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {method.isInstant ? "فوري" : "تأكيد يدوي"} • {method.fee}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ضمانات */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <ShieldCheck className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+            <h4 className="font-bold mb-1">دفع آمن 100%</h4>
+            <p className="text-xs text-muted-foreground">
+              جميع المعاملات مشفّرة وآمنة. لا نخزّن بيانات بطاقتك.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Zap className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+            <h4 className="font-bold mb-1">تفعيل فوري</h4>
+            <p className="text-xs text-muted-foreground">
+              بعد الدفع عبر CIB أو بريدي موب، تُفعّل باقتك خلال ثوانٍ.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Check className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+            <h4 className="font-bold mb-1">إلغاء سهل</h4>
+            <p className="text-xs text-muted-foreground">
+              يمكنك الإلغاء في أي وقت من لوحة التحكم، دون أي رسوم خفية.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* تجربة مجانية */}
+      <Card className="bg-gradient-to-l from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border-2 border-emerald-400">
+        <CardContent className="pt-6 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500 mb-3">
+            <Gift className="w-6 h-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold mb-2">🎁 تجربة مجانية 7 أيام</h3>
+          <p className="text-sm text-muted-foreground mb-4 max-w-xl mx-auto">
+            لست متأكدًا؟ جرّب الباقة الأساسية مجاناً لمدة 7 أيام كاملة. بدون أي بطاقة،
+            بدون أي التزام. استمتع بكل التمارين والحلول مجاناً!
+          </p>
+          <Button
+            size="lg"
+            variant="default"
+            className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+            onClick={() => {
+              useStudentStore.getState().startFreeTrial(7);
+              toast({
+                title: "🎁 تم تفعيل تجربتك المجانية!",
+                description: "استمتع بالباقة الأساسية مجاناً لمدة 7 أيام. استمتع بالكامل!",
+              });
+              setView("dashboard");
+            }}
+          >
+            <Zap className="w-4 h-4" />
+            ابدأ التجربة المجانية
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* أسئلة شائعة */}
+      <Card>
+        <CardHeader>
+          <CardTitle>الأسئلة الشائعة</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h4 className="font-bold mb-1">هل يمكنني الدفع عبر بريدي موب؟</h4>
+            <p className="text-sm text-muted-foreground">
+              نعم! بريدي موب مدعوم تمامًا. اختر هذه الطريقة عند الدفع، اتبع التعليمات في تطبيق بريدي موب،
+              وأدخل رقم العملية.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-1">هل الدفع آمن؟</h4>
+            <p className="text-sm text-muted-foreground">
+              نعم 100%. عمليات CIB تتم عبر بوابة آمنة مشفّرة، ولا نخزّن بيانات بطاقتك. عمليات بريدي موب
+              و CCP تتم من تطبيقك الخاص.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-1">هل يمكنني إلغاء الاشتراك؟</h4>
+            <p className="text-sm text-muted-foreground">
+              نعم، يمكنك الإلغاء في أي وقت من لوحة التحكم. الاشتراك يستمر حتى نهاية الفترة المدفوعة.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-1">ما الفرق بين الشهري والسنوي؟</h4>
+            <p className="text-sm text-muted-foreground">
+              السنوي يوفّر 33% (مثلاً 500×12 = 6000، سنوي = 4000). دفعة واحدة لكل السنة.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-1">هل توجد ضمان استرجاع؟</h4>
+            <p className="text-sm text-muted-foreground">
+              نعم، إذا لم تكن راضياً خلال أول 7 أيام من الاشتراك السنوي، نُعيد لك 100% من المبلغ.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ===================================================
+//  عرض الدفع (Payment)
+// ===================================================
+
+function PaymentView({
+  planId,
+  onBack,
+  onSuccess,
+}: {
+  planId: PlanTier;
+  onBack: () => void;
+  onSuccess: (planId: PlanTier, months: number) => void;
+}) {
+  const [selectedMethod, setSelectedMethod] = React.useState<PaymentMethodInfo | null>(null);
+  const [formData, setFormData] = React.useState<Record<string, string>>({});
+  const [duration, setDuration] = React.useState<1 | 3 | 6 | 12>(1);
+  const [processing, setProcessing] = React.useState(false);
+
+  const plan = plans.find((p) => p.id === planId);
+  if (!plan) return null;
+
+  const totalAmount = duration === 1
+    ? plan.monthlyPrice
+    : duration === 3
+    ? plan.monthlyPrice * 3
+    : duration === 6
+    ? plan.monthlyPrice * 6
+    : plan.yearlyPrice;
+
+  const handlePay = () => {
+    if (!selectedMethod) return;
+    setProcessing(true);
+    // محاكاة معالجة الدفع
+    setTimeout(() => {
+      setProcessing(false);
+      onSuccess(planId, duration);
+    }, 2000);
+  };
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
+        <ChevronRight className="w-4 h-4" />
+        عودة للباقات
+      </Button>
+
+      {/* ملخص الطلب */}
+      <Card className="border-2" style={{ borderColor: plan.color }}>
+        <CardHeader className="text-white" style={{ background: plan.color }}>
+          <CardTitle className="flex items-center justify-between">
+            <span>ملخص الطلب</span>
+            <span className="text-2xl">{plan.id === "PREMIUM" ? "⭐" : plan.id === "FAMILY" ? "👨‍👩‍👧" : "💳"}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-3">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">الباقة</span>
+            <span className="font-bold">{plan.nameAr}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">المدة</span>
+            <div className="flex gap-2">
+              {[1, 3, 6, 12].map((m) => (
+                <Button
+                  key={m}
+                  size="sm"
+                  variant={duration === m ? "default" : "outline"}
+                  onClick={() => setDuration(m as 1 | 3 | 6 | 12)}
+                >
+                  {m === 12 ? "سنة" : `${m} شهر`}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <Separator />
+          <div className="flex justify-between text-xl font-bold">
+            <span>الإجمالي</span>
+            <span style={{ color: plan.color }}>{totalAmount.toLocaleString("en-US")} دج</span>
+          </div>
+          {duration === 12 && plan.monthlyPrice > 0 && (
+            <div className="text-sm text-emerald-600 flex items-center gap-1">
+              <Zap className="w-3 h-3" />
+              توفير {((plan.monthlyPrice * 12) - plan.yearlyPrice).toLocaleString("en-US")} دج سنوياً!
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* اختيار طريقة الدفع */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            اختر طريقة الدفع
+          </CardTitle>
+          <CardDescription>طرق دفع جزائرية آمنة</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-3">
+            {paymentMethods.map((method) => (
+              <button
+                key={method.id}
+                onClick={() => {
+                  setSelectedMethod(method);
+                  setFormData({});
+                }}
+                className={`text-right p-4 border-2 rounded-lg transition-all ${
+                  selectedMethod?.id === method.id
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{method.icon}</span>
+                  <div className="flex-1">
+                    <div className="font-bold">{method.nameAr}</div>
+                    <div className="text-xs text-muted-foreground">{method.description}</div>
+                    <div className="text-xs mt-1 flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        {method.isInstant ? "✓ فوري" : "⏱ تأكيد يدوي"}
+                      </Badge>
+                      <Badge variant="ghost" className="text-xs">{method.fee}</Badge>
+                    </div>
+                  </div>
+                  {selectedMethod?.id === method.id && (
+                    <Check className="w-5 h-5 text-primary" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* نموذج طريقة الدفع */}
+      {selectedMethod && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-2xl">{selectedMethod.icon}</span>
+              {selectedMethod.nameAr} — تعليمات
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* التعليمات */}
+            <div className="bg-blue-50 dark:bg-blue-950/20 border-r-4 border-blue-400 rounded-md p-4">
+              <h4 className="font-bold mb-2 text-blue-700 dark:text-blue-300">طريقة الدفع:</h4>
+              <ol className="space-y-1 pr-6 list-decimal text-sm">
+                {selectedMethod.instructions.map((instr, i) => (
+                  <li key={i}>{instr}</li>
+                ))}
+              </ol>
+            </div>
+
+            {/* الحقول */}
+            <div className="space-y-3">
+              {selectedMethod.fields.map((field) => (
+                <div key={field.id} className="space-y-1">
+                  <Label htmlFor={field.id}>
+                    {field.label}
+                    {field.required && <span className="text-red-500 mr-1">*</span>}
+                  </Label>
+                  {field.type === "select" ? (
+                    <select
+                      id={field.id}
+                      value={formData[field.id] || ""}
+                      onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+                      className="w-full p-2 rounded-md border border-input bg-background"
+                    >
+                      <option value="">اختر...</option>
+                      {field.options?.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={formData[field.id] || ""}
+                      onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+                      className="font-mono text-right"
+                      dir={field.type === "number" || field.type === "tel" ? "ltr" : "rtl"}
+                    />
+                  )}
+                  {field.helpText && (
+                    <p className="text-xs text-muted-foreground">{field.helpText}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* زر الدفع */}
+            <Button
+              className="w-full gap-2"
+              size="lg"
+              style={{ background: selectedMethod.color }}
+              disabled={processing}
+              onClick={handlePay}
+            >
+              {processing ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  جارٍ معالجة الدفع...
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  ادفع {totalAmount.toLocaleString("en-US")} دج بـ {selectedMethod.nameAr}
+                </>
+              )}
+            </Button>
+
+            <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1">
+              <ShieldCheck className="w-3 h-3" />
+              معاملة آمنة 100% — بياناتك محمية ومشفّرة
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* رسالة من الأستاذ */}
+      <Card className="bg-primary/5 border-r-4 border-primary">
+        <CardContent className="pt-4">
+          <div className="flex items-start gap-3">
+            <img
+              src="/teachers/adli-asad.jpg"
+              alt="الأستاذ عدلي أسعد"
+              className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
+            />
+            <div>
+              <div className="font-bold text-primary mb-1">كلمة من الأستاذ عدلي أسعد</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                استثمارك في تعليمك هو استثمار في مستقبلك. كل دج تدفعه هنا يعود عليك بأضعاف
+                من خلال التفوق في البكالوريا. أنا أضمن لك جودة المحتوى ومتابعة حقيقية.
+                لك كل دعائي بالتوفيق!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ===================================================
+//  عرض المتجر (Products)
+// ===================================================
+
+function ProductsView({ onPurchase }: { onPurchase: (slug: string) => void }) {
+  const stats = getProductsStats();
+  const profile = useStudentStore((s) => s.profile);
+  const ownedProducts = profile?.ownedProducts || [];
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 mb-3">
+          <ShoppingBag className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          متجر المنتجات الرقمية
+        </h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          ملخصات ذهنية، مواضيع مصححة، حزم تمارين، دروس خاصة.
+          منتجات PDF احترافية للتحميل الفوري بعد الشراء.
+        </p>
+      </div>
+
+      {/* إحصائيات */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <ShoppingBag className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-xs text-muted-foreground">منتج رقمي</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Download className="w-6 h-6 text-emerald-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.featured}</div>
+            <div className="text-xs text-muted-foreground">منتج مميز</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <CreditCard className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.avgPrice}</div>
+            <div className="text-xs text-muted-foreground">متوسط السعر (دج)</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <CheckCircle2 className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{ownedProducts.length}</div>
+            <div className="text-xs text-muted-foreground">منتجاتك المُشتراة</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* المنتجات */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {digitalProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            owned={ownedProducts.includes(product.slug)}
+            onPurchase={() => onPurchase(product.slug)}
+          />
+        ))}
+      </div>
+
+      {/* دعوة */}
+      <Card className="bg-accent/10 border-r-4 border-accent">
+        <CardContent className="pt-6 text-center">
+          <h3 className="font-bold mb-2">🎁 خصومات خاصة للمشتركين</h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            المشتركين في الباقة المميزة يحصلون على كل المنتجات الرقمية مجاناً!
+          </p>
+          <Button
+            variant="default"
+            onClick={() => setView("pricing")}
+            className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
+          >
+            <CreditCard className="w-4 h-4" />
+            اكتشف الباقات
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function ProductCard({
+  product,
+  owned,
+  onPurchase,
+}: {
+  product: DigitalProduct;
+  owned: boolean;
+  onPurchase: () => void;
+}) {
+  const Icon = iconMap[product.icon] || FileText;
+  return (
+    <Card className={`overflow-hidden hover:shadow-lg transition-all hover:-translate-y-1 ${product.isFeatured ? "border-2 border-accent" : ""}`}>
+      <div
+        className="h-32 flex items-center justify-center relative"
+        style={{ background: `linear-gradient(135deg, ${product.color}, ${product.color}cc)` }}
+      >
+        <Icon className="w-16 h-16 text-white opacity-90" />
+        {product.isFeatured && (
+          <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground">
+            <Star className="w-3 h-3 ml-1 fill-current" />
+            مميز
+          </Badge>
+        )}
+        {owned && (
+          <Badge className="absolute top-3 left-3 bg-emerald-500 text-white">
+            <Check className="w-3 h-3 ml-1" />
+            مشترى
+          </Badge>
+        )}
+      </div>
+
+      <CardContent className="pt-4 space-y-3">
+        <div>
+          <Badge variant="ghost" className="text-xs mb-1">
+            {productCategoryLabels[product.category]}
+          </Badge>
+          <h3 className="font-bold text-lg leading-tight">{product.title}</h3>
+          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+            {product.description}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Badge variant="outline">{product.format}</Badge>
+          <span className="flex items-center gap-1">
+            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+            {product.rating}
+          </span>
+          <span className="flex items-center gap-1">
+            <Download className="w-3 h-3" />
+            {product.downloads}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div className="flex items-center gap-2">
+            {product.oldPrice && (
+              <span className="text-sm text-muted-foreground line-through">
+                {product.oldPrice.toLocaleString("en-US")} دج
+              </span>
+            )}
+            <span className="text-xl font-bold text-primary">
+              {product.price.toLocaleString("en-US")} دج
+            </span>
+          </div>
+        </div>
+
+        <Button
+          className="w-full gap-2"
+          variant={owned ? "outline" : "default"}
+          disabled={owned}
+          onClick={onPurchase}
+        >
+          {owned ? (
+            <>
+              <Check className="w-4 h-4" />
+              تحميل المنتج
+            </>
+          ) : (
+            <>
+              <ShoppingBag className="w-4 h-4" />
+              اشترِ الآن
+            </>
+          )}
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 

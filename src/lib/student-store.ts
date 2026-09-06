@@ -47,6 +47,11 @@ export interface UserProfile {
   grade: string;
   city: string;
   onboarded: boolean;
+  subscriptionTier?: "FREE" | "BASIC" | "PREMIUM" | "FAMILY";
+  subscriptionStartDate?: string;
+  subscriptionEndDate?: string;
+  trialEndDate?: string;
+  ownedProducts?: string[];   // قائمة المنتجات الرقمية المُشتراة (slug)
 }
 
 interface StudentStore {
@@ -65,6 +70,18 @@ interface StudentStore {
   setLastVisitedUnit: (slug: string) => void;
   toggleFavorite: (slug: string) => void;
   resetProgress: () => void;
+
+  // دوال الاشتراك
+  subscribeToPlan: (tier: "BASIC" | "PREMIUM" | "FAMILY", durationMonths: number) => void;
+  startFreeTrial: (days: number) => void;
+  cancelSubscription: () => void;
+  isSubscriptionActive: () => boolean;
+  getSubscriptionTier: () => "FREE" | "BASIC" | "PREMIUM" | "FAMILY";
+  isTrialActive: () => boolean;
+
+  // دوال المنتجات الرقمية
+  purchaseProduct: (slug: string) => void;
+  ownsProduct: (slug: string) => boolean;
 }
 
 export const useStudentStore = create<StudentStore>()(
@@ -132,6 +149,96 @@ export const useStudentStore = create<StudentStore>()(
           unitProgress: {},
           lastVisitedUnit: null,
         }),
+
+      // دوال الاشتراك
+      subscribeToPlan: (tier, durationMonths) =>
+        set((state) => {
+          const now = new Date();
+          const endDate = new Date(now);
+          endDate.setMonth(endDate.getMonth() + durationMonths);
+          return {
+            profile: state.profile
+              ? {
+                  ...state.profile,
+                  subscriptionTier: tier,
+                  subscriptionStartDate: now.toISOString(),
+                  subscriptionEndDate: endDate.toISOString(),
+                }
+              : null,
+          };
+        }),
+
+      startFreeTrial: (days) =>
+        set((state) => {
+          const now = new Date();
+          const trialEnd = new Date(now);
+          trialEnd.setDate(trialEnd.getDate() + days);
+          return {
+            profile: state.profile
+              ? {
+                  ...state.profile,
+                  subscriptionTier: "BASIC",   // تجربة BASIC مجانية
+                  subscriptionStartDate: now.toISOString(),
+                  subscriptionEndDate: trialEnd.toISOString(),
+                  trialEndDate: trialEnd.toISOString(),
+                }
+              : null,
+          };
+        }),
+
+      cancelSubscription: () =>
+        set((state) => ({
+          profile: state.profile
+            ? {
+                ...state.profile,
+                subscriptionTier: "FREE",
+                subscriptionEndDate: new Date().toISOString(),
+              }
+            : null,
+        })),
+
+      isSubscriptionActive: () => {
+        const profile = useStudentStore.getState().profile;
+        if (!profile) return false;
+        if (profile.subscriptionTier === "FREE" || !profile.subscriptionTier) return false;
+        if (!profile.subscriptionEndDate) return false;
+        return new Date(profile.subscriptionEndDate) > new Date();
+      },
+
+      getSubscriptionTier: () => {
+        const profile = useStudentStore.getState().profile;
+        if (!profile) return "FREE";
+        if (!profile.subscriptionTier) return "FREE";
+        if (!profile.subscriptionEndDate) return profile.subscriptionTier;
+        if (new Date(profile.subscriptionEndDate) < new Date()) return "FREE";
+        return profile.subscriptionTier;
+      },
+
+      isTrialActive: () => {
+        const profile = useStudentStore.getState().profile;
+        if (!profile?.trialEndDate) return false;
+        return new Date(profile.trialEndDate) > new Date();
+      },
+
+      // دوال المنتجات الرقمية
+      purchaseProduct: (slug) =>
+        set((state) => {
+          const owned = state.profile?.ownedProducts || [];
+          if (owned.includes(slug)) return state;
+          return {
+            profile: state.profile
+              ? {
+                  ...state.profile,
+                  ownedProducts: [...owned, slug],
+                }
+              : null,
+          };
+        }),
+
+      ownsProduct: (slug) => {
+        const profile = useStudentStore.getState().profile;
+        return (profile?.ownedProducts || []).includes(slug);
+      },
     }),
     {
       name: "student-storage",
