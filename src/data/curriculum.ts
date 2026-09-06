@@ -49,6 +49,7 @@ export interface UnitSeed {
   icon: string;
   color: string;
   stream: StudentStream | "ALL";
+  trimester: 1 | 2 | 3;     // الفصل الدراسي: 1، 2، أو 3
   chapters: ChapterSeed[];
 }
 
@@ -64,6 +65,7 @@ const unitSequences: UnitSeed = {
   icon: "TrendingUp",
   color: "#2D6A4F",
   stream: "ALL",
+  trimester: 1,  // الفصل الأول
   chapters: [
     {
       slug: "sequences-introduction",
@@ -468,6 +470,7 @@ const unitExponentialLogarithm: UnitSeed = {
   icon: "Sigma",
   color: "#7F5539",
   stream: "ALL",
+  trimester: 2,  // الفصل الثاني
   chapters: [
     {
       slug: "exponential-function",
@@ -804,6 +807,7 @@ const unitComplexNumbers: UnitSeed = {
   icon: "CircleDot",
   color: "#5A3EBA",
   stream: "MATHEMATICS",
+  trimester: 2,  // الفصل الثاني (شعبة رياضيات)
   chapters: [
     {
       slug: "complex-algebraic-form",
@@ -1107,6 +1111,7 @@ const unitProbability: UnitSeed = {
   icon: "Dices",
   color: "#A0522D",
   stream: "ALL",
+  trimester: 2,  // الفصل الثاني
   chapters: [
     {
       slug: "conditional-probability",
@@ -1288,11 +1293,12 @@ const unitSpaceGeometry: UnitSeed = {
   slug: "space-geometry",
   title: "الهندسة في الفضاء",
   description:
-    "الإحداثيات في الفضاء، الجداء السلمي والشعاعي، المعادلات الديكارتية والبارامترية للمستويات والمستقيمات، التطبيقات على الهندسة الإفضائية.",
+    "الإحداثيات في الفضاء، الجداء السلمي والشعاعي، المعادلات الديكارتية والبارامترية للمستويات والمستقيمات، التطبيقات على الهندسة الإفضالية.",
   order: 5,
   icon: "Box",
   color: "#1D3557",
   stream: "ALL",
+  trimester: 3,  // الفصل الثالث
   chapters: [
     {
       slug: "scalar-product",
@@ -1486,6 +1492,7 @@ const unitArithmeticDivisibility: UnitSeed = {
   icon: "Divide",
   color: "#3A7D44",
   stream: "MATHEMATICS",
+  trimester: 3,  // الفصل الثالث (شعبة رياضيات)
   chapters: [
     {
       slug: "divisibility-gcd",
@@ -1684,6 +1691,7 @@ const unitFunctionsStudy: UnitSeed = {
   icon: "LineChart",
   color: "#A4133C",
   stream: "ALL",
+  trimester: 1,  // الفصل الأول
   chapters: [
     {
       slug: "function-complete-study",

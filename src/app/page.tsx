@@ -82,6 +82,7 @@ import {
   PlayCircle,
   Layers,
   CheckCircle2,
+  Home,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -97,7 +98,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "dashboard" | "parent" | "about";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "dashboard" | "parent" | "about";
 
 export default function HomePage() {
   const [view, setView] = React.useState<MainView>("home");
@@ -168,8 +169,12 @@ export default function HomePage() {
             {/* القائمة الرئيسية — على الشاشات الكبيرة */}
             <nav className="hidden md:flex items-center gap-2">
               <NavButton active={view === "home"} onClick={() => navigateTo("home")}>
-                <BookOpen className="w-4 h-4 ml-2" />
+                <Home className="w-4 h-4 ml-2" />
                 الرئيسية
+              </NavButton>
+              <NavButton active={view === "trimesters"} onClick={() => navigateTo("trimesters")}>
+                <Calendar className="w-4 h-4 ml-2" />
+                الفصول
               </NavButton>
               <NavButton active={view === "curriculum"} onClick={() => navigateTo("curriculum")}>
                 <Calculator className="w-4 h-4 ml-2" />
@@ -177,7 +182,7 @@ export default function HomePage() {
               </NavButton>
               <NavButton active={view === "exams"} onClick={() => navigateTo("exams")}>
                 <Trophy className="w-4 h-4 ml-2" />
-                المواضيع الشاملة
+                المواضيع
               </NavButton>
               <NavButton active={view === "courses"} onClick={() => navigateTo("courses")}>
                 <PlayCircle className="w-4 h-4 ml-2" />
@@ -186,10 +191,6 @@ export default function HomePage() {
               <NavButton active={view === "dashboard"} onClick={() => navigateTo("dashboard")}>
                 <LayoutDashboard className="w-4 h-4 ml-2" />
                 لوحتي
-              </NavButton>
-              <NavButton active={view === "parent"} onClick={() => navigateTo("parent")}>
-                <Users className="w-4 h-4 ml-2" />
-                فضاء ولي الأمر
               </NavButton>
               <NavButton active={view === "about"} onClick={() => navigateTo("about")}>
                 <Sparkles className="w-4 h-4 ml-2" />
@@ -210,7 +211,10 @@ export default function HomePage() {
                 </SheetHeader>
                 <nav className="flex flex-col gap-2 mt-6">
                   <MobileNavButton onClick={() => navigateTo("home")}>
-                    <BookOpen className="w-4 h-4 ml-2" /> الرئيسية
+                    <Home className="w-4 h-4 ml-2" /> الرئيسية
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("trimesters")}>
+                    <Calendar className="w-4 h-4 ml-2" /> الفصول الدراسية
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("curriculum")}>
                     <Calculator className="w-4 h-4 ml-2" /> المنهاج
@@ -242,6 +246,10 @@ export default function HomePage() {
       {/* =================================================== */}
       <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
         {view === "home" && <HomeView onNavigate={navigateTo} />}
+
+        {view === "trimesters" && (
+          <TrimestersView onSelectUnit={(slug) => navigateTo("unit", slug)} onNavigateCurriculum={() => navigateTo("curriculum")} />
+        )}
 
         {view === "curriculum" && (
           <CurriculumView
@@ -312,6 +320,15 @@ export default function HomePage() {
                   </li>
                 ))}
                 <li className="pt-2 border-t border-primary-foreground/20 mt-2">
+                  <button
+                    onClick={() => navigateTo("trimesters")}
+                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <Calendar className="w-3 h-3" />
+                    الفصول الدراسية
+                  </button>
+                </li>
+                <li>
                   <button
                     onClick={() => navigateTo("courses")}
                     className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
@@ -474,6 +491,15 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
             <Button
               size="lg"
               variant="outline"
+              onClick={() => onNavigate("trimesters")}
+              className="bg-emerald-600 text-white border-emerald-700 hover:bg-emerald-700 gap-2"
+            >
+              <Calendar className="w-5 h-5" />
+              تصفح حسب الفصول
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
               onClick={() => onNavigate("exams")}
               className="bg-accent text-accent-foreground border-accent hover:bg-accent/90 gap-2"
             >
@@ -588,6 +614,17 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
                     </Badge>
                     <Badge variant="ghost" className="text-xs">
                       {streamLabels[unit.stream]}
+                    </Badge>
+                    <Badge
+                      className={`text-xs border ${
+                        unit.trimester === 1
+                          ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                          : unit.trimester === 2
+                          ? "bg-amber-100 text-amber-800 border-amber-300"
+                          : "bg-blue-100 text-blue-800 border-blue-300"
+                      }`}
+                    >
+                      الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
                     </Badge>
                   </div>
                   <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
@@ -748,17 +785,329 @@ function StreamCard({
 }
 
 // ===================================================
-//  عرض المنهاج الكامل
+//  عرض الفصول الدراسية الثلاثة (Trimesters)
+// ===================================================
+
+const trimesterInfo: Record<1 | 2 | 3, {
+  title: string;
+  subtitle: string;
+  description: string;
+  color: string;
+  gradient: string;
+  badgeColor: string;
+  period: string;
+  icon: string;
+  features: string[];
+}> = {
+  1: {
+    title: "الفصل الأول",
+    subtitle: "الأساسيات والتحليل التأسيسي",
+    description:
+      "الفصل الأول من السنة الدراسية: يضع الأسس المتينة عبر دراسة الدوال والمتتاليات العددية. كل ما يحتاجه الطالب لبناء فهم راسخ قبل التعمق في المنهاج.",
+    color: "#2D6A4F",
+    gradient: "from-emerald-600 to-green-700",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    period: "سبتمبر — ديسمبر",
+    icon: "🌱",
+    features: [
+      "بناء أساس قوي في دراسة الدوال",
+      "إتقان النهايات والاشتقاق",
+      "فهم المتتاليات العددية وحلولها",
+      "تمهيد للمواضيع المتقدمة في الفصول القادمة",
+    ],
+  },
+  2: {
+    title: "الفصل الثاني",
+    subtitle: "الدوال المتخصصة والاحتمالات",
+    description:
+      "الفصل الثاني: تعمق في الدوال الأسية واللوغاريتمية، إدخال الأعداد المركبة (للرياضيات)، ودراسة الاحتمالات. فصل تطبيقي واسع.",
+    color: "#7F5539",
+    gradient: "from-amber-700 to-orange-700",
+    badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
+    period: "جانفي — مارس",
+    icon: "📈",
+    features: [
+      "إتقان الدالة الأسية واللوغاريتم النيبيري",
+      "إدخال عالم الأعداد المركبة (شعبة رياضيات)",
+      "دراسة شاملة للاحتمالات والاحتمال الشرطي",
+      "تطبيقات فيزيائية واقتصادية للنمو الأُسي",
+    ],
+  },
+  3: {
+    title: "الفصل الثالث",
+    subtitle: "الهندسة الإفضالية والحساب المتقدم",
+    description:
+      "الفصل الثالث: دراسة الهندسة في الفضاء، الحساب وقابلية القسمة (للرياضيات)، ومراجعة شاملة قبل امتحان البكالوريا. فصل التحضير النهائي.",
+    color: "#1D3557",
+    gradient: "from-blue-700 to-indigo-800",
+    badgeColor: "bg-blue-100 text-blue-800 border-blue-300",
+    period: "أفريل — جوان",
+    icon: "🎯",
+    features: [
+      "إتقان الهندسة في الفضاء (الجداء السلمي والشعاعي)",
+      "الحساب وقابلية القسمة ونظرية فيرما (شعبة رياضيات)",
+      "تطبيقات شاملة لكل ما سبق",
+      "تحضير نهائي لامتحان البكالوريا",
+    ],
+  },
+};
+
+function TrimestersView({
+  onSelectUnit,
+  onNavigateCurriculum,
+}: {
+  onSelectUnit: (slug: string) => void;
+  onNavigateCurriculum: () => void;
+}) {
+  const [activeTrimester, setActiveTrimester] = React.useState<1 | 2 | 3>(1);
+  const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
+
+  const unitsByTrimester = (t: 1 | 2 | 3) =>
+    curriculum.filter((u) => u.trimester === t);
+
+  const currentUnits = unitsByTrimester(activeTrimester);
+  const info = trimesterInfo[activeTrimester];
+
+  // إحصائيات لكل فصل
+  const getTrimesterStats = (t: 1 | 2 | 3) => {
+    const units = unitsByTrimester(t);
+    return {
+      units: units.length,
+      chapters: units.reduce((a, u) => a + u.chapters.length, 0),
+      exercises: units.reduce(
+        (a, u) =>
+          a +
+          u.chapters.reduce((aa, c) => aa + c.exercises.length, 0),
+        0
+      ),
+    };
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary mb-3">
+          <Calendar className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          الفصول الدراسية الثلاثة
+        </h1>
+        <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          منصة الرياضيات مقسّمة وفق المنهاج الرسمي لوزارة التربية الوطنية الجزائرية
+          إلى ثلاثة فصول دراسية. كل فصل يحتوي على الوحدات التعليمية المناسبة لتلك
+          الفترة، مرتبة تدريجياً لبناء فهم متين عند الطالب.
+        </p>
+      </div>
+
+      {/* بطاقات الفصول الثلاثة */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {([1, 2, 3] as const).map((t) => {
+          const tInfo = trimesterInfo[t];
+          const stats = getTrimesterStats(t);
+          const isActive = activeTrimester === t;
+          return (
+            <Card
+              key={t}
+              className={`cursor-pointer transition-all hover:-translate-y-1 ${
+                isActive
+                  ? "border-2 shadow-lg"
+                  : "border hover:shadow-md"
+              }`}
+              style={isActive ? { borderColor: tInfo.color } : {}}
+              onClick={() => setActiveTrimester(t)}
+            >
+              <CardContent className="pt-6">
+                <div
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${tInfo.gradient} text-white text-2xl mb-3`}
+                >
+                  {tInfo.icon}
+                </div>
+                <h3 className="font-bold text-xl mb-1">{tInfo.title}</h3>
+                <p className="text-sm text-muted-foreground italic mb-3">
+                  {tInfo.subtitle}
+                </p>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+                  <Clock className="w-3 h-3" />
+                  <span>{tInfo.period}</span>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <Badge variant="outline">{stats.units} وحدات</Badge>
+                  <Badge variant="outline">{stats.chapters} فصول</Badge>
+                  <Badge variant="outline">{stats.exercises} تمرين</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* الفصل المُختار — تفاصيل */}
+      <Card
+        className="overflow-hidden border-2"
+        style={{ borderColor: info.color }}
+      >
+        <div
+          className={`bg-gradient-to-l ${info.gradient} text-white p-6`}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-4xl">{info.icon}</span>
+            <div>
+              <h2 className="text-2xl font-bold">{info.title}</h2>
+              <p className="text-white/80 italic">{info.subtitle}</p>
+            </div>
+          </div>
+          <p className="text-white/90 leading-relaxed mb-3">{info.description}</p>
+          <div className="flex items-center gap-2 text-sm text-white/80">
+            <Clock className="w-4 h-4" />
+            <span>الفترة: {info.period}</span>
+          </div>
+        </div>
+
+        <CardContent className="pt-6 space-y-4">
+          {/* مميزات الفصل */}
+          <div>
+            <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: info.color }}>
+              <Sparkles className="w-4 h-4" />
+              مميزات الفصل
+            </h4>
+            <ul className="space-y-1 pr-6 list-disc">
+              {info.features.map((f, i) => (
+                <li key={i} className="text-sm">{f}</li>
+              ))}
+            </ul>
+          </div>
+
+          <Separator />
+
+          {/* وحدات الفصل */}
+          <div>
+            <h4 className="font-bold mb-3 flex items-center gap-2" style={{ color: info.color }}>
+              <BookOpen className="w-4 h-4" />
+              وحدات {info.title} ({currentUnits.length})
+            </h4>
+            <div className="space-y-3">
+              {currentUnits.map((unit) => {
+                const Icon = iconMap[unit.icon] || Calculator;
+                const isFavorite = favoriteUnits.includes(unit.slug);
+                const totalExercises = unit.chapters.reduce(
+                  (a, c) => a + c.exercises.length,
+                  0
+                );
+                return (
+                  <Card
+                    key={unit.slug}
+                    className="cursor-pointer hover:shadow-md transition-all"
+                    onClick={() => onSelectUnit(unit.slug)}
+                  >
+                    <CardContent className="pt-4">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-12 h-12 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+                          style={{ background: unit.color }}
+                        >
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <Badge variant="outline" className="text-xs">
+                              وحدة {unit.order}
+                            </Badge>
+                            <Badge variant="ghost" className="text-xs">
+                              {streamLabels[unit.stream]}
+                            </Badge>
+                            <Badge
+                              className={`text-xs ${info.badgeColor} border`}
+                            >
+                              {info.title}
+                            </Badge>
+                            {isFavorite && (
+                              <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            )}
+                          </div>
+                          <h3 className="font-bold mb-1">{unit.title}</h3>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {unit.description}
+                          </p>
+                          <div className="flex gap-3 mt-2 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <BookOpen className="w-3 h-3" />
+                              {unit.chapters.length} فصول
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calculator className="w-3 h-3" />
+                              {totalExercises} تمرين
+                            </span>
+                          </div>
+                        </div>
+                        <ChevronLeft className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* رسالة بيداغوجية */}
+      <Card className="bg-gradient-to-l from-primary/5 to-accent/5 border-r-4 border-primary">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <img
+              src="/teachers/adli-asad.jpg"
+              alt="الأستاذ عدلي أسعد"
+              className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
+            />
+            <div>
+              <div className="font-bold text-primary mb-1">
+                كلمة بيداغوجية من الأستاذ عدلي أسعد
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                الفصل الدراسي ليس مجرد فترة زمنية — هو رحلة تعليمية كاملة. كل فصل
+                يبني على ما قبله ويمهد لما بعده. ابدأ بالفصل الأول وأتقن أساسياته
+                قبل الانتقال. لا تقفز بين الفصول — الترتيب الصحيح هو سر التفوق.
+                ومن يُتقن فصله الأول، يجد الفصل الثاني سهلاً. ومن يتقن الثاني،
+                يجد الثالث ممتعاً. هكذا تُبنى النجاحات!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* دعوة لعرض المنهاج الكامل */}
+      <div className="text-center pt-4">
+        <Button variant="outline" onClick={onNavigateCurriculum} className="gap-2">
+          <Calculator className="w-4 h-4" />
+          عرض المنهاج الكامل (كل الوحدات)
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 // ===================================================
 
 function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void }) {
   const [filter, setFilter] = React.useState<"ALL" | "MATHEMATICS" | "EXPERIMENTAL_SCIENCES" | "TECHNICAL_MATH">("ALL");
+  const [trimesterFilter, setTrimesterFilter] = React.useState<"ALL" | 1 | 2 | 3>("ALL");
   const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
   const toggleFavorite = useStudentStore((s) => s.toggleFavorite);
 
   const filteredUnits = curriculum.filter(
-    (u) => filter === "ALL" || u.stream === filter || u.stream === "ALL"
+    (u) => {
+      const streamOK = filter === "ALL" || u.stream === filter || u.stream === "ALL";
+      const trimesterOK = trimesterFilter === "ALL" || u.trimester === trimesterFilter;
+      return streamOK && trimesterOK;
+    }
   );
+
+  const trimesterBadge: Record<1 | 2 | 3, string> = {
+    1: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    2: "bg-amber-100 text-amber-800 border-amber-300",
+    3: "bg-blue-100 text-blue-800 border-blue-300",
+  };
 
   return (
     <div className="space-y-6">
@@ -773,35 +1122,74 @@ function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void
       </div>
 
       {/* مرشحات الشعب */}
-      <div className="flex flex-wrap gap-2 justify-center">
-        <Button
-          variant={filter === "ALL" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("ALL")}
-        >
-          كل الوحدات
-        </Button>
-        <Button
-          variant={filter === "EXPERIMENTAL_SCIENCES" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("EXPERIMENTAL_SCIENCES")}
-        >
-          علوم تجريبية
-        </Button>
-        <Button
-          variant={filter === "MATHEMATICS" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("MATHEMATICS")}
-        >
-          رياضيات
-        </Button>
-        <Button
-          variant={filter === "TECHNICAL_MATH" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setFilter("TECHNICAL_MATH")}
-        >
-          تقني رياضي
-        </Button>
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-2 justify-center">
+          <span className="text-sm font-bold self-center ml-2">الشعبة:</span>
+          <Button
+            variant={filter === "ALL" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("ALL")}
+          >
+            كل الوحدات
+          </Button>
+          <Button
+            variant={filter === "EXPERIMENTAL_SCIENCES" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("EXPERIMENTAL_SCIENCES")}
+          >
+            علوم تجريبية
+          </Button>
+          <Button
+            variant={filter === "MATHEMATICS" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("MATHEMATICS")}
+          >
+            رياضيات
+          </Button>
+          <Button
+            variant={filter === "TECHNICAL_MATH" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("TECHNICAL_MATH")}
+          >
+            تقني رياضي
+          </Button>
+        </div>
+
+        {/* مرشح الفصل */}
+        <div className="flex flex-wrap gap-2 justify-center">
+          <span className="text-sm font-bold self-center ml-2">الفصل الدراسي:</span>
+          <Button
+            variant={trimesterFilter === "ALL" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setTrimesterFilter("ALL")}
+          >
+            كل الفصول
+          </Button>
+          <Button
+            variant={trimesterFilter === 1 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setTrimesterFilter(1)}
+            className={trimesterFilter === 1 ? "bg-emerald-600" : ""}
+          >
+            الفصل الأول
+          </Button>
+          <Button
+            variant={trimesterFilter === 2 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setTrimesterFilter(2)}
+            className={trimesterFilter === 2 ? "bg-amber-700" : ""}
+          >
+            الفصل الثاني
+          </Button>
+          <Button
+            variant={trimesterFilter === 3 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setTrimesterFilter(3)}
+            className={trimesterFilter === 3 ? "bg-blue-700" : ""}
+          >
+            الفصل الثالث
+          </Button>
+        </div>
       </div>
 
       {/* قائمة الوحدات */}
@@ -833,6 +1221,10 @@ function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <Badge variant="outline">وحدة {unit.order}</Badge>
                       <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+                      <Badge className={`${trimesterBadge[unit.trimester]} border`}>
+                        <Calendar className="w-3 h-3 ml-1" />
+                        الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
+                      </Badge>
                     </div>
                     <h3 className="text-xl font-bold mb-2">{unit.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-2">
@@ -917,6 +1309,18 @@ function UnitView({ unit, onBack }: { unit: any; onBack: () => void }) {
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <Badge variant="outline">وحدة {unit.order}</Badge>
                   <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+                  <Badge
+                    className={`${
+                      unit.trimester === 1
+                        ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                        : unit.trimester === 2
+                        ? "bg-amber-100 text-amber-800 border-amber-300"
+                        : "bg-blue-100 text-blue-800 border-blue-300"
+                    } border`}
+                  >
+                    <Calendar className="w-3 h-3 ml-1" />
+                    الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
+                  </Badge>
                 </div>
                 <h1 className="text-3xl font-bold mb-2">{unit.title}</h1>
                 <p className="text-muted-foreground leading-relaxed">
