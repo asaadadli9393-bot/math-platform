@@ -1883,25 +1883,28 @@ import {
   extraExercisesByChapter,
   extraChaptersByUnit,
 } from "./curriculum-extra";
+import { bankExercisesByChapter } from "./banks-integration";
 
 // دمج المحتوى الإضافي في الفصول الموجودة
 function mergeChapter(chapter: ChapterSeed): ChapterSeed {
   const slug = chapter.slug;
   const extraLessons = extraLessonsByChapter[slug] || [];
   const extraExercises = extraExercisesByChapter[slug] || [];
+  const bankExercises = bankExercisesByChapter[slug] || [];
   return {
     ...chapter,
     lessons: [...chapter.lessons, ...extraLessons],
-    exercises: [...chapter.exercises, ...extraExercises],
+    exercises: [...chapter.exercises, ...extraExercises, ...bankExercises],
   };
 }
 
 // دمج الفصول الإضافية في الوحدات
 function mergeUnit(unit: UnitSeed): UnitSeed {
   const extraChapters = extraChaptersByUnit[unit.slug] || [];
+  // تطبيق mergeChapter على كل الفصول (الموجودة والإضافية) لدمج بنوك التمارين
   return {
     ...unit,
-    chapters: [...unit.chapters.map(mergeChapter), ...extraChapters],
+    chapters: [...unit.chapters.map(mergeChapter), ...extraChapters.map(mergeChapter)],
   };
 }
 
