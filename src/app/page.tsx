@@ -37,6 +37,8 @@ import { StudentDashboard } from "@/components/student-dashboard";
 import { ParentPortal } from "@/components/parent-portal";
 import { curriculum, getCurriculumStats } from "@/data/curriculum";
 import { quizzes } from "@/data/quizzes";
+import { bacExams, getBacExamsStats, streamLabelsBac, type BacStream } from "@/data/bac-exams";
+import { BacExamCard } from "@/components/bac-exam-card";
 import {
   difficultyLabels,
   difficultyColors,
@@ -71,6 +73,10 @@ import {
   MapPin,
   Quote,
   Eye,
+  FileText,
+  Trophy,
+  Clock,
+  Calendar,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -86,7 +92,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "curriculum" | "unit" | "quiz" | "dashboard" | "parent" | "about";
+type MainView = "home" | "curriculum" | "unit" | "quiz" | "exams" | "dashboard" | "parent" | "about";
 
 export default function HomePage() {
   const [view, setView] = React.useState<MainView>("home");
@@ -163,6 +169,10 @@ export default function HomePage() {
                 <Calculator className="w-4 h-4 ml-2" />
                 المنهاج
               </NavButton>
+              <NavButton active={view === "exams"} onClick={() => navigateTo("exams")}>
+                <Trophy className="w-4 h-4 ml-2" />
+                المواضيع الشاملة
+              </NavButton>
               <NavButton active={view === "dashboard"} onClick={() => navigateTo("dashboard")}>
                 <LayoutDashboard className="w-4 h-4 ml-2" />
                 لوحتي
@@ -194,6 +204,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("curriculum")}>
                     <Calculator className="w-4 h-4 ml-2" /> المنهاج
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("exams")}>
+                    <Trophy className="w-4 h-4 ml-2" /> المواضيع الشاملة
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("dashboard")}>
                     <LayoutDashboard className="w-4 h-4 ml-2" /> لوحة التحكم
@@ -230,6 +243,8 @@ export default function HomePage() {
         {view === "quiz" && selectedQuiz && (
           <QuizSelectionView onSelectQuiz={(id) => navigateTo("quiz", undefined, id)} />
         )}
+
+        {view === "exams" && <ExamsView />}
 
         {view === "dashboard" && <StudentDashboard />}
 
@@ -409,6 +424,15 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
             >
               <BookOpen className="w-5 h-5" />
               ابدأ التعلّم الآن
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => onNavigate("exams")}
+              className="bg-accent text-accent-foreground border-accent hover:bg-accent/90 gap-2"
+            >
+              <Trophy className="w-5 h-5" />
+              مواضيع البكالوريا السابقة
             </Button>
             <Button
               size="lg"
@@ -1088,7 +1112,198 @@ function QuizSelectionView({ onSelectQuiz }: { onSelectQuiz: (id: string) => voi
 }
 
 // ===================================================
-//  عرض عن المنصة
+//  عرض المواضيع الشاملة والبكالوريات السابقة
+// ===================================================
+
+function ExamsView() {
+  const [filterStream, setFilterStream] = React.useState<"ALL" | BacStream>("ALL");
+  const [filterYear, setFilterYear] = React.useState<number | "ALL">("ALL");
+  const stats = getBacExamsStats();
+
+  const filteredExams = bacExams.filter((e) => {
+    if (filterStream !== "ALL" && e.stream !== filterStream && e.stream !== "ALL") return false;
+    if (filterYear !== "ALL" && e.year !== filterYear) return false;
+    return true;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+          <Trophy className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          المواضيع الشاملة والبكالوريات السابقة
+        </h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          مواضيع بكالوريا فعلية من السنوات السابقة لكل الشعب العلمية،
+          مع الحلول النموذجية المفصلة خطوة بخطوة بمنهجية رسمية، بإشراف الأستاذ عدلي أسعد.
+        </p>
+      </div>
+
+      {/* إحصائيات سريعة */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <FileText className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-xs text-muted-foreground">موضوع بكالوريا</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Calendar className="w-6 h-6 text-accent mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.years.length}</div>
+            <div className="text-xs text-muted-foreground">سنوات (من {Math.min(...stats.years)} إلى {Math.max(...stats.years)})</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <BookOpen className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.totalQuestions}</div>
+            <div className="text-xs text-muted-foreground">سؤال مع حل نموذجي</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Award className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{stats.total * 20}</div>
+            <div className="text-xs text-muted-foreground">نقطة (20 لكل موضوع)</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* المرشحات */}
+      <Card>
+        <CardContent className="pt-4">
+          <div className="flex flex-wrap gap-3 items-center justify-between">
+            <div>
+              <div className="text-sm font-bold mb-2">تصفية حسب الشعبة:</div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  variant={filterStream === "ALL" ? "default" : "outline"}
+                  onClick={() => setFilterStream("ALL")}
+                >
+                  كل الشعب
+                </Button>
+                <Button
+                  size="sm"
+                  variant={filterStream === "EXPERIMENTAL_SCIENCES" ? "default" : "outline"}
+                  onClick={() => setFilterStream("EXPERIMENTAL_SCIENCES")}
+                >
+                  علوم تجريبية
+                </Button>
+                <Button
+                  size="sm"
+                  variant={filterStream === "MATHEMATICS" ? "default" : "outline"}
+                  onClick={() => setFilterStream("MATHEMATICS")}
+                >
+                  رياضيات
+                </Button>
+                <Button
+                  size="sm"
+                  variant={filterStream === "TECHNICAL_MATH" ? "default" : "outline"}
+                  onClick={() => setFilterStream("TECHNICAL_MATH")}
+                >
+                  تقني رياضي
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-sm font-bold mb-2">تصفية حسب السنة:</div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  variant={filterYear === "ALL" ? "default" : "outline"}
+                  onClick={() => setFilterYear("ALL")}
+                >
+                  كل السنوات
+                </Button>
+                {stats.years.map((year) => (
+                  <Button
+                    key={year}
+                    size="sm"
+                    variant={filterYear === year ? "default" : "outline"}
+                    onClick={() => setFilterYear(year)}
+                  >
+                    {year}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-3 text-sm text-muted-foreground">
+            عرض <strong className="text-primary">{filteredExams.length}</strong> من أصل <strong>{stats.total}</strong> موضوع
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* رسالة الأستاذ */}
+      <Card className="bg-gradient-to-l from-primary/5 to-accent/5 border-r-4 border-primary">
+        <CardContent className="pt-4">
+          <div className="flex items-start gap-3">
+            <img
+              src="/teachers/adli-asad.jpg"
+              alt="الأستاذ عدلي أسعد"
+              className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
+            />
+            <div>
+              <div className="font-bold text-primary mb-1">رسالة من الأستاذ عدلي أسعد</div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                أحبائي الطلاب، هذه المواضيع ليست مجرد امتحانات، بل هي خريطة لطريق النجاح.
+                كل موضوع هنا يحمل توجيهات وحلولاً نموذجية. حاولوا أولاً حل الموضوع بأنفسكم
+                قبل النظر إلى الحل — هذا هو سر التفوق. أعرفكم بأن البكالوريا ليست عدواً،
+                بل فرصة لإثبات قدراتكم. أنا معكم في كل خطوة!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* قائمة المواضيع */}
+      <div className="space-y-4">
+        {filteredExams.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <FileText className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>لا توجد مواضيع مطابقة للمرشحات المختارة.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredExams
+            .slice()
+            .sort((a, b) => b.year - a.year)
+            .map((exam) => <BacExamCard key={exam.id} exam={exam} />)
+        )}
+      </div>
+
+      {/* نصيحة في النهاية */}
+      <Card className="bg-accent/10 border-r-4 border-accent">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <Target className="w-8 h-8 text-accent flex-shrink-0" />
+            <div>
+              <h3 className="font-bold mb-2">نصيحة الأستاذ للتعامل مع المواضيع</h3>
+              <ul className="text-sm space-y-2 text-muted-foreground pr-6 list-disc leading-relaxed">
+                <li>اقرأ الموضوع كاملاً قبل البدء في الحل — هذا يفتح لك الصورة العامة.</li>
+                <li>خصص وقتاً لكل جزء (مثلاً: نصف ساعة لكل 5 نقاط).</li>
+                <li>ابدأ دائماً بالأسئلة التي تجدها أسهل — هذا يبني الثقة.</li>
+                <li>لا تترك سؤالاً فارغاً — حتى محاولة جزئية تستحق نقاطاً.</li>
+                <li>راجع الحل النموذجي بعد كل تمرين لتفهم المنهجية الرسمية.</li>
+                <li>كرر المواضيع القديمة — البكالوريا يعيد نفس الأنماط!</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // ===================================================
 
 function AboutView() {
