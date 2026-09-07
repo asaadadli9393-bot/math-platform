@@ -57,6 +57,12 @@ import {
   type DigitalProduct,
 } from "@/data/monetization";
 import {
+  getLessonSummary,
+  getVideoSimulation,
+  getLessonEnhancementsStats,
+} from "@/data/lesson-enhancements";
+import { VideoSimulationPlayer } from "@/components/video-simulation-player";
+import {
   difficultyLabels,
   difficultyColors,
   streamLabels,
@@ -1188,6 +1194,110 @@ function TrimestersView({
 }
 
 // ===================================================
+//  بطاقة الدرس (LessonCard) — مع الملخص والفيديو
+// ===================================================
+
+function LessonCard({ lesson }: { lesson: any }) {
+  const [showVideo, setShowVideo] = React.useState(false);
+  const [showSummary, setShowSummary] = React.useState(false);
+
+  // الحصول على الفيديو والملخص من lesson-enhancements
+  const video = React.useMemo(() => getVideoSimulation(lesson.slug), [lesson.slug]);
+  const summary = React.useMemo(() => getLessonSummary(lesson.slug), [lesson.slug]);
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1">
+            <CardTitle className="text-base">{lesson.title}</CardTitle>
+            <CardDescription className="text-xs flex items-center gap-3">
+              <span>⏱️ {lesson.durationMin} دقيقة</span>
+              {video && (
+                <Badge className="bg-primary/10 text-primary border border-primary/30">
+                  <Sparkles className="w-3 h-3 ml-1" />
+                  فيديو متاح
+                </Badge>
+              )}
+              {summary && (
+                <Badge variant="outline" className="text-xs">
+                  <CheckCircle2 className="w-3 h-3 ml-1" />
+                  ملخص نهائي
+                </Badge>
+              )}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* محتوى الدرس */}
+        <MarkdownMath content={lesson.content} />
+
+        {/* زر الفيديو المحاكاة */}
+        {video && (
+          <div className="mt-4 pt-3 border-t border-border">
+            <Button
+              variant="default"
+              className="w-full gap-2 bg-gradient-to-l from-primary to-accent"
+              onClick={() => setShowVideo(!showVideo)}
+            >
+              <Sparkles className="w-4 h-4" />
+              {showVideo ? "إخفاء الفيديو المحاكاة" : "▶ مشاهدة الفيديو المحاكاة"}
+            </Button>
+            {showVideo && (
+              <div className="mt-4">
+                <VideoSimulationPlayer video={video} lessonTitle={lesson.title} />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* النقاط الأساسية */}
+        {lesson.keyPoints && lesson.keyPoints.length > 0 && (
+          <div className="mt-4 pt-3 border-t border-border">
+            <div className="font-bold text-sm mb-2 flex items-center gap-2">
+              <Target className="w-4 h-4 text-primary" />
+              النقاط الأساسية
+            </div>
+            <ul className="space-y-1 text-sm">
+              {lesson.keyPoints.map((kp: string, i: number) => (
+                <li key={i} className="flex items-start gap-2">
+                  <ChevronLeft className="w-3 h-3 mt-1 text-primary flex-shrink-0" />
+                  <span>{kp}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* الملخص النهائي */}
+        {summary && (
+          <div className="mt-4 pt-3 border-t border-border">
+            <Button
+              variant="outline"
+              className="w-full gap-2 bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-950/40"
+              onClick={() => setShowSummary(!showSummary)}
+            >
+              <Sparkles className="w-4 h-4" />
+              {showSummary ? "إخفاء الملخص النهائي" : "📋 عرض الملخص النهائي"}
+            </Button>
+            {showSummary && (
+              <div className="mt-3 bg-gradient-to-l from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 border-r-4 border-amber-500 rounded-md p-4">
+                <div className="font-bold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+                  <Award className="w-4 h-4" />
+                  الملخص النهائي للدرس
+                </div>
+                <MarkdownMath content={summary} />
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+// ===================================================
 
 function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void }) {
   const [filter, setFilter] = React.useState<"ALL" | "MATHEMATICS" | "EXPERIMENTAL_SCIENCES" | "TECHNICAL_MATH">("ALL");
@@ -1465,33 +1575,7 @@ function UnitView({ unit, onBack }: { unit: any; onBack: () => void }) {
               <div className="space-y-3">
                 <h3 className="font-bold text-lg academic-divider">الدروس</h3>
                 {chapter.lessons.map((lesson: any) => (
-                  <Card key={lesson.slug}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">{lesson.title}</CardTitle>
-                      <CardDescription className="text-xs">
-                        ⏱️ {lesson.durationMin} دقيقة
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <MarkdownMath content={lesson.content} />
-                      {lesson.keyPoints && lesson.keyPoints.length > 0 && (
-                        <div className="mt-4 pt-3 border-t border-border">
-                          <div className="font-bold text-sm mb-2 flex items-center gap-2">
-                            <Target className="w-4 h-4 text-primary" />
-                            النقاط الأساسية
-                          </div>
-                          <ul className="space-y-1 text-sm">
-                            {lesson.keyPoints.map((kp: string, i: number) => (
-                              <li key={i} className="flex items-start gap-2">
-                                <ChevronLeft className="w-3 h-3 mt-1 text-primary flex-shrink-0" />
-                                <span>{kp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                  <LessonCard key={lesson.slug} lesson={lesson} />
                 ))}
               </div>
 

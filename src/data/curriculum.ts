@@ -18,6 +18,25 @@ export interface LessonSeed {
   content: string;
   durationMin: number;
   keyPoints: string[];
+  summary?: string;       // الملخص النهائي للدرس
+  videoSimulation?: VideoSimulation;  // محاكاة فيديو للدرس (للدروس الصعبة)
+}
+
+// محاكاة فيديو تعليمي — عرض متحرك خطوة بخطوة
+export interface VideoSimulation {
+  duration: number;          // بالثواني
+  difficulty: "easy" | "medium" | "hard";
+  scenes: VideoScene[];
+}
+
+export interface VideoScene {
+  id: string;
+  timeStart: number;         // بالثواني
+  title: string;
+  narration: string;         // النص المسموع (يظهر كـ subtitle)
+  content: string;           // المحتوى المعروض (Markdown + LaTeX)
+  highlight?: string;         // ما يجب إبرازه
+  animation?: "fade" | "slide" | "zoom" | "highlight" | "draw";
 }
 
 export interface ExerciseSeed {
