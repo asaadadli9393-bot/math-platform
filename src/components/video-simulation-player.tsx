@@ -22,12 +22,130 @@ import {
   Mic,
   MicOff,
   Loader2,
+  Eye,
+  Type,
 } from "lucide-react";
 
 interface VideoSimulationPlayerProps {
   video: VideoSimulation;
   lessonTitle: string;
 }
+
+// ============================================================
+//  hook للسرد الصوتي العربي (Web Speech API + بحث مكثف)
+// ============================================================
+
+function useArabicSpeech() {
+  const [supported, setSupported] = React.useState(false);
+  const [arabicVoice, setArabicVoice] = React.useState<SpeechSynthesisVoice | null>(null);
+  const [speaking, setSpeaking] = React.useState(false);
+  const [searching, setSearching] = React.useState(true);
+  const [allVoices, setAllVoices] = React.useState<SpeechSynthesisVoice[]>([]);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setSearching(false);
+      return;
+    }
+
+    setSupported(true);
+
+    const findArabicVoice = (voices: SpeechSynthesisVoice[]) => {
+      // البحث بأولوية: العربية السعودية > المصرية > الإماراتية > أي عربية
+      const priorities = ["ar-SA", "ar-EG", "ar-AE", "ar", "Arabic"];
+      for (const p of priorities) {
+        const v = voices.find(
+          (v) => v.lang.startsWith(p) || v.name.includes("Arabic") || v.name.includes("العربية")
+        );
+        if (v) return v;
+      }
+      // البحث بأي لغة تحتوي "ar"
+      return voices.find((v) => v.lang.toLowerCase().startsWith("ar")) || null;
+    };
+
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) return; // سيتوقف البحث بعد 5 ثوانٍ
+
+      setAllVoices(voices);
+      const ar = findArabicVoice(voices);
+      setArabicVoice(ar);
+      setSearching(false);
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    // إعادة المحاولة (بعض المتصفحات تأخذ وقتاً لتحميل الأصوات)
+    const retryInterval = setInterval(() => {
+      if (!arabicVoice) loadVoices();
+    }, 500);
+
+    // إيقاف البحث بعد 5 ثوانٍ مهما كانت النتيجة
+    const stopSearchTimeout = setTimeout(() => {
+      clearInterval(retryInterval);
+      setSearching(false);
+      // إذا لم نجد أصواتاً أصلاً، نضع supported = false
+      if (window.speechSynthesis.getVoices().length === 0) {
+        setSupported(false);
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(retryInterval);
+      clearTimeout(stopSearchTimeout);
+      window.speechSynthesis.cancel();
+    };
+  }, []);
+
+  const speak = React.useCallback(
+    (text: string, options?: { rate?: number; voice?: SpeechSynthesisVoice }) => {
+      if (!supported || !text) return;
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ar-SA";
+
+      const voice = options?.voice || arabicVoice;
+      if (voice) {
+        utterance.voice = voice;
+      }
+      utterance.rate = options?.rate ?? 1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      utterance.onstart = () => setSpeaking(true);
+      utterance.onend = () => setSpeaking(false);
+      utterance.onerror = () => setSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    },
+    [supported, arabicVoice]
+  );
+
+  const stop = React.useCallback(() => {
+    if (!supported) return;
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }, [supported]);
+
+  const pause = React.useCallback(() => {
+    if (!supported) return;
+    window.speechSynthesis.pause();
+  }, [supported]);
+
+  const resume = React.useCallback(() => {
+    if (!supported) return;
+    window.speechSynthesis.resume();
+  }, [supported]);
+
+  return { supported, arabicVoice, speaking, searching, allVoices, speak, stop, pause, resume };
+}
+
+// ============================================================
+//  مكوّن الفيديو المحاكاة
+// ============================================================
 
 export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPlayerProps) {
   const [currentTime, setCurrentTime] = React.useState(0);
@@ -36,91 +154,25 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
   const [narrationEnabled, setNarrationEnabled] = React.useState(true);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [playbackRate, setPlaybackRate] = React.useState(1);
-  const [audioLoading, setAudioLoading] = React.useState(false);
-  const [audioError, setAudioError] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const timerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
-  const audioCacheRef = React.useRef<Map<string, string>>(new Map());
-  const currentSceneRef = React.useRef(0);
 
+  const speech = useArabicSpeech();
   const currentScene = video.scenes[currentSceneIdx];
 
-  // ============================================================
-  //  توليد وتشغيل الصوت عبر API السحابي
-  // ============================================================
+  // هل يوجد صوت عربي متاح؟
+  const hasArabicAudio = speech.supported && !!speech.arabicVoice;
 
-  const generateAndPlayAudio = React.useCallback(
-    async (scene: VideoScene, rate: number) => {
-      if (!narrationEnabled || !scene.narration) return;
+  // وضع "السرد المرئي" إذا لم يوجد صوت عربي
+  const visualNarrationMode = narrationEnabled && !hasArabicAudio;
 
-      // تحقق من الكاش
-      const cacheKey = `${scene.id}-${rate}`;
-      if (audioCacheRef.current.has(cacheKey)) {
-        playAudio(audioCacheRef.current.get(cacheKey)!, rate);
-        return;
-      }
-
-      setAudioLoading(true);
-      setAudioError(false);
-
-      try {
-        const response = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: scene.narration, speed: rate }),
-        });
-
-        if (!response.ok) throw new Error("TTS failed");
-
-        const blob = await response.blob();
-        const audioUrl = URL.createObjectURL(blob);
-
-        // حفظ في الكاش
-        audioCacheRef.current.set(cacheKey, audioUrl);
-
-        // تشغيل
-        playAudio(audioUrl, rate);
-      } catch (err) {
-        console.error("TTS Error:", err);
-        setAudioError(true);
-      } finally {
-        setAudioLoading(false);
-      }
-    },
-    [narrationEnabled]
-  );
-
-  const playAudio = (url: string, rate: number) => {
-    // إيقاف الصوت السابق
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-
-    // إنشاء عنصر صوتي جديد
-    const audio = new Audio(url);
-    audio.playbackRate = rate;
-    audio.volume = 1;
-    audioRef.current = audio;
-    audio.play().catch((e) => console.error("Audio play error:", e));
-  };
-
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  };
-
-  // تشغيل السرد عند تغير المشهد
+  // تشغيل السرد الصوتي عند تغير المشهد
   React.useEffect(() => {
-    currentSceneRef.current = currentSceneIdx;
-    if (narrationEnabled && currentScene?.narration) {
-      generateAndPlayAudio(currentScene, playbackRate);
+    if (narrationEnabled && hasArabicAudio && currentScene?.narration) {
+      speech.speak(currentScene.narration, { rate: playbackRate });
     }
-  }, [currentSceneIdx, narrationEnabled, currentScene, playbackRate, generateAndPlayAudio]);
+  }, [currentSceneIdx, narrationEnabled, hasArabicAudio, currentScene, playbackRate, speech]);
 
   // التشغيل التلقائي للفيديو
   React.useEffect(() => {
@@ -129,7 +181,7 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
         setCurrentTime((t) => {
           if (t >= video.duration) {
             setIsPlaying(false);
-            stopAudio();
+            speech.stop();
             return video.duration;
           }
           return t + 0.1 * playbackRate;
@@ -141,17 +193,14 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPlaying, video.duration, playbackRate]);
+  }, [isPlaying, video.duration, playbackRate, speech]);
 
   // تنظيف عند الخروج
   React.useEffect(() => {
     return () => {
-      stopAudio();
-      // تنظيف الكاش
-      audioCacheRef.current.forEach((url) => URL.revokeObjectURL(url));
-      audioCacheRef.current.clear();
+      speech.stop();
     };
-  }, []);
+  }, [speech]);
 
   // ============================================================
   //  أدوات التحكم
@@ -162,11 +211,16 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
       setCurrentTime(0);
       setCurrentSceneIdx(0);
     }
+    if (isPlaying) {
+      speech.pause();
+    } else {
+      speech.resume();
+    }
     setIsPlaying(!isPlaying);
   };
 
   const handleSkipForward = () => {
-    stopAudio();
+    speech.stop();
     if (currentSceneIdx < video.scenes.length - 1) {
       const next = video.scenes[currentSceneIdx + 1];
       setCurrentTime(next.timeStart);
@@ -175,7 +229,7 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
   };
 
   const handleSkipBack = () => {
-    stopAudio();
+    speech.stop();
     if (currentSceneIdx > 0) {
       const prev = video.scenes[currentSceneIdx - 1];
       setCurrentTime(prev.timeStart);
@@ -187,14 +241,14 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
   };
 
   const handleReset = () => {
-    stopAudio();
+    speech.stop();
     setIsPlaying(false);
     setCurrentTime(0);
     setCurrentSceneIdx(0);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    stopAudio();
+    speech.stop();
     const newTime = parseFloat(e.target.value);
     setCurrentTime(newTime);
     setIsPlaying(false);
@@ -212,9 +266,9 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
 
   const toggleNarration = () => {
     if (narrationEnabled) {
-      stopAudio();
-    } else if (currentScene?.narration) {
-      generateAndPlayAudio(currentScene, playbackRate);
+      speech.stop();
+    } else if (hasArabicAudio && currentScene?.narration) {
+      speech.speak(currentScene.narration, { rate: playbackRate });
     }
     setNarrationEnabled(!narrationEnabled);
   };
@@ -247,23 +301,29 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
               فيديو محاكاة — {lessonTitle}
             </CardTitle>
             <CardDescription className="text-primary-foreground/80 mt-1">
-              شرح تفاعلي متحرك خطوة بخطوة مع سرد صوتي
+              شرح تفاعلي متحرك خطوة بخطوة
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
             <Badge className={`${difficultyColors[video.difficulty]} border`}>
               {difficultyLabels[video.difficulty]}
             </Badge>
-            {narrationEnabled && (
+            {narrationEnabled && hasArabicAudio && (
               <Badge className="bg-emerald-500 text-white">
                 <Mic className="w-3 h-3 ml-1" />
-                سرد صوتي
+                سرد صوتي عربي
               </Badge>
             )}
-            {audioLoading && (
-              <Badge className="bg-amber-500 text-white">
-                <Loader2 className="w-3 h-3 ml-1 animate-spin" />
-                تحميل الصوت...
+            {narrationEnabled && visualNarrationMode && (
+              <Badge className="bg-blue-500 text-white">
+                <Type className="w-3 h-3 ml-1" />
+                سرد مرئي
+              </Badge>
+            )}
+            {speech.speaking && (
+              <Badge className="bg-amber-500 text-white animate-pulse">
+                <Mic className="w-3 h-3 ml-1" />
+                ينطق...
               </Badge>
             )}
           </div>
@@ -320,10 +380,22 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
           )}
         </div>
 
-        {/* النص المسموع */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-md text-sm max-w-md text-center">
-          {currentScene.narration}
-        </div>
+        {/* السرد — مرئي أو صوتي */}
+        {narrationEnabled && currentScene.narration && (
+          <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-md text-sm max-w-md text-center ${
+            visualNarrationMode
+              ? "bg-blue-600/80 text-white border border-blue-300"
+              : "bg-black/70 text-white"
+          }`}>
+            {visualNarrationMode && (
+              <div className="flex items-center justify-center gap-1 mb-1 text-xs text-blue-200">
+                <Eye className="w-3 h-3" />
+                السرد المرئي
+              </div>
+            )}
+            {currentScene.narration}
+          </div>
+        )}
       </div>
 
       {/* أدوات التحكم */}
@@ -374,18 +446,18 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
             <SkipForward className="w-4 h-4" />
           </Button>
 
-          {/* زر السرد الصوتي */}
+          {/* زر السرد */}
           <Button
             variant={narrationEnabled ? "default" : "outline"}
             size="icon"
             onClick={toggleNarration}
-            title={narrationEnabled ? "إيقاف السرد الصوتي" : "تشغيل السرد الصوتي"}
+            title={narrationEnabled ? "إيقاف السرد" : "تشغيل السرد"}
             className={narrationEnabled ? "bg-emerald-600 hover:bg-emerald-700" : ""}
           >
             {narrationEnabled ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
           </Button>
 
-          <Button variant="ghost" size="icon" title="النص مرئي دائماً">
+          <Button variant="ghost" size="icon" title="النص مرئي">
             <Volume2 className="w-4 h-4" />
           </Button>
         </div>
@@ -402,8 +474,8 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
               className="h-7 px-2 text-xs"
               onClick={() => {
                 setPlaybackRate(rate);
-                if (narrationEnabled && currentScene?.narration) {
-                  generateAndPlayAudio(currentScene, rate);
+                if (narrationEnabled && hasArabicAudio && currentScene?.narration) {
+                  speech.speak(currentScene.narration, { rate });
                 }
               }}
             >
@@ -412,11 +484,30 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
           ))}
         </div>
 
-        {/* حالة الصوت */}
-        {audioError && (
+        {/* معلومات عن الصوت */}
+        {narrationEnabled && speech.searching && (
           <div className="text-xs text-amber-600 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/20 p-2 rounded">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            جارٍ البحث عن صوت عربي على جهازك...
+          </div>
+        )}
+        {narrationEnabled && !speech.searching && !hasArabicAudio && speech.supported && (
+          <div className="text-xs text-blue-600 flex items-center gap-1 bg-blue-50 dark:bg-blue-950/20 p-2 rounded">
+            <Type className="w-3 h-3" />
+            لا يوجد صوت عربي على جهازك. تم تفعيل <strong>السرد المرئي</strong> تلقائياً —
+            النص يظهر بوضوح في الأسفل. لتشغيل الصوت، ثبّت صوتاً عربياً من إعدادات جهازك.
+          </div>
+        )}
+        {narrationEnabled && !speech.supported && (
+          <div className="text-xs text-muted-foreground flex items-center gap-1 bg-muted p-2 rounded">
             <MicOff className="w-3 h-3" />
-            تعذّر توليد الصوت. النص المسموع مرئي في الأسفل.
+            متصفحك لا يدعم السرد الصوتي. النص يظهر في الأسفل كافٍ للفهم.
+          </div>
+        )}
+        {narrationEnabled && hasArabicAudio && speech.arabicVoice && (
+          <div className="text-xs text-emerald-600 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/20 p-2 rounded">
+            <Mic className="w-3 h-3" />
+            صوت عربي متاح: {speech.arabicVoice.name} ({speech.arabicVoice.lang})
           </div>
         )}
 
@@ -428,7 +519,7 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
               <button
                 key={scene.id}
                 onClick={() => {
-                  stopAudio();
+                  speech.stop();
                   setCurrentTime(scene.timeStart);
                   setCurrentSceneIdx(idx);
                   setIsPlaying(false);
