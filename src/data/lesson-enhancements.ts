@@ -8,6 +8,7 @@
 // ============================================================
 
 import type { LessonSeed, VideoSimulation } from "./curriculum";
+import { additionalVideoSimulations } from "./additional-video-simulations";
 
 // ============================================================
 //  الملخصات النهائية لكل درس (حسب slug)
@@ -1418,17 +1419,18 @@ export function getLessonSummary(slug: string): string | undefined {
   return lessonSummariesBySlug[slug];
 }
 
-// دالة للحصول على فيديو محاكاة لدرس
+// دالة للحصول على فيديو محاكاة لدرس (يدمج الفيديوهات الأصلية + الإضافية)
 export function getVideoSimulation(slug: string): VideoSimulation | undefined {
-  return videoSimulationsBySlug[slug];
+  return videoSimulationsBySlug[slug] || additionalVideoSimulations[slug];
 }
 
 // إحصائيات
 export function getLessonEnhancementsStats() {
+  const allVideos = { ...videoSimulationsBySlug, ...additionalVideoSimulations };
   return {
     lessonsWithSummary: Object.keys(lessonSummariesBySlug).length,
-    lessonsWithVideo: Object.keys(videoSimulationsBySlug).length,
-    totalVideoDuration: Object.values(videoSimulationsBySlug).reduce(
+    lessonsWithVideo: Object.keys(allVideos).length,
+    totalVideoDuration: Object.values(allVideos).reduce(
       (a, v) => a + v.duration,
       0
     ),
