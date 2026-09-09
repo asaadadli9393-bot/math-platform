@@ -51,7 +51,14 @@ export interface UserProfile {
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
   trialEndDate?: string;
-  ownedProducts?: string[];   // قائمة المنتجات الرقمية المُشتراة (slug)
+  ownedProducts?: string[];
+  // ✅ حقول الدفع والاشتراك
+  phone?: string;
+  email?: string;
+  pendingPaymentId?: string;
+  pendingTransactionRef?: string;
+  lastPaymentStatus?: "PENDING" | "VERIFIED" | "REJECTED" | "EXPIRED" | "CANCELLED";
+  lastPaymentCheckAt?: string;
 }
 
 interface StudentStore {
@@ -78,6 +85,10 @@ interface StudentStore {
   isSubscriptionActive: () => boolean;
   getSubscriptionTier: () => "FREE" | "FULL";
   isTrialActive: () => boolean;
+
+  // ✅ دوال الدفع
+  setPendingPayment: (paymentId: string, transactionRef: string) => void;
+  clearPendingPayment: () => void;
 
   // دوال المنتجات الرقمية
   purchaseProduct: (slug: string) => void;
@@ -220,6 +231,31 @@ export const useStudentStore = create<StudentStore>()(
         if (!profile?.trialEndDate) return false;
         return new Date(profile.trialEndDate) > new Date();
       },
+
+      // ✅ دوال الدفع
+      setPendingPayment: (paymentId, transactionRef) =>
+        set((state) => ({
+          profile: state.profile
+            ? {
+                ...state.profile,
+                pendingPaymentId: paymentId,
+                pendingTransactionRef: transactionRef,
+                lastPaymentStatus: "PENDING" as const,
+                lastPaymentCheckAt: new Date().toISOString(),
+              }
+            : state.profile,
+        })),
+
+      clearPendingPayment: () =>
+        set((state) => ({
+          profile: state.profile
+            ? {
+                ...state.profile,
+                pendingPaymentId: undefined,
+                pendingTransactionRef: undefined,
+              }
+            : state.profile,
+        })),
 
       // دوال المنتجات الرقمية
       purchaseProduct: (slug) =>
