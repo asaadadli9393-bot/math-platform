@@ -118,6 +118,8 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FunctionPlot } from "@/components/function-plot";
+import { AIAssistant } from "@/components/ai-assistant";
+import { premiumCourses } from "@/data/premium-courses";
 
 // خريطة الأيقونات
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -131,7 +133,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -290,6 +292,10 @@ export default function HomePage() {
                 <ShieldCheck className="w-4 h-4 ml-2" />
                 المشرف
               </NavButton>
+              <NavButton active={false} onClick={() => navigateTo("assistant")}>
+                <Sparkles className="w-4 h-4 ml-2" />
+                المساعد الذكي
+              </NavButton>
             </nav>
 
             {/* زر القائمة على الجوال */}
@@ -336,6 +342,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("function-plotter")}>
                     <LineChart className="w-4 h-4 ml-2" /> رسم الدوال
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("assistant")}>
+                    <Sparkles className="w-4 h-4 ml-2" /> المساعد الذكي
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("admin")}>
                     <ShieldCheck className="w-4 h-4 ml-2" /> المشرف
@@ -443,6 +452,10 @@ export default function HomePage() {
         )}
 
         {view === "function-plotter" && <FunctionPlotter />}
+
+        {view === "assistant" && (
+          isSubscribed ? <AIAssistant /> : <LockedContent feature="المساعد الذكي" onSubscribe={() => navigateTo("pricing")} />
+        )}
 
         {view === "parent" && <ParentPortal />}
 
@@ -1844,7 +1857,11 @@ function CoursesView({ onSelectCourse }: { onSelectCourse: (c: Course) => void }
   const [filterLevel, setFilterLevel] = React.useState<"ALL" | Course["level"]>("ALL");
   const stats = getCoursesStats();
 
-  const filteredCourses = courses.filter((c) => {
+  // ✅ دمج الدورات المميزة (Premium) مع الدورات المجانية
+  // الدورات المميزة تظهر أولاً في القائمة
+  const allCourses = [...premiumCourses, ...courses];
+
+  const filteredCourses = allCourses.filter((c) => {
     if (filterStream !== "ALL" && c.stream !== filterStream && c.stream !== "ALL") return false;
     if (filterLevel !== "ALL" && c.level !== filterLevel) return false;
     return true;

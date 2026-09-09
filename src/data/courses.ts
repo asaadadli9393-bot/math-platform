@@ -60,6 +60,8 @@ export interface Course {
   modules: CourseModule[];
   isPublished: boolean;
   createdAt: string;
+  isPremium?: boolean;           // ✅ دورة مدفوعة (مميزة)
+  pdfUrl?: string;              // ✅ رابط PDF للدورة المميزة
 }
 
 // ============================================================
