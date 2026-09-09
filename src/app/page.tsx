@@ -2371,7 +2371,7 @@ function PricingView({ onSelectPlan, onNavigateToDashboard }: { onSelectPlan: (p
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   const input = e.target as HTMLInputElement;
-                  if (input.value === "adli-asad-2024-math") {
+                  if (input.value === "adli2024") {
                     updateProfile({ role: "SUPERVISOR" });
                     toast({ title: "✅ تم تفعيل صلاحية المشرف", description: "أهلاً أستاذ! كل الدورات المميزة مفتوحة لك." });
                     onNavigateToDashboard();
@@ -2387,7 +2387,7 @@ function PricingView({ onSelectPlan, onNavigateToDashboard }: { onSelectPlan: (p
               className="gap-2 border-purple-500 text-purple-700"
               onClick={() => {
                 const input = document.getElementById("supervisor-key") as HTMLInputElement;
-                if (input && input.value === "adli-asad-2024-math") {
+                if (input && input.value === "adli2024") {
                   updateProfile({ role: "SUPERVISOR" });
                   toast({ title: "✅ تم تفعيل صلاحية المشرف", description: "أهلاً أستاذ! كل الدورات المميزة مفتوحة لك." });
                   onNavigateToDashboard();

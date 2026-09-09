@@ -13,7 +13,7 @@ import crypto from "node:crypto";
  * كلمة سر الإدارة المتوقعة (يجب أن تطابق ما يُرسل من زر الدخول).
  * لا تُكشف في العميل أبداً. تستعمل كمفتاح Bearer للطلبات المحمية.
  */
-export const ADMIN_KEY = "adli-asad-2024-math";
+export const ADMIN_KEY = "adli2024";
 
 /**
  * مقارنة ثابتة الزمن لتفادي هجمات التوقيت (timing attacks).

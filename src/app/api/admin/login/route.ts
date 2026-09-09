@@ -6,7 +6,7 @@
 //   - safeEqual (مقارنة ثابتة الزمن)
 //   - تأخير 200ms عند الفشل لتفادي brute force
 //   - يُرجع { success: true, token: password, message } عند النجاح
-//   - كلمة السر الافتراضية: adli-asad-2024-math
+//   - كلمة السر الافتراضية: adli2024
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 // كلمة السر الافتراضية للوحة الإدارة
-const DEFAULT_ADMIN_KEY = "adli-asad-2024-math";
+const DEFAULT_ADMIN_KEY = "adli2024";
 
 /**
  * مقارنة ثابتة الزمن لتفادي هجمات التوقيت (timing attacks).

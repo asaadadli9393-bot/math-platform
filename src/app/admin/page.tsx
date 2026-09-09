@@ -10,7 +10,7 @@
 //    * التحليلات  (AnalyticsTab)     : Recharts — AreaChart + PieChart + BarChart + 4 بطاقات
 //    * الإشعارات  (NotificationsTab) : قائمة + تعليم كمقروء
 //    * الإعدادات  (SettingsTab)      : SMTP + دليل App Password + Test Email
-//  - كلمة السر: adli-asad-2024-math
+//  - كلمة السر: adli2024
 //  - STORAGE_KEY = "math_admin_key"
 // ============================================================
 
@@ -95,7 +95,7 @@ import {
 // ============================================================
 
 const STORAGE_KEY = "math_admin_key";
-const DEFAULT_PASSWORD = "adli-asad-2024-math";
+const DEFAULT_PASSWORD = "adli2024";
 
 const STATUS_BADGE: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   PENDING: { label: "قيد المراجعة", variant: "secondary" },
