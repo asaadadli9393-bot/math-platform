@@ -1,0 +1,32 @@
+============================================================
+  منصة الرياضيات — النسخة الاحتياطية
+============================================================
+
+التاريخ: Wed Sep  9 11:03:06 UTC 2026
+آخر commit: c99b2eb ✨ استرجاع الدورات المميزة + المساعد الذكي + أداة رسم الدوال + القفل
+عدد commits: 18
+
+الملفات الأساسية:
+- src/app/page.tsx — الصفحة الرئيسية (مع القفل + المساعد الذكي + أداة رسم الدوال)
+- src/app/admin/ — لوحة الإدارة (4 تبويبات + APIs)
+- src/app/api/ — كل APIs (ai-assistant, payments, admin/login, stats, etc.)
+- src/app/error.tsx + loading.tsx + not-found.tsx — صفحات الخطأ
+- src/components/function-plot.tsx — مكوّن الرسم البياني
+- src/components/ai-assistant.tsx — المساعد الذكي
+- src/data/premium-courses.ts — الدورات المميزة (5 دورات)
+- src/data/monetization.ts — نظام الاشتراك (عرض واحد 500 دج)
+- src/lib/student-store.ts — نظام الاشتراك الأمن
+- public/anime/ — صور الأنمي (5 صور)
+
+الاسترجاع:
+1. انسخ محتويات النسخة إلى مشروع Next.js جديد
+2. npm install
+3. npx prisma db push
+4. npm run dev
+
+أو من GitHub:
+git clone https://github.com/USERNAME/math-platform.git
+cd math-platform
+npm install
+npx prisma db push
+npm run dev

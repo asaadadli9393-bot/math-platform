@@ -1,0 +1,395 @@
+// ============================================================
+//  منصة الرياضيات | الأستاذ عدلي أسعد
+//  Prisma Schema — قاعدة بيانات شاملة للمنصة التعليمية
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+//  المستخدمون وأدوارهم
+// ============================================================
+
+enum UserRole {
+  STUDENT      // طالب
+  PARENT       // ولي أمر
+  TEACHER      // أستاذ
+  SUPERVISOR   // المشرف البيداغوجي (الأستاذ عدلي أسعد)
+  ADMIN        // مدير المنصة
+}
+
+enum StudentStream {
+  EXPERIMENTAL_SCIENCES   // علوم تجريبية
+  MATHEMATICS             // رياضيات
+  TECHNICAL_MATH          // تقني رياضي
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String
+  passwordHash  String
+  role          UserRole     @default(STUDENT)
+  phone         String?
+  avatar        String?
+  city          String?
+  // علاقة ولي الأمر بالطلاب
+  parentOf      ParentRelation[] @relation("ParentToStudent")
+  // علاقة الطالب بولي الأمر
+  parents       ParentRelation[] @relation("StudentToParent")
+  // علاقة الطالب بالنتائج والتمارين
+  exerciseAttempts    ExerciseAttempt[]
+  quizResults        QuizResult[]
+  progressRecords    ProgressRecord[]
+  unitProgress       UnitProgress[]
+  notifications      Notification[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+// علاقة ولي الأمر بالطلاب (يمكن لولي أمر متابعة عدة أبناء)
+model ParentRelation {
+  id        String   @id @default(cuid())
+  parentId String
+  studentId String
+  parent    User     @relation("ParentToStudent", fields: [parentId], references: [id], onDelete: Cascade)
+  student   User     @relation("StudentToParent", fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// ============================================================
+//  هيكل المحتوى المعرفي (شجرة المنهاج)
+// ============================================================
+
+// الوحدة الكبرى (مثلاً: المتتاليات العددية)
+model Unit {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  order       Int      @default(0)
+  icon        String?
+  color       String?
+  stream      StudentStream?  // null = مشترك بين كل الشعب
+  chapters    Chapter[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// فصل داخل الوحدة (مثلاً: المتتاليات الحسابية، المتتاليات الهندسية)
+model Chapter {
+  id          String   @id @default(cuid())
+  unitId      String
+  unit        Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String
+  description String
+  order       Int      @default(0)
+  // مراجعة المكتسبات القبلية
+  prerequisites String?
+  // الدروس (محتوى نظري)
+  lessons     Lesson[]
+  // سلاسل التمارين
+  exercises   Exercise[]
+  // الاختبارات
+  quizzes     Quiz[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// درس نظري داخل الفصل
+model Lesson {
+  id          String   @id @default(cuid())
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String
+  content     String   // محتوى Markdown مع رياضيات LaTeX
+  order       Int      @default(0)
+  durationMin Int      @default(30)  // المدة المقدرة بالدقائق
+  keyPoints   String?  // النقاط الأساسية (JSON)
+  examples    String?  // أمثلة محلولة (JSON)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================================
+//  التمارين والحلول
+// ============================================================
+
+enum ExerciseDifficulty {
+  PREREQUISITE    // تمارين المكتسبات القبلية (مستوى الصفر)
+  BEGINNER        // تمارين تأسيسية
+  INTERMEDIATE    // تمارين متوسطة
+  ADVANCED        // تمارين متقدمة
+  BAC_LEVEL       // تمارين على مستوى البكالوريا
+  BAC_EXAM        // مواضيع بكالوريا فعلية
+}
+
+enum ExerciseType {
+  DIRECT_APPLICATION   // تطبيق مباشر
+  METHOD_EXERCISE      // تمرين منهجي
+  PROBLEM              // مسألة
+  TRUE_FALSE           // صحيح/خطأ
+  MULTIPLE_CHOICE      // اختيار من متعدد
+  DEMONSTRATION        // برهان
+}
+
+model Exercise {
+  id          String             @id @default(cuid())
+  chapterId   String
+  chapter     Chapter            @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  title       String
+  statement   String             // نص التمرين بـ LaTeX
+  hint        String?            // تلميح
+  solution    String             // الحل النموذجي المفصل (خطوة بخطوة) بـ LaTeX
+  methodology String?            // المنهجية الرسمية المبرزة
+  difficulty  ExerciseDifficulty @default(BEGINNER)
+  type        ExerciseType       @default(DIRECT_APPLICATION)
+  points      Int                @default(4)   // عدد النقاط (من 20)
+  tags        String?            // علامات تصنيفية (JSON array)
+  order       Int               @default(0)
+  attempts    ExerciseAttempt[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+// محاولات الطلاب على التمارين
+model ExerciseAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId  String
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  // إجابة الطالب
+  answer      String
+  // تقييم ذاتي: هل وصل للحل؟
+  selfRated   Boolean  @default(false)
+  // النقطة المعطاة (إذا كان تصحيح آلي)
+  score       Float?
+  // زمن الإجابة بالثواني
+  timeSpentSec Int?
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([exerciseId])
+}
+
+// ============================================================
+//  الاختبارات التفاعلية
+// ============================================================
+
+model Quiz {
+  id          String   @id @default(cuid())
+  chapterId   String?
+  chapter     Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  durationMin Int      @default(30)
+  passScore   Float    @default(50)  // نسبة النجاح %
+  questions   QuizQuestion[]
+  results     QuizResult[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model QuizQuestion {
+  id          String   @id @default(cuid())
+  quizId      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question    String   // نص السؤال بـ LaTeX
+  options     String   // JSON array of options
+  correctIdx  Int      // فهرس الإجابة الصحيحة
+  explanation String?  // تفسير الإجابة الصحيحة
+  points      Int      @default(1)
+  order       Int      @default(0)
+}
+
+// نتائج الاختبارات
+model QuizResult {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score       Float    // نسبة مئوية
+  correctCount Int
+  totalCount  Int
+  answers     String   // JSON of user answers
+  timeSpentSec Int?
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([quizId])
+}
+
+// ============================================================
+//  تتبع التقدم
+// ============================================================
+
+// تقدم الطالب في كل وحدة (نسبة الإنجاز)
+model UnitProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unitId      String
+  // نسبة الإنجاز %
+  completion  Float    @default(0)
+  // متوسط النقاط
+  averageScore Float   @default(0)
+  // عدد التمارين المنجزة
+  exercisesDone Int    @default(0)
+  // عدد التمارين الكلية في الوحدة
+  exercisesTotal Int   @default(0)
+  // آخر زيارة
+  lastVisitedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@unique([userId, unitId])
+  @@index([userId])
+}
+
+// سجل تقدم يومي (للرسم البياني في لوحة التحكم)
+model ProgressRecord {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime @default(now())
+  // عدد التمارين المنجزة في ذلك اليوم
+  exercisesCompleted Int @default(0)
+  // نقاط ذلك اليوم
+  scoreEarned Float  @default(0)
+  // مدة الدراسة بالدقائق
+  studyMinutes Int   @default(0)
+}
+
+// الإشعارات (للطالب وولي الأمر)
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  body        String
+  type        String   @default("info")  // info | success | warning | alert
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+// ============================================================
+//  المدفوعات والاشتراكات (لوحة الإدارة)
+// ============================================================
+
+enum PaymentStatus {
+  PENDING      // قيد الانتظار
+  VERIFIED     // تم التحقق منها
+  REJECTED     // مرفوضة
+  EXPIRED      // منتهية الصلاحية
+  CANCELLED    // ملغاة
+}
+
+enum PaymentMethod {
+  CIB            // البطاقة الذهبية
+  BARIDI_MOB     // بريدي موب
+  CCP            // حساب بريدي
+  BANK_TRANSFER  // تحويل بنكي
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  paymentId      String        @unique   // معرّف فريد للدفعة (مولّد)
+  transactionRef String?       // رقم العملية من البنك/بريدي موب
+  plan           String        // الباقة (FREE/BASIC/PREMIUM/FAMILY)
+  method         PaymentMethod
+  amount         Int           // بالدينار الجزائري
+  status         PaymentStatus @default(PENDING)
+  // بيانات الطالب / المشترك
+  studentName    String?
+  phone          String        @unique   // هاتف الطالب/المشترك (مُسجَّل بحق الوصول)
+  email          String?
+  // بيانات إضافية حسب طريقة الدفع (JSON)
+  metadata       String?
+  // تواريخ
+  verifiedAt     DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // فهارس لتسريع الاستعلامات الإدارية
+  @@index([phone])
+  @@index([transactionRef])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@unique([transactionRef])
+}
+
+// ============================================================
+//  إشعارات المدفوعات (مرتبطة بكل دفعة)
+//  مستقلة عن جدول Notification العامة لتفادي التضارب مع userId.
+// ============================================================
+
+model PaymentNotification {
+  id          String   @id @default(cuid())
+  paymentId   String?  // قد يكون null إذا لم يُربط بدفعة معيّنة
+  title       String
+  body        String
+  type        String   @default("info")  // info | success | warning | alert
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([read, createdAt])
+  @@index([createdAt])
+  @@index([paymentId])
+}
+
+// ============================================================
+//  إعدادات المنصة (Key/Value) — SMTP، ADMIN_EMAIL، WEBHOOK، إلخ.
+// ============================================================
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  category  String   @default("general")  // smtp | email | admin | webhook | general
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+//  إعدادات لوحة الإدارة (Key/Value) — مفصولة عن إعدادات المنصة
+//  يستعملها لوحة الإدارة فقط: SMTP، RESEND، WEBHOOK، TELEGRAM، ADMIN_EMAIL...
+// ============================================================
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+//  الفيديوهات المرفوعة من لوحة الإدارة
+// ============================================================
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileName    String
+  filePath    String   // المسار النسبي داخل /upload
+  fileSize    Int      // بالبايت
+  duration    Int?     // بالثواني (اختياري)
+  chapterSlug String?  // الفصل المرتبط (اختياري)
+  unitSlug    String?   // الوحدة المرتبطة (اختياري)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([chapterSlug])
+  @@index([unitSlug])
+}
