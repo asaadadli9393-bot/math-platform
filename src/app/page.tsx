@@ -113,8 +113,11 @@ import {
   Zap,
   ShieldCheck,
   Gift,
+  RefreshCw,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { FunctionPlot } from "@/components/function-plot";
 
 // خريطة الأيقونات
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -128,7 +131,47 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter";
+
+// ===================================================
+//  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
+// ===================================================
+function LockedContent({ feature, onSubscribe }: { feature: string; onSubscribe: () => void }) {
+  return (
+    <div className="max-w-2xl mx-auto text-center py-12">
+      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 dark:bg-amber-950/30 mb-4">
+        <Lock className="w-10 h-10 text-amber-600" />
+      </div>
+      <h2 className="text-2xl font-bold mb-2">🔒 {feature} مقفل</h2>
+      <p className="text-muted-foreground mb-6 max-w-md mx-auto leading-relaxed">
+        للوصول إلى {feature} يجب الاشتراك في الاستفادة الكاملة من المنصة.
+        اشترك مرة واحدة بـ 500 دج فقط وافتح كل المحتوى.
+      </p>
+      <Button
+        size="lg"
+        className="gap-2 bg-primary hover:bg-primary/90"
+        onClick={onSubscribe}
+      >
+        <CreditCard className="w-5 h-5" />
+        اشترك الآن — 500 دج
+      </Button>
+      <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          دفع آمن
+        </span>
+        <span className="flex items-center gap-1">
+          <Zap className="w-4 h-4 text-amber-500" />
+          تفعيل فوري
+        </span>
+        <span className="flex items-center gap-1">
+          <CheckCircle2 className="w-4 h-4 text-primary" />
+          1000+ تمرين
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const [view, setView] = React.useState<MainView>("home");
@@ -146,6 +189,9 @@ export default function HomePage() {
   const lastVisitedUnit = useStudentStore((s) => s.lastVisitedUnit);
   const setLastVisitedUnit = useStudentStore((s) => s.setLastVisitedUnit);
   const { toast } = useToast();
+
+  // ✅ نظام الاشتراك الأمن — يفحص تاريخ انتهاء الاشتراك فعلياً
+  const isSubscribed = useStudentStore((s) => s.isSubscriptionActive());
 
   // التهيئة (Onboarding) عند أول زيارة
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
@@ -236,6 +282,14 @@ export default function HomePage() {
                 <Sparkles className="w-4 h-4 ml-2" />
                 عن المنصة
               </NavButton>
+              <NavButton active={view === "function-plotter"} onClick={() => navigateTo("function-plotter")}>
+                <LineChart className="w-4 h-4 ml-2" />
+                رسم الدوال
+              </NavButton>
+              <NavButton active={false} onClick={() => navigateTo("admin")}>
+                <ShieldCheck className="w-4 h-4 ml-2" />
+                المشرف
+              </NavButton>
             </nav>
 
             {/* زر القائمة على الجوال */}
@@ -280,6 +334,12 @@ export default function HomePage() {
                   <MobileNavButton onClick={() => navigateTo("about")}>
                     <Sparkles className="w-4 h-4 ml-2" /> عن المنصة
                   </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("function-plotter")}>
+                    <LineChart className="w-4 h-4 ml-2" /> رسم الدوال
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("admin")}>
+                    <ShieldCheck className="w-4 h-4 ml-2" /> المشرف
+                  </MobileNavButton>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -311,7 +371,9 @@ export default function HomePage() {
           <QuizSelectionView onSelectQuiz={(id) => navigateTo("quiz", undefined, id)} />
         )}
 
-        {view === "exams" && <ExamsView />}
+        {view === "exams" && (
+          isSubscribed ? <ExamsView /> : <LockedContent feature="المواضيع الشاملة وبكالوريا سابقة" onSubscribe={() => navigateTo("pricing")} />
+        )}
 
         {view === "pricing" && (
           <PricingView
@@ -341,13 +403,15 @@ export default function HomePage() {
         )}
 
         {view === "products" && (
-          <ProductsView
-            onPurchase={(slug) => {
-              setSelectedProductSlug(slug);
-              setView("payment-product");
-            }}
-            onNavigateToPricing={() => navigateTo("pricing")}
-          />
+          isSubscribed ? (
+            <ProductsView
+              onPurchase={(slug) => {
+                setSelectedProductSlug(slug);
+                setView("payment-product");
+              }}
+              onNavigateToPricing={() => navigateTo("pricing")}
+            />
+          ) : <LockedContent feature="المتجر" onSubscribe={() => navigateTo("pricing")} />
         )}
 
         {view === "courses" && (
@@ -366,6 +430,19 @@ export default function HomePage() {
         )}
 
         {view === "dashboard" && <StudentDashboard />}
+
+        {view === "admin" && (
+          <div className="text-center py-12">
+            <ShieldCheck className="w-16 h-16 mx-auto text-primary mb-4" />
+            <h2 className="text-2xl font-bold mb-2">لوحة المشرف</h2>
+            <p className="text-muted-foreground mb-4">صفحة الإدارة الكاملة متاحة على المسار المستقل</p>
+            <a href="/admin" className="inline-flex items-center gap-2 text-primary hover:underline text-lg font-bold">
+              <ShieldCheck className="w-5 h-5" /> /admin
+            </a>
+          </div>
+        )}
+
+        {view === "function-plotter" && <FunctionPlotter />}
 
         {view === "parent" && <ParentPortal />}
 
@@ -2454,7 +2531,7 @@ function PaymentView({
         <CardHeader className="text-white" style={{ background: plan.color }}>
           <CardTitle className="flex items-center justify-between">
             <span>ملخص الطلب</span>
-            <span className="text-2xl">{plan.id === "PREMIUM" ? "⭐" : plan.id === "FAMILY" ? "👨‍👩‍👧" : "💳"}</span>
+            <span className="text-2xl">{plan.id === "FULL" ? "⭐" : "💳"}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6 space-y-3">
@@ -3092,5 +3169,166 @@ function OnboardingDialog({
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// ===================================================
+//  أداة رسم الدوال التفاعلية — للطالب
+// ===================================================
+function FunctionPlotter() {
+  const [expr, setExpr] = React.useState("x^2");
+  const [xMin, setXMin] = React.useState(-5);
+  const [xMax, setXMax] = React.useState(5);
+  const [color, setColor] = React.useState("#A4133C");
+  const [showExamples, setShowExamples] = React.useState(true);
+
+  const examples = [
+    { label: "متعددة الحدود", expr: "x^3 - 3*x", range: [-3, 3] as [number, number] },
+    { label: "كسرية", expr: "(x^2 - 1)/(x + 2)", range: [-5, 5] as [number, number] },
+    { label: "لوغاريتمية", expr: "Math.log(x)", range: [0.1, 10] as [number, number] },
+    { label: "أسية", expr: "Math.exp(x)", range: [-3, 3] as [number, number] },
+    { label: "مثلثية", expr: "Math.sin(x)", range: [-6.28, 6.28] as [number, number] },
+    { label: "جذر", expr: "Math.sqrt(x)", range: [0, 10] as [number, number] },
+    { label: "قيمة مطلقة", expr: "Math.abs(x)", range: [-5, 5] as [number, number] },
+  ];
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+          <LineChart className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          أداة رسم الدوال التفاعلية
+        </h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          اكتب أي دالة رياضية ورسمها بيانياً بشكل تفاعلي. مرّر الماوس لرؤية قيم x.
+        </p>
+      </div>
+
+      {/* نموذج الإدخال */}
+      <Card className="border-2 border-primary/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <LineChart className="w-5 h-5 text-primary" />
+            أدخل الدالة
+          </CardTitle>
+          <CardDescription>استعمل صيغة JavaScript: x^2, Math.sin(x), Math.log(x), Math.exp(x), Math.sqrt(x)</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="fn-expr" className="block mb-2 font-bold">الدالة f(x) =</Label>
+            <Input
+              id="fn-expr"
+              value={expr}
+              onChange={(e) => setExpr(e.target.value)}
+              placeholder="مثال: x^2 + 2*x - 1"
+              className="font-mono text-lg"
+              dir="ltr"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="x-min" className="block mb-2 font-bold">x (أدنى)</Label>
+              <Input
+                id="x-min"
+                type="number"
+                value={xMin}
+                onChange={(e) => setXMin(parseFloat(e.target.value) || -5)}
+                className="font-mono"
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <Label htmlFor="x-max" className="block mb-2 font-bold">x (أعلى)</Label>
+              <Input
+                id="x-max"
+                type="number"
+                value={xMax}
+                onChange={(e) => setXMax(parseFloat(e.target.value) || 5)}
+                className="font-mono"
+                dir="ltr"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="block mb-2 font-bold">لون المنحنى</Label>
+            <div className="flex gap-2 flex-wrap">
+              {["#A4133C", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"].map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setColor(c)}
+                  className={`w-8 h-8 rounded-full border-2 ${color === c ? "border-primary border-4" : "border-transparent"}`}
+                  style={{ background: c }}
+                />
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* الرسم البياني */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            الرسم البياني
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {expr && xMax > xMin ? (
+            <FunctionPlot
+              functions={[{ expr, color, label: `f(x) = ${expr}`, width: 3 }]}
+              xRange={[xMin, xMax]}
+              height={400}
+              title={`f(x) = ${expr}`}
+            />
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>⚠️ تأكد من أن x (أعلى) أكبر من x (أدنى)</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* أمثلة جاهزة */}
+      {showExamples && (
+        <Card className="bg-muted/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Sparkles className="w-4 h-4 text-accent" />
+              أمثلة جاهزة — اضغط لتجربتها
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {examples.map((ex, i) => (
+                <Button
+                  key={i}
+                  variant="outline"
+                  className="text-xs justify-start"
+                  onClick={() => {
+                    setExpr(ex.expr);
+                    setXMin(ex.range[0]);
+                    setXMax(ex.range[1]);
+                  }}
+                >
+                  <span className="font-mono">{ex.expr}</span>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-md p-4">
+        💡 <strong>تلميح:</strong> يمكنك تجربة دوال معقدة مثل:
+        <code className="bg-muted px-2 py-1 rounded mx-1" dir="ltr">(x^3 - 2*x)/(x + 1)</code>
+        أو
+        <code className="bg-muted px-2 py-1 rounded mx-1" dir="ltr">Math.sin(x) * Math.exp(-x/3)</code>
+      </div>
+    </div>
   );
 }

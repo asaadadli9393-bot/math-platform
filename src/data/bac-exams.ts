@@ -19,6 +19,22 @@ export interface BacExamQuestion {
   statement: string;   // نص السؤال بـ LaTeX
   hint?: string;
   solution: string;   // الحل النموذجي بـ LaTeX
+  plot?: {
+    functions: Array<{ expr: string; color: string; label?: string; width?: number; dashed?: boolean; }>;
+    xRange?: [number, number];
+    yRange?: [number, number];
+    points?: Array<{ x: number; y: number; label?: string; color?: string }>;
+    title?: string;
+    height?: number;
+    sequence?: {
+      values: number[];
+      color?: string;
+      connect?: boolean;
+      label?: string;
+      showValues?: boolean;
+      fixedPoint?: number;
+    };
+  };
 }
 
 export interface BacExam {
@@ -100,6 +116,21 @@ $$\\lim_{n \\to +\\infty} \\left(\\frac{1}{2}\\right)^n = 0$$
 $$\\lim_{n \\to +\\infty} u_n = \\lim \\left[\\left(\\frac{1}{2}\\right)^n + 2\\right] = 0 + 2 = 2$$
 
 **النتيجة:** $\\lim u_n = 2$`,
+          plot: {
+            title: "تقارب المتتالية (u_n) إلى النهاية 2",
+            functions: [],
+            sequence: {
+              values: [3, 2.5, 2.25, 2.125, 2.0625, 2.0313, 2.0156, 2.0078, 2.0039],
+              color: "#A4133C",
+              connect: true,
+              showValues: true,
+              fixedPoint: 2,
+              label: "u_n",
+            },
+            xRange: [0, 8],
+            yRange: [1.8, 3.2],
+            height: 320,
+          },
         },
         {
           number: "5)",
@@ -240,6 +271,17 @@ $$\\ln x \\cdot (x-1) - x \\ln x + x = (x \\ln x - \\ln x) - x \\ln x + x = x - 
 **جدول التغيرات على $]1, +\\infty[$:**
 - $f'$ موجبة دائماً
 - $f$ متزايدة قطعاً من $-\\infty$ (عند $1^+$) إلى $+\\infty$ (عند $+\\infty$)`,
+          plot: {
+            title: "المنحنى (C_f) للدالة اللوغاريتمية مع المماس عند x = e",
+            functions: [
+              { expr: "(x*Math.log(x) - x)/(x - 1)", color: "#A4133C", label: "y = f(x)", width: 3 },
+              { expr: "(x - Math.E)/(Math.E - 1)", color: "#3b82f6", label: "y = المماس عند x=e", width: 2 },
+            ],
+            xRange: [1.1, 8],
+            yRange: [-6, 10],
+            points: [{ x: Math.E, y: 0, label: "(e, 0)", color: "#10b981" }],
+            height: 360,
+          },
         },
       ],
     },
@@ -507,6 +549,16 @@ $f_2$ تزايدية قطعاً على $]-\\infty, 1[$ وعلى $]1, +\\infty[$.
 $$\\lim_{x \\to \\pm\\infty} [f_2(x) - (x + 1)] = \\lim \\frac{-1}{x - 1} = 0$$
 
 إذن المستقيم $y = x + 1$ هو **مقاربة مائلة** لـ $f_2$ عند $\\pm\\infty$.`,
+          plot: {
+            title: "المنحنى (C_{f_2}) مع المقاربة المائلة y = x + 1",
+            functions: [
+              { expr: "(x*x - 2)/(x - 1)", color: "#A4133C", label: "y = f_2(x)", width: 3 },
+              { expr: "x + 1", color: "#3b82f6", label: "y = x+1 (مقاربة)", dashed: true, width: 2 },
+            ],
+            xRange: [-6, 6],
+            yRange: [-15, 15],
+            height: 360,
+          },
         },
       ],
     },
@@ -615,6 +667,20 @@ $$[-2, 4] \\cap \\;]2, +\\infty[ = \\;]2, 4]$$
 $$\\int_1^e \\frac{\\ln x}{x} dx = \\int_0^1 u \\, du = \\left[\\frac{u^2}{2}\\right]_0^1 = \\frac{1}{2} - 0 = \\frac{1}{2}$$
 
 **النتيجة:** $\\int_1^e \\frac{\\ln x}{x} dx = \\dfrac{1}{2}$`,
+          plot: {
+            title: "المنحنى y = ln(x)/x — المساحة تحت المنحنى من 1 إلى e",
+            functions: [
+              { expr: "Math.log(x)/x", color: "#A4133C", label: "y = ln(x)/x", width: 3 },
+              { expr: "0", color: "#3b82f6", label: "y = 0 (محور الأفاصيل)", dashed: true, width: 1.5 },
+            ],
+            xRange: [0.5, 6],
+            yRange: [-0.2, 0.6],
+            points: [
+              { x: 1, y: 0, label: "(1, 0)", color: "#10b981" },
+              { x: Math.E, y: 1 / Math.E, label: "(e, 1/e) أقصى", color: "#f59e0b" },
+            ],
+            height: 320,
+          },
         },
       ],
     },
@@ -699,6 +765,21 @@ $$v_{n+1} = u_{n+1} + 3 = 2u_n + 3 + 3 = 2(u_n + 3) = 2 v_n$$
 $$v_n = 4 \\cdot 2^n \\implies u_n = 4 \\cdot 2^n - 3$$
 
 **التحقق:** $u_0 = 4 - 3 = 1$ ✓, $u_1 = 8 - 3 = 5$ ✓ ($u_1 = 2(1) + 3 = 5$)`,
+          plot: {
+            title: "التباعد السريع للمتتالية (u_n) = 4·2^n − 3 نحو +∞",
+            functions: [],
+            sequence: {
+              values: [1, 5, 13, 29, 61, 125, 253],
+              color: "#A4133C",
+              connect: true,
+              showValues: true,
+              fixedPoint: -3,
+              label: "u_n",
+            },
+            xRange: [0, 6],
+            yRange: [-10, 260],
+            height: 320,
+          },
         },
         {
           number: "2)",

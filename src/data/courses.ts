@@ -26,6 +26,22 @@ export interface CourseExercise {
   statement: string;
   hint?: string;
   solution: string;
+  plot?: {
+    functions: Array<{ expr: string; color: string; label?: string; width?: number; dashed?: boolean; }>;
+    xRange?: [number, number];
+    yRange?: [number, number];
+    points?: Array<{ x: number; y: number; label?: string; color?: string }>;
+    title?: string;
+    height?: number;
+    sequence?: {
+      values: number[];
+      color?: string;
+      connect?: boolean;
+      label?: string;
+      showValues?: boolean;
+      fixedPoint?: number;
+    };
+  };
 }
 
 export interface Course {
@@ -691,6 +707,16 @@ $$2x^2 + 3x + 1 = (x-1)(2x + 5) + 6$$
 **4. موضع المنحنى:** $f - (2x+5) = \\frac{6}{x-1}$:
 - $x > 1$: موجبة، فوق المقاربة
 - $x < 1$: سالبة، تحت المقاربة`,
+          plot: {
+            title: "المنحنى (C_f) مع المقاربة المائلة y = 2x + 5",
+            functions: [
+              { expr: "(2*x*x + 3*x + 1)/(x - 1)", color: "#A4133C", label: "y = f(x)", width: 3 },
+              { expr: "2*x + 5", color: "#3b82f6", label: "y = 2x+5 (مقاربة)", dashed: true, width: 2 },
+            ],
+            xRange: [-6, 8],
+            yRange: [-25, 35],
+            height: 360,
+          },
         },
       ],
     },

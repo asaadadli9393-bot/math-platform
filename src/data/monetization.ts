@@ -7,7 +7,7 @@
 //  - CCP (حساب بريدي)
 // ============================================================
 
-export type PlanTier = "FREE" | "BASIC" | "PREMIUM" | "FAMILY";
+export type PlanTier = "FREE" | "FULL";
 
 export interface Plan {
   id: PlanTier;
@@ -54,82 +54,33 @@ export const plans: Plan[] = [
       { label: "الملخصات الذهنية PDF", included: false },
     ],
   },
+  // ✅ عرض واحد فقط — 500 دج للاستفادة الكاملة
   {
-    id: "BASIC",
-    slug: "basic",
-    name: "Basic",
-    nameAr: "الأساسي",
-    description: "الأنسب للطالب الجاد — وصول كامل لكل التمارين والحلول النموذجية",
+    id: "FULL",
+    slug: "full",
+    name: "Full",
+    nameAr: "الاستفادة الكاملة",
+    description: "عرض واحد بسعر رمزي — 500 دج فقط للوصول الكامل لكل محتوى المنصة",
     monthlyPrice: 500,
-    yearlyPrice: 4000,
-    currency: "DZD",
-    color: "#2D6A4F",
-    badge: "موصى به",
-    isMostPopular: true,
-    cta: "اشترك الآن",
-    features: [
-      { label: "كل الدروس النظرية", included: true },
-      { label: "كل التمارين المحلولة (1000+ تمرين)", included: true, highlight: true },
-      { label: "كل الاختبارات التفاعلية", included: true },
-      { label: "لوحة تتبع التقدم المتقدمة", included: true },
-      { label: "فضاء ولي الأمر الكامل", included: true, highlight: true },
-      { label: "كل المواضيع الشاملة (بكالوريا)", included: true },
-      { label: "الدورات الشاملة الكاملة", included: false },
-      { label: "الدروس الخاصة مع الأستاذ", included: false },
-      { label: "تصحيح فردي للتمارين", included: false },
-      { label: "الملخصات الذهنية PDF", included: true },
-    ],
-  },
-  {
-    id: "PREMIUM",
-    slug: "premium",
-    name: "Premium",
-    nameAr: "المميز",
-    description: "تجربة كاملة + متابعة شخصية من الأستاذ عدلي أسعد — للطالب الطموح للتفوق",
-    monthlyPrice: 1500,
-    yearlyPrice: 12000,
+    yearlyPrice: 500,
     currency: "DZD",
     color: "#A4133C",
-    badge: "الأفضل قيمة",
-    cta: "اشترك الآن",
+    badge: "⭐ العرض الوحيد",
+    isMostPopular: true,
+    cta: "اشترك الآن — 500 دج",
     features: [
-      { label: "كل ما في الباقة الأساسية", included: true },
+      { label: "كل ما في الباقة المجانية", included: true },
       { label: "كل التمارين المحلولة (1000+ تمرين)", included: true, highlight: true },
       { label: "كل الاختبارات التفاعلية", included: true },
-      { label: "الدورات الشاملة الكاملة", included: true, highlight: true },
       { label: "فضاء ولي الأمر الكامل", included: true },
-      { label: "كل المواضيع الشاملة (بكالوريا)", included: true },
-      { label: "4 دروس خاصة شهرية مع الأستاذ", included: true, highlight: true },
-      { label: "تصحيح فردي للتمارين (شهرياً)", included: true, highlight: true },
-      { label: "الملخصات الذهنية PDF", included: true },
-      { label: "أولوية الدعم الفني", included: true },
+      { label: "كل المواضيع الشاملة (بكالوريا)", included: true, highlight: true },
+      { label: "الفيديوهات التعليمية", included: true },
+      { label: "الملخصات النهائية PDF", included: true },
+      { label: "المساعد الذكي", included: true, highlight: true },
+      { label: "الدورات الشاملة (9 دورات)", included: true, highlight: true },
     ],
   },
-  {
-    id: "FAMILY",
-    slug: "family",
-    name: "Family",
-    nameAr: "العائلي",
-    description: "للعائلات التي لديها أكثر من طالب — حتى 3 أبناء بثمن واحد",
-    monthlyPrice: 2500,
-    yearlyPrice: 20000,
-    currency: "DZD",
-    color: "#7F5539",
-    badge: "حتى 3 أبناء",
-    cta: "اشترك الآن",
-    features: [
-      { label: "كل ما في الباقة المميزة", included: true },
-      { label: "حتى 3 حسابات أبناء", included: true, highlight: true },
-      { label: "متابعة ولي الأمر المركزية", included: true, highlight: true },
-      { label: "تقارير شهرية مفصلة", included: true },
-      { label: "اجتماع شهري مع الأستاذ (لولي الأمر)", included: true },
-      { label: "كل التمارين والحلول", included: true },
-      { label: "كل الدورات والمواضيع", included: true },
-      { label: "كل الدروس والمتابعة", included: true },
-      { label: "تصحيح فردي لكل ابن", included: true },
-      { label: "الملخصات الذهنية لكل ابن", included: true },
-    ],
-  },
+  // تم حذف باقات BASIC, PREMIUM, FAMILY — عرض واحد فقط بـ 500 دج
 ];
 
 // ============================================================
@@ -521,7 +472,7 @@ export function getPlansStats() {
     minPrice: Math.min(...plans.filter((p) => p.monthlyPrice > 0).map((p) => p.monthlyPrice)),
     maxPrice: Math.max(...plans.map((p) => p.monthlyPrice)),
     freePlan: plans.find((p) => p.id === "FREE"),
-    premiumPlan: plans.find((p) => p.id === "PREMIUM"),
+    fullPlan: plans.find((p) => p.id === "FULL"),
   };
 }
 
@@ -539,9 +490,7 @@ export function getProductsStats() {
 // عناوين عربية
 export const planLabelsAr: Record<PlanTier, string> = {
   FREE: "مجاني",
-  BASIC: "أساسي",
-  PREMIUM: "مميز",
-  FAMILY: "عائلي",
+  FULL: "الاستفادة الكاملة",
 };
 
 export const productCategoryLabels: Record<DigitalProduct["category"], string> = {

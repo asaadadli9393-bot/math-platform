@@ -47,7 +47,7 @@ export interface UserProfile {
   grade: string;
   city: string;
   onboarded: boolean;
-  subscriptionTier?: "FREE" | "BASIC" | "PREMIUM" | "FAMILY";
+  subscriptionTier?: "FREE" | "FULL";
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
   trialEndDate?: string;
@@ -72,11 +72,11 @@ interface StudentStore {
   resetProgress: () => void;
 
   // دوال الاشتراك
-  subscribeToPlan: (tier: "FREE" | "BASIC" | "PREMIUM" | "FAMILY", durationMonths: number) => void;
+  subscribeToPlan: (tier: "FREE" | "FULL", durationMonths: number) => void;
   startFreeTrial: (days: number) => void;
   cancelSubscription: () => void;
   isSubscriptionActive: () => boolean;
-  getSubscriptionTier: () => "FREE" | "BASIC" | "PREMIUM" | "FAMILY";
+  getSubscriptionTier: () => "FREE" | "FULL";
   isTrialActive: () => boolean;
 
   // دوال المنتجات الرقمية
@@ -177,7 +177,7 @@ export const useStudentStore = create<StudentStore>()(
             profile: state.profile
               ? {
                   ...state.profile,
-                  subscriptionTier: "BASIC",   // تجربة BASIC مجانية
+                  subscriptionTier: "FULL",   // تجربة الاستفادة الكاملة مجانية
                   subscriptionStartDate: now.toISOString(),
                   subscriptionEndDate: trialEnd.toISOString(),
                   trialEndDate: trialEnd.toISOString(),
@@ -200,18 +200,19 @@ export const useStudentStore = create<StudentStore>()(
       isSubscriptionActive: () => {
         const profile = useStudentStore.getState().profile;
         if (!profile) return false;
-        if (profile.subscriptionTier === "FREE" || !profile.subscriptionTier) return false;
+        if (profile.subscriptionTier !== "FULL") return false;
         if (!profile.subscriptionEndDate) return false;
         return new Date(profile.subscriptionEndDate) > new Date();
       },
 
       getSubscriptionTier: () => {
         const profile = useStudentStore.getState().profile;
-        if (!profile) return "FREE";
-        if (!profile.subscriptionTier) return "FREE";
-        if (!profile.subscriptionEndDate) return profile.subscriptionTier;
-        if (new Date(profile.subscriptionEndDate) < new Date()) return "FREE";
-        return profile.subscriptionTier;
+        if (!profile) return "FREE" as const;
+        if (!profile.subscriptionTier) return "FREE" as const;
+        if (profile.subscriptionTier !== "FULL") return "FREE" as const;
+        if (!profile.subscriptionEndDate) return "FREE" as const;
+        if (new Date(profile.subscriptionEndDate) < new Date()) return "FREE" as const;
+        return "FULL" as const;
       },
 
       isTrialActive: () => {

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MarkdownMath } from "@/components/math-renderer";
+import { FunctionPlot } from "@/components/function-plot";
 import { ChevronLeft, Clock, Award, FileText, Eye, EyeOff, Lightbulb, BookOpen } from "lucide-react";
 import type { BacExam } from "@/data/bac-exams";
 import { streamLabelsBac } from "@/data/bac-exams";
@@ -121,6 +122,12 @@ export function BacExamCard({ exam }: BacExamCardProps) {
                         الحل النموذجي
                       </div>
                       <MarkdownMath content={q.solution} />
+                      {q.plot && (
+                        <div className="mt-4 pt-3 border-t border-green-300 dark:border-green-700">
+                          <div className="text-sm font-bold text-green-900 dark:text-green-200 mb-2">📈 الرسم البياني للمنحنى</div>
+                          <FunctionPlot functions={q.plot.functions} xRange={q.plot.xRange} yRange={q.plot.yRange} points={q.plot.points} sequence={q.plot.sequence} title={q.plot.title} height={q.plot.height ?? 320} />
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

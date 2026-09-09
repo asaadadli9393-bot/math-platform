@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MarkdownMath } from "@/components/math-renderer";
+import { FunctionPlot } from "@/components/function-plot";
 import {
   Clock,
   Award,
@@ -314,6 +315,12 @@ function CourseModuleView({ module, course }: { module: CourseModule; course: Co
                       الحل:
                     </div>
                     <MarkdownMath content={ex.solution} />
+                    {ex.plot && (
+                      <div className="mt-4 pt-3 border-t border-green-300 dark:border-green-700">
+                        <div className="text-sm font-bold text-green-900 dark:text-green-200 mb-2">📈 الرسم البياني للمنحنى</div>
+                        <FunctionPlot functions={ex.plot.functions} xRange={ex.plot.xRange} yRange={ex.plot.yRange} points={ex.plot.points} sequence={ex.plot.sequence} title={ex.plot.title} height={ex.plot.height ?? 320} />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
