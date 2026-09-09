@@ -380,9 +380,7 @@ export default function HomePage() {
           <QuizSelectionView onSelectQuiz={(id) => navigateTo("quiz", undefined, id)} />
         )}
 
-        {view === "exams" && (
-          isSubscribed ? <ExamsView /> : <LockedContent feature="المواضيع الشاملة وبكالوريا سابقة" onSubscribe={() => navigateTo("pricing")} />
-        )}
+        {view === "exams" && <ExamsView />}
 
         {view === "pricing" && (
           <PricingView
@@ -392,15 +390,13 @@ export default function HomePage() {
         )}
 
         {view === "products" && (
-          isSubscribed ? (
-            <ProductsView
-              onPurchase={(slug) => {
-                setSelectedProductSlug(slug);
-                setView("payment-product");
-              }}
-              onNavigateToPricing={() => navigateTo("pricing")}
-            />
-          ) : <LockedContent feature="المتجر" onSubscribe={() => navigateTo("pricing")} />
+          <ProductsView
+            onPurchase={(slug) => {
+              setSelectedProductSlug(slug);
+              setView("payment-product");
+            }}
+            onNavigateToPricing={() => navigateTo("pricing")}
+          />
         )}
 
         {view === "courses" && (
@@ -438,7 +434,7 @@ export default function HomePage() {
         {view === "function-plotter" && <FunctionPlotter />}
 
         {view === "assistant" && (
-          isSubscribed ? <AIAssistant /> : <LockedContent feature="المساعد الذكي" onSubscribe={() => navigateTo("pricing")} />
+          <AIAssistant />
         )}
 
         {view === "parent" && <ParentPortal />}
