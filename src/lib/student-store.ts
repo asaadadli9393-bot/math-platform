@@ -47,6 +47,7 @@ export interface UserProfile {
   grade: string;
   city: string;
   onboarded: boolean;
+  role?: "STUDENT" | "SUPERVISOR";  // ✅ صلاحية المشرف
   subscriptionTier?: "FREE" | "FULL";
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;

@@ -192,8 +192,9 @@ export default function HomePage() {
   const setLastVisitedUnit = useStudentStore((s) => s.setLastVisitedUnit);
   const { toast } = useToast();
 
-  // ✅ نظام الاشتراك الأمن — يفحص تاريخ انتهاء الاشتراك فعلياً
-  const isSubscribed = useStudentStore((s) => s.isSubscriptionActive());
+  // ✅ نظام الاشتراك الأمن + صلاحية المشرف
+  // المشرف (SUPERVISOR) يصل لكل الدورات المميزة بدون اشتراك
+  const isSubscribed = useStudentStore((s) => s.isSubscriptionActive()) || profile?.role === "SUPERVISOR";
 
   // التهيئة (Onboarding) عند أول زيارة
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
@@ -2353,6 +2354,54 @@ function PricingView({ onSelectPlan, onNavigateToDashboard }: { onSelectPlan: (p
           </CardContent>
         </Card>
       )}
+
+      {/* ✅ صلاحية المشرف — للأستاذ عدلي أسعد */}
+      <Card className="border-2 border-purple-500/30 bg-purple-50/50 dark:bg-purple-950/20">
+        <CardContent className="pt-4 pb-4">
+          <div className="text-center space-y-3">
+            <ShieldCheck className="w-8 h-8 text-purple-600 mx-auto" />
+            <h3 className="font-bold text-purple-700 dark:text-purple-300">هل أنت الأستاذ عدلي أسعد؟</h3>
+            <p className="text-xs text-muted-foreground">فعّل صلاحية المشرف للوصول لكل الدورات المميزة مجاناً</p>
+            <Input
+              id="supervisor-key"
+              type="password"
+              placeholder="أدخل كلمة سر المشرف"
+              className="max-w-xs mx-auto"
+              dir="rtl"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const input = e.target as HTMLInputElement;
+                  if (input.value === "adli-asad-2024-math") {
+                    updateProfile({ role: "SUPERVISOR" });
+                    toast({ title: "✅ تم تفعيل صلاحية المشرف", description: "أهلاً أستاذ! كل الدورات المميزة مفتوحة لك." });
+                    onNavigateToDashboard();
+                  } else {
+                    toast({ title: "❌ كلمة سر خاطئة", description: "حاول مرة أخرى.", variant: "destructive" });
+                  }
+                }
+              }}
+            />
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-2 border-purple-500 text-purple-700"
+              onClick={() => {
+                const input = document.getElementById("supervisor-key") as HTMLInputElement;
+                if (input && input.value === "adli-asad-2024-math") {
+                  updateProfile({ role: "SUPERVISOR" });
+                  toast({ title: "✅ تم تفعيل صلاحية المشرف", description: "أهلاً أستاذ! كل الدورات المميزة مفتوحة لك." });
+                  onNavigateToDashboard();
+                } else {
+                  toast({ title: "❌ كلمة سر خاطئة", description: "حاول مرة أخرى.", variant: "destructive" });
+                }
+              }}
+            >
+              <ShieldCheck className="w-4 h-4" />
+              تفعيل صلاحية المشرف
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* خطوة 1: التحويل لبريدي موب */}
       <Card className="border-2 border-blue-500/30">
