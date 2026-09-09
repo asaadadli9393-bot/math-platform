@@ -424,11 +424,15 @@ export default function HomePage() {
         )}
 
         {view === "courses" && (
-          <CoursesView onSelectCourse={(c) => {
-            setSelectedCourse(c);
-            setView("course-detail");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }} />
+          <CoursesView
+            onSelectCourse={(c) => {
+              setSelectedCourse(c);
+              setView("course-detail");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            isSubscribed={isSubscribed}
+            onSubscribe={() => navigateTo("pricing")}
+          />
         )}
 
         {view === "course-detail" && selectedCourse && (
@@ -1852,7 +1856,7 @@ function QuizSelectionView({ onSelectQuiz }: { onSelectQuiz: (id: string) => voi
 //  عرض الدورات الشاملة
 // ===================================================
 
-function CoursesView({ onSelectCourse }: { onSelectCourse: (c: Course) => void }) {
+function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCourse: (c: Course) => void; onSubscribe?: () => void; isSubscribed?: boolean }) {
   const [filterStream, setFilterStream] = React.useState<"ALL" | Course["stream"]>("ALL");
   const [filterLevel, setFilterLevel] = React.useState<"ALL" | Course["level"]>("ALL");
   const stats = getCoursesStats();
@@ -1998,7 +2002,7 @@ function CoursesView({ onSelectCourse }: { onSelectCourse: (c: Course) => void }
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredCourses.map((course) => (
-            <CourseCard key={course.id} course={course} onOpen={onSelectCourse} />
+            <CourseCard key={course.id} course={course} onOpen={onSelectCourse} isSubscribed={isSubscribed} onSubscribe={onSubscribe} />
           ))}
         </div>
       )}

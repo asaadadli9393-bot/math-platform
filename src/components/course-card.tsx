@@ -16,6 +16,8 @@ import {
   CheckCircle2,
   PlayCircle,
   Calendar,
+  Lock,
+  ShieldCheck,
 } from "lucide-react";
 import type { Course, CourseModule } from "@/data/courses";
 import {
@@ -42,15 +44,26 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 interface CourseCardProps {
   course: Course;
   onOpen: (course: Course) => void;
+  isSubscribed?: boolean;
+  onSubscribe?: () => void;
 }
 
-export function CourseCard({ course, onOpen }: CourseCardProps) {
+export function CourseCard({ course, onOpen, isSubscribed = true, onSubscribe }: CourseCardProps) {
   const Icon = iconMap[course.icon] || BookOpen;
+  const isLocked = course.isPremium && !isSubscribed;
+
+  const handleClick = () => {
+    if (isLocked && onSubscribe) {
+      onSubscribe();
+      return;
+    }
+    onOpen(course);
+  };
 
   return (
     <Card
-      className="overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group"
-      onClick={() => onOpen(course)}
+      className={`overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group ${isLocked ? "opacity-80" : ""}`}
+      onClick={handleClick}
     >
       <div
         className="h-32 flex items-center justify-center relative"
@@ -66,11 +79,18 @@ export function CourseCard({ course, onOpen }: CourseCardProps) {
         >
           {courseLevelLabels[course.level]}
         </Badge>
+        {course.isPremium && (
+          <Badge className="absolute bottom-3 left-3 bg-amber-500 text-white">
+            <ShieldCheck className="w-3 h-3 ml-1" />
+            مدفوعة
+          </Badge>
+        )}
       </div>
 
       <CardContent className="pt-4 space-y-3">
         <div>
-          <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+          <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors flex items-center gap-2">
+            {isLocked && <Lock className="w-4 h-4 text-amber-600" />}
             {course.title}
           </h3>
           <p className="text-sm text-muted-foreground italic">{course.subtitle}</p>
@@ -102,10 +122,17 @@ export function CourseCard({ course, onOpen }: CourseCardProps) {
           ))}
         </div>
 
-        <Button className="w-full mt-2 gap-2" onClick={(e) => { e.stopPropagation(); onOpen(course); }}>
-          <PlayCircle className="w-4 h-4" />
-          ابدأ الدورة
-        </Button>
+        {isLocked ? (
+          <Button variant="outline" className="w-full mt-2 gap-2 border-amber-500 text-amber-700" onClick={(e) => { e.stopPropagation(); onSubscribe?.(); }}>
+            <Lock className="w-4 h-4" />
+            اشترك لفتح الدورة
+          </Button>
+        ) : (
+          <Button className="w-full mt-2 gap-2" onClick={(e) => { e.stopPropagation(); onOpen(course); }}>
+            <PlayCircle className="w-4 h-4" />
+            {course.isPremium ? "ابدأ الدورة المميزة" : "ابدأ الدورة"}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
