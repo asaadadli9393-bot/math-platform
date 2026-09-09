@@ -128,14 +128,14 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "products" | "dashboard" | "parent" | "about";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin";
 
 export default function HomePage() {
   const [view, setView] = React.useState<MainView>("home");
   const [selectedUnitSlug, setSelectedUnitSlug] = React.useState<string | null>(null);
   const [selectedQuizId, setSelectedQuizId] = React.useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(null);
-  const [selectedPlanId, setSelectedPlanId] = React.useState<"BASIC" | "PREMIUM" | "FAMILY" | null>(null);
+  const [selectedPlanId, setSelectedPlanId] = React.useState<PlanTier | null>(null);
   const [selectedProductSlug, setSelectedProductSlug] = React.useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
@@ -314,11 +314,14 @@ export default function HomePage() {
         {view === "exams" && <ExamsView />}
 
         {view === "pricing" && (
-          <PricingView onSelectPlan={(planId) => {
-            setSelectedPlanId(planId);
-            setView("payment");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }} />
+          <PricingView
+            onSelectPlan={(planId) => {
+              setSelectedPlanId(planId);
+              setView("payment");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onNavigateToDashboard={() => navigateTo("dashboard")}
+          />
         )}
 
         {view === "payment" && selectedPlanId && (
@@ -326,7 +329,7 @@ export default function HomePage() {
             planId={selectedPlanId}
             onBack={() => navigateTo("pricing")}
             onSuccess={(planId, months) => {
-              const tier = planId as "BASIC" | "PREMIUM" | "FAMILY";
+              const tier = planId as PlanTier;
               useStudentStore.getState().subscribeToPlan(tier, months);
               toast({
                 title: "تم تفعيل اشتراكك بنجاح! 🎉",
@@ -343,6 +346,7 @@ export default function HomePage() {
               setSelectedProductSlug(slug);
               setView("payment-product");
             }}
+            onNavigateToPricing={() => navigateTo("pricing")}
           />
         )}
 
@@ -516,7 +520,7 @@ function NavButton({
 }) {
   return (
     <Button
-      variant={active ? "default" : "ghost"}
+      variant={active ? "default" : "outline"}
       size="sm"
       onClick={onClick}
       className="gap-1"
@@ -535,7 +539,7 @@ function MobileNavButton({
 }) {
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       className="justify-start w-full text-right"
       onClick={onClick}
     >
@@ -718,7 +722,7 @@ function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => voi
                     <Badge variant="outline" className="text-xs">
                       وحدة {unit.order}
                     </Badge>
-                    <Badge variant="ghost" className="text-xs">
+                    <Badge variant="outline" className="text-xs">
                       {streamLabels[unit.stream]}
                     </Badge>
                     <Badge
@@ -1119,7 +1123,7 @@ function TrimestersView({
                             <Badge variant="outline" className="text-xs">
                               وحدة {unit.order}
                             </Badge>
-                            <Badge variant="ghost" className="text-xs">
+                            <Badge variant="outline" className="text-xs">
                               {streamLabels[unit.stream]}
                             </Badge>
                             <Badge
@@ -1430,7 +1434,7 @@ function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <Badge variant="outline">وحدة {unit.order}</Badge>
-                      <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+                      <Badge variant="outline">{streamLabels[unit.stream]}</Badge>
                       <Badge className={`${trimesterBadge[unit.trimester]} border`}>
                         <Calendar className="w-3 h-3 ml-1" />
                         الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
@@ -1463,7 +1467,7 @@ function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void
                       <ChevronLeft className="w-4 h-4 mr-2" />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
                       onClick={() => toggleFavorite(unit.slug)}
                       title="إضافة للمفضلة"
@@ -1496,7 +1500,7 @@ function UnitView({ unit, onBack }: { unit: any; onBack: () => void }) {
     <div className="space-y-6">
       {/* رأس الوحدة */}
       <div>
-        <Button variant="ghost" size="sm" onClick={onBack} className="mb-4 gap-2">
+        <Button variant="outline" size="sm" onClick={onBack} className="mb-4 gap-2">
           <ChevronRight className="w-4 h-4" />
           عودة للمنهاج
         </Button>
@@ -1518,7 +1522,7 @@ function UnitView({ unit, onBack }: { unit: any; onBack: () => void }) {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <Badge variant="outline">وحدة {unit.order}</Badge>
-                  <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+                  <Badge variant="outline">{streamLabels[unit.stream]}</Badge>
                   <Badge
                     className={`${
                       unit.trimester === 1
@@ -1687,7 +1691,7 @@ function QuizSelectionView({ onSelectQuiz }: { onSelectQuiz: (id: string) => voi
     return (
       <div className="space-y-4">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => setSelectedQuizId(null)}
           className="gap-2"
@@ -2124,10 +2128,11 @@ function ExamsView() {
 //  عرض الباقات والأسعار (Pricing)
 // ===================================================
 
-function PricingView({ onSelectPlan }: { onSelectPlan: (planId: PlanTier) => void }) {
+function PricingView({ onSelectPlan, onNavigateToDashboard }: { onSelectPlan: (planId: PlanTier) => void; onNavigateToDashboard: () => void; }) {
   const [billingCycle, setBillingCycle] = React.useState<"monthly" | "yearly">("monthly");
   const stats = getPlansStats();
   const subscriptionTier = useStudentStore.getState().getSubscriptionTier();
+  const { toast } = useToast();
 
   return (
     <div className="space-y-6">
@@ -2345,7 +2350,7 @@ function PricingView({ onSelectPlan }: { onSelectPlan: (planId: PlanTier) => voi
                 title: "🎁 تم تفعيل تجربتك المجانية!",
                 description: "استمتع بالباقة الأساسية مجاناً لمدة 7 أيام. استمتع بالكامل!",
               });
-              setView("dashboard");
+              onNavigateToDashboard();
             }}
           >
             <Zap className="w-4 h-4" />
@@ -2439,7 +2444,7 @@ function PaymentView({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
+      <Button variant="outline" size="sm" onClick={onBack} className="gap-2">
         <ChevronRight className="w-4 h-4" />
         عودة للباقات
       </Button>
@@ -2519,7 +2524,7 @@ function PaymentView({
                       <Badge variant="outline" className="text-xs">
                         {method.isInstant ? "✓ فوري" : "⏱ تأكيد يدوي"}
                       </Badge>
-                      <Badge variant="ghost" className="text-xs">{method.fee}</Badge>
+                      <Badge variant="outline" className="text-xs">{method.fee}</Badge>
                     </div>
                   </div>
                   {selectedMethod?.id === method.id && (
@@ -2647,7 +2652,7 @@ function PaymentView({
 //  عرض المتجر (Products)
 // ===================================================
 
-function ProductsView({ onPurchase }: { onPurchase: (slug: string) => void }) {
+function ProductsView({ onPurchase, onNavigateToPricing }: { onPurchase: (slug: string) => void; onNavigateToPricing: () => void; }) {
   const stats = getProductsStats();
   const profile = useStudentStore((s) => s.profile);
   const ownedProducts = profile?.ownedProducts || [];
@@ -2720,7 +2725,7 @@ function ProductsView({ onPurchase }: { onPurchase: (slug: string) => void }) {
           </p>
           <Button
             variant="default"
-            onClick={() => setView("pricing")}
+            onClick={() => onNavigateToPricing()}
             className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
           >
             <CreditCard className="w-4 h-4" />
@@ -2765,7 +2770,7 @@ function ProductCard({
 
       <CardContent className="pt-4 space-y-3">
         <div>
-          <Badge variant="ghost" className="text-xs mb-1">
+          <Badge variant="outline" className="text-xs mb-1">
             {productCategoryLabels[product.category]}
           </Badge>
           <h3 className="font-bold text-lg leading-tight">{product.title}</h3>

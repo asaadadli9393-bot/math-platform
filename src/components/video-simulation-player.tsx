@@ -333,17 +333,17 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
       {/* منطقة العرض */}
       <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 min-h-[320px]">
         <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-          <Badge variant="ghost" className="bg-white/10 text-white border-white/20">
+          <Badge variant="outline" className="bg-white/10 text-white border-white/20">
             <Clock className="w-3 h-3 ml-1" />
             {formatTime(currentTime)} / {formatTime(video.duration)}
           </Badge>
-          <Badge variant="ghost" className="bg-white/10 text-white border-white/20">
+          <Badge variant="outline" className="bg-white/10 text-white border-white/20">
             مشهد {currentSceneIdx + 1} / {video.scenes.length}
           </Badge>
         </div>
 
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
           className="absolute top-3 left-3 bg-white/10 text-white hover:bg-white/20 z-10"
           onClick={toggleFullscreen}
@@ -457,7 +457,7 @@ export function VideoSimulationPlayer({ video, lessonTitle }: VideoSimulationPla
             {narrationEnabled ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
           </Button>
 
-          <Button variant="ghost" size="icon" title="النص مرئي">
+          <Button variant="outline" size="icon" title="النص مرئي">
             <Volume2 className="w-4 h-4" />
           </Button>
         </div>

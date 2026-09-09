@@ -1,0 +1,695 @@
+     1→"use client";
+     2→
+     3→// ============================================================
+     4→//  /app/admin/videos — صفحة رفع الفيديوهات
+     5→//  منصة الرياضيات | الأستاذ عدلي أسعد
+     6→// ============================================================
+     7→//  - رفع ملف MP4 عبر /api/admin/upload-video (Bearer ADMIN_KEY)
+     8→//  - دليل إنشاء الفيديوهات:
+     9→//    * Explain Everything (لوحة تفاعلية)
+    10→//    * OBS Studio (تسجيل الشاشة)
+    11→//    * Notability (iPad)
+    12→//  - قائمة آخر الفيديوهات المرفوعة
+    13→// ============================================================
+    14→
+    15→import * as React from "react";
+    16→import {
+    17→  Card,
+    18→  CardContent,
+    19→  CardDescription,
+    20→  CardHeader,
+    21→  CardTitle,
+    22→} from "@/components/ui/card";
+    23→import { Button } from "@/components/ui/button";
+    24→import { Input } from "@/components/ui/input";
+    25→import { Label } from "@/components/ui/label";
+    26→import { Textarea } from "@/components/ui/textarea";
+    27→import { Badge } from "@/components/ui/badge";
+    28→import {
+    29→  Select,
+    30→  SelectContent,
+    31→  SelectItem,
+    32→  SelectTrigger,
+    33→  SelectValue,
+    34→} from "@/components/ui/select";
+    35→import { useToast } from "@/hooks/use-toast";
+    36→import {
+    37→  Video as VideoIcon,
+    38→  Upload,
+    39→  ArrowRight,
+    40→  Monitor,
+    41→  Tablet,
+    42→  PenTool,
+    43→  RefreshCw,
+    44→  CheckCircle2,
+    45→  FileVideo,
+    46→  ExternalLink,
+    47→  Lock,
+    48→  AlertTriangle,
+    49→} from "lucide-react";
+    50→
+    51→// ============================================================
+    52→//  أنواع
+    53→// ============================================================
+    54→
+    55→interface VideoRow {
+    56→  id: string;
+    57→  title: string;
+    58→  description: string | null;
+    59→  fileName: string;
+    60→  filePath: string;
+    61→  fileSize: number;
+    62→  chapterSlug: string | null;
+    63→  unitSlug: string | null;
+    64→  isPublished: boolean;
+    65→  createdAt: string;
+    66→}
+    67→
+    68→// ============================================================
+    69→//  مساعدات
+    70→// ============================================================
+    71→
+    72→function formatBytes(b: number): string {
+    73→  if (b < 1024) return `${b} B`;
+    74→  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+    75→  if (b < 1024 * 1024 * 1024) return `${(b / 1024 / 1024).toFixed(1)} MB`;
+    76→  return `${(b / 1024 / 1024 / 1024).toFixed(2)} GB`;
+    77→}
+    78→
+    79→function formatDate(s: string): string {
+    80→  try {
+    81→    return new Date(s).toLocaleString("ar-DZ", {
+    82→      year: "numeric",
+    83→      month: "2-digit",
+    84→      day: "2-digit",
+    85→      hour: "2-digit",
+    86→      minute: "2-digit",
+    87→    });
+    88→  } catch {
+    89→    return s;
+    90→  }
+    91→}
+    92→
+    93→// ============================================================
+    94→//  الصفحة
+    95→// ============================================================
+    96→
+    97→export default function VideosPage() {
+    98→  const [token, setToken] = React.useState<string | null>(null);
+    99→  const [password, setPassword] = React.useState("");
+   100→  const [loginError, setLoginError] = React.useState<string | null>(null);
+   101→  const [loginLoading, setLoginLoading] = React.useState(false);
+   102→
+   103→  const [title, setTitle] = React.useState("");
+   104→  const [description, setDescription] = React.useState("");
+   105→  const [chapterSlug, setChapterSlug] = React.useState("");
+   106→  const [unitSlug, setUnitSlug] = React.useState("");
+   107→  const [isPublished, setIsPublished] = React.useState(false);
+   108→  const [file, setFile] = React.useState<File | null>(null);
+   109→  const [uploading, setUploading] = React.useState(false);
+   110→  const [progress, setProgress] = React.useState(0);
+   111→
+   112→  const [videos, setVideos] = React.useState<VideoRow[]>([]);
+   113→  const [loadingList, setLoadingList] = React.useState(false);
+   114→  const [listError, setListError] = React.useState<string | null>(null);
+   115→  const { toast } = useToast();
+   116→
+   117→  // قراءة الرمز من sessionStorage بعد التحميل
+   118→  React.useEffect(() => {
+   119→    try {
+   120→      const saved = sessionStorage.getItem("admin-token");
+   121→      if (saved) setToken(saved);
+   122→    } catch {
+   123→      // تجاهل
+   124→    }
+   125→  }, []);
+   126→
+   127→  async function handleLogin(e: React.FormEvent) {
+   128→    e.preventDefault();
+   129→    setLoginLoading(true);
+   130→    setLoginError(null);
+   131→    try {
+   132→      const res = await fetch("/api/admin/login", {
+   133→        method: "POST",
+   134→        headers: { "Content-Type": "application/json" },
+   135→        body: JSON.stringify({ password }),
+   136→      });
+   137→      const data = await res.json();
+   138→      if (!res.ok || !data.success) {
+   139→        setLoginError(data.error || "كلمة السر غير صحيحة");
+   140→        return;
+   141→      }
+   142→      setToken(data.token);
+   143→      try {
+   144→        sessionStorage.setItem("admin-token", data.token);
+   145→      } catch {
+   146→        // تجاهل
+   147→      }
+   148→      setPassword("");
+   149→    } finally {
+   150→      setLoginLoading(false);
+   151→    }
+   152→  }
+   153→
+   154→  const loadList = React.useCallback(async () => {
+   155→    if (!token) return;
+   156→    setLoadingList(true);
+   157→    setListError(null);
+   158→    try {
+   159→      const res = await fetch("/api/admin/upload-video", {
+   160→        headers: { Authorization: `Bearer ${token}` },
+   161→      });
+   162→      const data = await res.json();
+   163→      if (!res.ok) {
+   164→        setListError(data.error || "تعذّر جلب القائمة");
+   165→        return;
+   166→      }
+   167→      setVideos(Array.isArray(data.videos) ? data.videos : []);
+   168→    } catch {
+   169→      setListError("تعذّر الاتصال بالخادم");
+   170→    } finally {
+   171→      setLoadingList(false);
+   172→    }
+   173→  }, [token]);
+   174→
+   175→  React.useEffect(() => {
+   176→    if (token) loadList();
+   177→  }, [token, loadList]);
+   178→
+   179→  async function handleUpload(e: React.FormEvent) {
+   180→    e.preventDefault();
+   181→    if (!token) return;
+   182→    if (!file) {
+   183→      toast({ title: "الرجاء اختيار ملف MP4", variant: "destructive" });
+   184→      return;
+   185→    }
+   186→    if (!title.trim()) {
+   187→      toast({ title: "العنوان مطلوب", variant: "destructive" });
+   188→      return;
+   189→    }
+   190→    if (!file.name.toLowerCase().endsWith(".mp4")) {
+   191→      toast({ title: "الملف يجب أن يكون MP4", variant: "destructive" });
+   192→      return;
+   193→    }
+   194→    if (file.size > 512 * 1024 * 1024) {
+   195→      toast({
+   196→        title: "الملف أكبر من 500 MB",
+   197→        variant: "destructive",
+   198→      });
+   199→      return;
+   200→    }
+   201→
+   202→    setUploading(true);
+   203→    setProgress(0);
+   204→    try {
+   205→      // استعمل XMLHttpRequest لتتبع التقدم
+   206→      const formData = new FormData();
+   207→      formData.append("file", file);
+   208→      formData.append("title", title);
+   209→      formData.append("description", description);
+   210→      formData.append("chapterSlug", chapterSlug);
+   211→      formData.append("unitSlug", unitSlug);
+   212→      formData.append("isPublished", isPublished ? "true" : "false");
+   213→
+   214→      const xhr = new XMLHttpRequest();
+   215→      xhr.open("POST", "/api/admin/upload-video");
+   216→      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+   217→      xhr.upload.onprogress = (ev) => {
+   218→        if (ev.lengthComputable) {
+   219→          setProgress(Math.round((ev.loaded / ev.total) * 100));
+   220→        }
+   221→      };
+   222→      const result = await new Promise<{ ok: boolean; data: unknown }>(
+   223→        (resolve, reject) => {
+   224→          xhr.onload = () => {
+   225→            try {
+   226→              const data = JSON.parse(xhr.responseText);
+   227→              resolve({ ok: xhr.status >= 200 && xhr.status < 300, data });
+   228→            } catch (err) {
+   229→              reject(err);
+   230→            }
+   231→          };
+   232→          xhr.onerror = () => reject(new Error("Network error"));
+   233→          xhr.send(formData);
+   234→        }
+   235→      );
+   236→
+   237→      if (!result.ok) {
+   238→        const err = (result.data as { error?: string }).error || "فشل الرفع";
+   239→        toast({ title: "فشل الرفع", description: err, variant: "destructive" });
+   240→        return;
+   241→      }
+   242→      toast({
+   243→        title: "تم رفع الفيديو ✅",
+   244→        description: `«${title}» (${formatBytes(file.size)})`,
+   245→      });
+   246→      // إعادة تعيين الحقول
+   247→      setTitle("");
+   248→      setDescription("");
+   249→      setChapterSlug("");
+   250→      setUnitSlug("");
+   251→      setIsPublished(false);
+   252→      setFile(null);
+   253→      setProgress(0);
+   254→      await loadList();
+   255→    } catch (err) {
+   256→      const msg = err instanceof Error ? err.message : "خطأ غير معروف";
+   257→      toast({ title: "فشل الرفع", description: msg, variant: "destructive" });
+   258→    } finally {
+   259→      setUploading(false);
+   260→    }
+   261→  }
+   262→
+   263→  // ---- شاشة الدخول ----
+   264→  if (!token) {
+   265→    return (
+   266→      <div
+   267→        dir="rtl"
+   268→        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 via-background to-amber-50 p-6"
+   269→      >
+   270→        <div className="w-full max-w-md">
+   271→          <div className="text-center mb-8">
+   272→            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-600 text-white shadow-lg mb-4">
+   273→              <VideoIcon className="w-8 h-8" />
+   274→            </div>
+   275→            <h1 className="text-2xl font-bold text-foreground">
+   276→              رفع الفيديوهات — لوحة الإدارة
+   277→            </h1>
+   278→            <p className="text-muted-foreground mt-2 text-sm">
+   279→              منصة الرياضيات — الأستاذ عدلي أسعد
+   280→            </p>
+   281→          </div>
+   282→          <Card>
+   283→            <CardHeader>
+   284→              <CardTitle className="flex items-center gap-2">
+   285→                <Lock className="w-5 h-5 text-emerald-600" />
+   286→                الدخول
+   287→              </CardTitle>
+   288→              <CardDescription>أدخل كلمة السر للوصول إلى رفع الفيديوهات.</CardDescription>
+   289→            </CardHeader>
+   290→            <CardContent>
+   291→              <form onSubmit={handleLogin} className="space-y-4">
+   292→                <div className="space-y-2">
+   293→                  <Label htmlFor="password">كلمة السر</Label>
+   294→                  <Input
+   295→                    id="password"
+   296→                    type="password"
+   297→                    value={password}
+   298→                    onChange={(e) => setPassword(e.target.value)}
+   299→                    placeholder="••••••••••••"
+   300→                    autoFocus
+   301→                    disabled={loginLoading}
+   302→                    required
+   303→                  />
+   304→                </div>
+   305→                {loginError && (
+   306→                  <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 rounded-md p-3">
+   307→                    <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+   308→                    <span>{loginError}</span>
+   309→                  </div>
+   310→                )}
+   311→                <div className="flex gap-2">
+   312→                  <Button
+   313→                    asChild
+   314→                    type="button"
+   315→                    variant="outline"
+   316→                    className="flex-1"
+   317→                  >
+   318→                    <a href="/admin">
+   319→                      <ArrowRight className="w-4 h-4" />
+   320→                      رجوع للوحة
+   321→                    </a>
+   322→                  </Button>
+   323→                  <Button
+   324→                    type="submit"
+   325→                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+   326→                    disabled={loginLoading || !password}
+   327→                  >
+   328→                    {loginLoading ? "جارٍ الدخول..." : "دخول"}
+   329→                  </Button>
+   330→                </div>
+   331→              </form>
+   332→            </CardContent>
+   333→          </Card>
+   334→        </div>
+   335→      </div>
+   336→    );
+   337→  }
+   338→
+   339→  // ---- صفحة الرفع ----
+   340→  return (
+   341→    <div
+   342→      dir="rtl"
+   343→      className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-background to-background flex flex-col"
+   344→    >
+   345→      <header className="bg-background border-b sticky top-0 z-20">
+   346→        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+   347→          <div className="flex items-center gap-3">
+   348→            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow">
+   349→              <VideoIcon className="w-5 h-5" />
+   350→            </div>
+   351→            <div>
+   352→              <h1 className="text-lg font-bold leading-tight">رفع الفيديوهات</h1>
+   353→              <p className="text-xs text-muted-foreground">منصة الرياضيات — الأستاذ عدلي أسعد</p>
+   354→            </div>
+   355→          </div>
+   356→          <div className="flex gap-2">
+   357→            <Button asChild variant="outline" size="sm">
+   358→              <a href="/admin">
+   359→                <ArrowRight className="w-4 h-4" />
+   360→                رجوع للوحة
+   361→              </a>
+   362→            </Button>
+   363→          </div>
+   364→        </div>
+   365→      </header>
+   366→
+   367→      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+   368→        {/* دليل إنشاء الفيديوهات */}
+   369→        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+   370→          {/* Explain Everything */}
+   371→          <Card>
+   372→            <CardHeader className="pb-3">
+   373→              <div className="flex items-center gap-2">
+   374→                <Tablet className="w-5 h-5 text-emerald-600" />
+   375→                <CardTitle className="text-base">Explain Everything</CardTitle>
+   376→              </div>
+   377→              <CardDescription>لوحة تفاعلية للشرح المرئي.</CardDescription>
+   378→            </CardHeader>
+   379→            <CardContent className="text-sm space-y-2 pt-0">
+   380→              <ol className="list-decimal pr-4 space-y-1.5 leading-7">
+   381→                <li>حمّل Explain Everything على iPad/Android.</li>
+   382→                <li>أنشئ مشروعاً جديداً واختر خلفية بيضاء.</li>
+   383→                <li>استورد صور الدرس أو اكتب الرياضيات مباشرة.</li>
+   384→                <li>اضبط جودة التصدير: 1080p MP4.</li>
+   385→                <li>سجّل الشرح بصوتك أثناء الكتابة.</li>
+   386→                <li>صدّر بصيغة MP4 ثم ارفعه هنا.</li>
+   387→              </ol>
+   388→              <a
+   389→                href="https://explaineverything.com/"
+   390→                target="_blank"
+   391→                rel="noopener noreferrer"
+   392→                className="inline-flex items-center gap-1 text-emerald-700 text-xs mt-2"
+   393→              >
+   394→                <ExternalLink className="w-3 h-3" />
+   395→                explaineverything.com
+   396→              </a>
+   397→            </CardContent>
+   398→          </Card>
+   399→
+   400→          {/* OBS Studio */}
+   401→          <Card>
+   402→            <CardHeader className="pb-3">
+   403→              <div className="flex items-center gap-2">
+   404→                <Monitor className="w-5 h-5 text-emerald-600" />
+   405→                <CardTitle className="text-base">OBS Studio</CardTitle>
+   406→              </div>
+   407→              <CardDescription>تسجيل الشاشة + صوت الميكروفون.</CardDescription>
+   408→            </CardHeader>
+   409→            <CardContent className="text-sm space-y-2 pt-0">
+   410→              <ol className="list-decimal pr-4 space-y-1.5 leading-7">
+   411→                <li>حمّل OBS Studio (مجاني، Windows/Mac/Linux).</li>
+   412→                <li>أضف Source: «Display Capture» أو «Window Capture».</li>
+   413→                <li>أضف Source: «Audio Input Capture» لميكروفونك.</li>
+   414→                <li>اضبط الإخراج: MP4 / 1920×1080 / 30 fps.</li>
+   415→                <li>اضبط معدل البت 4000–6000 Kbps للوضوح.</li>
+   416→                <li>ابدأ التسجيل، اشرح الدرس، ثم أوقف.</li>
+   417→              </ol>
+   418→              <a
+   419→                href="https://obsproject.com/"
+   420→                target="_blank"
+   421→                rel="noopener noreferrer"
+   422→                className="inline-flex items-center gap-1 text-emerald-700 text-xs mt-2"
+   423→              >
+   424→                <ExternalLink className="w-3 h-3" />
+   425→                obsproject.com
+   426→              </a>
+   427→            </CardContent>
+   428→          </Card>
+   429→
+   430→          {/* Notability */}
+   431→          <Card>
+   432→            <CardHeader className="pb-3">
+   433→              <div className="flex items-center gap-2">
+   434→                <PenTool className="w-5 h-5 text-emerald-600" />
+   435→                <CardTitle className="text-base">Notability (iPad)</CardTitle>
+   436→              </div>
+   437→              <CardDescription>تدوين وكتابة يدوية مع تسجيل صوتي.</CardDescription>
+   438→            </CardHeader>
+   439→            <CardContent className="text-sm space-y-2 pt-0">
+   440→              <ol className="list-decimal pr-4 space-y-1.5 leading-7">
+   441→                <li>افتح Notability على iPad مع Apple Pencil.</li>
+   442→                <li>أنشئ ملاحظة جديدة واكتب الدرس.</li>
+   443→                <li>اضغط زر التسجيل لتسجيل شرحك الصوتي.</li>
+   444→                <li>عند الانتهاء، اضغط Share → «Record».</li>
+   445→                <li>اختر MP4 (أو حوّل MOV إلى MP4).</li>
+   446→                <li>احفظ الملف ثم ارفعه هنا.</li>
+   447→              </ol>
+   448→              <a
+   449→                href="https://www.gingerlabs.com/"
+   450→                target="_blank"
+   451→                rel="noopener noreferrer"
+   452→                className="inline-flex items-center gap-1 text-emerald-700 text-xs mt-2"
+   453→              >
+   454→                <ExternalLink className="w-3 h-3" />
+   455→                gingerlabs.com
+   456→              </a>
+   457→            </CardContent>
+   458→          </Card>
+   459→        </div>
+   460→
+   461→        {/* نموذج الرفع */}
+   462→        <Card>
+   463→          <CardHeader>
+   464→            <CardTitle className="flex items-center gap-2">
+   465→              <Upload className="w-5 h-5 text-emerald-600" />
+   466→              رفع فيديو MP4
+   467→            </CardTitle>
+   468→            <CardDescription>
+   469→              الحد الأقصى 500 MB. سيُحفظ في مجلد <code className="bg-muted px-1.5 py-0.5 rounded">/upload/videos/</code>.
+   470→            </CardDescription>
+   471→          </CardHeader>
+   472→          <CardContent>
+   473→            <form onSubmit={handleUpload} className="space-y-4">
+   474→              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+   475→                <div className="space-y-2">
+   476→                  <Label htmlFor="title">العنوان *</Label>
+   477→                  <Input
+   478→                    id="title"
+   479→                    value={title}
+   480→                    onChange={(e) => setTitle(e.target.value)}
+   481→                    placeholder="مثلاً: المتتاليات الحسابية — شرح كامل"
+   482→                    required
+   483→                  />
+   484→                </div>
+   485→                <div className="space-y-2">
+   486→                  <Label htmlFor="file">ملف MP4 *</Label>
+   487→                  <Input
+   488→                    id="file"
+   489→                    type="file"
+   490→                    accept="video/mp4,.mp4"
+   491→                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+   492→                    required
+   493→                  />
+   494→                </div>
+   495→              </div>
+   496→
+   497→              <div className="space-y-2">
+   498→                <Label htmlFor="description">الوصف</Label>
+   499→                <Textarea
+   500→                  id="description"
+   501→                  value={description}
+   502→                  onChange={(e) => setDescription(e.target.value)}
+   503→                  placeholder="وصف موجز لمحتوى الفيديو"
+   504→                  rows={3}
+   505→                />
+   506→              </div>
+   507→
+   508→              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+   509→                <div className="space-y-2">
+   510→                  <Label htmlFor="unitSlug">وحدة (اختياري)</Label>
+   511→                  <Input
+   512→                    id="unitSlug"
+   513→                    value={unitSlug}
+   514→                    onChange={(e) => setUnitSlug(e.target.value)}
+   515→                    placeholder="مثلاً: sequences"
+   516→                  />
+   517→                </div>
+   518→                <div className="space-y-2">
+   519→                  <Label htmlFor="chapterSlug">فصل (اختياري)</Label>
+   520→                  <Input
+   521→                    id="chapterSlug"
+   522→                    value={chapterSlug}
+   523→                    onChange={(e) => setChapterSlug(e.target.value)}
+   524→                    placeholder="مثلاً: arithmetic-sequences"
+   525→                  />
+   526→                </div>
+   527→                <div className="space-y-2">
+   528→                  <Label>الحالة</Label>
+   529→                  <Select
+   530→                    value={isPublished ? "true" : "false"}
+   531→                    onValueChange={(v) => setIsPublished(v === "true")}
+   532→                  >
+   533→                    <SelectTrigger className="w-full">
+   534→                      <SelectValue />
+   535→                    </SelectTrigger>
+   536→                    <SelectContent>
+   537→                      <SelectItem value="false">مسودة (غير منشور)</SelectItem>
+   538→                      <SelectItem value="true">منشور</SelectItem>
+   539→                    </SelectContent>
+   540→                  </Select>
+   541→                </div>
+   542→              </div>
+   543→
+   544→              {file && (
+   545→                <div className="text-sm text-muted-foreground bg-muted/50 rounded-md p-3 flex items-center gap-2">
+   546→                  <FileVideo className="w-4 h-4 text-emerald-600" />
+   547→                  <span className="font-medium">{file.name}</span>
+   548→                  <span>·</span>
+   549→                  <span>{formatBytes(file.size)}</span>
+   550→                </div>
+   551→              )}
+   552→
+   553→              {uploading && progress > 0 && (
+   554→                <div className="space-y-2">
+   555→                  <div className="flex items-center justify-between text-sm">
+   556→                    <span className="text-muted-foreground">جارٍ الرفع...</span>
+   557→                    <span className="font-medium">{progress}%</span>
+   558→                  </div>
+   559→                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+   560→                    <div
+   561→                      className="h-full bg-emerald-600 transition-all"
+   562→                      style={{ width: `${progress}%` }}
+   563→                    />
+   564→                  </div>
+   565→                </div>
+   566→              )}
+   567→
+   568→              <div className="flex justify-end">
+   569→                <Button
+   570→                  type="submit"
+   571→                  disabled={uploading || !file || !title}
+   572→                  className="bg-emerald-600 hover:bg-emerald-700"
+   573→                >
+   574→                  {uploading ? (
+   575→                    <>
+   576→                      <RefreshCw className="w-4 h-4 animate-spin" />
+   577→                      جارٍ الرفع...
+   578→                    </>
+   579→                  ) : (
+   580→                    <>
+   581→                      <Upload className="w-4 h-4" />
+   582→                      رفع الفيديو
+   583→                    </>
+   584→                  )}
+   585→                </Button>
+   586→              </div>
+   587→            </form>
+   588→          </CardContent>
+   589→        </Card>
+   590→
+   591→        {/* قائمة الفيديوهات */}
+   592→        <Card>
+   593→          <CardHeader>
+   594→            <div className="flex items-center justify-between gap-3 flex-wrap">
+   595→              <div>
+   596→                <CardTitle className="flex items-center gap-2">
+   597→                  <FileVideo className="w-5 h-5 text-emerald-600" />
+   598→                  آخر الفيديوهات المرفوعة
+   599→                </CardTitle>
+   600→                <CardDescription>
+   601→                  {videos.length} فيديو
+   602→                </CardDescription>
+   603→              </div>
+   604→              <Button
+   605→                variant="outline"
+   606→                size="sm"
+   607→                onClick={loadList}
+   608→                disabled={loadingList}
+   609→              >
+   610→                <RefreshCw className={`w-4 h-4 ${loadingList ? "animate-spin" : ""}`} />
+   611→                تحديث
+   612→              </Button>
+   613→            </div>
+   614→          </CardHeader>
+   615→          <CardContent>
+   616→            {listError && (
+   617→              <div className="text-sm text-destructive bg-destructive/10 rounded-md p-3 mb-4 flex items-center gap-2">
+   618→                <AlertTriangle className="w-4 h-4" />
+   619→                {listError}
+   620→              </div>
+   621→            )}
+   622→            {loadingList ? (
+   623→              <div className="text-center text-muted-foreground py-12">جارٍ التحميل...</div>
+   624→            ) : videos.length === 0 ? (
+   625→              <div className="text-center text-muted-foreground py-12">
+   626→                لا توجد فيديوهات مرفوعة بعد.
+   627→              </div>
+   628→            ) : (
+   629→              <div className="max-h-[500px] overflow-y-auto space-y-3 pr-1">
+   630→                {videos.map((v) => (
+   631→                  <div
+   632→                    key={v.id}
+   633→                    className="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-4"
+   634→                  >
+   635→                    <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+   636→                      <FileVideo className="w-6 h-6" />
+   637→                    </div>
+   638→                    <div className="flex-1 min-w-0">
+   639→                      <div className="flex items-center gap-2 flex-wrap">
+   640→                        <h4 className="font-semibold text-sm">{v.title}</h4>
+   641→                        <Badge variant={v.isPublished ? "default" : "secondary"}>
+   642→                          {v.isPublished ? (
+   643→                            <>
+   644→                              <CheckCircle2 className="w-3 h-3" />
+   645→                              منشور
+   646→                            </>
+   647→                          ) : (
+   648→                            "مسودة"
+   649→                          )}
+   650→                        </Badge>
+   651→                      </div>
+   652→                      {v.description && (
+   653→                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+   654→                          {v.description}
+   655→                        </p>
+   656→                      )}
+   657→                      <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1">
+   658→                        <span>📁 {v.fileName}</span>
+   659→                        <span>·</span>
+   660→                        <span>{formatBytes(v.fileSize)}</span>
+   661→                        <span>·</span>
+   662→                        <span>{formatDate(v.createdAt)}</span>
+   663→                        {v.chapterSlug && (
+   664→                          <>
+   665→                            <span>·</span>
+   666→                            <span>فصل: {v.chapterSlug}</span>
+   667→                          </>
+   668→                        )}
+   669→                      </div>
+   670→                    </div>
+   671→                    <div className="shrink-0">
+   672→                      <Button asChild variant="outline" size="sm">
+   673→                        <a href={v.filePath} target="_blank" rel="noopener noreferrer">
+   674→                          <ExternalLink className="w-4 h-4" />
+   675→                          فتح
+   676→                        </a>
+   677→                      </Button>
+   678→                    </div>
+   679→                  </div>
+   680→                ))}
+   681→              </div>
+   682→            )}
+   683→          </CardContent>
+   684→        </Card>
+   685→      </main>
+   686→
+   687→      <footer className="mt-auto border-t bg-background">
+   688→        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 text-center text-xs text-muted-foreground">
+   689→          © {new Date().getFullYear()} منصة الرياضيات — الأستاذ عدلي أسعد. جميع الحقوق محفوظة.
+   690→        </div>
+   691→      </footer>
+   692→    </div>
+   693→  );
+   694→}
+   695→

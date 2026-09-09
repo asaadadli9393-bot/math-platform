@@ -23,7 +23,6 @@ export function Math({ tex, display = false, className = "" }: MathProps) {
         strict: false,
         trust: true,
         output: "htmlAndMathml",
-        dir: "ltr",
       });
     } catch (e) {
       return `<span style="color: red;">خطأ في صياغة LaTeX: ${String(e)}</span>`;
@@ -142,7 +141,7 @@ export function MarkdownMath({ content, className = "" }: MarkdownMathProps) {
                 key={idx}
                 className="text-2xl font-bold text-primary border-r-4 border-primary pr-3 mt-4 mb-2"
               >
-                <MathText content={block.content} />
+                <MathText content={block.content ?? ""} />
               </h2>
             );
           case "h3":
@@ -151,7 +150,7 @@ export function MarkdownMath({ content, className = "" }: MarkdownMathProps) {
                 key={idx}
                 className="text-xl font-bold text-accent-foreground mt-3 mb-1"
               >
-                <MathText content={block.content} />
+                <MathText content={block.content ?? ""} />
               </h3>
             );
           case "h4":
@@ -160,13 +159,13 @@ export function MarkdownMath({ content, className = "" }: MarkdownMathProps) {
                 key={idx}
                 className="text-lg font-semibold mt-2 mb-1"
               >
-                <MathText content={block.content} />
+                <MathText content={block.content ?? ""} />
               </h4>
             );
           case "list":
             return (
               <ul key={idx} className="list-disc pr-6 space-y-1">
-                {block.items.map((item, i) => (
+                {(block.items ?? []).map((item, i) => (
                   <li key={i} className="text-base">
                     <MathText content={item} />
                   </li>
@@ -180,19 +179,19 @@ export function MarkdownMath({ content, className = "" }: MarkdownMathProps) {
                 className="bg-muted p-3 rounded-md overflow-x-auto text-sm font-mono"
                 dir="ltr"
               >
-                <code>{block.content}</code>
+                <code>{block.content ?? ""}</code>
               </pre>
             );
           case "paragraph":
             return (
               <p key={idx} className="text-base leading-relaxed">
-                <MathText content={block.content} />
+                <MathText content={block.content ?? ""} />
               </p>
             );
           case "display":
-            return <Math key={idx} tex={block.content} display />;
+            return <Math key={idx} tex={block.content ?? ""} display />;
           case "table":
-            return <MarkdownTable key={idx} table={block.rows} />;
+            return <MarkdownTable key={idx} table={block.rows ?? []} />;
           default:
             return null;
         }

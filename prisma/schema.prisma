@@ -176,6 +176,9 @@ model ExerciseAttempt {
   // زمن الإجابة بالثواني
   timeSpentSec Int?
   createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([exerciseId])
 }
 
 // ============================================================
@@ -221,6 +224,9 @@ model QuizResult {
   answers     String   // JSON of user answers
   timeSpentSec Int?
   createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([quizId])
 }
 
 // ============================================================
@@ -246,6 +252,7 @@ model UnitProgress {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@unique([userId, unitId])
+  @@index([userId])
 }
 
 // سجل تقدم يومي (للرسم البياني في لوحة التحكم)
@@ -272,4 +279,117 @@ model Notification {
   type        String   @default("info")  // info | success | warning | alert
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
+}
+
+// ============================================================
+//  المدفوعات والاشتراكات (لوحة الإدارة)
+// ============================================================
+
+enum PaymentStatus {
+  PENDING      // قيد الانتظار
+  VERIFIED     // تم التحقق منها
+  REJECTED     // مرفوضة
+  EXPIRED      // منتهية الصلاحية
+  CANCELLED    // ملغاة
+}
+
+enum PaymentMethod {
+  CIB            // البطاقة الذهبية
+  BARIDI_MOB     // بريدي موب
+  CCP            // حساب بريدي
+  BANK_TRANSFER  // تحويل بنكي
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  paymentId      String        @unique   // معرّف فريد للدفعة (مولّد)
+  transactionRef String?       // رقم العملية من البنك/بريدي موب
+  plan           String        // الباقة (FREE/BASIC/PREMIUM/FAMILY)
+  method         PaymentMethod
+  amount         Int           // بالدينار الجزائري
+  status         PaymentStatus @default(PENDING)
+  // بيانات الطالب / المشترك
+  studentName    String?
+  phone          String        @unique   // هاتف الطالب/المشترك (مُسجَّل بحق الوصول)
+  email          String?
+  // بيانات إضافية حسب طريقة الدفع (JSON)
+  metadata       String?
+  // تواريخ
+  verifiedAt     DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // فهارس لتسريع الاستعلامات الإدارية
+  @@index([phone])
+  @@index([transactionRef])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@unique([transactionRef])
+}
+
+// ============================================================
+//  إشعارات المدفوعات (مرتبطة بكل دفعة)
+//  مستقلة عن جدول Notification العامة لتفادي التضارب مع userId.
+// ============================================================
+
+model PaymentNotification {
+  id          String   @id @default(cuid())
+  paymentId   String?  // قد يكون null إذا لم يُربط بدفعة معيّنة
+  title       String
+  body        String
+  type        String   @default("info")  // info | success | warning | alert
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([read, createdAt])
+  @@index([createdAt])
+  @@index([paymentId])
+}
+
+// ============================================================
+//  إعدادات المنصة (Key/Value) — SMTP، ADMIN_EMAIL، WEBHOOK، إلخ.
+// ============================================================
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  category  String   @default("general")  // smtp | email | admin | webhook | general
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+//  إعدادات لوحة الإدارة (Key/Value) — مفصولة عن إعدادات المنصة
+//  يستعملها لوحة الإدارة فقط: SMTP، RESEND، WEBHOOK، TELEGRAM، ADMIN_EMAIL...
+// ============================================================
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+//  الفيديوهات المرفوعة من لوحة الإدارة
+// ============================================================
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileName    String
+  filePath    String   // المسار النسبي داخل /upload
+  fileSize    Int      // بالبايت
+  duration    Int?     // بالثواني (اختياري)
+  chapterSlug String?  // الفصل المرتبط (اختياري)
+  unitSlug    String?   // الوحدة المرتبطة (اختياري)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([chapterSlug])
+  @@index([unitSlug])
 }

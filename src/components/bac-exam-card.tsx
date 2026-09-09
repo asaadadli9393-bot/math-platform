@@ -41,8 +41,8 @@ export function BacExamCard({ exam }: BacExamCardProps) {
                 <Clock className="w-3 h-3 ml-1" />
                 {exam.duration}
               </Badge>
-              <Badge variant="ghost">المعامل: {exam.coefficient}</Badge>
-              <Badge variant="ghost">{exam.totalPoints} نقطة</Badge>
+              <Badge variant="outline">المعامل: {exam.coefficient}</Badge>
+              <Badge variant="outline">{exam.totalPoints} نقطة</Badge>
             </div>
           </div>
           <Button
@@ -98,7 +98,7 @@ export function BacExamCard({ exam }: BacExamCardProps) {
                     {q.hint && (
                       <div>
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => toggleHint(hintKey)}
                           className="text-amber-700 gap-1"

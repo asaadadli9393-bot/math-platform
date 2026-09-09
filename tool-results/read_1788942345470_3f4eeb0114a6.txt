@@ -1,0 +1,2002 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+     5→import { Button } from "@/components/ui/button";
+     6→import { Badge } from "@/components/ui/badge";
+     7→import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+     8→import { Progress } from "@/components/ui/progress";
+     9→import { Separator } from "@/components/ui/separator";
+    10→import {
+    11→  Sheet,
+    12→  SheetContent,
+    13→  SheetTrigger,
+    14→  SheetHeader,
+    15→  SheetTitle,
+    16→} from "@/components/ui/sheet";
+    17→import {
+    18→  Accordion,
+    19→  AccordionContent,
+    20→  AccordionItem,
+    21→  AccordionTrigger,
+    22→} from "@/components/ui/accordion";
+    23→import { Input } from "@/components/ui/input";
+    24→import { Label } from "@/components/ui/label";
+    25→import {
+    26→  Dialog,
+    27→  DialogContent,
+    28→  DialogHeader,
+    29→  DialogTitle,
+    30→  DialogTrigger,
+    31→  DialogDescription,
+    32→} from "@/components/ui/dialog";
+    33→import { MarkdownMath } from "@/components/math-renderer";
+    34→import { ExerciseCard } from "@/components/exercise-card";
+    35→import { InteractiveQuiz } from "@/components/interactive-quiz";
+    36→import { StudentDashboard } from "@/components/student-dashboard";
+    37→import { ParentPortal } from "@/components/parent-portal";
+    38→import { curriculum, getCurriculumStats } from "@/data/curriculum";
+    39→import { quizzes } from "@/data/quizzes";
+    40→import { bacExams, getBacExamsStats, streamLabelsBac, type BacStream } from "@/data/bac-exams";
+    41→import { BacExamCard } from "@/components/bac-exam-card";
+    42→import { courses, getCoursesStats, courseStreamLabels, courseLevelLabels, type Course } from "@/data/courses";
+    43→import { CourseCard, CourseDetail } from "@/components/course-card";
+    44→import {
+    45→  plans,
+    46→  paymentMethods,
+    47→  digitalProducts,
+    48→  formatPrice,
+    49→  formatPriceMonthly,
+    50→  getPlansStats,
+    51→  getProductsStats,
+    52→  planLabelsAr,
+    53→  productCategoryLabels,
+    54→  type Plan,
+    55→  type PlanTier,
+    56→  type PaymentMethodInfo,
+    57→  type DigitalProduct,
+    58→} from "@/data/monetization";
+    59→import {
+    60→  getLessonSummary,
+    61→  getVideoSimulation,
+    62→  getLessonEnhancementsStats,
+    63→} from "@/data/lesson-enhancements";
+    64→import { VideoSimulationPlayer } from "@/components/video-simulation-player";
+    65→import {
+    66→  difficultyLabels,
+    67→  difficultyColors,
+    68→  streamLabels,
+    69→  type ExerciseDifficulty,
+    70→} from "@/lib/curriculum-types";
+    71→import { useStudentStore } from "@/lib/student-store";
+    72→import {
+    73→  GraduationCap,
+    74→  BookOpen,
+    75→  Calculator,
+    76→  Sigma,
+    77→  CircleDot,
+    78→  Dices,
+    79→  Box,
+    80→  Divide,
+    81→  LineChart,
+    82→  TrendingUp,
+    83→  User,
+    84→  LayoutDashboard,
+    85→  Users,
+    86→  Menu,
+    87→  Star,
+    88→  Award,
+    89→  ChevronLeft,
+    90→  ChevronRight,
+    91→  Sparkles,
+    92→  Target,
+    93→  Heart,
+    94→  Phone,
+    95→  Mail,
+    96→  MapPin,
+    97→  Quote,
+    98→  Eye,
+    99→  FileText,
+   100→  Trophy,
+   101→  Clock,
+   102→  Calendar,
+   103→  PlayCircle,
+   104→  Layers,
+   105→  CheckCircle2,
+   106→  Home,
+   107→  CreditCard,
+   108→  ShoppingBag,
+   109→  Lock,
+   110→  Check,
+   111→  X,
+   112→  Download,
+   113→  Zap,
+   114→  ShieldCheck,
+   115→  Gift,
+   116→} from "lucide-react";
+   117→import { useToast } from "@/hooks/use-toast";
+   118→
+   119→// خريطة الأيقونات
+   120→const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+   121→  TrendingUp,
+   122→  Sigma,
+   123→  CircleDot,
+   124→  Dices,
+   125→  Box,
+   126→  Divide,
+   127→  LineChart,
+   128→  Calculator,
+   129→};
+   130→
+   131→type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "products" | "dashboard" | "parent" | "about";
+   132→
+   133→export default function HomePage() {
+   134→  const [view, setView] = React.useState<MainView>("home");
+   135→  const [selectedUnitSlug, setSelectedUnitSlug] = React.useState<string | null>(null);
+   136→  const [selectedQuizId, setSelectedQuizId] = React.useState<string | null>(null);
+   137→  const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(null);
+   138→  const [selectedPlanId, setSelectedPlanId] = React.useState<"BASIC" | "PREMIUM" | "FAMILY" | null>(null);
+   139→  const [selectedProductSlug, setSelectedProductSlug] = React.useState<string | null>(null);
+   140→  const [sheetOpen, setSheetOpen] = React.useState(false);
+   141→
+   142→  const stats = getCurriculumStats();
+   143→  const profile = useStudentStore((s) => s.profile);
+   144→  const updateProfile = useStudentStore((s) => s.updateProfile);
+   145→  const setUnitProgress = useStudentStore((s) => s.setUnitProgress);
+   146→  const lastVisitedUnit = useStudentStore((s) => s.lastVisitedUnit);
+   147→  const setLastVisitedUnit = useStudentStore((s) => s.setLastVisitedUnit);
+   148→  const { toast } = useToast();
+   149→
+   150→  // التهيئة (Onboarding) عند أول زيارة
+   151→  const [onboardingOpen, setOnboardingOpen] = React.useState(false);
+   152→  React.useEffect(() => {
+   153→    if (!profile?.onboarded) {
+   154→      setOnboardingOpen(true);
+   155→    }
+   156→  }, [profile]);
+   157→
+   158→  const navigateTo = (target: MainView, unitSlug?: string, quizId?: string) => {
+   159→    setView(target);
+   160→    if (unitSlug) {
+   161→      setSelectedUnitSlug(unitSlug);
+   162→      setLastVisitedUnit(unitSlug);
+   163→      setUnitProgress(unitSlug, {});
+   164→    }
+   165→    if (quizId) {
+   166→      setSelectedQuizId(quizId);
+   167→    }
+   168→    setSheetOpen(false);
+   169→    window.scrollTo({ top: 0, behavior: "smooth" });
+   170→  };
+   171→
+   172→  const selectedUnit = curriculum.find((u) => u.slug === selectedUnitSlug);
+   173→  const selectedQuiz = quizzes.find((q) => q.id === selectedQuizId);
+   174→
+   175→  return (
+   176→    <div className="min-h-screen flex flex-col bg-background pattern-bg" dir="rtl">
+   177→      {/* =================================================== */}
+   178→      {/*  الرأس (Header) — ثابت في الأعلى                       */}
+   179→      {/* =================================================== */}
+   180→      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
+   181→        <div className="container mx-auto px-4 py-3">
+   182→          <div className="flex items-center justify-between gap-4">
+   183→            {/* الشعار */}
+   184→            <div className="flex items-center gap-3">
+   185→              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+   186→                <Sigma className="w-6 h-6 text-primary-foreground" />
+   187→              </div>
+   188→              <div>
+   189→                <div className="font-bold text-lg leading-tight">منصة الرياضيات</div>
+   190→                <div className="text-xs text-muted-foreground leading-tight flex items-center gap-1">
+   191→                  <img
+   192→                    src="/teachers/adli-asad.jpg"
+   193→                    alt="الأستاذ عدلي أسعد"
+   194→                    className="w-4 h-4 rounded-full object-cover border border-primary/30"
+   195→                  />
+   196→                  الأستاذ عدلي أسعد
+   197→                </div>
+   198→              </div>
+   199→            </div>
+   200→
+   201→            {/* القائمة الرئيسية — على الشاشات الكبيرة */}
+   202→            <nav className="hidden md:flex items-center gap-2">
+   203→              <NavButton active={view === "home"} onClick={() => navigateTo("home")}>
+   204→                <Home className="w-4 h-4 ml-2" />
+   205→                الرئيسية
+   206→              </NavButton>
+   207→              <NavButton active={view === "trimesters"} onClick={() => navigateTo("trimesters")}>
+   208→                <Calendar className="w-4 h-4 ml-2" />
+   209→                الفصول
+   210→              </NavButton>
+   211→              <NavButton active={view === "curriculum"} onClick={() => navigateTo("curriculum")}>
+   212→                <Calculator className="w-4 h-4 ml-2" />
+   213→                المنهاج
+   214→              </NavButton>
+   215→              <NavButton active={view === "exams"} onClick={() => navigateTo("exams")}>
+   216→                <Trophy className="w-4 h-4 ml-2" />
+   217→                المواضيع
+   218→              </NavButton>
+   219→              <NavButton active={view === "courses"} onClick={() => navigateTo("courses")}>
+   220→                <PlayCircle className="w-4 h-4 ml-2" />
+   221→                الدورات
+   222→              </NavButton>
+   223→              <NavButton active={view === "products"} onClick={() => navigateTo("products")}>
+   224→                <ShoppingBag className="w-4 h-4 ml-2" />
+   225→                المتجر
+   226→              </NavButton>
+   227→              <NavButton active={view === "pricing"} onClick={() => navigateTo("pricing")}>
+   228→                <CreditCard className="w-4 h-4 ml-2" />
+   229→                الباقات
+   230→              </NavButton>
+   231→              <NavButton active={view === "dashboard"} onClick={() => navigateTo("dashboard")}>
+   232→                <LayoutDashboard className="w-4 h-4 ml-2" />
+   233→                لوحتي
+   234→              </NavButton>
+   235→              <NavButton active={view === "about"} onClick={() => navigateTo("about")}>
+   236→                <Sparkles className="w-4 h-4 ml-2" />
+   237→                عن المنصة
+   238→              </NavButton>
+   239→            </nav>
+   240→
+   241→            {/* زر القائمة على الجوال */}
+   242→            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+   243→              <SheetTrigger asChild>
+   244→                <Button variant="outline" size="icon" className="md:hidden">
+   245→                  <Menu className="w-5 h-5" />
+   246→                </Button>
+   247→              </SheetTrigger>
+   248→              <SheetContent side="right" className="w-72">
+   249→                <SheetHeader>
+   250→                  <SheetTitle className="text-right">القائمة</SheetTitle>
+   251→                </SheetHeader>
+   252→                <nav className="flex flex-col gap-2 mt-6">
+   253→                  <MobileNavButton onClick={() => navigateTo("home")}>
+   254→                    <Home className="w-4 h-4 ml-2" /> الرئيسية
+   255→                  </MobileNavButton>
+   256→                  <MobileNavButton onClick={() => navigateTo("trimesters")}>
+   257→                    <Calendar className="w-4 h-4 ml-2" /> الفصول الدراسية
+   258→                  </MobileNavButton>
+   259→                  <MobileNavButton onClick={() => navigateTo("curriculum")}>
+   260→                    <Calculator className="w-4 h-4 ml-2" /> المنهاج
+   261→                  </MobileNavButton>
+   262→                  <MobileNavButton onClick={() => navigateTo("exams")}>
+   263→                    <Trophy className="w-4 h-4 ml-2" /> المواضيع الشاملة
+   264→                  </MobileNavButton>
+   265→                  <MobileNavButton onClick={() => navigateTo("courses")}>
+   266→                    <PlayCircle className="w-4 h-4 ml-2" /> الدورات
+   267→                  </MobileNavButton>
+   268→                  <MobileNavButton onClick={() => navigateTo("products")}>
+   269→                    <ShoppingBag className="w-4 h-4 ml-2" /> المتجر
+   270→                  </MobileNavButton>
+   271→                  <MobileNavButton onClick={() => navigateTo("pricing")}>
+   272→                    <CreditCard className="w-4 h-4 ml-2" /> الباقات والأسعار
+   273→                  </MobileNavButton>
+   274→                  <MobileNavButton onClick={() => navigateTo("dashboard")}>
+   275→                    <LayoutDashboard className="w-4 h-4 ml-2" /> لوحة التحكم
+   276→                  </MobileNavButton>
+   277→                  <MobileNavButton onClick={() => navigateTo("parent")}>
+   278→                    <Users className="w-4 h-4 ml-2" /> فضاء ولي الأمر
+   279→                  </MobileNavButton>
+   280→                  <MobileNavButton onClick={() => navigateTo("about")}>
+   281→                    <Sparkles className="w-4 h-4 ml-2" /> عن المنصة
+   282→                  </MobileNavButton>
+   283→                </nav>
+   284→              </SheetContent>
+   285→            </Sheet>
+   286→          </div>
+   287→        </div>
+   288→      </header>
+   289→
+   290→      {/* =================================================== */}
+   291→      {/*  المحتوى الرئيسي                                     */}
+   292→      {/* =================================================== */}
+   293→      <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
+   294→        {view === "home" && <HomeView onNavigate={navigateTo} />}
+   295→
+   296→        {view === "trimesters" && (
+   297→          <TrimestersView onSelectUnit={(slug) => navigateTo("unit", slug)} onNavigateCurriculum={() => navigateTo("curriculum")} />
+   298→        )}
+   299→
+   300→        {view === "curriculum" && (
+   301→          <CurriculumView
+   302→            onSelectUnit={(slug) => navigateTo("unit", slug)}
+   303→          />
+   304→        )}
+   305→
+   306→        {view === "unit" && selectedUnit && (
+   307→          <UnitView unit={selectedUnit} onBack={() => navigateTo("curriculum")} />
+   308→        )}
+   309→
+   310→        {view === "quiz" && selectedQuiz && (
+   311→          <QuizSelectionView onSelectQuiz={(id) => navigateTo("quiz", undefined, id)} />
+   312→        )}
+   313→
+   314→        {view === "exams" && <ExamsView />}
+   315→
+   316→        {view === "pricing" && (
+   317→          <PricingView onSelectPlan={(planId) => {
+   318→            setSelectedPlanId(planId);
+   319→            setView("payment");
+   320→            window.scrollTo({ top: 0, behavior: "smooth" });
+   321→          }} />
+   322→        )}
+   323→
+   324→        {view === "payment" && selectedPlanId && (
+   325→          <PaymentView
+   326→            planId={selectedPlanId}
+   327→            onBack={() => navigateTo("pricing")}
+   328→            onSuccess={(planId, months) => {
+   329→              const tier = planId as "BASIC" | "PREMIUM" | "FAMILY";
+   330→              useStudentStore.getState().subscribeToPlan(tier, months);
+   331→              toast({
+   332→                title: "تم تفعيل اشتراكك بنجاح! 🎉",
+   333→                description: `أنت الآن في الباقة ${planLabelsAr[tier]} — لمدة ${months} شهر. استمتع بالكامل!`,
+   334→              });
+   335→              setView("dashboard");
+   336→            }}
+   337→          />
+   338→        )}
+   339→
+   340→        {view === "products" && (
+   341→          <ProductsView
+   342→            onPurchase={(slug) => {
+   343→              setSelectedProductSlug(slug);
+   344→              setView("payment-product");
+   345→            }}
+   346→          />
+   347→        )}
+   348→
+   349→        {view === "courses" && (
+   350→          <CoursesView onSelectCourse={(c) => {
+   351→            setSelectedCourse(c);
+   352→            setView("course-detail");
+   353→            window.scrollTo({ top: 0, behavior: "smooth" });
+   354→          }} />
+   355→        )}
+   356→
+   357→        {view === "course-detail" && selectedCourse && (
+   358→          <CourseDetail
+   359→            course={selectedCourse}
+   360→            onBack={() => navigateTo("courses")}
+   361→          />
+   362→        )}
+   363→
+   364→        {view === "dashboard" && <StudentDashboard />}
+   365→
+   366→        {view === "parent" && <ParentPortal />}
+   367→
+   368→        {view === "about" && <AboutView />}
+   369→      </main>
+   370→
+   371→      {/* =================================================== */}
+   372→      {/*  التذييل (Footer)                                    */}
+   373→      {/* =================================================== */}
+   374→      <footer className="bg-primary text-primary-foreground mt-auto">
+   375→        <div className="container mx-auto px-4 py-8">
+   376→          <div className="grid md:grid-cols-3 gap-6">
+   377→            <div>
+   378→              <div className="flex items-center gap-2 mb-3">
+   379→                <Sigma className="w-6 h-6" />
+   380→                <span className="font-bold">منصة الرياضيات</span>
+   381→              </div>
+   382→              <p className="text-sm text-primary-foreground/80 leading-relaxed">
+   383→                منصة تعليمية تفاعلية لطلبة السنة الثالثة ثانوي (الشعب العلمية)
+   384→                في الجزائر، متوافقة كلياً مع المنهاج الرسمي لوزارة التربية الوطنية.
+   385→              </p>
+   386→            </div>
+   387→
+   388→            <div>
+   389→              <h4 className="font-bold mb-3 academic-divider">المحتوى</h4>
+   390→              <ul className="space-y-1 text-sm text-primary-foreground/80">
+   391→                {curriculum.map((unit) => (
+   392→                  <li key={unit.slug}>
+   393→                    <button
+   394→                      onClick={() => navigateTo("unit", unit.slug)}
+   395→                      className="hover:text-accent transition-colors"
+   396→                    >
+   397→                      {unit.title}
+   398→                    </button>
+   399→                  </li>
+   400→                ))}
+   401→                <li className="pt-2 border-t border-primary-foreground/20 mt-2">
+   402→                  <button
+   403→                    onClick={() => navigateTo("trimesters")}
+   404→                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+   405→                  >
+   406→                    <Calendar className="w-3 h-3" />
+   407→                    الفصول الدراسية
+   408→                  </button>
+   409→                </li>
+   410→                <li>
+   411→                  <button
+   412→                    onClick={() => navigateTo("courses")}
+   413→                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+   414→                  >
+   415→                    <PlayCircle className="w-3 h-3" />
+   416→                    الدورات الشاملة
+   417→                  </button>
+   418→                </li>
+   419→                <li>
+   420→                  <button
+   421→                    onClick={() => navigateTo("products")}
+   422→                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+   423→                  >
+   424→                    <ShoppingBag className="w-3 h-3" />
+   425→                    المتجر
+   426→                  </button>
+   427→                </li>
+   428→                <li>
+   429→                  <button
+   430→                    onClick={() => navigateTo("pricing")}
+   431→                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+   432→                  >
+   433→                    <CreditCard className="w-3 h-3" />
+   434→                    الباقات والأسعار
+   435→                  </button>
+   436→                </li>
+   437→                <li>
+   438→                  <button
+   439→                    onClick={() => navigateTo("exams")}
+   440→                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
+   441→                  >
+   442→                    <Trophy className="w-3 h-3" />
+   443→                    مواضيع البكالوريا
+   444→                  </button>
+   445→                </li>
+   446→              </ul>
+   447→            </div>
+   448→
+   449→            <div>
+   450→              <h4 className="font-bold mb-3 academic-divider">تواصل معنا</h4>
+   451→              <ul className="space-y-2 text-sm text-primary-foreground/80">
+   452→                <li className="flex items-center gap-2">
+   453→                  <img
+   454→                    src="/teachers/adli-asad.jpg"
+   455→                    alt="الأستاذ عدلي أسعد"
+   456→                    className="w-6 h-6 rounded-full object-cover border border-primary-foreground/30"
+   457→                  />
+   458→                  الأستاذ عدلي أسعد — المشرف البيداغوجي
+   459→                </li>
+   460→                <li className="flex items-center gap-2">
+   461→                  <Mail className="w-4 h-4" />
+   462→                  contact@adli-math.dz
+   463→                </li>
+   464→                <li className="flex items-center gap-2">
+   465→                  <Phone className="w-4 h-4" />
+   466→                  +213 0 00 00 00 00
+   467→                </li>
+   468→                <li className="flex items-center gap-2">
+   469→                  <MapPin className="w-4 h-4" />
+   470→                  الجزائر — الجمهورية الجزائرية الديمقراطية الشعبية
+   471→                </li>
+   472→              </ul>
+   473→            </div>
+   474→          </div>
+   475→
+   476→          <Separator className="my-6 bg-primary-foreground/20" />
+   477→
+   478→          <div className="text-center text-sm text-primary-foreground/60">
+   479→            © {new Date().getFullYear()} منصة الرياضيات — الأستاذ عدلي أسعد. جميع الحقوق محفوظة.
+   480→            <div className="mt-2">
+   481→              صُممت بكل حب لطلبة البكالوريا في الجزائر 🇩🇿
+   482→            </div>
+   483→          </div>
+   484→        </div>
+   485→      </footer>
+   486→
+   487→      {/* حوار التهيئة */}
+   488→      <OnboardingDialog
+   489→        open={onboardingOpen}
+   490→        onOpenChange={setOnboardingOpen}
+   491→        onComplete={(p) => {
+   492→          updateProfile({ ...p, onboarded: true });
+   493→          setOnboardingOpen(false);
+   494→          toast({
+   495→            title: "أهلاً وسهلاً! 🎉",
+   496→            description: `تم تسجيلك بنجاح. ابدأ رحلتك نحو البكالوريا!`,
+   497→          });
+   498→        }}
+   499→      />
+   500→    </div>
+   501→  );
+   502→}
+   503→
+   504→// ===================================================
+   505→//  مكوّن المساعدة (Sub-components)
+   506→// ===================================================
+   507→
+   508→function NavButton({
+   509→  active,
+   510→  onClick,
+   511→  children,
+   512→}: {
+   513→  active: boolean;
+   514→  onClick: () => void;
+   515→  children: React.ReactNode;
+   516→}) {
+   517→  return (
+   518→    <Button
+   519→      variant={active ? "default" : "ghost"}
+   520→      size="sm"
+   521→      onClick={onClick}
+   522→      className="gap-1"
+   523→    >
+   524→      {children}
+   525→    </Button>
+   526→  );
+   527→}
+   528→
+   529→function MobileNavButton({
+   530→  onClick,
+   531→  children,
+   532→}: {
+   533→  onClick: () => void;
+   534→  children: React.ReactNode;
+   535→}) {
+   536→  return (
+   537→    <Button
+   538→      variant="ghost"
+   539→      className="justify-start w-full text-right"
+   540→      onClick={onClick}
+   541→    >
+   542→      {children}
+   543→    </Button>
+   544→  );
+   545→}
+   546→
+   547→// ===================================================
+   548→//  الصفحة الرئيسية
+   549→// ===================================================
+   550→
+   551→function HomeView({ onNavigate }: { onNavigate: (v: MainView, s?: string) => void }) {
+   552→  const stats = getCurriculumStats();
+   553→  return (
+   554→    <div className="space-y-8">
+   555→      {/* قسم البطل (Hero) */}
+   556→      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-l from-primary via-primary/95 to-accent/30 text-primary-foreground p-8 md:p-12">
+   557→        <div className="absolute inset-0 opacity-10">
+   558→          <div className="absolute top-0 left-1/4 text-9xl font-bold">∑</div>
+   559→          <div className="absolute bottom-0 right-1/4 text-9xl font-bold">∫</div>
+   560→          <div className="absolute top-1/2 right-1/3 text-7xl font-bold">π</div>
+   561→          <div className="absolute top-1/4 left-1/3 text-8xl font-bold">∞</div>
+   562→        </div>
+   563→        <div className="relative z-10 max-w-3xl">
+   564→          <Badge className="bg-accent text-accent-foreground mb-4 text-sm py-1 px-3">
+   565→            <Sparkles className="w-3 h-3 ml-1" />
+   566→            المنصة الرسمية المعتمدة
+   567→          </Badge>
+   568→          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+   569→            من الصفر إلى البكالوريا
+   570→            <br />
+   571→            <span className="text-accent">رياضيات السنة الثالثة ثانوي</span>
+   572→          </h1>
+   573→          <p className="text-lg md:text-xl text-primary-foreground/90 mb-6 leading-relaxed">
+   574→            منصة تفاعلية شاملة لطلبة الشعب العلمية في الجزائر — علوم تجريبية،
+   575→            رياضيات، وتقني رياضي. متوافقة كلياً مع المنهاج الرسمي لوزارة التربية
+   576→            الوطنية، بإشراف بيداغوجي مباشر من الأستاذ عدلي أسعد.
+   577→          </p>
+   578→          <div className="flex flex-wrap gap-3">
+   579→            <Button
+   580→              size="lg"
+   581→              variant="secondary"
+   582→              onClick={() => onNavigate("curriculum")}
+   583→              className="gap-2"
+   584→            >
+   585→              <BookOpen className="w-5 h-5" />
+   586→              ابدأ التعلّم الآن
+   587→            </Button>
+   588→            <Button
+   589→              size="lg"
+   590→              variant="outline"
+   591→              onClick={() => onNavigate("trimesters")}
+   592→              className="bg-emerald-600 text-white border-emerald-700 hover:bg-emerald-700 gap-2"
+   593→            >
+   594→              <Calendar className="w-5 h-5" />
+   595→              تصفح حسب الفصول
+   596→            </Button>
+   597→            <Button
+   598→              size="lg"
+   599→              variant="outline"
+   600→              onClick={() => onNavigate("exams")}
+   601→              className="bg-accent text-accent-foreground border-accent hover:bg-accent/90 gap-2"
+   602→            >
+   603→              <Trophy className="w-5 h-5" />
+   604→              مواضيع البكالوريا السابقة
+   605→            </Button>
+   606→            <Button
+   607→              size="lg"
+   608→              variant="outline"
+   609→              onClick={() => onNavigate("pricing")}
+   610→              className="bg-amber-500 text-white border-amber-600 hover:bg-amber-600 gap-2"
+   611→            >
+   612→              <CreditCard className="w-5 h-5" />
+   613→              اشترك الآن
+   614→            </Button>
+   615→            <Button
+   616→              size="lg"
+   617→              variant="outline"
+   618→              onClick={() => onNavigate("quiz")}
+   619→              className="bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground/10 gap-2"
+   620→            >
+   621→              <Calculator className="w-5 h-5" />
+   622→              اختبار تحديد المستوى
+   623→            </Button>
+   624→          </div>
+   625→
+   626→          {/* إحصائيات سريعة */}
+   627→          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-primary-foreground/20">
+   628→            <div>
+   629→              <div className="text-3xl font-bold text-accent">{stats.units}</div>
+   630→              <div className="text-sm text-primary-foreground/80">وحدات تعليمية</div>
+   631→            </div>
+   632→            <div>
+   633→              <div className="text-3xl font-bold text-accent">{stats.chapters}</div>
+   634→              <div className="text-sm text-primary-foreground/80">فصول دراسية</div>
+   635→            </div>
+   636→            <div>
+   637→              <div className="text-3xl font-bold text-accent">{stats.lessons}</div>
+   638→              <div className="text-sm text-primary-foreground/80">درساً مفصلاً</div>
+   639→            </div>
+   640→            <div>
+   641→              <div className="text-3xl font-bold text-accent">{stats.exercises}+</div>
+   642→              <div className="text-sm text-primary-foreground/80">تمرين وحل نموذجي</div>
+   643→            </div>
+   644→          </div>
+   645→        </div>
+   646→      </section>
+   647→
+   648→      {/* قسم مميزات المنصة */}
+   649→      <section>
+   650→        <h2 className="text-3xl font-bold text-center mb-2 academic-divider mx-auto">
+   651→          لماذا منصتنا؟
+   652→        </h2>
+   653→        <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+   654→          تجربة تعلم متكاملة، من المكتسبات القبلية إلى مستوى البكالوريا المتقدم،
+   655→          مع متابعة شخصية وآلية.
+   656→        </p>
+   657→
+   658→        <div className="grid md:grid-cols-3 gap-4">
+   659→          <FeatureCard
+   660→            icon={<Target className="w-6 h-6" />}
+   661→            title="منهجية من الصفر"
+   662→            description="نبدأ من المكتسبات القبلية، نرتفع تدريجياً إلى مستويات البكالوريا المتقدمة. لا طالب يُترك خلف الركب."
+   663→          />
+   664→          <FeatureCard
+   665→            icon={<BookOpen className="w-6 h-6" />}
+   666→            title="حلول نموذجية مفصلة"
+   667→            description="كل تمرين مصحوب بحل خطوة بخطوة بمنهجية رسمية مبرزة، مع إمكانية إظهار التلميح قبل الحل."
+   668→          />
+   669→          <FeatureCard
+   670→            icon={<Calculator className="w-6 h-6" />}
+   671→            title="رياضيات LaTeX احترافية"
+   672→            description="عرض رياضيات عالي الجودة باستعمال KaTeX — صياغة أنيقة وواضحة لكل التعبيرات والمعادلات."
+   673→          />
+   674→          <FeatureCard
+   675→            icon={<LayoutDashboard className="w-6 h-6" />}
+   676→            title="لوحة تتبع التقدم"
+   677→            description="إحصائيات دقيقة، رسوم بيانية أسبوعية، نسب نجاح، توزيع حسب الصعوبة — كل شيء في مكان واحد."
+   678→          />
+   679→          <FeatureCard
+   680→            icon={<Users className="w-6 h-6" />}
+   681→            title="فضاء أولياء الأمور"
+   682→            description="متابعة شفافة لتقدم الأبناء: نقاط القوة، نقاط الضعف، النتائج، مع تواصل مباشر مع الأستاذ."
+   683→          />
+   684→          <FeatureCard
+   685→            icon={<Heart className="w-6 h-6" />}
+   686→            title="إشراف الأستاذ عدلي أسعد"
+   687→            description="منصة تحت إشراف بيداغوجي مباشر، بمحتوى مراجَع بدقة ومتابعة شخصية لكل طالب."
+   688→          />
+   689→        </div>
+   690→      </section>
+   691→
+   692→      {/* قسم الوحدات — معاينة */}
+   693→      <section>
+   694→        <div className="flex items-center justify-between mb-4">
+   695→          <h2 className="text-3xl font-bold academic-divider">الوحدات التعليمية</h2>
+   696→          <Button variant="outline" onClick={() => onNavigate("curriculum")}>
+   697→            عرض الكل
+   698→            <ChevronLeft className="w-4 h-4 mr-2" />
+   699→          </Button>
+   700→        </div>
+   701→        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+   702→          {curriculum.map((unit) => {
+   703→            const Icon = iconMap[unit.icon] || Calculator;
+   704→            return (
+   705→              <Card
+   706→                key={unit.slug}
+   707→                className="cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group"
+   708→                onClick={() => onNavigate("unit", unit.slug)}
+   709→              >
+   710→                <CardContent className="pt-6">
+   711→                  <div
+   712→                    className="w-12 h-12 rounded-lg flex items-center justify-center mb-3 text-primary-foreground"
+   713→                    style={{ background: unit.color }}
+   714→                  >
+   715→                    <Icon className="w-6 h-6" />
+   716→                  </div>
+   717→                  <div className="flex items-center gap-2 mb-2">
+   718→                    <Badge variant="outline" className="text-xs">
+   719→                      وحدة {unit.order}
+   720→                    </Badge>
+   721→                    <Badge variant="ghost" className="text-xs">
+   722→                      {streamLabels[unit.stream]}
+   723→                    </Badge>
+   724→                    <Badge
+   725→                      className={`text-xs border ${
+   726→                        unit.trimester === 1
+   727→                          ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+   728→                          : unit.trimester === 2
+   729→                          ? "bg-amber-100 text-amber-800 border-amber-300"
+   730→                          : "bg-blue-100 text-blue-800 border-blue-300"
+   731→                      }`}
+   732→                    >
+   733→                      الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
+   734→                    </Badge>
+   735→                  </div>
+   736→                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
+   737→                    {unit.title}
+   738→                  </h3>
+   739→                  <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+   740→                    {unit.description}
+   741→                  </p>
+   742→                  <div className="mt-3 pt-3 border-t border-border flex justify-between text-xs text-muted-foreground">
+   743→                    <span>{unit.chapters.length} فصول</span>
+   744→                    <span>
+   745→                      {unit.chapters.reduce((a, c) => a + c.exercises.length, 0)} تمارين
+   746→                    </span>
+   747→                  </div>
+   748→                </CardContent>
+   749→              </Card>
+   750→            );
+   751→          })}
+   752→        </div>
+   753→      </section>
+   754→
+   755→      {/* قسم الكلمة التشجيعية من الأستاذ */}
+   756→      <section>
+   757→        <Card className="bg-gradient-to-l from-accent/10 to-transparent border-r-4 border-accent">
+   758→          <CardContent className="pt-6">
+   759→            <div className="flex flex-col md:flex-row items-start gap-6">
+   760→              <div className="flex-shrink-0 mx-auto md:mx-0">
+   761→                <div className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-accent shadow-md">
+   762→                  <img
+   763→                    src="/teachers/adli-asad.jpg"
+   764→                    alt="الأستاذ عدلي أسعد"
+   765→                    className="w-full h-full object-cover"
+   766→                  />
+   767→                </div>
+   768→              </div>
+   769→              <div className="flex-1">
+   770→                <Quote className="w-6 h-6 text-accent mb-2" />
+   771→                <p className="text-lg leading-relaxed mb-3 italic">
+   772→                  &ldquo;الرياضيات ليست عقبة أمام النجاح، بل هي طريقه. كل تمرين تحلّه
+   773→                  يفتح باباً جديداً من أبواب الفهم. ابدأ من حيث أنت، وتقدّم خطوة
+   774→                  خطوة — حتى تبلغ القمة بإذن الله.&rdquo;
+   775→                </p>
+   776→                <div className="text-sm font-bold text-accent-foreground">
+   777→                  — الأستاذ عدلي أسعد
+   778→                </div>
+   779→                <div className="text-xs text-muted-foreground">
+   780→                  المشرف البيداغوجي والمؤسس للمنصة
+   781→                </div>
+   782→              </div>
+   783→            </div>
+   784→          </CardContent>
+   785→        </Card>
+   786→      </section>
+   787→
+   788→      {/* قسم الشعب المدعومة */}
+   789→      <section>
+   790→        <Card>
+   791→          <CardHeader>
+   792→            <CardTitle className="flex items-center gap-2">
+   793→              <GraduationCap className="w-5 h-5 text-primary" />
+   794→              الشعب العلمية المدعومة
+   795→            </CardTitle>
+   796→            <CardDescription>
+   797→              المنهاج الرسمي لوزارة التربية الوطنية — الجزائر
+   798→            </CardDescription>
+   799→          </CardHeader>
+   800→          <CardContent>
+   801→            <div className="grid md:grid-cols-3 gap-4">
+   802→              <StreamCard
+   803→                name="علوم تجريبية"
+   804→                description="منهاج متكامل يشمل كل الوحدات السبع، مع تركيز على التطبيقات العلمية."
+   805→                color="bg-green-100 text-green-800 border-green-300"
+   806→              />
+   807→              <StreamCard
+   808→                name="رياضيات"
+   809→                description="منهاج متعمق يشمل الأعداد المركبة والحساب المتقدم — للمتفوقين رياضياً."
+   810→                color="bg-blue-100 text-blue-800 border-blue-300"
+   811→              />
+   812→              <StreamCard
+   813→                name="تقني رياضي"
+   814→                description="منهاج مرن يدمج الرياضيات النظرية مع التطبيقات التقنية والهندسية."
+   815→                color="bg-amber-100 text-amber-800 border-amber-300"
+   816→              />
+   817→            </div>
+   818→          </CardContent>
+   819→        </Card>
+   820→      </section>
+   821→
+   822→      {/* دعوة لاتخاذ إجراء */}
+   823→      <section className="text-center py-8">
+   824→        <h2 className="text-2xl md:text-3xl font-bold mb-3 academic-divider mx-auto">
+   825→          جاهز لبدء رحلتك؟
+   826→        </h2>
+   827→        <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+   828→          آلاف الطلاب بدؤوا من الصفر وبلغوا التفوق في البكالوريا. أنت التالي بإذن الله.
+   829→        </p>
+   830→        <div className="flex flex-wrap gap-3 justify-center">
+   831→          <Button size="lg" onClick={() => onNavigate("curriculum")}>
+   832→            <BookOpen className="w-5 h-5 ml-2" />
+   833→            ابدأ التعلّم
+   834→          </Button>
+   835→          <Button
+   836→            size="lg"
+   837→            variant="default"
+   838→            onClick={() => onNavigate("courses")}
+   839→            className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
+   840→          >
+   841→            <PlayCircle className="w-5 h-5" />
+   842→            استكشف الدورات
+   843→          </Button>
+   844→          <Button size="lg" variant="outline" onClick={() => onNavigate("dashboard")}>
+   845→            <LayoutDashboard className="w-5 h-5 ml-2" />
+   846→            لوحة التحكم
+   847→          </Button>
+   848→        </div>
+   849→      </section>
+   850→    </div>
+   851→  );
+   852→}
+   853→
+   854→function FeatureCard({
+   855→  icon,
+   856→  title,
+   857→  description,
+   858→}: {
+   859→  icon: React.ReactNode;
+   860→  title: string;
+   861→  description: string;
+   862→}) {
+   863→  return (
+   864→    <Card className="h-full transition-all hover:shadow-md hover:-translate-y-1">
+   865→      <CardContent className="pt-6">
+   866→        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 text-primary">
+   867→          {icon}
+   868→        </div>
+   869→        <h3 className="font-bold mb-2">{title}</h3>
+   870→        <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+   871→      </CardContent>
+   872→    </Card>
+   873→  );
+   874→}
+   875→
+   876→function StreamCard({
+   877→  name,
+   878→  description,
+   879→  color,
+   880→}: {
+   881→  name: string;
+   882→  description: string;
+   883→  color: string;
+   884→}) {
+   885→  return (
+   886→    <div className={`p-4 rounded-lg border-2 ${color}`}>
+   887→      <h3 className="font-bold mb-2">{name}</h3>
+   888→      <p className="text-sm leading-relaxed">{description}</p>
+   889→    </div>
+   890→  );
+   891→}
+   892→
+   893→// ===================================================
+   894→//  عرض الفصول الدراسية الثلاثة (Trimesters)
+   895→// ===================================================
+   896→
+   897→const trimesterInfo: Record<1 | 2 | 3, {
+   898→  title: string;
+   899→  subtitle: string;
+   900→  description: string;
+   901→  color: string;
+   902→  gradient: string;
+   903→  badgeColor: string;
+   904→  period: string;
+   905→  icon: string;
+   906→  features: string[];
+   907→}> = {
+   908→  1: {
+   909→    title: "الفصل الأول",
+   910→    subtitle: "الأساسيات والتحليل التأسيسي",
+   911→    description:
+   912→      "الفصل الأول من السنة الدراسية: يضع الأسس المتينة عبر دراسة الدوال والمتتاليات العددية. كل ما يحتاجه الطالب لبناء فهم راسخ قبل التعمق في المنهاج.",
+   913→    color: "#2D6A4F",
+   914→    gradient: "from-emerald-600 to-green-700",
+   915→    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
+   916→    period: "سبتمبر — ديسمبر",
+   917→    icon: "🌱",
+   918→    features: [
+   919→      "بناء أساس قوي في دراسة الدوال",
+   920→      "إتقان النهايات والاشتقاق",
+   921→      "فهم المتتاليات العددية وحلولها",
+   922→      "تمهيد للمواضيع المتقدمة في الفصول القادمة",
+   923→    ],
+   924→  },
+   925→  2: {
+   926→    title: "الفصل الثاني",
+   927→    subtitle: "الدوال المتخصصة والاحتمالات",
+   928→    description:
+   929→      "الفصل الثاني: تعمق في الدوال الأسية واللوغاريتمية، إدخال الأعداد المركبة (للرياضيات)، ودراسة الاحتمالات. فصل تطبيقي واسع.",
+   930→    color: "#7F5539",
+   931→    gradient: "from-amber-700 to-orange-700",
+   932→    badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
+   933→    period: "جانفي — مارس",
+   934→    icon: "📈",
+   935→    features: [
+   936→      "إتقان الدالة الأسية واللوغاريتم النيبيري",
+   937→      "إدخال عالم الأعداد المركبة (شعبة رياضيات)",
+   938→      "دراسة شاملة للاحتمالات والاحتمال الشرطي",
+   939→      "تطبيقات فيزيائية واقتصادية للنمو الأُسي",
+   940→    ],
+   941→  },
+   942→  3: {
+   943→    title: "الفصل الثالث",
+   944→    subtitle: "الهندسة الإفضالية والحساب المتقدم",
+   945→    description:
+   946→      "الفصل الثالث: دراسة الهندسة في الفضاء، الحساب وقابلية القسمة (للرياضيات)، ومراجعة شاملة قبل امتحان البكالوريا. فصل التحضير النهائي.",
+   947→    color: "#1D3557",
+   948→    gradient: "from-blue-700 to-indigo-800",
+   949→    badgeColor: "bg-blue-100 text-blue-800 border-blue-300",
+   950→    period: "أفريل — جوان",
+   951→    icon: "🎯",
+   952→    features: [
+   953→      "إتقان الهندسة في الفضاء (الجداء السلمي والشعاعي)",
+   954→      "الحساب وقابلية القسمة ونظرية فيرما (شعبة رياضيات)",
+   955→      "تطبيقات شاملة لكل ما سبق",
+   956→      "تحضير نهائي لامتحان البكالوريا",
+   957→    ],
+   958→  },
+   959→};
+   960→
+   961→function TrimestersView({
+   962→  onSelectUnit,
+   963→  onNavigateCurriculum,
+   964→}: {
+   965→  onSelectUnit: (slug: string) => void;
+   966→  onNavigateCurriculum: () => void;
+   967→}) {
+   968→  const [activeTrimester, setActiveTrimester] = React.useState<1 | 2 | 3>(1);
+   969→  const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
+   970→
+   971→  const unitsByTrimester = (t: 1 | 2 | 3) =>
+   972→    curriculum.filter((u) => u.trimester === t);
+   973→
+   974→  const currentUnits = unitsByTrimester(activeTrimester);
+   975→  const info = trimesterInfo[activeTrimester];
+   976→
+   977→  // إحصائيات لكل فصل
+   978→  const getTrimesterStats = (t: 1 | 2 | 3) => {
+   979→    const units = unitsByTrimester(t);
+   980→    return {
+   981→      units: units.length,
+   982→      chapters: units.reduce((a, u) => a + u.chapters.length, 0),
+   983→      exercises: units.reduce(
+   984→        (a, u) =>
+   985→          a +
+   986→          u.chapters.reduce((aa, c) => aa + c.exercises.length, 0),
+   987→        0
+   988→      ),
+   989→    };
+   990→  };
+   991→
+   992→  return (
+   993→    <div className="space-y-6">
+   994→      {/* الرأس */}
+   995→      <div className="text-center">
+   996→        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary mb-3">
+   997→          <Calendar className="w-8 h-8 text-white" />
+   998→        </div>
+   999→        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+  1000→          الفصول الدراسية الثلاثة
+  1001→        </h1>
+  1002→        <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+  1003→          منصة الرياضيات مقسّمة وفق المنهاج الرسمي لوزارة التربية الوطنية الجزائرية
+  1004→          إلى ثلاثة فصول دراسية. كل فصل يحتوي على الوحدات التعليمية المناسبة لتلك
+  1005→          الفترة، مرتبة تدريجياً لبناء فهم متين عند الطالب.
+  1006→        </p>
+  1007→      </div>
+  1008→
+  1009→      {/* بطاقات الفصول الثلاثة */}
+  1010→      <div className="grid md:grid-cols-3 gap-4">
+  1011→        {([1, 2, 3] as const).map((t) => {
+  1012→          const tInfo = trimesterInfo[t];
+  1013→          const stats = getTrimesterStats(t);
+  1014→          const isActive = activeTrimester === t;
+  1015→          return (
+  1016→            <Card
+  1017→              key={t}
+  1018→              className={`cursor-pointer transition-all hover:-translate-y-1 ${
+  1019→                isActive
+  1020→                  ? "border-2 shadow-lg"
+  1021→                  : "border hover:shadow-md"
+  1022→              }`}
+  1023→              style={isActive ? { borderColor: tInfo.color } : {}}
+  1024→              onClick={() => setActiveTrimester(t)}
+  1025→            >
+  1026→              <CardContent className="pt-6">
+  1027→                <div
+  1028→                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${tInfo.gradient} text-white text-2xl mb-3`}
+  1029→                >
+  1030→                  {tInfo.icon}
+  1031→                </div>
+  1032→                <h3 className="font-bold text-xl mb-1">{tInfo.title}</h3>
+  1033→                <p className="text-sm text-muted-foreground italic mb-3">
+  1034→                  {tInfo.subtitle}
+  1035→                </p>
+  1036→                <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+  1037→                  <Clock className="w-3 h-3" />
+  1038→                  <span>{tInfo.period}</span>
+  1039→                </div>
+  1040→                <div className="flex flex-wrap gap-2 text-xs">
+  1041→                  <Badge variant="outline">{stats.units} وحدات</Badge>
+  1042→                  <Badge variant="outline">{stats.chapters} فصول</Badge>
+  1043→                  <Badge variant="outline">{stats.exercises} تمرين</Badge>
+  1044→                </div>
+  1045→              </CardContent>
+  1046→            </Card>
+  1047→          );
+  1048→        })}
+  1049→      </div>
+  1050→
+  1051→      {/* الفصل المُختار — تفاصيل */}
+  1052→      <Card
+  1053→        className="overflow-hidden border-2"
+  1054→        style={{ borderColor: info.color }}
+  1055→      >
+  1056→        <div
+  1057→          className={`bg-gradient-to-l ${info.gradient} text-white p-6`}
+  1058→        >
+  1059→          <div className="flex items-center gap-3 mb-2">
+  1060→            <span className="text-4xl">{info.icon}</span>
+  1061→            <div>
+  1062→              <h2 className="text-2xl font-bold">{info.title}</h2>
+  1063→              <p className="text-white/80 italic">{info.subtitle}</p>
+  1064→            </div>
+  1065→          </div>
+  1066→          <p className="text-white/90 leading-relaxed mb-3">{info.description}</p>
+  1067→          <div className="flex items-center gap-2 text-sm text-white/80">
+  1068→            <Clock className="w-4 h-4" />
+  1069→            <span>الفترة: {info.period}</span>
+  1070→          </div>
+  1071→        </div>
+  1072→
+  1073→        <CardContent className="pt-6 space-y-4">
+  1074→          {/* مميزات الفصل */}
+  1075→          <div>
+  1076→            <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: info.color }}>
+  1077→              <Sparkles className="w-4 h-4" />
+  1078→              مميزات الفصل
+  1079→            </h4>
+  1080→            <ul className="space-y-1 pr-6 list-disc">
+  1081→              {info.features.map((f, i) => (
+  1082→                <li key={i} className="text-sm">{f}</li>
+  1083→              ))}
+  1084→            </ul>
+  1085→          </div>
+  1086→
+  1087→          <Separator />
+  1088→
+  1089→          {/* وحدات الفصل */}
+  1090→          <div>
+  1091→            <h4 className="font-bold mb-3 flex items-center gap-2" style={{ color: info.color }}>
+  1092→              <BookOpen className="w-4 h-4" />
+  1093→              وحدات {info.title} ({currentUnits.length})
+  1094→            </h4>
+  1095→            <div className="space-y-3">
+  1096→              {currentUnits.map((unit) => {
+  1097→                const Icon = iconMap[unit.icon] || Calculator;
+  1098→                const isFavorite = favoriteUnits.includes(unit.slug);
+  1099→                const totalExercises = unit.chapters.reduce(
+  1100→                  (a, c) => a + c.exercises.length,
+  1101→                  0
+  1102→                );
+  1103→                return (
+  1104→                  <Card
+  1105→                    key={unit.slug}
+  1106→                    className="cursor-pointer hover:shadow-md transition-all"
+  1107→                    onClick={() => onSelectUnit(unit.slug)}
+  1108→                  >
+  1109→                    <CardContent className="pt-4">
+  1110→                      <div className="flex items-center gap-3">
+  1111→                        <div
+  1112→                          className="w-12 h-12 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+  1113→                          style={{ background: unit.color }}
+  1114→                        >
+  1115→                          <Icon className="w-6 h-6" />
+  1116→                        </div>
+  1117→                        <div className="flex-1">
+  1118→                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+  1119→                            <Badge variant="outline" className="text-xs">
+  1120→                              وحدة {unit.order}
+  1121→                            </Badge>
+  1122→                            <Badge variant="ghost" className="text-xs">
+  1123→                              {streamLabels[unit.stream]}
+  1124→                            </Badge>
+  1125→                            <Badge
+  1126→                              className={`text-xs ${info.badgeColor} border`}
+  1127→                            >
+  1128→                              {info.title}
+  1129→                            </Badge>
+  1130→                            {isFavorite && (
+  1131→                              <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+  1132→                            )}
+  1133→                          </div>
+  1134→                          <h3 className="font-bold mb-1">{unit.title}</h3>
+  1135→                          <p className="text-sm text-muted-foreground line-clamp-2">
+  1136→                            {unit.description}
+  1137→                          </p>
+  1138→                          <div className="flex gap-3 mt-2 text-xs text-muted-foreground">
+  1139→                            <span className="flex items-center gap-1">
+  1140→                              <BookOpen className="w-3 h-3" />
+  1141→                              {unit.chapters.length} فصول
+  1142→                            </span>
+  1143→                            <span className="flex items-center gap-1">
+  1144→                              <Calculator className="w-3 h-3" />
+  1145→                              {totalExercises} تمرين
+  1146→                            </span>
+  1147→                          </div>
+  1148→                        </div>
+  1149→                        <ChevronLeft className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+  1150→                      </div>
+  1151→                    </CardContent>
+  1152→                  </Card>
+  1153→                );
+  1154→              })}
+  1155→            </div>
+  1156→          </div>
+  1157→        </CardContent>
+  1158→      </Card>
+  1159→
+  1160→      {/* رسالة بيداغوجية */}
+  1161→      <Card className="bg-gradient-to-l from-primary/5 to-accent/5 border-r-4 border-primary">
+  1162→        <CardContent className="pt-6">
+  1163→          <div className="flex items-start gap-3">
+  1164→            <img
+  1165→              src="/teachers/adli-asad.jpg"
+  1166→              alt="الأستاذ عدلي أسعد"
+  1167→              className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
+  1168→            />
+  1169→            <div>
+  1170→              <div className="font-bold text-primary mb-1">
+  1171→                كلمة بيداغوجية من الأستاذ عدلي أسعد
+  1172→              </div>
+  1173→              <p className="text-sm text-muted-foreground leading-relaxed">
+  1174→                الفصل الدراسي ليس مجرد فترة زمنية — هو رحلة تعليمية كاملة. كل فصل
+  1175→                يبني على ما قبله ويمهد لما بعده. ابدأ بالفصل الأول وأتقن أساسياته
+  1176→                قبل الانتقال. لا تقفز بين الفصول — الترتيب الصحيح هو سر التفوق.
+  1177→                ومن يُتقن فصله الأول، يجد الفصل الثاني سهلاً. ومن يتقن الثاني،
+  1178→                يجد الثالث ممتعاً. هكذا تُبنى النجاحات!
+  1179→              </p>
+  1180→            </div>
+  1181→          </div>
+  1182→        </CardContent>
+  1183→      </Card>
+  1184→
+  1185→      {/* دعوة لعرض المنهاج الكامل */}
+  1186→      <div className="text-center pt-4">
+  1187→        <Button variant="outline" onClick={onNavigateCurriculum} className="gap-2">
+  1188→          <Calculator className="w-4 h-4" />
+  1189→          عرض المنهاج الكامل (كل الوحدات)
+  1190→        </Button>
+  1191→      </div>
+  1192→    </div>
+  1193→  );
+  1194→}
+  1195→
+  1196→// ===================================================
+  1197→//  بطاقة الدرس (LessonCard) — مع الملخص والفيديو
+  1198→// ===================================================
+  1199→
+  1200→function LessonCard({ lesson }: { lesson: any }) {
+  1201→  const [showVideo, setShowVideo] = React.useState(false);
+  1202→  const [showSummary, setShowSummary] = React.useState(false);
+  1203→
+  1204→  // الحصول على الفيديو والملخص من lesson-enhancements
+  1205→  const video = React.useMemo(() => getVideoSimulation(lesson.slug), [lesson.slug]);
+  1206→  const summary = React.useMemo(() => getLessonSummary(lesson.slug), [lesson.slug]);
+  1207→
+  1208→  return (
+  1209→    <Card>
+  1210→      <CardHeader className="pb-2">
+  1211→        <div className="flex items-start justify-between gap-2">
+  1212→          <div className="flex-1">
+  1213→            <CardTitle className="text-base">{lesson.title}</CardTitle>
+  1214→            <CardDescription className="text-xs flex items-center gap-3">
+  1215→              <span>⏱️ {lesson.durationMin} دقيقة</span>
+  1216→              {video && (
+  1217→                <Badge className="bg-primary/10 text-primary border border-primary/30">
+  1218→                  <Sparkles className="w-3 h-3 ml-1" />
+  1219→                  فيديو متاح
+  1220→                </Badge>
+  1221→              )}
+  1222→              {summary && (
+  1223→                <Badge variant="outline" className="text-xs">
+  1224→                  <CheckCircle2 className="w-3 h-3 ml-1" />
+  1225→                  ملخص نهائي
+  1226→                </Badge>
+  1227→              )}
+  1228→            </CardDescription>
+  1229→          </div>
+  1230→        </div>
+  1231→      </CardHeader>
+  1232→      <CardContent>
+  1233→        {/* محتوى الدرس */}
+  1234→        <MarkdownMath content={lesson.content} />
+  1235→
+  1236→        {/* زر الفيديو المحاكاة */}
+  1237→        {video && (
+  1238→          <div className="mt-4 pt-3 border-t border-border">
+  1239→            <Button
+  1240→              variant="default"
+  1241→              className="w-full gap-2 bg-gradient-to-l from-primary to-accent"
+  1242→              onClick={() => setShowVideo(!showVideo)}
+  1243→            >
+  1244→              <Sparkles className="w-4 h-4" />
+  1245→              {showVideo ? "إخفاء الفيديو المحاكاة" : "▶ مشاهدة الفيديو المحاكاة"}
+  1246→            </Button>
+  1247→            {showVideo && (
+  1248→              <div className="mt-4">
+  1249→                <VideoSimulationPlayer video={video} lessonTitle={lesson.title} />
+  1250→              </div>
+  1251→            )}
+  1252→          </div>
+  1253→        )}
+  1254→
+  1255→        {/* النقاط الأساسية */}
+  1256→        {lesson.keyPoints && lesson.keyPoints.length > 0 && (
+  1257→          <div className="mt-4 pt-3 border-t border-border">
+  1258→            <div className="font-bold text-sm mb-2 flex items-center gap-2">
+  1259→              <Target className="w-4 h-4 text-primary" />
+  1260→              النقاط الأساسية
+  1261→            </div>
+  1262→            <ul className="space-y-1 text-sm">
+  1263→              {lesson.keyPoints.map((kp: string, i: number) => (
+  1264→                <li key={i} className="flex items-start gap-2">
+  1265→                  <ChevronLeft className="w-3 h-3 mt-1 text-primary flex-shrink-0" />
+  1266→                  <span>{kp}</span>
+  1267→                </li>
+  1268→              ))}
+  1269→            </ul>
+  1270→          </div>
+  1271→        )}
+  1272→
+  1273→        {/* الملخص النهائي */}
+  1274→        {summary && (
+  1275→          <div className="mt-4 pt-3 border-t border-border">
+  1276→            <Button
+  1277→              variant="outline"
+  1278→              className="w-full gap-2 bg-amber-50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-950/40"
+  1279→              onClick={() => setShowSummary(!showSummary)}
+  1280→            >
+  1281→              <Sparkles className="w-4 h-4" />
+  1282→              {showSummary ? "إخفاء الملخص النهائي" : "📋 عرض الملخص النهائي"}
+  1283→            </Button>
+  1284→            {showSummary && (
+  1285→              <div className="mt-3 bg-gradient-to-l from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20 border-r-4 border-amber-500 rounded-md p-4">
+  1286→                <div className="font-bold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+  1287→                  <Award className="w-4 h-4" />
+  1288→                  الملخص النهائي للدرس
+  1289→                </div>
+  1290→                <MarkdownMath content={summary} />
+  1291→              </div>
+  1292→            )}
+  1293→          </div>
+  1294→        )}
+  1295→      </CardContent>
+  1296→    </Card>
+  1297→  );
+  1298→}
+  1299→
+  1300→// ===================================================
+  1301→
+  1302→function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void }) {
+  1303→  const [filter, setFilter] = React.useState<"ALL" | "MATHEMATICS" | "EXPERIMENTAL_SCIENCES" | "TECHNICAL_MATH">("ALL");
+  1304→  const [trimesterFilter, setTrimesterFilter] = React.useState<"ALL" | 1 | 2 | 3>("ALL");
+  1305→  const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
+  1306→  const toggleFavorite = useStudentStore((s) => s.toggleFavorite);
+  1307→
+  1308→  const filteredUnits = curriculum.filter(
+  1309→    (u) => {
+  1310→      const streamOK = filter === "ALL" || u.stream === filter || u.stream === "ALL";
+  1311→      const trimesterOK = trimesterFilter === "ALL" || u.trimester === trimesterFilter;
+  1312→      return streamOK && trimesterOK;
+  1313→    }
+  1314→  );
+  1315→
+  1316→  const trimesterBadge: Record<1 | 2 | 3, string> = {
+  1317→    1: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  1318→    2: "bg-amber-100 text-amber-800 border-amber-300",
+  1319→    3: "bg-blue-100 text-blue-800 border-blue-300",
+  1320→  };
+  1321→
+  1322→  return (
+  1323→    <div className="space-y-6">
+  1324→      <div className="text-center">
+  1325→        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+  1326→          شجرة المحتوى المعرفي
+  1327→        </h1>
+  1328→        <p className="text-muted-foreground max-w-2xl mx-auto">
+  1329→          المنهاج الرسمي كاملاً لطلبة السنة الثالثة ثانوي — الشعب العلمية في الجزائر.
+  1330→          كل وحدة تتضمن دروساً نظرية، تمارين متدرجة، وحلولاً نموذجية مفصلة.
+  1331→        </p>
+  1332→      </div>
+  1333→
+  1334→      {/* مرشحات الشعب */}
+  1335→      <div className="space-y-3">
+  1336→        <div className="flex flex-wrap gap-2 justify-center">
+  1337→          <span className="text-sm font-bold self-center ml-2">الشعبة:</span>
+  1338→          <Button
+  1339→            variant={filter === "ALL" ? "default" : "outline"}
+  1340→            size="sm"
+  1341→            onClick={() => setFilter("ALL")}
+  1342→          >
+  1343→            كل الوحدات
+  1344→          </Button>
+  1345→          <Button
+  1346→            variant={filter === "EXPERIMENTAL_SCIENCES" ? "default" : "outline"}
+  1347→            size="sm"
+  1348→            onClick={() => setFilter("EXPERIMENTAL_SCIENCES")}
+  1349→          >
+  1350→            علوم تجريبية
+  1351→          </Button>
+  1352→          <Button
+  1353→            variant={filter === "MATHEMATICS" ? "default" : "outline"}
+  1354→            size="sm"
+  1355→            onClick={() => setFilter("MATHEMATICS")}
+  1356→          >
+  1357→            رياضيات
+  1358→          </Button>
+  1359→          <Button
+  1360→            variant={filter === "TECHNICAL_MATH" ? "default" : "outline"}
+  1361→            size="sm"
+  1362→            onClick={() => setFilter("TECHNICAL_MATH")}
+  1363→          >
+  1364→            تقني رياضي
+  1365→          </Button>
+  1366→        </div>
+  1367→
+  1368→        {/* مرشح الفصل */}
+  1369→        <div className="flex flex-wrap gap-2 justify-center">
+  1370→          <span className="text-sm font-bold self-center ml-2">الفصل الدراسي:</span>
+  1371→          <Button
+  1372→            variant={trimesterFilter === "ALL" ? "default" : "outline"}
+  1373→            size="sm"
+  1374→            onClick={() => setTrimesterFilter("ALL")}
+  1375→          >
+  1376→            كل الفصول
+  1377→          </Button>
+  1378→          <Button
+  1379→            variant={trimesterFilter === 1 ? "default" : "outline"}
+  1380→            size="sm"
+  1381→            onClick={() => setTrimesterFilter(1)}
+  1382→            className={trimesterFilter === 1 ? "bg-emerald-600" : ""}
+  1383→          >
+  1384→            الفصل الأول
+  1385→          </Button>
+  1386→          <Button
+  1387→            variant={trimesterFilter === 2 ? "default" : "outline"}
+  1388→            size="sm"
+  1389→            onClick={() => setTrimesterFilter(2)}
+  1390→            className={trimesterFilter === 2 ? "bg-amber-700" : ""}
+  1391→          >
+  1392→            الفصل الثاني
+  1393→          </Button>
+  1394→          <Button
+  1395→            variant={trimesterFilter === 3 ? "default" : "outline"}
+  1396→            size="sm"
+  1397→            onClick={() => setTrimesterFilter(3)}
+  1398→            className={trimesterFilter === 3 ? "bg-blue-700" : ""}
+  1399→          >
+  1400→            الفصل الثالث
+  1401→          </Button>
+  1402→        </div>
+  1403→      </div>
+  1404→
+  1405→      {/* قائمة الوحدات */}
+  1406→      <div className="space-y-4">
+  1407→        {filteredUnits.map((unit, idx) => {
+  1408→          const Icon = iconMap[unit.icon] || Calculator;
+  1409→          const isFavorite = favoriteUnits.includes(unit.slug);
+  1410→          const totalExercises = unit.chapters.reduce(
+  1411→            (a, c) => a + c.exercises.length,
+  1412→            0
+  1413→          );
+  1414→          return (
+  1415→            <Card
+  1416→              key={unit.slug}
+  1417→              className="overflow-hidden hover:shadow-md transition-all"
+  1418→            >
+  1419→              <CardContent className="pt-6">
+  1420→                <div className="flex flex-col md:flex-row md:items-center gap-4">
+  1421→                  {/* الأيقونة */}
+  1422→                  <div
+  1423→                    className="w-16 h-16 rounded-xl flex items-center justify-center text-primary-foreground flex-shrink-0"
+  1424→                    style={{ background: unit.color }}
+  1425→                  >
+  1426→                    <Icon className="w-8 h-8" />
+  1427→                  </div>
+  1428→
+  1429→                  {/* المعلومات */}
+  1430→                  <div className="flex-1">
+  1431→                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+  1432→                      <Badge variant="outline">وحدة {unit.order}</Badge>
+  1433→                      <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+  1434→                      <Badge className={`${trimesterBadge[unit.trimester]} border`}>
+  1435→                        <Calendar className="w-3 h-3 ml-1" />
+  1436→                        الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
+  1437→                      </Badge>
+  1438→                    </div>
+  1439→                    <h3 className="text-xl font-bold mb-2">{unit.title}</h3>
+  1440→                    <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+  1441→                      {unit.description}
+  1442→                    </p>
+  1443→                    <div className="flex gap-4 text-xs text-muted-foreground">
+  1444→                      <span className="flex items-center gap-1">
+  1445→                        <BookOpen className="w-3 h-3" />
+  1446→                        {unit.chapters.length} فصول
+  1447→                      </span>
+  1448→                      <span className="flex items-center gap-1">
+  1449→                        <Calculator className="w-3 h-3" />
+  1450→                        {totalExercises} تمارين
+  1451→                      </span>
+  1452→                      <span className="flex items-center gap-1">
+  1453→                        <Award className="w-3 h-3" />
+  1454→                        {unit.chapters.reduce((a, c) => a + c.lessons.length, 0)} دروس
+  1455→                      </span>
+  1456→                    </div>
+  1457→                  </div>
+  1458→
+  1459→                  {/* الإجراءات */}
+  1460→                  <div className="flex md:flex-col gap-2 items-center">
+  1461→                    <Button onClick={() => onSelectUnit(unit.slug)}>
+  1462→                      دخول الوحدة
+  1463→                      <ChevronLeft className="w-4 h-4 mr-2" />
+  1464→                    </Button>
+  1465→                    <Button
+  1466→                      variant="ghost"
+  1467→                      size="icon"
+  1468→                      onClick={() => toggleFavorite(unit.slug)}
+  1469→                      title="إضافة للمفضلة"
+  1470→                    >
+  1471→                      <Star
+  1472→                        className={`w-4 h-4 ${
+  1473→                          isFavorite ? "fill-amber-500 text-amber-500" : ""
+  1474→                        }`}
+  1475→                      />
+  1476→                    </Button>
+  1477→                  </div>
+  1478→                </div>
+  1479→              </CardContent>
+  1480→            </Card>
+  1481→          );
+  1482→        })}
+  1483→      </div>
+  1484→    </div>
+  1485→  );
+  1486→}
+  1487→
+  1488→// ===================================================
+  1489→//  عرض وحدة معينة (فصول + تمارين)
+  1490→// ===================================================
+  1491→
+  1492→function UnitView({ unit, onBack }: { unit: any; onBack: () => void }) {
+  1493→  const Icon = iconMap[unit.icon] || Calculator;
+  1494→
+  1495→  return (
+  1496→    <div className="space-y-6">
+  1497→      {/* رأس الوحدة */}
+  1498→      <div>
+  1499→        <Button variant="ghost" size="sm" onClick={onBack} className="mb-4 gap-2">
+  1500→          <ChevronRight className="w-4 h-4" />
+  1501→          عودة للمنهاج
+  1502→        </Button>
+  1503→
+  1504→        <Card
+  1505→          className="overflow-hidden"
+  1506→          style={{
+  1507→            background: `linear-gradient(to left, ${unit.color}10, transparent)`,
+  1508→          }}
+  1509→        >
+  1510→          <CardContent className="pt-6">
+  1511→            <div className="flex items-start gap-4">
+  1512→              <div
+  1513→                className="w-16 h-16 rounded-xl flex items-center justify-center text-primary-foreground flex-shrink-0"
+  1514→                style={{ background: unit.color }}
+  1515→              >
+  1516→                <Icon className="w-8 h-8" />
+  1517→              </div>
+  1518→              <div className="flex-1">
+  1519→                <div className="flex items-center gap-2 mb-2 flex-wrap">
+  1520→                  <Badge variant="outline">وحدة {unit.order}</Badge>
+  1521→                  <Badge variant="ghost">{streamLabels[unit.stream]}</Badge>
+  1522→                  <Badge
+  1523→                    className={`${
+  1524→                      unit.trimester === 1
+  1525→                        ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+  1526→                        : unit.trimester === 2
+  1527→                        ? "bg-amber-100 text-amber-800 border-amber-300"
+  1528→                        : "bg-blue-100 text-blue-800 border-blue-300"
+  1529→                    } border`}
+  1530→                  >
+  1531→                    <Calendar className="w-3 h-3 ml-1" />
+  1532→                    الفصل {unit.trimester === 1 ? "الأول" : unit.trimester === 2 ? "الثاني" : "الثالث"}
+  1533→                  </Badge>
+  1534→                </div>
+  1535→                <h1 className="text-3xl font-bold mb-2">{unit.title}</h1>
+  1536→                <p className="text-muted-foreground leading-relaxed">
+  1537→                  {unit.description}
+  1538→                </p>
+  1539→              </div>
+  1540→            </div>
+  1541→          </CardContent>
+  1542→        </Card>
+  1543→      </div>
+  1544→
+  1545→      {/* الفصول مع المحتوى */}
+  1546→      <Accordion type="multiple" defaultValue={[unit.chapters[0]?.slug]} className="space-y-3">
+  1547→        {unit.chapters.map((chapter: any) => (
+  1548→          <AccordionItem
+  1549→            key={chapter.slug}
+  1550→            value={chapter.slug}
+  1551→            className="border rounded-lg overflow-hidden"
+  1552→          >
+  1553→            <AccordionTrigger className="px-4 py-3 hover:no-underline bg-muted/30">
+  1554→              <div className="flex items-center gap-3 text-right flex-1">
+  1555→                <BookOpen className="w-5 h-5 text-primary flex-shrink-0" />
+  1556→                <div>
+  1557→                  <div className="font-bold">{chapter.title}</div>
+  1558→                  <div className="text-xs text-muted-foreground">
+  1559→                    {chapter.lessons.length} دروس • {chapter.exercises.length} تمارين
+  1560→                  </div>
+  1561→                </div>
+  1562→              </div>
+  1563→            </AccordionTrigger>
+  1564→            <AccordionContent className="px-4 pb-4 space-y-6">
+  1565→              {/* المكتسبات القبلية */}
+  1566→              <div className="bg-blue-50 dark:bg-blue-950/20 border-r-4 border-blue-500 p-3 rounded">
+  1567→                <div className="font-bold text-blue-700 dark:text-blue-300 mb-1 flex items-center gap-2">
+  1568→                  <Sparkles className="w-4 h-4" />
+  1569→                  مراجعة المكتسبات القبلية
+  1570→                </div>
+  1571→                <p className="text-sm">{chapter.prerequisites}</p>
+  1572→              </div>
+  1573→
+  1574→              {/* الدروس */}
+  1575→              <div className="space-y-3">
+  1576→                <h3 className="font-bold text-lg academic-divider">الدروس</h3>
+  1577→                {chapter.lessons.map((lesson: any) => (
+  1578→                  <LessonCard key={lesson.slug} lesson={lesson} />
+  1579→                ))}
+  1580→              </div>
+  1581→
+  1582→              {/* التمارين */}
+  1583→              <div className="space-y-3">
+  1584→                <div className="flex items-center justify-between">
+  1585→                  <h3 className="font-bold text-lg academic-divider">سلسلة التمارين المتدرجة</h3>
+  1586→                  <Badge variant="secondary">
+  1587→                    {chapter.exercises.length} تمارين
+  1588→                  </Badge>
+  1589→                </div>
+  1590→
+  1591→                {chapter.exercises.map((exercise: any, idx: number) => (
+  1592→                  <ExerciseCard
+  1593→                    key={idx}
+  1594→                    exercise={exercise}
+  1595→                    exerciseId={`${unit.slug}-${chapter.slug}-${idx}`}
+  1596→                    unitSlug={unit.slug}
+  1597→                    chapterSlug={chapter.slug}
+  1598→                  />
+  1599→                ))}
+  1600→              </div>
+  1601→            </AccordionContent>
+  1602→          </AccordionItem>
+  1603→        ))}
+  1604→      </Accordion>
+  1605→
+  1606→      {/* الاختبارات التفاعلية للوحدة */}
+  1607→      <Card className="border-2 border-primary">
+  1608→        <CardHeader>
+  1609→          <CardTitle className="flex items-center gap-2">
+  1610→            <Calculator className="w-5 h-5" />
+  1611→            اختبارات تفاعلية لهذه الوحدة
+  1612→          </CardTitle>
+  1613→          <CardDescription>
+  1614→            اختبر فهمك من خلال اختبارات تفاعلية فورية.
+  1615→          </CardDescription>
+  1616→        </CardHeader>
+  1617→        <CardContent>
+  1618→          {quizzes.filter((q) => q.unitSlug === unit.slug).length > 0 ? (
+  1619→            <div className="space-y-3">
+  1620→              {quizzes
+  1621→                .filter((q) => q.unitSlug === unit.slug)
+  1622→                .map((quiz) => (
+  1623→                  <QuizPreviewCard key={quiz.id} quiz={quiz} />
+  1624→                ))}
+  1625→            </div>
+  1626→          ) : (
+  1627→            <p className="text-muted-foreground text-center py-4">
+  1628→              لا توجد اختبارات لهذه الوحدة بعد.
+  1629→            </p>
+  1630→          )}
+  1631→        </CardContent>
+  1632→      </Card>
+  1633→    </div>
+  1634→  );
+  1635→}
+  1636→
+  1637→function QuizPreviewCard({ quiz }: { quiz: any }) {
+  1638→  const [open, setOpen] = React.useState(false);
+  1639→  return (
+  1640→    <>
+  1641→      <Card className="border-r-2 border-primary">
+  1642→        <CardContent className="py-3 flex items-center justify-between gap-3">
+  1643→          <div>
+  1644→            <div className="font-bold">{quiz.title}</div>
+  1645→            <div className="text-xs text-muted-foreground">
+  1646→              {quiz.questions.length} أسئلة • {quiz.durationMin} دقيقة
+  1647→            </div>
+  1648→          </div>
+  1649→          <Button size="sm" onClick={() => setOpen(true)}>
+  1650→            <Calculator className="w-4 h-4 ml-2" />
+  1651→            ابدأ الاختبار
+  1652→          </Button>
+  1653→        </CardContent>
+  1654→      </Card>
+  1655→
+  1656→      <Dialog open={open} onOpenChange={setOpen}>
+  1657→        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+  1658→          <DialogHeader>
+  1659→            <DialogTitle className="text-right">{quiz.title}</DialogTitle>
+  1660→            <DialogDescription className="text-right">
+  1661→              {quiz.description}
+  1662→            </DialogDescription>
+  1663→          </DialogHeader>
+  1664→          <InteractiveQuiz
+  1665→            quizId={quiz.id}
+  1666→            title={quiz.title}
+  1667→            description={quiz.description}
+  1668→            questions={quiz.questions}
+  1669→            durationMin={quiz.durationMin}
+  1670→          />
+  1671→        </DialogContent>
+  1672→      </Dialog>
+  1673→    </>
+  1674→  );
+  1675→}
+  1676→
+  1677→// ===================================================
+  1678→//  عرض اختيار الاختبارات
+  1679→// ===================================================
+  1680→
+  1681→function QuizSelectionView({ onSelectQuiz }: { onSelectQuiz: (id: string) => void }) {
+  1682→  const [selectedQuizId, setSelectedQuizId] = React.useState<string | null>(null);
+  1683→
+  1684→  const selectedQuiz = quizzes.find((q) => q.id === selectedQuizId);
+  1685→
+  1686→  if (selectedQuiz) {
+  1687→    return (
+  1688→      <div className="space-y-4">
+  1689→        <Button
+  1690→          variant="ghost"
+  1691→          size="sm"
+  1692→          onClick={() => setSelectedQuizId(null)}
+  1693→          className="gap-2"
+  1694→        >
+  1695→          <ChevronRight className="w-4 h-4" />
+  1696→          عودة للاختبارات
+  1697→        </Button>
+  1698→        <InteractiveQuiz
+  1699→          quizId={selectedQuiz.id}
+  1700→          title={selectedQuiz.title}
+  1701→          description={selectedQuiz.description}
+  1702→          questions={selectedQuiz.questions}
+  1703→          durationMin={selectedQuiz.durationMin}
+  1704→        />
+  1705→      </div>
+  1706→    );
+  1707→  }
+  1708→
+  1709→  return (
+  1710→    <div className="space-y-6">
+  1711→      <div className="text-center">
+  1712→        <h1 className="text-3xl font-bold mb-2 academic-divider mx-auto">
+  1713→          الاختبارات التفاعلية
+  1714→        </h1>
+  1715→        <p className="text-muted-foreground max-w-2xl mx-auto">
+  1716→          اختبر نفسك في كل وحدة، واحصل على نتيجة فورية مع تفسير تفصيلي لكل إجابة.
+  1717→        </p>
+  1718→      </div>
+  1719→
+  1720→      <div className="grid md:grid-cols-2 gap-4">
+  1721→        {quizzes.map((quiz) => {
+  1722→          const unit = curriculum.find((u) => u.slug === quiz.unitSlug);
+  1723→          const Icon = unit ? iconMap[unit.icon] || Calculator : Calculator;
+  1724→          return (
+  1725→            <Card
+  1726→              key={quiz.id}
+  1727→              className="cursor-pointer hover:shadow-md transition-all hover:-translate-y-1"
+  1728→              onClick={() => setSelectedQuizId(quiz.id)}
+  1729→            >
+  1730→              <CardContent className="pt-6">
+  1731→                <div className="flex items-start gap-3 mb-3">
+  1732→                  <div
+  1733→                    className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0"
+  1734→                    style={{ background: unit?.color || "#2D6A4F" }}
+  1735→                  >
+  1736→                    <Icon className="w-5 h-5" />
+  1737→                  </div>
+  1738→                  <div>
+  1739→                    <h3 className="font-bold">{quiz.title}</h3>
+  1740→                    <p className="text-xs text-muted-foreground">{unit?.title}</p>
+  1741→                  </div>
+  1742→                </div>
+  1743→                <p className="text-sm text-muted-foreground mb-3">{quiz.description}</p>
+  1744→                <div className="flex gap-2 text-xs">
+  1745→                  <Badge variant="outline">{quiz.questions.length} أسئلة</Badge>
+  1746→                  <Badge variant="outline">{quiz.durationMin} دقيقة</Badge>
+  1747→                </div>
+  1748→              </CardContent>
+  1749→            </Card>
+  1750→          );
+  1751→        })}
+  1752→      </div>
+  1753→    </div>
+  1754→  );
+  1755→}
+  1756→
+  1757→// ===================================================
+  1758→//  عرض الدورات الشاملة
+  1759→// ===================================================
+  1760→
+  1761→function CoursesView({ onSelectCourse }: { onSelectCourse: (c: Course) => void }) {
+  1762→  const [filterStream, setFilterStream] = React.useState<"ALL" | Course["stream"]>("ALL");
+  1763→  const [filterLevel, setFilterLevel] = React.useState<"ALL" | Course["level"]>("ALL");
+  1764→  const stats = getCoursesStats();
+  1765→
+  1766→  const filteredCourses = courses.filter((c) => {
+  1767→    if (filterStream !== "ALL" && c.stream !== filterStream && c.stream !== "ALL") return false;
+  1768→    if (filterLevel !== "ALL" && c.level !== filterLevel) return false;
+  1769→    return true;
+  1770→  });
+  1771→
+  1772→  return (
+  1773→    <div className="space-y-6">
+  1774→      {/* الرأس */}
+  1775→      <div className="text-center">
+  1776→        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary mb-3">
+  1777→          <BookOpen className="w-8 h-8 text-white" />
+  1778→        </div>
+  1779→        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+  1780→          الدورات الشاملة
+  1781→        </h1>
+  1782→        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1783→          دورات تدريبية متكاملة من إعداد الأستاذ عدلي أسعد، تغطي كل محاور منهاج
+  1784→          السنة الثالثة ثانوي. كل دورة تحتوي على وحدات (modules) متتالية، مع دروس
+  1785→          مفصلة، تمارين محلولة، ونقاط أساسية.
+  1786→        </p>
+  1787→      </div>
+  1788→
+  1789→      {/* إحصائيات */}
+  1790→      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+  1791→        <Card>
+  1792→          <CardContent className="pt-4 text-center">
+  1793→            <BookOpen className="w-6 h-6 text-primary mx-auto mb-2" />
+  1794→            <div className="text-2xl font-bold">{stats.total}</div>
+  1795→            <div className="text-xs text-muted-foreground">دورة شاملة</div>
+  1796→          </CardContent>
+  1797→        </Card>
+  1798→        <Card>
+  1799→          <CardContent className="pt-4 text-center">
+  1800→            <Layers className="w-6 h-6 text-accent mx-auto mb-2" />
+  1801→            <div className="text-2xl font-bold">{stats.totalModules}</div>
+  1802→            <div className="text-xs text-muted-foreground">وحدة (حلقة)</div>
+  1803→          </CardContent>
+  1804→        </Card>
+  1805→        <Card>
+  1806→          <CardContent className="pt-4 text-center">
+  1807→            <CheckCircle2 className="w-6 h-6 text-green-600 mx-auto mb-2" />
+  1808→            <div className="text-2xl font-bold">{stats.totalExercises}</div>
+  1809→            <div className="text-xs text-muted-foreground">تمرين محلول</div>
+  1810→          </CardContent>
+  1811→        </Card>
+  1812→        <Card>
+  1813→          <CardContent className="pt-4 text-center">
+  1814→            <Clock className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+  1815→            <div className="text-2xl font-bold">{stats.totalDurationHours}</div>
+  1816→            <div className="text-xs text-muted-foreground">ساعة تدريس</div>
+  1817→          </CardContent>
+  1818→        </Card>
+  1819→      </div>
+  1820→
+  1821→      {/* المرشحات */}
+  1822→      <Card>
+  1823→        <CardContent className="pt-4">
+  1824→          <div className="flex flex-wrap gap-4 items-start">
+  1825→            <div>
+  1826→              <div className="text-sm font-bold mb-2">الشعبة:</div>
+  1827→              <div className="flex flex-wrap gap-2">
+  1828→                <Button size="sm" variant={filterStream === "ALL" ? "default" : "outline"} onClick={() => setFilterStream("ALL")}>
+  1829→                  كل الشعب
+  1830→                </Button>
+  1831→                <Button size="sm" variant={filterStream === "EXPERIMENTAL_SCIENCES" ? "default" : "outline"} onClick={() => setFilterStream("EXPERIMENTAL_SCIENCES")}>
+  1832→                  علوم تجريبية
+  1833→                </Button>
+  1834→                <Button size="sm" variant={filterStream === "MATHEMATICS" ? "default" : "outline"} onClick={() => setFilterStream("MATHEMATICS")}>
+  1835→                  رياضيات
+  1836→                </Button>
+  1837→                <Button size="sm" variant={filterStream === "TECHNICAL_MATH" ? "default" : "outline"} onClick={() => setFilterStream("TECHNICAL_MATH")}>
+  1838→                  تقني رياضي
+  1839→                </Button>
+  1840→              </div>
+  1841→            </div>
+  1842→
+  1843→            <div>
+  1844→              <div className="text-sm font-bold mb-2">المستوى:</div>
+  1845→              <div className="flex flex-wrap gap-2">
+  1846→                <Button size="sm" variant={filterLevel === "ALL" ? "default" : "outline"} onClick={() => setFilterLevel("ALL")}>
+  1847→                  كل المستويات
+  1848→                </Button>
+  1849→                <Button size="sm" variant={filterLevel === "BEGINNER" ? "default" : "outline"} onClick={() => setFilterLevel("BEGINNER")}>
+  1850→                  تأسيسي
+  1851→                </Button>
+  1852→                <Button size="sm" variant={filterLevel === "INTERMEDIATE" ? "default" : "outline"} onClick={() => setFilterLevel("INTERMEDIATE")}>
+  1853→                  متوسط
+  1854→                </Button>
+  1855→                <Button size="sm" variant={filterLevel === "ADVANCED" ? "default" : "outline"} onClick={() => setFilterLevel("ADVANCED")}>
+  1856→                  متقدم
+  1857→                </Button>
+  1858→                <Button size="sm" variant={filterLevel === "BAC_EXAM" ? "default" : "outline"} onClick={() => setFilterLevel("BAC_EXAM")}>
+  1859→                  مستوى البكالوريا
+  1860→                </Button>
+  1861→              </div>
+  1862→            </div>
+  1863→          </div>
+  1864→
+  1865→          <div className="mt-3 text-sm text-muted-foreground">
+  1866→            عرض <strong className="text-primary">{filteredCourses.length}</strong> من أصل <strong>{stats.total}</strong> دورة
+  1867→          </div>
+  1868→        </CardContent>
+  1869→      </Card>
+  1870→
+  1871→      {/* رسالة الأستاذ */}
+  1872→      <Card className="bg-gradient-to-l from-primary/5 to-accent/5 border-r-4 border-primary">
+  1873→        <CardContent className="pt-4">
+  1874→          <div className="flex items-start gap-3">
+  1875→            <img
+  1876→              src="/teachers/adli-asad.jpg"
+  1877→              alt="الأستاذ عدلي أسعد"
+  1878→              className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
+  1879→            />
+  1880→            <div>
+  1881→              <div className="font-bold text-primary mb-1">رسالة من الأستاذ عدلي أسعد</div>
+  1882→              <p className="text-sm text-muted-foreground leading-relaxed">
+  1883→                أحبائي الطلاب، صممت هذه الدورات لتكون رفيقتكم في رحلة التفوق. كل دورة
+  1884→                تأخذكم من حيث أنتم، وترفعكم إلى مستوى البكالوريا. ابدؤوا بالأساسيات،
+  1885→                ثم انتقلوا للدورات المتقدمة. وأنا معكم في كل خطوة!
+  1886→              </p>
+  1887→            </div>
+  1888→          </div>
+  1889→        </CardContent>
+  1890→      </Card>
+  1891→
+  1892→      {/* قائمة الدورات */}
+  1893→      {filteredCourses.length === 0 ? (
+  1894→        <Card>
+  1895→          <CardContent className="py-12 text-center text-muted-foreground">
+  1896→            <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+  1897→            <p>لا توجد دورات مطابقة للمرشحات المختارة.</p>
+  1898→          </CardContent>
+  1899→        </Card>
+  1900→      ) : (
+  1901→        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+  1902→          {filteredCourses.map((course) => (
+  1903→            <CourseCard key={course.id} course={course} onOpen={onSelectCourse} />
+  1904→          ))}
+  1905→        </div>
+  1906→      )}
+  1907→
+  1908→      {/* دعوة للسلاسل */}
+  1909→      <Card className="bg-accent/10 border-r-4 border-accent">
+  1910→        <CardContent className="pt-6">
+  1911→          <div className="flex items-start gap-3">
+  1912→            <Sparkles className="w-8 h-8 text-accent flex-shrink-0" />
+  1913→            <div>
+  1914→              <h3 className="font-bold mb-2">هل لديك سلاسل تريد إضافتها؟</h3>
+  1915→              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+  1916→                إذا كان لديك سلاسل تمارين، ملخصات، أو محاضرات، شاركها معنا وسنحوّلها
+  1917→                إلى دورات شاملة تُضاف للمنصة. هدفنا إثراء المحتوى التعليمي معاً!
+  1918→              </p>
+  1919→              <p className="text-sm font-bold text-accent-foreground">
+  1920→                📩 تواصل مع الأستاذ عدلي أسعد لإضافة سلاسلك.
+  1921→              </p>
+  1922→            </div>
+  1923→          </div>
+  1924→        </CardContent>
+  1925→      </Card>
+  1926→    </div>
+  1927→  );
+  1928→}
+  1929→
+  1930→// ===================================================
+  1931→//  عرض المواضيع الشاملة والبكالوريات السابقة
+  1932→// ===================================================
+  1933→
+  1934→function ExamsView() {
+  1935→  const [filterStream, setFilterStream] = React.useState<"ALL" | BacStream>("ALL");
+  1936→  const [filterYear, setFilterYear] = React.useState<number | "ALL">("ALL");
+  1937→  const stats = getBacExamsStats();
+  1938→
+  1939→  const filteredExams = bacExams.filter((e) => {
+  1940→    if (filterStream !== "ALL" && e.stream !== filterStream && e.stream !== "ALL") return false;
+  1941→    if (filterYear !== "ALL" && e.year !== filterYear) return false;
+  1942→    return true;
+  1943→  });
+  1944→
+  1945→  return (
+  1946→    <div className="space-y-6">
+  1947→      {/* الرأس */}
+  1948→      <div className="text-center">
+  1949→        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+  1950→          <Trophy className="w-8 h-8 text-white" />
+  1951→        </div>
+  1952→        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+  1953→          المواضيع الشاملة والبكالوريات السابقة
+  1954→        </h1>
+  1955→        <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1956→          مواضيع بكالوريا فعلية من السنوات السابقة لكل الشعب العلمية،
+  1957→          مع الحلول النموذجية المفصلة خطوة بخطوة بمنهجية رسمية، بإشراف الأستاذ عدلي أسعد.
+  1958→        </p>
+  1959→      </div>
+  1960→
+  1961→      {/* إحصائيات سريعة */}
+  1962→      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+  1963→        <Card>
+  1964→          <CardContent className="pt-4 text-center">
+  1965→            <FileText className="w-6 h-6 text-primary mx-auto mb-2" />
+  1966→            <div className="text-2xl font-bold">{stats.total}</div>
+  1967→            <div className="text-xs text-muted-foreground">موضوع بكالوريا</div>
+  1968→          </CardContent>
+  1969→        </Card>
+  1970→        <Card>
+  1971→          <CardContent className="pt-4 text-center">
+  1972→            <Calendar className="w-6 h-6 text-accent mx-auto mb-2" />
+  1973→            <div className="text-2xl font-bold">{stats.years.length}</div>
+  1974→            <div className="text-xs text-muted-foreground">سنوات (من {Math.min(...stats.years)} إلى {Math.max(...stats.years)})</div>
+  1975→          </CardContent>
+  1976→        </Card>
+  1977→        <Card>
+  1978→          <CardContent className="pt-4 text-center">
+  1979→            <BookOpen className="w-6 h-6 text-primary mx-auto mb-2" />
+  1980→            <div className="text-2xl font-bold">{stats.totalQuestions}</div>
+  1981→            <div className="text-xs text-muted-foreground">سؤال مع حل نموذجي</div>
+  1982→          </CardContent>
+  1983→        </Card>
+  1984→        <Card>
+  1985→          <CardContent className="pt-4 text-center">
+  1986→            <Award className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+  1987→            <div className="text-2xl font-bold">{stats.total * 20}</div>
+  1988→            <div className="text-xs text-muted-foreground">نقطة (20 لكل موضوع)</div>
+  1989→          </CardContent>
+  1990→        </Card>
+  1991→      </div>
+  1992→
+  1993→      {/* المرشحات */}
+  1994→      <Card>
+  1995→        <CardContent className="pt-4">
+  1996→          <div className="flex flex-wrap gap-3 items-center justify-between">
+  1997→            <div>
+  1998→              <div className="text-sm font-bold mb-2">تصفية حسب الشعبة:</div>
+  1999→              <div className="flex flex-wrap gap-2">
+  2000→                <Button
+
+[showing lines 1-2000 of 3092; use offset=2001 with limit to continue reading]

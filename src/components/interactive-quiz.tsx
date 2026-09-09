@@ -80,7 +80,7 @@ export function InteractiveQuiz({
 
   const handleSubmit = () => {
     setSubmitted(true);
-    const correct = answers.reduce(
+    const correct = answers.reduce<number>(
       (acc, ans, i) => acc + (ans === questions[i].correctIdx ? 1 : 0),
       0
     );
@@ -121,7 +121,7 @@ export function InteractiveQuiz({
   };
 
   const currentQuestion = questions[currentQ];
-  const correct = answers.reduce(
+  const correct = answers.reduce<number>(
     (acc, ans, i) => acc + (ans === questions[i].correctIdx ? 1 : 0),
     0
   );

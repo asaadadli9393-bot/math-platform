@@ -96,7 +96,7 @@ export function ExerciseCard({
                 {pointsLabel}
               </Badge>
               {exercise.tags?.map((tag, i) => (
-                <Badge key={i} variant="ghost">
+                <Badge key={i} variant="outline">
                   #{tag}
                 </Badge>
               ))}
@@ -118,7 +118,7 @@ export function ExerciseCard({
         {exercise.hint && (
           <Collapsible open={showHint} onOpenChange={setShowHint}>
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-accent">
+              <Button variant="outline" size="sm" className="text-accent">
                 <Lightbulb className="w-4 h-4 ml-2" />
                 {showHint ? "إخفاء التلميح" : "إظهار التلميح"}
               </Button>

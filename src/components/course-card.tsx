@@ -95,7 +95,7 @@ export function CourseCard({ course, onOpen }: CourseCardProps) {
 
         <div className="flex flex-wrap gap-1 pt-1">
           {course.tags.slice(0, 3).map((tag, i) => (
-            <Badge key={i} variant="ghost" className="text-xs">
+            <Badge key={i} variant="outline" className="text-xs">
               #{tag}
             </Badge>
           ))}
@@ -121,7 +121,7 @@ export function CourseDetail({ course, onBack }: CourseDetailProps) {
   return (
     <div className="space-y-6">
       {/* زر العودة */}
-      <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
+      <Button variant="outline" size="sm" onClick={onBack} className="gap-2">
         <ChevronLeft className="w-4 h-4 rotate-180" />
         عودة لكل الدورات
       </Button>
@@ -174,7 +174,7 @@ export function CourseDetail({ course, onBack }: CourseDetailProps) {
 
           <div className="flex flex-wrap gap-2 pt-2">
             {course.tags.map((tag, i) => (
-              <Badge key={i} variant="ghost">
+              <Badge key={i} variant="outline">
                 #{tag}
               </Badge>
             ))}

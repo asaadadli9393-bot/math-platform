@@ -72,7 +72,7 @@ interface StudentStore {
   resetProgress: () => void;
 
   // دوال الاشتراك
-  subscribeToPlan: (tier: "BASIC" | "PREMIUM" | "FAMILY", durationMonths: number) => void;
+  subscribeToPlan: (tier: "FREE" | "BASIC" | "PREMIUM" | "FAMILY", durationMonths: number) => void;
   startFreeTrial: (days: number) => void;
   cancelSubscription: () => void;
   isSubscriptionActive: () => boolean;
@@ -86,7 +86,7 @@ interface StudentStore {
 
 export const useStudentStore = create<StudentStore>()(
   persist(
-    (set) => ({
+    (set): StudentStore => ({
       profile: null,
       attempts: [],
       quizAttempts: [],
