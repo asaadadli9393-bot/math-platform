@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "bash scripts/set-prisma-provider.sh && next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
-  "outputDirectory": ".next/standalone",
+  "buildCommand": "bash scripts/set-prisma-provider.sh && next build",
   "framework": "nextjs",
   "regions": ["cdg1"],
   "env": {
