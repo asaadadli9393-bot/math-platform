@@ -7,78 +7,68 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
-.exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
-.exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
-.questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
-.questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة — معلومات الامتحان */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.q{margin:8px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.q strong{color:#000}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">اختبار 1</div>
-  <h1>الاختبار الفصلي الثالث</h1>
-  <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
-  <div class="info">
-    <div class="info-item">⏱️ المدة: ساعتان ونصف</div>
-    <div class="info-item">📅 جوان 2027</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">الاختبار الفصلي الثالث</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان ونصف</div>
+    <div><strong>التاريخ:</strong> جوان 2027</div>
   </div>
 </div>
-<div class="exam-meta">
-  <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
-  <div class="row"><span class="label">النوع:</span> <span>اختبار رقم 1</span></div>
-  <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل 3</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>ساعتان ونصف</span></div>
-  <div class="row"><span class="label">عدد التمارين:</span> <span>5 تمارين شاملة</span></div>
-</div>
 
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الأول (4 نقاط) — دراسة دالة شاملة</div>
-        <ol class="questions"><li class="question"><li>لتكن $f(x) = \frac{x - 2}{x + 1}$ معرفة على $\mathbb{R} \setminus \{-1\}$. احسب حدود $f$ عند $-1$ و عند $\pm\infty$.</li></li><li class="question"><li>استنتج المستقيمات المقاربة و عيّنها.</li></li><li class="question"><li>احسب $f'(x)$ و ادرس إشارها.</li></li><li class="question"><li>أنشئ جدول تغيرات $f$.</li></li><li class="question"><li>بيّن أن $(\mathcal{C}_f)$ يقبل مركز تناظر $I$, حدد إحداثياته.</li></li><li class="question"><li>ارسم $(\mathcal{C}_f)$ مع المقاربتين في معلم متعامد.</li></li><li class="question"><li>لتكن $g(x) = f(x) - \ln(x + 2)$ على $(-1, +\infty)$. بيّن أن $g(x) = 0$ يقبل حلاً وحيدًا على $(-1, +\infty)$.</li></li><li class="question"><li>احسب المساحة المحصورة بين $(\mathcal{C}_f)$ و المحور السيني على المجال $[-2, 1]$ (ملاحظة: $\int f = ...$).</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الأول (4 نقاط) — دراسة دالة شاملة</h3>
+        <p class="q"><li>لتكن $f(x) = \frac{x - 2}{x + 1}$ معرفة على $\mathbb{R} \setminus \{-1\}$. احسب حدود $f$ عند $-1$ و عند $\pm\infty$.</li></p><p class="q"><li>استنتج المستقيمات المقاربة و عيّنها.</li></p><p class="q"><li>احسب $f'(x)$ و ادرس إشارها.</li></p><p class="q"><li>أنشئ جدول تغيرات $f$.</li></p><p class="q"><li>بيّن أن $(\mathcal{C}_f)$ يقبل مركز تناظر $I$, حدد إحداثياته.</li></p><p class="q"><li>ارسم $(\mathcal{C}_f)$ مع المقاربتين في معلم متعامد.</li></p><p class="q"><li>لتكن $g(x) = f(x) - \ln(x + 2)$ على $(-1, +\infty)$. بيّن أن $g(x) = 0$ يقبل حلاً وحيدًا على $(-1, +\infty)$.</li></p><p class="q"><li>احسب المساحة المحصورة بين $(\mathcal{C}_f)$ و المحور السيني على المجال $[-2, 1]$ (ملاحظة: $\int f = ...$).</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثاني (4 نقاط) — متتالية + متتالية مساعدة</div>
-        <ol class="questions"><li class="question"><li>نعتبر $(u_n)$ معرفة بـ $u_0 = 1$ و $u_{n+1} = \frac{2 u_n}{u_n + 1}$. احسب $u_1, u_2, u_3$.</li></li><li class="question"><li>بيّن بالتراجع أن $u_n > 0$ لكل $n$.</li></li><li class="question"><li>لتكن $v_n = \frac{1}{u_n}$. اكتب $v_{n+1}$ بدلالة $v_n$.</li></li><li class="question"><li>بيّن أن $(v_n)$ حسابية, حدد أساسها و حدّها الأول.</li></li><li class="question"><li>اكتب $v_n$ ثم $u_n$ بدلالة $n$.</li></li><li class="question"><li>احسب $\lim u_n$.</li></li><li class="question"><li>ادرس رتابة $(u_n)$ مباشرة.</li></li><li class="question"><li>احسب $\sum_{k=0}^n v_k$ ثم استنتج $\sum_{k=0}^n \frac{1}{u_k}$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثاني (4 نقاط) — متتالية + متتالية مساعدة</h3>
+        <p class="q"><li>نعتبر $(u_n)$ معرفة بـ $u_0 = 1$ و $u_{n+1} = \frac{2 u_n}{u_n + 1}$. احسب $u_1, u_2, u_3$.</li></p><p class="q"><li>بيّن بالتراجع أن $u_n > 0$ لكل $n$.</li></p><p class="q"><li>لتكن $v_n = \frac{1}{u_n}$. اكتب $v_{n+1}$ بدلالة $v_n$.</li></p><p class="q"><li>بيّن أن $(v_n)$ حسابية, حدد أساسها و حدّها الأول.</li></p><p class="q"><li>اكتب $v_n$ ثم $u_n$ بدلالة $n$.</li></p><p class="q"><li>احسب $\lim u_n$.</li></p><p class="q"><li>ادرس رتابة $(u_n)$ مباشرة.</li></p><p class="q"><li>احسب $\sum_{k=0}^n v_k$ ثم استنتج $\sum_{k=0}^n \frac{1}{u_k}$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثالث (4 نقاط) — أعداد مركبة شاملة</div>
-        <ol class="questions"><li class="question"><li>لتكن $z = \sqrt{3} - i$. احسب $|z|$ و $\arg(z)$.</li></li><li class="question"><li>اكتب $z$ على الشكل الأسي.</li></li><li class="question"><li>احسب $z^6$ على الشكل الأسي ثم الجبري.</li></li><li class="question"><li>حل في $\mathbb{C}$: $z^3 = -8i$.</li></li><li class="question"><li>لتكن $Z = z^6$. اكتب $\bar Z$ على الشكل الجبري.</li></li><li class="question"><li>لتكن $A$ نقطة التمثيل لـ $z$ في المستوي المركب. احسب $OA$ و الزاوية $(\vec{u}, \vec{OA})$.</li></li><li class="question"><li>لتكن $B$ نقطة التمثيل لـ $z^2$. احسب $AB$.</li></li><li class="question"><li>بيّن أن النقاط $O, A, B$ تشكل مثلثًا (ليس بالضرورة متساوي الأضلاع).</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثالث (4 نقاط) — أعداد مركبة شاملة</h3>
+        <p class="q"><li>لتكن $z = \sqrt{3} - i$. احسب $|z|$ و $\arg(z)$.</li></p><p class="q"><li>اكتب $z$ على الشكل الأسي.</li></p><p class="q"><li>احسب $z^6$ على الشكل الأسي ثم الجبري.</li></p><p class="q"><li>حل في $\mathbb{C}$: $z^3 = -8i$.</li></p><p class="q"><li>لتكن $Z = z^6$. اكتب $\bar Z$ على الشكل الجبري.</li></p><p class="q"><li>لتكن $A$ نقطة التمثيل لـ $z$ في المستوي المركب. احسب $OA$ و الزاوية $(\vec{u}, \vec{OA})$.</li></p><p class="q"><li>لتكن $B$ نقطة التمثيل لـ $z^2$. احسب $AB$.</li></p><p class="q"><li>بيّن أن النقاط $O, A, B$ تشكل مثلثًا (ليس بالضرورة متساوي الأضلاع).</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الرابع (4 نقاط) — تكامل + متتالية (صيغة واليس)</div>
-        <ol class="questions"><li class="question"><li>احسب $\int_0^1 x^2 e^{-x^3}\, dx$ (تغيير متغير $u = -x^3$).</li></li><li class="question"><li>احسب $\int_0^{\pi/2} \cos^2 x \sin x\, dx$ (تغيير متغير $u = \cos x$).</li></li><li class="question"><li>برهن بالتجزئة أن $I_n = \int_0^{\pi/2} \sin^n x\, dx = \frac{n-1}{n} I_{n-2}$ لـ $n \geq 2$.</li></li><li class="question"><li>احسب $I_0$ و $I_1$.</li></li><li class="question"><li>احسب $I_2, I_3, I_4$.</li></li><li class="question"><li>بيّن أن $(I_n)$ متناقية لـ $n \geq 1$ و استنتج $\lim I_n$.</li></li><li class="question"><li>لتكن $J_n = (n+1) I_n I_{n+1}$. بيّن أن $J_n$ ثابتة (مسألة واليس).</li></li><li class="question"><li>استنتج صيغة واليس: $\lim \frac{I_{n+1}}{I_n} = 1$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الرابع (4 نقاط) — تكامل + متتالية (صيغة واليس)</h3>
+        <p class="q"><li>احسب $\int_0^1 x^2 e^{-x^3}\, dx$ (تغيير متغير $u = -x^3$).</li></p><p class="q"><li>احسب $\int_0^{\pi/2} \cos^2 x \sin x\, dx$ (تغيير متغير $u = \cos x$).</li></p><p class="q"><li>برهن بالتجزئة أن $I_n = \int_0^{\pi/2} \sin^n x\, dx = \frac{n-1}{n} I_{n-2}$ لـ $n \geq 2$.</li></p><p class="q"><li>احسب $I_0$ و $I_1$.</li></p><p class="q"><li>احسب $I_2, I_3, I_4$.</li></p><p class="q"><li>بيّن أن $(I_n)$ متناقية لـ $n \geq 1$ و استنتج $\lim I_n$.</li></p><p class="q"><li>لتكن $J_n = (n+1) I_n I_{n+1}$. بيّن أن $J_n$ ثابتة (مسألة واليس).</li></p><p class="q"><li>استنتج صيغة واليس: $\lim \frac{I_{n+1}}{I_n} = 1$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الخامس (4 نقاط) — احتمالات + توزيعات منفصلة</div>
-        <ol class="questions"><li class="question"><li>في علبة 10 كرات: 4 حمراء, 5 بيضاء, 1 خضراء. نسحب 3 كرات دفعة واحدة. احسب عدد السحوبات الممكنة.</li></li><li class="question"><li>احسب احتمال الحصول على 3 كرات حمراء.</li></li><li class="question"><li>احسب احتمال الحصول على 3 كرات من نفس اللون.</li></li><li class="question"><li>احسب احتمال الحصول على لونين مختلفين على الأقل.</li></li><li class="question"><li>لتكن $X$ عدد الكرات البيضاء المسحوبة. حدد توزيع $X$.</li></li><li class="question"><li>احسب $E(X)$ و $V(X)$.</li></li><li class="question"><li>احسب $P(X \geq 2)$.</li></li><li class="question"><li>احسب $P(X = 1 | X \geq 1)$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الخامس (4 نقاط) — احتمالات + توزيعات منفصلة</h3>
+        <p class="q"><li>في علبة 10 كرات: 4 حمراء, 5 بيضاء, 1 خضراء. نسحب 3 كرات دفعة واحدة. احسب عدد السحوبات الممكنة.</li></p><p class="q"><li>احسب احتمال الحصول على 3 كرات حمراء.</li></p><p class="q"><li>احسب احتمال الحصول على 3 كرات من نفس اللون.</li></p><p class="q"><li>احسب احتمال الحصول على لونين مختلفين على الأقل.</li></p><p class="q"><li>لتكن $X$ عدد الكرات البيضاء المسحوبة. حدد توزيع $X$.</li></p><p class="q"><li>احسب $E(X)$ و $V(X)$.</li></p><p class="q"><li>احسب $P(X \geq 2)$.</li></p><p class="q"><li>احسب $P(X = 1 | X \geq 1)$.</li></p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>منصة تعليمية لطلبة السنة الثالثة ثانوي — الجزائر 🇩🇿</p>
-  <p>📧 asaadadli9393@gmail.com | بإشراف الأستاذ عدلي أسعد</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

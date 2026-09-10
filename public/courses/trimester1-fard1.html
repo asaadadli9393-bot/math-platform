@@ -7,68 +7,58 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
-.exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
-.exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
-.questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
-.questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة — معلومات الامتحان */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.q{margin:8px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.q strong{color:#000}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">فرض 1</div>
-  <h1>الفرض الأول — الفصل الأول</h1>
-  <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
-  <div class="info">
-    <div class="info-item">⏱️ المدة: ساعتان</div>
-    <div class="info-item">📅 أكتوبر 2026</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">الفرض الأول — الفصل الأول</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+    <div><strong>التاريخ:</strong> أكتوبر 2026</div>
   </div>
 </div>
-<div class="exam-meta">
-  <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
-  <div class="row"><span class="label">النوع:</span> <span>فرض رقم 1</span></div>
-  <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل 1</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>ساعتان</span></div>
-  <div class="row"><span class="label">عدد التمارين:</span> <span>3 تمارين شاملة</span></div>
-</div>
 
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الأول (6 نقاط) — أجب بـ صحيح أو خطأ مع تعليل الإجابة:</div>
-        <ol class="questions"><li class="question"><li>من أجل كل عدد حقيقي $x$ يكون $\ln(1 - x^3) \geq 2\ln(1 - x)$.</li></li><li class="question"><li>إذا كانت $f$ دالة مُعرّفة على $\mathbb{R}^*$ بـ $f(x) = \frac{x^4}{e^x}$، فإن $\lim_{x \to 0} f(x) = 3$.</li></li><li class="question"><li>المعادلة $e^{2x} - 3e^x + 2 = 0$ تقبل حلّين متمايزين.</li></li><li class="question"><li>إذا كانت $f$ دالة مُعرّفة على $\mathbb{R}$ بـ $f(x) = x^2 e^{-x}$، فإن تمثيلها البياني يقبل قيمة حدّية عظمى عند النقطة ذات الفاصلة $x = 2$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الأول (6 نقاط) — أجب بـ صحيح أو خطأ مع تعليل الإجابة:</h3>
+        <p class="q"><li>من أجل كل عدد حقيقي $x$ يكون $\ln(1 - x^3) \geq 2\ln(1 - x)$.</li></p><p class="q"><li>إذا كانت $f$ دالة مُعرّفة على $\mathbb{R}^*$ بـ $f(x) = \frac{x^4}{e^x}$، فإن $\lim_{x \to 0} f(x) = 3$.</li></p><p class="q"><li>المعادلة $e^{2x} - 3e^x + 2 = 0$ تقبل حلّين متمايزين.</li></p><p class="q"><li>إذا كانت $f$ دالة مُعرّفة على $\mathbb{R}$ بـ $f(x) = x^2 e^{-x}$، فإن تمثيلها البياني يقبل قيمة حدّية عظمى عند النقطة ذات الفاصلة $x = 2$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثاني (7 نقاط) — لتكن $g$ دالة عددية مُعرّفة على $\mathbb{R}$ بـ $g(x) = (1 - x^2) + (1 - x)\ln(1 - x)$.</div>
-        <ol class="questions"><li class="question"><li>أُحسُب نهايات الدالة $g$ عند $+\infty$ و عند $-\infty$.</li></li><li class="question"><li>أثبت أنّ $g(x) = x^2 - x(1 - x)\ln(1 - x)$ وأنّ $g$ قابلة للاشتقاق على $\mathbb{R}$، ثُمّ شكّل جدول تغيّراتها.</li></li><li class="question"><li>استنتج اتجاه تغيّر الدالة $g$.</li></li><li class="question"><li>أثبت أنّ المعادلة $g(x) = 0$ تقبل حلًّا وحيدًا $\alpha$ حيث $0,2 < \alpha < 0,3$.</li></li><li class="question"><li>استنتج إشارة $g(x)$ تبعًا لقيم العدد الحقيقي $x$.</li></li><li class="question"><li>لتكن $f$ دالة عددية مُعرّفة على $]-1, 0]$ بـ $f(x) = \frac{1}{\ln(1 + x)}$، وليكن $(\mathcal{C}_f)$ تمثيلها البياني في معلم متعامد ومتجانس للمستوي.</li></li><li class="question"><li>أُحسُب نهايات الدالة $f$ و فسّر هندسيًّا النّتائج.</li></li><li class="question"><li>أثبت أنّ $f'(x) = \frac{-g(x)}{x^2 (1 + x)\ln^2(1 + x)}$ لكل $x \in ]-1, 0]$، ثُمّ شكّل جدول تغيّرات $f$.</li></li><li class="question"><li>أ( أثبت أنّ المستقيم $(\Delta): y = x + 1$ مقارب مائل لـ $(\mathcal{C}_f)$. ب( أدرُس الوضع النّسبي لـ $(\mathcal{C}_f)$ و $(\Delta)$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثاني (7 نقاط) — لتكن $g$ دالة عددية مُعرّفة على $\mathbb{R}$ بـ $g(x) = (1 - x^2) + (1 - x)\ln(1 - x)$.</h3>
+        <p class="q"><li>أُحسُب نهايات الدالة $g$ عند $+\infty$ و عند $-\infty$.</li></p><p class="q"><li>أثبت أنّ $g(x) = x^2 - x(1 - x)\ln(1 - x)$ وأنّ $g$ قابلة للاشتقاق على $\mathbb{R}$، ثُمّ شكّل جدول تغيّراتها.</li></p><p class="q"><li>استنتج اتجاه تغيّر الدالة $g$.</li></p><p class="q"><li>أثبت أنّ المعادلة $g(x) = 0$ تقبل حلًّا وحيدًا $\alpha$ حيث $0,2 < \alpha < 0,3$.</li></p><p class="q"><li>استنتج إشارة $g(x)$ تبعًا لقيم العدد الحقيقي $x$.</li></p><p class="q"><li>لتكن $f$ دالة عددية مُعرّفة على $]-1, 0]$ بـ $f(x) = \frac{1}{\ln(1 + x)}$، وليكن $(\mathcal{C}_f)$ تمثيلها البياني في معلم متعامد ومتجانس للمستوي.</li></p><p class="q"><li>أُحسُب نهايات الدالة $f$ و فسّر هندسيًّا النّتائج.</li></p><p class="q"><li>أثبت أنّ $f'(x) = \frac{-g(x)}{x^2 (1 + x)\ln^2(1 + x)}$ لكل $x \in ]-1, 0]$، ثُمّ شكّل جدول تغيّرات $f$.</li></p><p class="q"><li>أ( أثبت أنّ المستقيم $(\Delta): y = x + 1$ مقارب مائل لـ $(\mathcal{C}_f)$. ب( أدرُس الوضع النّسبي لـ $(\mathcal{C}_f)$ و $(\Delta)$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثالث (7 نقاط) — نعتبر المتتالية $(u_n)$ المعرفة بـ $u_0 = 3$ و $u_{n+1} = \frac{1}{2} u_n + 1$ لكل $n \in \mathbb{N}$.</div>
-        <ol class="questions"><li class="question"><li>احسب $u_1, u_2, u_3$ (إعطِ الكسور المختصرة).</li></li><li class="question"><li>لتكن $(v_n)$ المتتالية المعرفة بـ $v_n = u_n - 2$. أثبت أنّ $(v_n)$ متتالية هندسية وحدد أساسها.</li></li><li class="question"><li>اكتب $v_n$ ثم $u_n$ بدلالة $n$.</li></li><li class="question"><li>احسب $\lim_{n \to +\infty} u_n$.</li></li><li class="question"><li>احسب $S_n = v_0 + v_1 + \cdots + v_n$ بدلالة $n$.</li></li><li class="question"><li>برهن بالتراجع أنّ $2 < u_n \leq 3$ لكل $n \in \mathbb{N}$.</li></li><li class="question"><li>أدرس رتابة المتتالية $(u_n)$ بطريقتين: (أ) مباشرة، (ب) باستعمال $(v_n)$.</li></li><li class="question"><li>لنضع $w_n = u_1 \cdot u_2 \cdots u_n$. ادرس قابلية تقارب $(w_n)$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثالث (7 نقاط) — نعتبر المتتالية $(u_n)$ المعرفة بـ $u_0 = 3$ و $u_{n+1} = \frac{1}{2} u_n + 1$ لكل $n \in \mathbb{N}$.</h3>
+        <p class="q"><li>احسب $u_1, u_2, u_3$ (إعطِ الكسور المختصرة).</li></p><p class="q"><li>لتكن $(v_n)$ المتتالية المعرفة بـ $v_n = u_n - 2$. أثبت أنّ $(v_n)$ متتالية هندسية وحدد أساسها.</li></p><p class="q"><li>اكتب $v_n$ ثم $u_n$ بدلالة $n$.</li></p><p class="q"><li>احسب $\lim_{n \to +\infty} u_n$.</li></p><p class="q"><li>احسب $S_n = v_0 + v_1 + \cdots + v_n$ بدلالة $n$.</li></p><p class="q"><li>برهن بالتراجع أنّ $2 < u_n \leq 3$ لكل $n \in \mathbb{N}$.</li></p><p class="q"><li>أدرس رتابة المتتالية $(u_n)$ بطريقتين: (أ) مباشرة، (ب) باستعمال $(v_n)$.</li></p><p class="q"><li>لنضع $w_n = u_1 \cdot u_2 \cdots u_n$. ادرس قابلية تقارب $(w_n)$.</li></p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>منصة تعليمية لطلبة السنة الثالثة ثانوي — الجزائر 🇩🇿</p>
-  <p>📧 asaadadli9393@gmail.com | بإشراف الأستاذ عدلي أسعد</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

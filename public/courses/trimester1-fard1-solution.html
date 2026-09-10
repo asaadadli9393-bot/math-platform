@@ -7,59 +7,58 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#15803d,#166534);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.exercise{background:white;border:1px solid #d1fae5;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#166534;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #86efac;line-height:1.6}
-.steps{display:flex;flex-direction:column;gap:10px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#f0fdf4;border-radius:8px;border-right:3px solid #10b981}
-.step-num{font-weight:700;color:#047857;flex-shrink:0;background:#d1fae5;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:11px}
-.step-content{flex:1;line-height:1.9}
-.step-content strong{color:#047857}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#86efac;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.step{margin:6px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.step strong{color:#000;background:#f0f0f0;padding:1px 4px;border-radius:2px}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f0fdf4;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">✅ الحل النموذجي المفصّل</div>
-  <h1>الفرض الأول — الفصل الأول</h1>
-  <div class="subtitle">الحل النموذجي الشامل — منصة الرياضيات</div>
-  <div class="info">
-    <div class="info-item">📝 3 تمارين محلولة</div>
-    <div class="info-item">📅 أكتوبر 2026</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الفرض الأول — الفصل الأول</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+    <div><strong>عدد التمارين:</strong> 3</div>
   </div>
 </div>
 
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الأول — صحيح أو خطأ</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1) خطأ.</strong> $\ln(1 - x^3) = \ln((1 - x)(1 + x + x^2)) = \ln|1 - x| + \ln(1 + x + x^2)$. ليس بالضرورة $\geq 2\ln(1 - x)$. مثلًا عند $x = 0$: $\ln 1 = 0$ و $2\ln 1 = 0$ — متساويان. عند $x = -1$: $\ln 2 = \ln 2$ و $2\ln 2 = \ln 4 > \ln 2$. إذن العبارة خاطئة.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2) خطأ.</strong> $f(x) = \frac{x^4}{e^x} = x^4 e^{-x}$. عند $x \to 0$: $f(0) = 0$. ليست النهاية 3. (النهاية الحقيقية هي 0.)</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3) صحيح.</strong> نضع $X = e^x$: $X^2 - 3X + 2 = 0 \Rightarrow (X - 1)(X - 2) = 0 \Rightarrow X = 1$ أو $X = 2$. أي $x = 0$ أو $x = \ln 2$. حلّان متمايزان ✓.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4) صحيح.</strong> $f'(x) = 2x e^{-x} - x^2 e^{-x} = x e^{-x}(2 - x)$. $f'(x) = 0 \iff x = 0$ أو $x = 2$. عند $x = 2$: $f$ تغيّر إشارتها من + إلى −، إذن قيمة حدّية عظمى ✓.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الأول — صحيح أو خطأ</h3>
+        <p class="step"><strong>1) خطأ.</strong> $\ln(1 - x^3) = \ln((1 - x)(1 + x + x^2)) = \ln|1 - x| + \ln(1 + x + x^2)$. ليس بالضرورة $\geq 2\ln(1 - x)$. مثلًا عند $x = 0$: $\ln 1 = 0$ و $2\ln 1 = 0$ — متساويان. عند $x = -1$: $\ln 2 = \ln 2$ و $2\ln 2 = \ln 4 > \ln 2$. إذن العبارة خاطئة.</p><p class="step"><strong>2) خطأ.</strong> $f(x) = \frac{x^4}{e^x} = x^4 e^{-x}$. عند $x \to 0$: $f(0) = 0$. ليست النهاية 3. (النهاية الحقيقية هي 0.)</p><p class="step"><strong>3) صحيح.</strong> نضع $X = e^x$: $X^2 - 3X + 2 = 0 \Rightarrow (X - 1)(X - 2) = 0 \Rightarrow X = 1$ أو $X = 2$. أي $x = 0$ أو $x = \ln 2$. حلّان متمايزان ✓.</p><p class="step"><strong>4) صحيح.</strong> $f'(x) = 2x e^{-x} - x^2 e^{-x} = x e^{-x}(2 - x)$. $f'(x) = 0 \iff x = 0$ أو $x = 2$. عند $x = 2$: $f$ تغيّر إشارتها من + إلى −، إذن قيمة حدّية عظمى ✓.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثاني — دراسة الدالة $g$ و $f$</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> عند $+\infty$: $1 - x^2 \to -\infty$ و $(1 - x)\ln(1 - x) \to +\infty \cdot +\infty = +\infty$. بدراسة أعمق: $x^2$ يتفوق، إذن $g(x) \to -\infty$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content">عند $-\infty$: $1 - x^2 \to -\infty$ و $(1 - x)\ln(1 - x) \to +\infty \cdot +\infty = +\infty$. لكن الأساسي: $-x^2 + x(1-x)\ln(1-x)$, $\ln(1-x) \to +\infty$ ببطء، إذن $g(x) \to -\infty$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>2)</strong> نحسب $g'(x)$: $g'(x) = -2x - \ln(1 - x) - (1 - x) \cdot \frac{-1}{1 - x} = -2x - \ln(1 - x) + 1$. إذن $g'(x) = 1 - 2x - \ln(1 - x)$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content">$g''(x) = -2 + \frac{1}{1 - x}$. $g''(x) = 0 \iff 1 - x = 1/2 \iff x = 1/2$. $g''(x) > 0$ لـ $x < 1/2$, $g''(x) < 0$ لـ $x > 1/2$. إشارة $g'$ تتغير حسب $x$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content">جدول التغيرات: $g$ يبدأ من $-\infty$, يرتفع, ثم ينخفض إلى $-\infty$. نقطة قصوى عند تقريب $x = 0$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>3)</strong> $g$ تزايد ثم تناقص (حسب جدول التغيرات).</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>4)</strong> $g(0,2) = 0,96 + 0,8 \cdot \ln 0,8 \approx 0,96 + 0,8 \cdot (-0,223) \approx 0,96 - 0,178 = 0,782 > 0$. $g(0,3) = 0,91 + 0,7 \cdot \ln 0,7 \approx 0,91 + 0,7 \cdot (-0,357) \approx 0,91 - 0,25 = 0,66 > 0$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content">بعد إعادة الفحص: نحتاج قيمًا أكبر. $g(0,9) = (1 - 0,81) + 0,1 \ln 0,1 = 0,19 - 0,23 = -0,04 < 0$. $g(0,8) = 0,36 + 0,2 \ln 0,2 = 0,36 - 0,32 = 0,04 > 0$. إذن $\alpha \in (0,8, 0,9)$. [ملاحظة: السؤال الأصلي يحتاج تعديل في القيم]</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>5)</strong> $g(x) > 0$ على $(-\infty, \alpha)$ و $g(x) < 0$ على $(\alpha, +\infty)$. (مع $\alpha \approx 0,84$)</div></div><div class="step"><span class="step-num">10)</span><div class="step-content"><strong>6)</strong> نهايات $f$ على $]-1, 0]$: عند $-1^+$: $\ln(1 + x) \to -\infty$, إذن $f(x) \to 0^-$. عند $0^-$: $\ln(1 + x) \to 0^-$, إذن $f(x) \to -\infty$.</div></div><div class="step"><span class="step-num">11)</span><div class="step-content">تفسير هندسي: $\mathcal{C}_f$ يقبل مقاربة أفقية $y = 0$ عند $-1^+$ و مقاربة عمودية $x = 0$ عند $0^-$.</div></div><div class="step"><span class="step-num">12)</span><div class="step-content"><strong>7)</strong> $f'(x) = \frac{(1 + x)\ln(1+x) \cdot \frac{1}{1+x} \cdot x^2 - 1 \cdot 2x(1+x)\ln^2(1+x)}{x^4(1+x)^2 \ln^2(1+x)} = \frac{x(1+x)\ln(1+x) - 2x(1+x)\ln^2(1+x)}{x^4(1+x)^2\ln^2(1+x)}$</div></div><div class="step"><span class="step-num">13)</span><div class="step-content">بعد التبسيط: $f'(x) = \frac{1 - 2\ln(1+x)}{x^2(1+x)\ln^2(1+x)}$... (التفصيل في الاشتقاق).</div></div><div class="step"><span class="step-num">14)</span><div class="step-content">بالأحرى من العلاقة $f'(x) = \frac{-g(x)}{x^2 (1+x)\ln^2(1+x)}$ نستعمل إشارة $g$: $f' > 0$ حيث $g < 0$ و $f' < 0$ حيث $g > 0$.</div></div><div class="step"><span class="step-num">15)</span><div class="step-content">جدول تغيرات $f$: تناقص على $(-1, 0]$ (لأن $g > 0$ هناك → $f' < 0$).</div></div><div class="step"><span class="step-num">16)</span><div class="step-content"><strong>8 أ)</strong> المقارب المائل: $f(x) - (x + 1) = \frac{1}{\ln(1+x)} - x - 1 \to 0$ عند $x \to -1^+$ (إذ $\ln(1+x) \to -\infty$ فـ $1/\ln \to 0$ و $x + 1 \to 0$). إذن $(\Delta)$ مقارب مائل (في الحقيقة مقاربة أفقية $y = 1$ عند الفحص).</div></div><div class="step"><span class="step-num">17)</span><div class="step-content"><strong>8 ب)</strong> $f(x) - (x + 1)$ إشارته تعتمد على $\frac{1 - (x+1)\ln(1+x)}{\ln(1+x)}$. عند $-1^+$: موجب (لأن $1 - 0 = 1 > 0$ و $\ln < 0$) → سالب. إذن $\mathcal{C}_f$ تحت $(\Delta)$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثاني — دراسة الدالة $g$ و $f$</h3>
+        <p class="step"><strong>1)</strong> عند $+\infty$: $1 - x^2 \to -\infty$ و $(1 - x)\ln(1 - x) \to +\infty \cdot +\infty = +\infty$. بدراسة أعمق: $x^2$ يتفوق، إذن $g(x) \to -\infty$.</p><p class="step">عند $-\infty$: $1 - x^2 \to -\infty$ و $(1 - x)\ln(1 - x) \to +\infty \cdot +\infty = +\infty$. لكن الأساسي: $-x^2 + x(1-x)\ln(1-x)$, $\ln(1-x) \to +\infty$ ببطء، إذن $g(x) \to -\infty$.</p><p class="step"><strong>2)</strong> نحسب $g'(x)$: $g'(x) = -2x - \ln(1 - x) - (1 - x) \cdot \frac{-1}{1 - x} = -2x - \ln(1 - x) + 1$. إذن $g'(x) = 1 - 2x - \ln(1 - x)$.</p><p class="step">$g''(x) = -2 + \frac{1}{1 - x}$. $g''(x) = 0 \iff 1 - x = 1/2 \iff x = 1/2$. $g''(x) > 0$ لـ $x < 1/2$, $g''(x) < 0$ لـ $x > 1/2$. إشارة $g'$ تتغير حسب $x$.</p><p class="step">جدول التغيرات: $g$ يبدأ من $-\infty$, يرتفع, ثم ينخفض إلى $-\infty$. نقطة قصوى عند تقريب $x = 0$.</p><p class="step"><strong>3)</strong> $g$ تزايد ثم تناقص (حسب جدول التغيرات).</p><p class="step"><strong>4)</strong> $g(0,2) = 0,96 + 0,8 \cdot \ln 0,8 \approx 0,96 + 0,8 \cdot (-0,223) \approx 0,96 - 0,178 = 0,782 > 0$. $g(0,3) = 0,91 + 0,7 \cdot \ln 0,7 \approx 0,91 + 0,7 \cdot (-0,357) \approx 0,91 - 0,25 = 0,66 > 0$.</p><p class="step">بعد إعادة الفحص: نحتاج قيمًا أكبر. $g(0,9) = (1 - 0,81) + 0,1 \ln 0,1 = 0,19 - 0,23 = -0,04 < 0$. $g(0,8) = 0,36 + 0,2 \ln 0,2 = 0,36 - 0,32 = 0,04 > 0$. إذن $\alpha \in (0,8, 0,9)$. [ملاحظة: السؤال الأصلي يحتاج تعديل في القيم]</p><p class="step"><strong>5)</strong> $g(x) > 0$ على $(-\infty, \alpha)$ و $g(x) < 0$ على $(\alpha, +\infty)$. (مع $\alpha \approx 0,84$)</p><p class="step"><strong>6)</strong> نهايات $f$ على $]-1, 0]$: عند $-1^+$: $\ln(1 + x) \to -\infty$, إذن $f(x) \to 0^-$. عند $0^-$: $\ln(1 + x) \to 0^-$, إذن $f(x) \to -\infty$.</p><p class="step">تفسير هندسي: $\mathcal{C}_f$ يقبل مقاربة أفقية $y = 0$ عند $-1^+$ و مقاربة عمودية $x = 0$ عند $0^-$.</p><p class="step"><strong>7)</strong> $f'(x) = \frac{(1 + x)\ln(1+x) \cdot \frac{1}{1+x} \cdot x^2 - 1 \cdot 2x(1+x)\ln^2(1+x)}{x^4(1+x)^2 \ln^2(1+x)} = \frac{x(1+x)\ln(1+x) - 2x(1+x)\ln^2(1+x)}{x^4(1+x)^2\ln^2(1+x)}$</p><p class="step">بعد التبسيط: $f'(x) = \frac{1 - 2\ln(1+x)}{x^2(1+x)\ln^2(1+x)}$... (التفصيل في الاشتقاق).</p><p class="step">بالأحرى من العلاقة $f'(x) = \frac{-g(x)}{x^2 (1+x)\ln^2(1+x)}$ نستعمل إشارة $g$: $f' > 0$ حيث $g < 0$ و $f' < 0$ حيث $g > 0$.</p><p class="step">جدول تغيرات $f$: تناقص على $(-1, 0]$ (لأن $g > 0$ هناك → $f' < 0$).</p><p class="step"><strong>8 أ)</strong> المقارب المائل: $f(x) - (x + 1) = \frac{1}{\ln(1+x)} - x - 1 \to 0$ عند $x \to -1^+$ (إذ $\ln(1+x) \to -\infty$ فـ $1/\ln \to 0$ و $x + 1 \to 0$). إذن $(\Delta)$ مقارب مائل (في الحقيقة مقاربة أفقية $y = 1$ عند الفحص).</p><p class="step"><strong>8 ب)</strong> $f(x) - (x + 1)$ إشارته تعتمد على $\frac{1 - (x+1)\ln(1+x)}{\ln(1+x)}$. عند $-1^+$: موجب (لأن $1 - 0 = 1 > 0$ و $\ln < 0$) → سالب. إذن $\mathcal{C}_f$ تحت $(\Delta)$.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثالث — المتتالية العودية</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> $u_1 = \frac{1}{2}(3) + 1 = \frac{5}{2}$. $u_2 = \frac{1}{2} \cdot \frac{5}{2} + 1 = \frac{5}{4} + 1 = \frac{9}{4}$. $u_3 = \frac{1}{2} \cdot \frac{9}{4} + 1 = \frac{9}{8} + 1 = \frac{17}{8}$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $v_{n+1} = u_{n+1} - 2 = \frac{1}{2} u_n + 1 - 2 = \frac{1}{2}(u_n - 2) = \frac{1}{2} v_n$. $(v_n)$ هندسية أساسها $q = \frac{1}{2}$ و $v_0 = 1$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> $v_n = \left(\frac{1}{2}\right)^n = \frac{1}{2^n}$. $u_n = v_n + 2 = 2 + \frac{1}{2^n}$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> $\lim u_n = 2$ (لأن $\frac{1}{2^n} \to 0$).</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> $S_n = v_0 \cdot \frac{1 - q^{n+1}}{1 - q} = 1 \cdot \frac{1 - (1/2)^{n+1}}{1/2} = 2\left(1 - \frac{1}{2^{n+1}}\right) = 2 - \frac{1}{2^n}$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>6) التهيئة:</strong> $u_0 = 3 \in (2, 3]$ ✓. <strong>الفرضية:</strong> $2 < u_n \leq 3$. <strong>النتيجة:</strong> $u_{n+1} = \frac{1}{2} u_n + 1 \in \left(\frac{1}{2} \cdot 2 + 1, \frac{1}{2} \cdot 3 + 1\right] = (2, 5/2] \subset (2, 3]$ ✓.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>7) أ) مباشرة:</strong> $u_{n+1} - u_n = \frac{1}{2} u_n + 1 - u_n = 1 - \frac{u_n}{2}$. بما أن $u_n > 2$, $1 - u_n/2 < 0$. إذن $(u_n)$ متناقصة.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>ب) عبر $(v_n)$:</strong> $v_{n+1} = \frac{1}{2} v_n < v_n$ (لأن $v_n > 0$), إذن $(v_n)$ متناقصة, و بالتالي $(u_n) = (v_n) + 2$ متناقصة.</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>8)</strong> $w_n = \prod_{k=1}^n u_k$. $\ln w_n = \sum_{k=1}^n \ln u_k$. بما أن $u_k > 2 > 1$, $\ln u_k > 0$, إذن $\ln w_n \to +\infty$, إذن $w_n \to +\infty$. المتتالية $(w_n)$ غير متقاربة.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثالث — المتتالية العودية</h3>
+        <p class="step"><strong>1)</strong> $u_1 = \frac{1}{2}(3) + 1 = \frac{5}{2}$. $u_2 = \frac{1}{2} \cdot \frac{5}{2} + 1 = \frac{5}{4} + 1 = \frac{9}{4}$. $u_3 = \frac{1}{2} \cdot \frac{9}{4} + 1 = \frac{9}{8} + 1 = \frac{17}{8}$.</p><p class="step"><strong>2)</strong> $v_{n+1} = u_{n+1} - 2 = \frac{1}{2} u_n + 1 - 2 = \frac{1}{2}(u_n - 2) = \frac{1}{2} v_n$. $(v_n)$ هندسية أساسها $q = \frac{1}{2}$ و $v_0 = 1$.</p><p class="step"><strong>3)</strong> $v_n = \left(\frac{1}{2}\right)^n = \frac{1}{2^n}$. $u_n = v_n + 2 = 2 + \frac{1}{2^n}$.</p><p class="step"><strong>4)</strong> $\lim u_n = 2$ (لأن $\frac{1}{2^n} \to 0$).</p><p class="step"><strong>5)</strong> $S_n = v_0 \cdot \frac{1 - q^{n+1}}{1 - q} = 1 \cdot \frac{1 - (1/2)^{n+1}}{1/2} = 2\left(1 - \frac{1}{2^{n+1}}\right) = 2 - \frac{1}{2^n}$.</p><p class="step"><strong>6) التهيئة:</strong> $u_0 = 3 \in (2, 3]$ ✓. <strong>الفرضية:</strong> $2 < u_n \leq 3$. <strong>النتيجة:</strong> $u_{n+1} = \frac{1}{2} u_n + 1 \in \left(\frac{1}{2} \cdot 2 + 1, \frac{1}{2} \cdot 3 + 1\right] = (2, 5/2] \subset (2, 3]$ ✓.</p><p class="step"><strong>7) أ) مباشرة:</strong> $u_{n+1} - u_n = \frac{1}{2} u_n + 1 - u_n = 1 - \frac{u_n}{2}$. بما أن $u_n > 2$, $1 - u_n/2 < 0$. إذن $(u_n)$ متناقصة.</p><p class="step"><strong>ب) عبر $(v_n)$:</strong> $v_{n+1} = \frac{1}{2} v_n < v_n$ (لأن $v_n > 0$), إذن $(v_n)$ متناقصة, و بالتالي $(u_n) = (v_n) + 2$ متناقصة.</p><p class="step"><strong>8)</strong> $w_n = \prod_{k=1}^n u_k$. $\ln w_n = \sum_{k=1}^n \ln u_k$. بما أن $u_k > 2 > 1$, $\ln u_k > 0$, إذن $\ln w_n \to +\infty$, إذن $w_n \to +\infty$. المتتالية $(w_n)$ غير متقاربة.</p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>الحل النموذجي — بإشراف الأستاذ عدلي أسعد</p>
-  <p>📧 asaadadli9393@gmail.com | الجزائر 🇩🇿</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

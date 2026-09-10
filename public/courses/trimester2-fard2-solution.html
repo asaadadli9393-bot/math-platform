@@ -7,64 +7,63 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#15803d,#166534);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.exercise{background:white;border:1px solid #d1fae5;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#166534;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #86efac;line-height:1.6}
-.steps{display:flex;flex-direction:column;gap:10px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#f0fdf4;border-radius:8px;border-right:3px solid #10b981}
-.step-num{font-weight:700;color:#047857;flex-shrink:0;background:#d1fae5;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:11px}
-.step-content{flex:1;line-height:1.9}
-.step-content strong{color:#047857}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#86efac;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.step{margin:6px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.step strong{color:#000;background:#f0f0f0;padding:1px 4px;border-radius:2px}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f0fdf4;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">✅ الحل النموذجي المفصّل</div>
-  <h1>الفرض الثاني — الفصل الثاني</h1>
-  <div class="subtitle">الحل النموذجي الشامل — منصة الرياضيات</div>
-  <div class="info">
-    <div class="info-item">📝 4 تمارين محلولة</div>
-    <div class="info-item">📅 مارس 2027</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الفرض الثاني — الفصل الثاني</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+    <div><strong>عدد التمارين:</strong> 4</div>
   </div>
 </div>
 
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الأول — الدالة $f(x) = (ax + b) e^{-x}$</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>2)</strong> من الشكل الافتراضي: $f(x) \to 0$ عند $+\infty$ (مقارب أفقي $y = 0$) و $f(x) \to +\infty$ أو $-\infty$ عند $-\infty$ (حسب إشارة $a$).</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>3)</strong> المنحنى يمر من $A(0; 2)$: $f(0) = b \cdot e^0 = b = 2$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content">المماس في $A$ يمر من $B(1; 3)$. معامل المماس = $\frac{3 - 2}{1 - 0} = 1$. أي $f'(0) = 1$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content">$f'(x) = a e^{-x} - (ax + b) e^{-x} = (a - ax - b) e^{-x}$. $f'(0) = a - b = 1 \Rightarrow a = b + 1 = 3$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>4)</strong> $f(x) = (3x + 2) e^{-x}$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>5)</strong> $f'(x) = (3 - 3x - 2) e^{-x} = (1 - 3x) e^{-x}$. إشارة $e^{-x} > 0$ دائمًا, إذن $f'(x) \geq 0 \iff x \leq 1/3$. $f$ تزايد على $(-\infty, 1/3]$, تناقص على $[1/3, +\infty)$. الأقصى: $f(1/3) = (1 + 2) e^{-1/3} = 3 e^{-1/3} \approx 2,15$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>6)</strong> $f(x) - 0 = (3x + 2) e^{-x} \to 0$ عند $+\infty$. $y = 0$ مقارب أفقي. إشارة $f(x)$ = إشارة $3x + 2$: لـ $x > -2/3$, $f > 0$ (فوق), لـ $x < -2/3$, $f < 0$ (تحت).</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>7)</strong> $f(1) = 5 e^{-1} \approx 1,84$, $f'(1) = (1 - 3) e^{-1} = -2/e \approx -0,74$. المماس: $y = -\frac{2}{e}(x - 1) + \frac{5}{e} = -\frac{2x}{e} + \frac{7}{e}$.</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>8)</strong> الرسم: منحنى من $-\infty$ (لأن $3x + 2 \to -\infty$ و $e^{-x} \to +\infty$, المنتج $\to -\infty$) يصعد, يقطع المحور السيني عند $x = -2/3$, يصل القمة $(1/3, 2,15)$, ثم ينزل نحو $y = 0$ من فوق.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الأول — الدالة $f(x) = (ax + b) e^{-x}$</h3>
+        <p class="step"><strong>2)</strong> من الشكل الافتراضي: $f(x) \to 0$ عند $+\infty$ (مقارب أفقي $y = 0$) و $f(x) \to +\infty$ أو $-\infty$ عند $-\infty$ (حسب إشارة $a$).</p><p class="step"><strong>3)</strong> المنحنى يمر من $A(0; 2)$: $f(0) = b \cdot e^0 = b = 2$.</p><p class="step">المماس في $A$ يمر من $B(1; 3)$. معامل المماس = $\frac{3 - 2}{1 - 0} = 1$. أي $f'(0) = 1$.</p><p class="step">$f'(x) = a e^{-x} - (ax + b) e^{-x} = (a - ax - b) e^{-x}$. $f'(0) = a - b = 1 \Rightarrow a = b + 1 = 3$.</p><p class="step"><strong>4)</strong> $f(x) = (3x + 2) e^{-x}$.</p><p class="step"><strong>5)</strong> $f'(x) = (3 - 3x - 2) e^{-x} = (1 - 3x) e^{-x}$. إشارة $e^{-x} > 0$ دائمًا, إذن $f'(x) \geq 0 \iff x \leq 1/3$. $f$ تزايد على $(-\infty, 1/3]$, تناقص على $[1/3, +\infty)$. الأقصى: $f(1/3) = (1 + 2) e^{-1/3} = 3 e^{-1/3} \approx 2,15$.</p><p class="step"><strong>6)</strong> $f(x) - 0 = (3x + 2) e^{-x} \to 0$ عند $+\infty$. $y = 0$ مقارب أفقي. إشارة $f(x)$ = إشارة $3x + 2$: لـ $x > -2/3$, $f > 0$ (فوق), لـ $x < -2/3$, $f < 0$ (تحت).</p><p class="step"><strong>7)</strong> $f(1) = 5 e^{-1} \approx 1,84$, $f'(1) = (1 - 3) e^{-1} = -2/e \approx -0,74$. المماس: $y = -\frac{2}{e}(x - 1) + \frac{5}{e} = -\frac{2x}{e} + \frac{7}{e}$.</p><p class="step"><strong>8)</strong> الرسم: منحنى من $-\infty$ (لأن $3x + 2 \to -\infty$ و $e^{-x} \to +\infty$, المنتج $\to -\infty$) يصعد, يقطع المحور السيني عند $x = -2/3$, يصل القمة $(1/3, 2,15)$, ثم ينزل نحو $y = 0$ من فوق.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثاني — أعداد مركبة</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> $|z| = \sqrt{3 + 1} = 2$. $\arg(z) = \arctan(-1/\sqrt{3}) = -\pi/6$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $z = 2 e^{-i\pi/6}$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> $z^6 = 2^6 e^{-i\pi} = 64 \cdot (-1) = -64$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> $OA = |z| = 2$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> $z^3 = -8i = 8 e^{-i\pi/2}$. الحلول: $z = 2 e^{i(-\pi/6 + 2k\pi/3)}$ لـ $k = 0, 1, 2$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content">$z_0 = 2 e^{-i\pi/6} = \sqrt{3} - i$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content">$z_1 = 2 e^{i\pi/2} = 2i$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content">$z_2 = 2 e^{i 7\pi/6} = -\sqrt{3} - i$.</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>6)</strong> $Z = z^2 = (\sqrt{3} - i)^2 = 3 - 2i\sqrt{3} + i^2 = 2 - 2i\sqrt{3}$.</div></div><div class="step"><span class="step-num">10)</span><div class="step-content"><strong>7)</strong> $|Z| = |z|^2 = 4$, إذن $Z \bar Z = |Z|^2 = 16$ ✓.</div></div><div class="step"><span class="step-num">11)</span><div class="step-content"><strong>8)</strong> $\arg(z) + \arg(\bar z) = -\pi/6 + \pi/6 = 0$. ملاحظة: $\arg(\bar z) = -\arg(z)$, إذن المجموع دائمًا 0.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثاني — أعداد مركبة</h3>
+        <p class="step"><strong>1)</strong> $|z| = \sqrt{3 + 1} = 2$. $\arg(z) = \arctan(-1/\sqrt{3}) = -\pi/6$.</p><p class="step"><strong>2)</strong> $z = 2 e^{-i\pi/6}$.</p><p class="step"><strong>3)</strong> $z^6 = 2^6 e^{-i\pi} = 64 \cdot (-1) = -64$.</p><p class="step"><strong>4)</strong> $OA = |z| = 2$.</p><p class="step"><strong>5)</strong> $z^3 = -8i = 8 e^{-i\pi/2}$. الحلول: $z = 2 e^{i(-\pi/6 + 2k\pi/3)}$ لـ $k = 0, 1, 2$.</p><p class="step">$z_0 = 2 e^{-i\pi/6} = \sqrt{3} - i$.</p><p class="step">$z_1 = 2 e^{i\pi/2} = 2i$.</p><p class="step">$z_2 = 2 e^{i 7\pi/6} = -\sqrt{3} - i$.</p><p class="step"><strong>6)</strong> $Z = z^2 = (\sqrt{3} - i)^2 = 3 - 2i\sqrt{3} + i^2 = 2 - 2i\sqrt{3}$.</p><p class="step"><strong>7)</strong> $|Z| = |z|^2 = 4$, إذن $Z \bar Z = |Z|^2 = 16$ ✓.</p><p class="step"><strong>8)</strong> $\arg(z) + \arg(\bar z) = -\pi/6 + \pi/6 = 0$. ملاحظة: $\arg(\bar z) = -\arg(z)$, إذن المجموع دائمًا 0.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثالث — احتمالات</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> $X \sim \mathcal{B}(3, 0,4)$ (تجارب بيرنولي مستقلة, $p = 4/10 = 0,4$).</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $P(X = 0) = (0,6)^3 = 0,216$. $P(X = 3) = (0,4)^3 = 0,064$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> $E(X) = np = 3 \cdot 0,4 = 1,2$. $V(X) = np(1-p) = 3 \cdot 0,4 \cdot 0,6 = 0,72$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> $P(X \geq 2) = P(2) + P(3) = \binom{3}{2}(0,4)^2(0,6) + 0,064 = 3 \cdot 0,096 \cdot 0,6 + 0,064 = 0,1728 + 0,064 = 0,2368$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> صيغة التوزيع ذي الحدين: $P(X = k) = \binom{n}{k} p^k (1-p)^{n-k} = \binom{3}{k}(0,4)^k(0,6)^{3-k}$ ✓.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>6)</strong> $P(Y \geq 1) = 1 - (0,6)^n \geq 0,95 \iff (0,6)^n \leq 0,05 \iff n \ln 0,6 \leq \ln 0,05 \iff n \geq \frac{\ln 0,05}{\ln 0,6} \approx 6,15$. إذن $n_{\min} = 7$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>7)</strong> $P(X = 2 | X \geq 1) = \frac{P(X = 2)}{P(X \geq 1)} = \frac{0,288}{1 - 0,216} = \frac{0,288}{0,784} \approx 0,367$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>8)</strong> بدون إعادة: $P(X = 0) = \frac{\binom{6}{3}}{\binom{10}{3}} = \frac{20}{120} = \frac{1}{6} \approx 0,167$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثالث — احتمالات</h3>
+        <p class="step"><strong>1)</strong> $X \sim \mathcal{B}(3, 0,4)$ (تجارب بيرنولي مستقلة, $p = 4/10 = 0,4$).</p><p class="step"><strong>2)</strong> $P(X = 0) = (0,6)^3 = 0,216$. $P(X = 3) = (0,4)^3 = 0,064$.</p><p class="step"><strong>3)</strong> $E(X) = np = 3 \cdot 0,4 = 1,2$. $V(X) = np(1-p) = 3 \cdot 0,4 \cdot 0,6 = 0,72$.</p><p class="step"><strong>4)</strong> $P(X \geq 2) = P(2) + P(3) = \binom{3}{2}(0,4)^2(0,6) + 0,064 = 3 \cdot 0,096 \cdot 0,6 + 0,064 = 0,1728 + 0,064 = 0,2368$.</p><p class="step"><strong>5)</strong> صيغة التوزيع ذي الحدين: $P(X = k) = \binom{n}{k} p^k (1-p)^{n-k} = \binom{3}{k}(0,4)^k(0,6)^{3-k}$ ✓.</p><p class="step"><strong>6)</strong> $P(Y \geq 1) = 1 - (0,6)^n \geq 0,95 \iff (0,6)^n \leq 0,05 \iff n \ln 0,6 \leq \ln 0,05 \iff n \geq \frac{\ln 0,05}{\ln 0,6} \approx 6,15$. إذن $n_{\min} = 7$.</p><p class="step"><strong>7)</strong> $P(X = 2 | X \geq 1) = \frac{P(X = 2)}{P(X \geq 1)} = \frac{0,288}{1 - 0,216} = \frac{0,288}{0,784} \approx 0,367$.</p><p class="step"><strong>8)</strong> بدون إعادة: $P(X = 0) = \frac{\binom{6}{3}}{\binom{10}{3}} = \frac{20}{120} = \frac{1}{6} \approx 0,167$.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الرابع — متتالية + تراجع</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1) التهيئة:</strong> $n = 1$: $\sum_{k=0}^1 q^k = 1 + q = \frac{1 - q^2}{1 - q}$ ✓ (لـ $q \neq 1$).</div></div><div class="step"><span class="step-num">2)</span><div class="step-content">النتيجة: $\sum_{k=0}^{n+1} q^k = \frac{1 - q^{n+1}}{1 - q} + q^{n+1} = \frac{1 - q^{n+1} + (1-q) q^{n+1}}{1 - q} = \frac{1 - q^{n+2}}{1 - q}$ ✓.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>2)</strong> $q = 1/2$: $\sum_{k=0}^n \frac{1}{2^k} = \frac{1 - (1/2)^{n+1}}{1/2} = 2\left(1 - \frac{1}{2^{n+1}}\right) \to 2$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>3)</strong> $u_1 = \frac{3}{2}$, $u_2 = \frac{5}{4}$, $u_3 = \frac{9}{8}$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>4) التهيئة:</strong> $u_0 = 2 \in (1, 2]$ ✓. الفرضية: $1 < u_n \leq 2$. النتيجة: $u_{n+1} = \frac{u_n + 1}{2} \in \left(\frac{2}{2}, \frac{3}{2}\right] = (1, 1,5] \subset (1, 2]$ ✓.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>5)</strong> $u_{n+1} - u_n = \frac{u_n + 1}{2} - u_n = \frac{1 - u_n}{2} < 0$ (لأن $u_n > 1$). $(u_n)$ متناقصة.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content">محدودة سفلًا بـ 1, إذن متقاربة. $\ell = \frac{\ell + 1}{2} \Rightarrow \ell = 1$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>6)</strong> $v_{n+1} = u_{n+1} - 1 = \frac{u_n + 1}{2} - 1 = \frac{u_n - 1}{2} = \frac{v_n}{2}$. $(v_n)$ هندسية أساسها $1/2$ و $v_0 = 1$. $v_n = (1/2)^n$.</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>7)</strong> $\sum_{k=0}^n v_k = \frac{1 - (1/2)^{n+1}}{1/2} = 2 - \frac{1}{2^n}$. $\sum u_k = \sum (v_k + 1) = \sum v_k + (n + 1) = 2 - \frac{1}{2^n} + n + 1 = n + 3 - \frac{1}{2^n}$.</div></div><div class="step"><span class="step-num">10)</span><div class="step-content"><strong>8)</strong> $\lim \sum v_k = 2$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الرابع — متتالية + تراجع</h3>
+        <p class="step"><strong>1) التهيئة:</strong> $n = 1$: $\sum_{k=0}^1 q^k = 1 + q = \frac{1 - q^2}{1 - q}$ ✓ (لـ $q \neq 1$).</p><p class="step">النتيجة: $\sum_{k=0}^{n+1} q^k = \frac{1 - q^{n+1}}{1 - q} + q^{n+1} = \frac{1 - q^{n+1} + (1-q) q^{n+1}}{1 - q} = \frac{1 - q^{n+2}}{1 - q}$ ✓.</p><p class="step"><strong>2)</strong> $q = 1/2$: $\sum_{k=0}^n \frac{1}{2^k} = \frac{1 - (1/2)^{n+1}}{1/2} = 2\left(1 - \frac{1}{2^{n+1}}\right) \to 2$.</p><p class="step"><strong>3)</strong> $u_1 = \frac{3}{2}$, $u_2 = \frac{5}{4}$, $u_3 = \frac{9}{8}$.</p><p class="step"><strong>4) التهيئة:</strong> $u_0 = 2 \in (1, 2]$ ✓. الفرضية: $1 < u_n \leq 2$. النتيجة: $u_{n+1} = \frac{u_n + 1}{2} \in \left(\frac{2}{2}, \frac{3}{2}\right] = (1, 1,5] \subset (1, 2]$ ✓.</p><p class="step"><strong>5)</strong> $u_{n+1} - u_n = \frac{u_n + 1}{2} - u_n = \frac{1 - u_n}{2} < 0$ (لأن $u_n > 1$). $(u_n)$ متناقصة.</p><p class="step">محدودة سفلًا بـ 1, إذن متقاربة. $\ell = \frac{\ell + 1}{2} \Rightarrow \ell = 1$.</p><p class="step"><strong>6)</strong> $v_{n+1} = u_{n+1} - 1 = \frac{u_n + 1}{2} - 1 = \frac{u_n - 1}{2} = \frac{v_n}{2}$. $(v_n)$ هندسية أساسها $1/2$ و $v_0 = 1$. $v_n = (1/2)^n$.</p><p class="step"><strong>7)</strong> $\sum_{k=0}^n v_k = \frac{1 - (1/2)^{n+1}}{1/2} = 2 - \frac{1}{2^n}$. $\sum u_k = \sum (v_k + 1) = \sum v_k + (n + 1) = 2 - \frac{1}{2^n} + n + 1 = n + 3 - \frac{1}{2^n}$.</p><p class="step"><strong>8)</strong> $\lim \sum v_k = 2$.</p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>الحل النموذجي — بإشراف الأستاذ عدلي أسعد</p>
-  <p>📧 asaadadli9393@gmail.com | الجزائر 🇩🇿</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

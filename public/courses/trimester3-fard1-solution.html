@@ -7,64 +7,63 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#15803d,#166534);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.exercise{background:white;border:1px solid #d1fae5;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#166534;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #86efac;line-height:1.6}
-.steps{display:flex;flex-direction:column;gap:10px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#f0fdf4;border-radius:8px;border-right:3px solid #10b981}
-.step-num{font-weight:700;color:#047857;flex-shrink:0;background:#d1fae5;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:11px}
-.step-content{flex:1;line-height:1.9}
-.step-content strong{color:#047857}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#86efac;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.step{margin:6px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.step strong{color:#000;background:#f0f0f0;padding:1px 4px;border-radius:2px}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f0fdf4;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">✅ الحل النموذجي المفصّل</div>
-  <h1>الفرض الأول — الفصل الثالث</h1>
-  <div class="subtitle">الحل النموذجي الشامل — منصة الرياضيات</div>
-  <div class="info">
-    <div class="info-item">📝 4 تمارين محلولة</div>
-    <div class="info-item">📅 أفريل 2027</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الفرض الأول — الفصل الثالث</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+    <div><strong>عدد التمارين:</strong> 4</div>
   </div>
 </div>
 
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الأول — هندسة في الفضاء</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> $\vec{AB}(1; -3; -2)$, $\vec{AC}(2; -2; -4)$, $\vec{AD}(-1; -1; 1)$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $\vec{AB} \cdot \vec{AC} = 1 \cdot 2 + (-3)(-2) + (-2)(-4) = 2 + 6 + 8 = 16$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> $\vec{AB} \wedge \vec{AC} = \begin{vmatrix} \vec{i} & \vec{j} & \vec{k} \\ 1 & -3 & -2 \\ 2 & -2 & -4 \end{vmatrix} = (12 - 4)\vec{i} - (-4 + 4)\vec{j} + (-2 + 6)\vec{k} = (8; 0; 4)$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> المتجه العادي للمستوي $(ABC)$ هو $(8, 0, 4)$. المعادلة: $8(x - 1) + 0(y - 2) + 4(z - 3) = 0 \Rightarrow 8x + 4z - 20 = 0 \Rightarrow 2x + z - 5 = 0$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> $d(D, (ABC)) = \frac{|2 \cdot 0 + 0 \cdot 1 + 1 \cdot 4 - 5|}{\sqrt{4 + 0 + 1}} = \frac{|-1|}{\sqrt{5}} = \frac{1}{\sqrt{5}} = \frac{\sqrt{5}}{5} \approx 0,447$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>6)</strong> الجداء المختلط: $(\vec{AB} \wedge \vec{AC}) \cdot \vec{AD} = 8 \cdot (-1) + 0 \cdot (-1) + 4 \cdot 1 = -8 + 4 = -4$. الحجم = $\frac{|-4|}{6} = \frac{2}{3}$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>7)</strong> $\vec{AB}$ و $\vec{AC}$ غير معمدلين (لأن $\vec{AB} \wedge \vec{AC} \neq \vec{0}$), إذن $A, B, C$ ليست مستقيمية.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>8)</strong> مساحة المثلث $ABC$: $\mathcal{S} = \frac{1}{2}|\vec{AB} \wedge \vec{AC}| = \frac{1}{2}\sqrt{64 + 0 + 16} = \frac{1}{2}\sqrt{80} = 2\sqrt{5} \approx 4,47$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الأول — هندسة في الفضاء</h3>
+        <p class="step"><strong>1)</strong> $\vec{AB}(1; -3; -2)$, $\vec{AC}(2; -2; -4)$, $\vec{AD}(-1; -1; 1)$.</p><p class="step"><strong>2)</strong> $\vec{AB} \cdot \vec{AC} = 1 \cdot 2 + (-3)(-2) + (-2)(-4) = 2 + 6 + 8 = 16$.</p><p class="step"><strong>3)</strong> $\vec{AB} \wedge \vec{AC} = \begin{vmatrix} \vec{i} & \vec{j} & \vec{k} \\ 1 & -3 & -2 \\ 2 & -2 & -4 \end{vmatrix} = (12 - 4)\vec{i} - (-4 + 4)\vec{j} + (-2 + 6)\vec{k} = (8; 0; 4)$.</p><p class="step"><strong>4)</strong> المتجه العادي للمستوي $(ABC)$ هو $(8, 0, 4)$. المعادلة: $8(x - 1) + 0(y - 2) + 4(z - 3) = 0 \Rightarrow 8x + 4z - 20 = 0 \Rightarrow 2x + z - 5 = 0$.</p><p class="step"><strong>5)</strong> $d(D, (ABC)) = \frac{|2 \cdot 0 + 0 \cdot 1 + 1 \cdot 4 - 5|}{\sqrt{4 + 0 + 1}} = \frac{|-1|}{\sqrt{5}} = \frac{1}{\sqrt{5}} = \frac{\sqrt{5}}{5} \approx 0,447$.</p><p class="step"><strong>6)</strong> الجداء المختلط: $(\vec{AB} \wedge \vec{AC}) \cdot \vec{AD} = 8 \cdot (-1) + 0 \cdot (-1) + 4 \cdot 1 = -8 + 4 = -4$. الحجم = $\frac{|-4|}{6} = \frac{2}{3}$.</p><p class="step"><strong>7)</strong> $\vec{AB}$ و $\vec{AC}$ غير معمدلين (لأن $\vec{AB} \wedge \vec{AC} \neq \vec{0}$), إذن $A, B, C$ ليست مستقيمية.</p><p class="step"><strong>8)</strong> مساحة المثلث $ABC$: $\mathcal{S} = \frac{1}{2}|\vec{AB} \wedge \vec{AC}| = \frac{1}{2}\sqrt{64 + 0 + 16} = \frac{1}{2}\sqrt{80} = 2\sqrt{5} \approx 4,47$.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثاني — الدالة $f(x) = \ln x / x$</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> عند $0^+$: $\ln x \to -\infty$ و $1/x \to +\infty$. $\ln x / x \to -\infty \cdot +\infty = -\infty$ (اللوغاريتم يتفوق على القوة بشكل عكسي). إذن $f(x) \to -\infty$. عند $+\infty$: $\frac{\ln x}{x} \to 0^+$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $f'(x) = \frac{x \cdot \frac{1}{x} - \ln x \cdot 1}{x^2} = \frac{1 - \ln x}{x^2}$. $f'(x) \geq 0 \iff \ln x \leq 1 \iff x \leq e$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> القيمة العظمى عند $x = e$: $f(e) = \ln e / e = 1/e$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> $f(x) = 0 \iff \ln x = 0 \iff x = 1$. نقطة تقاطع وحيدة: $(1, 0)$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> $\int_1^e \frac{\ln x}{x}\, dx = \frac{(\ln x)^2}{2}\Big|_1^e = \frac{1 - 0}{2} = \frac{1}{2}$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>6)</strong> $u_n = \frac{\ln n}{n}$. $u_{n+1} - u_n = \frac{\ln(n+1)}{n+1} - \frac{\ln n}{n} = \frac{n \ln(n+1) - (n+1)\ln n}{n(n+1)} = \frac{\ln\frac{(n+1)^n}{n^{n+1}}}{n(n+1)} = \frac{\ln\frac{(1 + 1/n)^n}{n}}{n(n+1)}$. لـ $n \geq 3$: $(1+1/n)^n < e < n$, إذن البسط $< 0$, $u_{n+1} < u_n$. $(u_n)$ متناقية لـ $n \geq 3$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>7)</strong> $\lim u_n = 0$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>8)</strong> القيمة العظمى لـ $f$ هي $1/e$, و $\frac{1}{2e} < \frac{1}{e}$. $f$ تزايد من $-\infty$ إلى $1/e$ على $(0, e)$ ثم تناقص من $1/e$ إلى 0 على $(e, +\infty)$. إذن $f(x) = 1/(2e)$ يقطع مرتين: مرة على $(0, e)$ و مرة على $(e, +\infty)$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثاني — الدالة $f(x) = \ln x / x$</h3>
+        <p class="step"><strong>1)</strong> عند $0^+$: $\ln x \to -\infty$ و $1/x \to +\infty$. $\ln x / x \to -\infty \cdot +\infty = -\infty$ (اللوغاريتم يتفوق على القوة بشكل عكسي). إذن $f(x) \to -\infty$. عند $+\infty$: $\frac{\ln x}{x} \to 0^+$.</p><p class="step"><strong>2)</strong> $f'(x) = \frac{x \cdot \frac{1}{x} - \ln x \cdot 1}{x^2} = \frac{1 - \ln x}{x^2}$. $f'(x) \geq 0 \iff \ln x \leq 1 \iff x \leq e$.</p><p class="step"><strong>3)</strong> القيمة العظمى عند $x = e$: $f(e) = \ln e / e = 1/e$.</p><p class="step"><strong>4)</strong> $f(x) = 0 \iff \ln x = 0 \iff x = 1$. نقطة تقاطع وحيدة: $(1, 0)$.</p><p class="step"><strong>5)</strong> $\int_1^e \frac{\ln x}{x}\, dx = \frac{(\ln x)^2}{2}\Big|_1^e = \frac{1 - 0}{2} = \frac{1}{2}$.</p><p class="step"><strong>6)</strong> $u_n = \frac{\ln n}{n}$. $u_{n+1} - u_n = \frac{\ln(n+1)}{n+1} - \frac{\ln n}{n} = \frac{n \ln(n+1) - (n+1)\ln n}{n(n+1)} = \frac{\ln\frac{(n+1)^n}{n^{n+1}}}{n(n+1)} = \frac{\ln\frac{(1 + 1/n)^n}{n}}{n(n+1)}$. لـ $n \geq 3$: $(1+1/n)^n < e < n$, إذن البسط $< 0$, $u_{n+1} < u_n$. $(u_n)$ متناقية لـ $n \geq 3$.</p><p class="step"><strong>7)</strong> $\lim u_n = 0$.</p><p class="step"><strong>8)</strong> القيمة العظمى لـ $f$ هي $1/e$, و $\frac{1}{2e} < \frac{1}{e}$. $f$ تزايد من $-\infty$ إلى $1/e$ على $(0, e)$ ثم تناقص من $1/e$ إلى 0 على $(e, +\infty)$. إذن $f(x) = 1/(2e)$ يقطع مرتين: مرة على $(0, e)$ و مرة على $(e, +\infty)$.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الثالث — براهين + متتالية</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1) التهيئة:</strong> $n = 1$: $1 = \frac{1 \cdot 2 \cdot 3}{6} = 1$ ✓. النتيجة: $\sum_{k=1}^{n+1} k^2 = \frac{n(n+1)(2n+1)}{6} + (n+1)^2 = (n+1)\left[\frac{n(2n+1)}{6} + (n+1)\right] = (n+1) \cdot \frac{2n^2 + n + 6n + 6}{6} = \frac{(n+1)(n+2)(2n+3)}{6}$ ✓.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> $\sum (k^2 + k) = \sum k^2 + \sum k = \frac{n(n+1)(2n+1)}{6} + \frac{n(n+1)}{2} = \frac{n(n+1)(2n+1) + 3n(n+1)}{6} = \frac{n(n+1)(2n+4)}{6} = \frac{n(n+1)(n+2)}{3}$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> $u_n = \frac{n^2 + n + 1}{n^2 - n + 1}$. $u_{n+1} - u_n$ بعد التبسيط: نحسب البسط المشترك.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content">$u_{n+1} = \frac{(n+1)^2 + (n+1) + 1}{(n+1)^2 - (n+1) + 1} = \frac{n^2 + 3n + 3}{n^2 + n + 1}$. $u_{n+1} - u_n = \frac{(n^2 + 3n + 3)(n^2 - n + 1) - (n^2 + n + 1)(n^2 + n + 1)}{(n^2 + n + 1)(n^2 - n + 1)}$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content">البسط: $n^4 - n^3 + n^2 + 3n^3 - 3n^2 + 3n + 3n^2 - 3n + 3 - (n^4 + 2n^3 + 3n^2 + 2n + 1) = 2n^3 + n^2 + 0n + 2 - 2n^3 - 3n^2 - 2n - 1$... (الحساب معقد).</div></div><div class="step"><span class="step-num">6)</span><div class="step-content">بالأحرى: $u_n - 1 = \frac{2n}{n^2 - n + 1}$. $u_{n+1} - 1 = \frac{2(n+1)}{(n+1)^2 - (n+1) + 1} = \frac{2n + 2}{n^2 + n + 1}$. $u_{n+1} - u_n = (u_{n+1} - 1) - (u_n - 1) = \frac{2n+2}{n^2+n+1} - \frac{2n}{n^2-n+1}$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content">بعد التبسيط: $\frac{(2n+2)(n^2-n+1) - 2n(n^2+n+1)}{...} = \frac{2n^3 - 2n^2 + 2n + 2n^2 - 2n + 2 - 2n^3 - 2n^2 - 2n}{...} = \frac{-2n^2 - 2n + 2}{...}$. لـ $n$ كبير, سالب, إذن $(u_n)$ متناقية لـ $n$ كبير.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>4)</strong> $\lim u_n = \lim \frac{n^2}{n^2} = 1$.</div></div><div class="step"><span class="step-num">9)</span><div class="step-content"><strong>5)</strong> $u_n - 1 = \frac{2n}{n^2 - n + 1} > 0$ لـ $n \geq 1$ (لأن $n^2 - n + 1 > 0$ دائمًا). إذن $u_n > 1$ ✓.</div></div><div class="step"><span class="step-num">10)</span><div class="step-content"><strong>6)</strong> $n(u_n - 1) = \frac{2n^2}{n^2 - n + 1} \to 2$.</div></div><div class="step"><span class="step-num">11)</span><div class="step-content"><strong>7)</strong> $v_n = n u_n = n \cdot \frac{n^2 + n + 1}{n^2 - n + 1} = \frac{n^3 + n^2 + n}{n^2 - n + 1} \to +\infty$ (لأن البسط درجة 3 و المقام درجة 2).</div></div><div class="step"><span class="step-num">12)</span><div class="step-content"><strong>8)</strong> $u_n - 1 \sim \frac{2}{n}$ (تقريب taylor), إذن التقارب من الرتبة 1 بمعدل $2$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الثالث — براهين + متتالية</h3>
+        <p class="step"><strong>1) التهيئة:</strong> $n = 1$: $1 = \frac{1 \cdot 2 \cdot 3}{6} = 1$ ✓. النتيجة: $\sum_{k=1}^{n+1} k^2 = \frac{n(n+1)(2n+1)}{6} + (n+1)^2 = (n+1)\left[\frac{n(2n+1)}{6} + (n+1)\right] = (n+1) \cdot \frac{2n^2 + n + 6n + 6}{6} = \frac{(n+1)(n+2)(2n+3)}{6}$ ✓.</p><p class="step"><strong>2)</strong> $\sum (k^2 + k) = \sum k^2 + \sum k = \frac{n(n+1)(2n+1)}{6} + \frac{n(n+1)}{2} = \frac{n(n+1)(2n+1) + 3n(n+1)}{6} = \frac{n(n+1)(2n+4)}{6} = \frac{n(n+1)(n+2)}{3}$.</p><p class="step"><strong>3)</strong> $u_n = \frac{n^2 + n + 1}{n^2 - n + 1}$. $u_{n+1} - u_n$ بعد التبسيط: نحسب البسط المشترك.</p><p class="step">$u_{n+1} = \frac{(n+1)^2 + (n+1) + 1}{(n+1)^2 - (n+1) + 1} = \frac{n^2 + 3n + 3}{n^2 + n + 1}$. $u_{n+1} - u_n = \frac{(n^2 + 3n + 3)(n^2 - n + 1) - (n^2 + n + 1)(n^2 + n + 1)}{(n^2 + n + 1)(n^2 - n + 1)}$.</p><p class="step">البسط: $n^4 - n^3 + n^2 + 3n^3 - 3n^2 + 3n + 3n^2 - 3n + 3 - (n^4 + 2n^3 + 3n^2 + 2n + 1) = 2n^3 + n^2 + 0n + 2 - 2n^3 - 3n^2 - 2n - 1$... (الحساب معقد).</p><p class="step">بالأحرى: $u_n - 1 = \frac{2n}{n^2 - n + 1}$. $u_{n+1} - 1 = \frac{2(n+1)}{(n+1)^2 - (n+1) + 1} = \frac{2n + 2}{n^2 + n + 1}$. $u_{n+1} - u_n = (u_{n+1} - 1) - (u_n - 1) = \frac{2n+2}{n^2+n+1} - \frac{2n}{n^2-n+1}$.</p><p class="step">بعد التبسيط: $\frac{(2n+2)(n^2-n+1) - 2n(n^2+n+1)}{...} = \frac{2n^3 - 2n^2 + 2n + 2n^2 - 2n + 2 - 2n^3 - 2n^2 - 2n}{...} = \frac{-2n^2 - 2n + 2}{...}$. لـ $n$ كبير, سالب, إذن $(u_n)$ متناقية لـ $n$ كبير.</p><p class="step"><strong>4)</strong> $\lim u_n = \lim \frac{n^2}{n^2} = 1$.</p><p class="step"><strong>5)</strong> $u_n - 1 = \frac{2n}{n^2 - n + 1} > 0$ لـ $n \geq 1$ (لأن $n^2 - n + 1 > 0$ دائمًا). إذن $u_n > 1$ ✓.</p><p class="step"><strong>6)</strong> $n(u_n - 1) = \frac{2n^2}{n^2 - n + 1} \to 2$.</p><p class="step"><strong>7)</strong> $v_n = n u_n = n \cdot \frac{n^2 + n + 1}{n^2 - n + 1} = \frac{n^3 + n^2 + n}{n^2 - n + 1} \to +\infty$ (لأن البسط درجة 3 و المقام درجة 2).</p><p class="step"><strong>8)</strong> $u_n - 1 \sim \frac{2}{n}$ (تقريب taylor), إذن التقارب من الرتبة 1 بمعدل $2$.</p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">حل التمرين الرابع — التكاملات</div>
-        <div class="steps"><div class="step"><span class="step-num">1)</span><div class="step-content"><strong>1)</strong> $[x^3 + x^2 - x]_0^1 = 1 + 1 - 1 = 1$.</div></div><div class="step"><span class="step-num">2)</span><div class="step-content"><strong>2)</strong> بالتجزئة: $\int_0^1 x e^x\, dx = [x e^x]_0^1 - \int_0^1 e^x\, dx = e - (e - 1) = 1$.</div></div><div class="step"><span class="step-num">3)</span><div class="step-content"><strong>3)</strong> بالتجزئة: $u = \ln x$, $v' = 1/x^2$. $\int_1^e \frac{\ln x}{x^2}\, dx = [-\frac{\ln x}{x}]_1^e + \int_1^e \frac{1}{x^2}\, dx = -1 + [-1/x]_1^e = -1 + (-1/e + 1) = -1/e$.</div></div><div class="step"><span class="step-num">4)</span><div class="step-content"><strong>4)</strong> $u = \cos x$, $du = -\sin x\, dx$. $\int_0^{\pi/2} \sin x (1 - \cos^2 x)\, dx = -\int_1^0 (1 - u^2)\, du = [u - u^3/3]_0^1 = 2/3$.</div></div><div class="step"><span class="step-num">5)</span><div class="step-content"><strong>5)</strong> $u = e^x + 1$, $du = e^x\, dx$. $[\ln(e^x + 1)]_0^{\ln 2} = \ln 3 - \ln 2$.</div></div><div class="step"><span class="step-num">6)</span><div class="step-content"><strong>6)</strong> بالتجزئة: $u = x$, $v' = \sin x$. $[-x \cos x]_0^\pi + \int_0^\pi \cos x\, dx = \pi + 0 = \pi$.</div></div><div class="step"><span class="step-num">7)</span><div class="step-content"><strong>7)</strong> $\int_0^{+\infty} x e^{-x}\, dx = \lim_{A \to +\infty} [-x e^{-x} - e^{-x}]_0^A = \lim (0 - 0) - (-1) = 1$.</div></div><div class="step"><span class="step-num">8)</span><div class="step-content"><strong>8)</strong> $\int_0^1 \frac{1}{x^2 + 1}\, dx = [\arctan x]_0^1 = \pi/4$.</div></div></div>
+      <div class="ex">
+        <h3>حل التمرين الرابع — التكاملات</h3>
+        <p class="step"><strong>1)</strong> $[x^3 + x^2 - x]_0^1 = 1 + 1 - 1 = 1$.</p><p class="step"><strong>2)</strong> بالتجزئة: $\int_0^1 x e^x\, dx = [x e^x]_0^1 - \int_0^1 e^x\, dx = e - (e - 1) = 1$.</p><p class="step"><strong>3)</strong> بالتجزئة: $u = \ln x$, $v' = 1/x^2$. $\int_1^e \frac{\ln x}{x^2}\, dx = [-\frac{\ln x}{x}]_1^e + \int_1^e \frac{1}{x^2}\, dx = -1 + [-1/x]_1^e = -1 + (-1/e + 1) = -1/e$.</p><p class="step"><strong>4)</strong> $u = \cos x$, $du = -\sin x\, dx$. $\int_0^{\pi/2} \sin x (1 - \cos^2 x)\, dx = -\int_1^0 (1 - u^2)\, du = [u - u^3/3]_0^1 = 2/3$.</p><p class="step"><strong>5)</strong> $u = e^x + 1$, $du = e^x\, dx$. $[\ln(e^x + 1)]_0^{\ln 2} = \ln 3 - \ln 2$.</p><p class="step"><strong>6)</strong> بالتجزئة: $u = x$, $v' = \sin x$. $[-x \cos x]_0^\pi + \int_0^\pi \cos x\, dx = \pi + 0 = \pi$.</p><p class="step"><strong>7)</strong> $\int_0^{+\infty} x e^{-x}\, dx = \lim_{A \to +\infty} [-x e^{-x} - e^{-x}]_0^A = \lim (0 - 0) - (-1) = 1$.</p><p class="step"><strong>8)</strong> $\int_0^1 \frac{1}{x^2 + 1}\, dx = [\arctan x]_0^1 = \pi/4$.</p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>الحل النموذجي — بإشراف الأستاذ عدلي أسعد</p>
-  <p>📧 asaadadli9393@gmail.com | الجزائر 🇩🇿</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

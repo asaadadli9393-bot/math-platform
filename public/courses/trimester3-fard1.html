@@ -7,73 +7,63 @@
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
-.exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
-.exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
-.questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
-.questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة — معلومات الامتحان */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.q{margin:8px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.q strong{color:#000}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">فرض 1</div>
-  <h1>الفرض الأول — الفصل الثالث</h1>
-  <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
-  <div class="info">
-    <div class="info-item">⏱️ المدة: ساعتان</div>
-    <div class="info-item">📅 أفريل 2027</div>
-    <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
+<div class="header">
+  <div class="title">الفرض الأول — الفصل الثالث</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> علوم تجريبية / رياضيات / تقني رياضي</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+    <div><strong>التاريخ:</strong> أفريل 2027</div>
   </div>
 </div>
-<div class="exam-meta">
-  <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
-  <div class="row"><span class="label">النوع:</span> <span>فرض رقم 1</span></div>
-  <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل 3</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>ساعتان</span></div>
-  <div class="row"><span class="label">عدد التمارين:</span> <span>4 تمارين شاملة</span></div>
-</div>
 
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الأول (5 نقاط) — هندسة في الفضاء</div>
-        <ol class="questions"><li class="question"><li>المعلم $(O; \vec{i}, \vec{j}, \vec{k})$. النقاط $A(1; 2; 3)$, $B(2; -1; 1)$, $C(3; 0; -1)$, $D(0; 1; 4)$. احسب $\vec{AB}$, $\vec{AC}$, $\vec{AD}$.</li></li><li class="question"><li>احسب الجداء السلمي $\vec{AB} \cdot \vec{AC}$.</li></li><li class="question"><li>احسب الجداء الشعاعي $\vec{AB} \wedge \vec{AC}$.</li></li><li class="question"><li>استنتج معادلة المستوي $(ABC)$ على الشكل $ax + by + cz + d = 0$.</li></li><li class="question"><li>احسب المسافة من $D$ إلى المستوي $(ABC)$.</li></li><li class="question"><li>احسب الجداء المختلط $[\vec{AB}, \vec{AC}, \vec{AD}]$ و استنتج حجم الرباعي $ABCD$.</li></li><li class="question"><li>بيّن أن النقاط $A, B, C$ ليست مستقيمية.</li></li><li class="question"><li>أوجد مساحة المثلث $ABC$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الأول (5 نقاط) — هندسة في الفضاء</h3>
+        <p class="q"><li>المعلم $(O; \vec{i}, \vec{j}, \vec{k})$. النقاط $A(1; 2; 3)$, $B(2; -1; 1)$, $C(3; 0; -1)$, $D(0; 1; 4)$. احسب $\vec{AB}$, $\vec{AC}$, $\vec{AD}$.</li></p><p class="q"><li>احسب الجداء السلمي $\vec{AB} \cdot \vec{AC}$.</li></p><p class="q"><li>احسب الجداء الشعاعي $\vec{AB} \wedge \vec{AC}$.</li></p><p class="q"><li>استنتج معادلة المستوي $(ABC)$ على الشكل $ax + by + cz + d = 0$.</li></p><p class="q"><li>احسب المسافة من $D$ إلى المستوي $(ABC)$.</li></p><p class="q"><li>احسب الجداء المختلط $[\vec{AB}, \vec{AC}, \vec{AD}]$ و استنتج حجم الرباعي $ABCD$.</li></p><p class="q"><li>بيّن أن النقاط $A, B, C$ ليست مستقيمية.</li></p><p class="q"><li>أوجد مساحة المثلث $ABC$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثاني (5 نقاط) — دالة + تكامل</div>
-        <ol class="questions"><li class="question"><li>لتكن $f(x) = \frac{\ln x}{x}$ معرفة على $(0, +\infty)$. احسب $\lim_{x \to 0^+} f(x)$ و $\lim_{x \to +\infty} f(x)$.</li></li><li class="question"><li>احسب $f'(x)$ و ادرس إشارها.</li></li><li class="question"><li>بيّن أن $f$ تقبل قيمة عظمى, عيّن النقطة و القيمة.</li></li><li class="question"><li>ادرس تقاطع $(\mathcal{C}_f)$ مع المحور السيني.</li></li><li class="question"><li>احسب $\int_1^e f(x)\, dx$.</li></li><li class="question"><li>لتكن $(u_n) = f(n) = \frac{\ln n}{n}$. ادرس رتابة $(u_n)$.</li></li><li class="question"><li>احسب $\lim u_n$.</li></li><li class="question"><li>بيّن أن المعادلة $f(x) = \frac{1}{2e}$ يقبل حلّين على $(0, +\infty)$.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثاني (5 نقاط) — دالة + تكامل</h3>
+        <p class="q"><li>لتكن $f(x) = \frac{\ln x}{x}$ معرفة على $(0, +\infty)$. احسب $\lim_{x \to 0^+} f(x)$ و $\lim_{x \to +\infty} f(x)$.</li></p><p class="q"><li>احسب $f'(x)$ و ادرس إشارها.</li></p><p class="q"><li>بيّن أن $f$ تقبل قيمة عظمى, عيّن النقطة و القيمة.</li></p><p class="q"><li>ادرس تقاطع $(\mathcal{C}_f)$ مع المحور السيني.</li></p><p class="q"><li>احسب $\int_1^e f(x)\, dx$.</li></p><p class="q"><li>لتكن $(u_n) = f(n) = \frac{\ln n}{n}$. ادرس رتابة $(u_n)$.</li></p><p class="q"><li>احسب $\lim u_n$.</li></p><p class="q"><li>بيّن أن المعادلة $f(x) = \frac{1}{2e}$ يقبل حلّين على $(0, +\infty)$.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الثالث (5 نقاط) — متتالية عودية + برهنة بالتراجع</div>
-        <ol class="questions"><li class="question"><li>برهن بالتراجع أن $\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$ لـ $n \geq 1$.</li></li><li class="question"><li>استنتج $\sum_{k=1}^n (k^2 + k)$.</li></li><li class="question"><li>لتكن $(u_n)$ معرفة بـ $u_n = \frac{n^2 + n + 1}{n^2 - n + 1}$. ادرس رتابة $(u_n)$.</li></li><li class="question"><li>احسب $\lim u_n$.</li></li><li class="question"><li>برهن أن $u_n \geq 1$ لكل $n$.</li></li><li class="question"><li>احسب $\lim n(u_n - 1)$.</li></li><li class="question"><li>لتكن $v_n = n u_n$. احسب $\lim v_n$.</li></li><li class="question"><li>بيّن أن $(u_n)$ متقاربة برتبة 1.</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الثالث (5 نقاط) — متتالية عودية + برهنة بالتراجع</h3>
+        <p class="q"><li>برهن بالتراجع أن $\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$ لـ $n \geq 1$.</li></p><p class="q"><li>استنتج $\sum_{k=1}^n (k^2 + k)$.</li></p><p class="q"><li>لتكن $(u_n)$ معرفة بـ $u_n = \frac{n^2 + n + 1}{n^2 - n + 1}$. ادرس رتابة $(u_n)$.</li></p><p class="q"><li>احسب $\lim u_n$.</li></p><p class="q"><li>برهن أن $u_n \geq 1$ لكل $n$.</li></p><p class="q"><li>احسب $\lim n(u_n - 1)$.</li></p><p class="q"><li>لتكن $v_n = n u_n$. احسب $\lim v_n$.</li></p><p class="q"><li>بيّن أن $(u_n)$ متقاربة برتبة 1.</li></p>
       </div>
     
-      <div class="exercise">
-        <div class="ex-header">📝 التمرين الرابع (5 نقاط) — احسب التكاملات:</div>
-        <ol class="questions"><li class="question"><li>$\int_0^1 (3x^2 + 2x - 1)\, dx$</li></li><li class="question"><li>$\int_0^1 x e^{x}\, dx$ (بالتجزئة)</li></li><li class="question"><li>$\int_1^e \frac{\ln x}{x^2}\, dx$ (بالتجزئة)</li></li><li class="question"><li>$\int_0^{\pi/2} \sin^3 x\, dx$</li></li><li class="question"><li>$\int_0^{\ln 2} \frac{e^x}{e^x + 1}\, dx$ (تغيير متغير)</li></li><li class="question"><li>$\int_0^{\pi} x \sin x\, dx$ (بالتجزئة)</li></li><li class="question"><li>$\int_0^{+\infty} x e^{-x}\, dx$ (تكامل غير منتظم)</li></li><li class="question"><li>$\int_0^1 \frac{1}{x^2 + 1}\, dx$ (شهيرة)</li></li></ol>
+      <div class="ex">
+        <h3>التمرين الرابع (5 نقاط) — احسب التكاملات:</h3>
+        <p class="q"><li>$\int_0^1 (3x^2 + 2x - 1)\, dx$</li></p><p class="q"><li>$\int_0^1 x e^{x}\, dx$ (بالتجزئة)</li></p><p class="q"><li>$\int_1^e \frac{\ln x}{x^2}\, dx$ (بالتجزئة)</li></p><p class="q"><li>$\int_0^{\pi/2} \sin^3 x\, dx$</li></p><p class="q"><li>$\int_0^{\ln 2} \frac{e^x}{e^x + 1}\, dx$ (تغيير متغير)</li></p><p class="q"><li>$\int_0^{\pi} x \sin x\, dx$ (بالتجزئة)</li></p><p class="q"><li>$\int_0^{+\infty} x e^{-x}\, dx$ (تكامل غير منتظم)</li></p><p class="q"><li>$\int_0^1 \frac{1}{x^2 + 1}\, dx$ (شهيرة)</li></p>
       </div>
     
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>منصة تعليمية لطلبة السنة الثالثة ثانوي — الجزائر 🇩🇿</p>
-  <p>📧 asaadadli9393@gmail.com | بإشراف الأستاذ عدلي أسعد</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

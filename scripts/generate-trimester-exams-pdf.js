@@ -44,12 +44,12 @@ function processMathContent(text) {
 function generateTopicHTML(exam) {
   const exercisesHTML = exam.topic.exercises.map((ex, idx) => {
     const questionsHTML = (ex.questions || [])
-      .map((q, qi) => `<li class="question">${processMathContent(q)}</li>`)
+      .map((q, qi) => `<p class="q">${processMathContent(q)}</p>`)
       .join("");
     return `
-      <div class="exercise">
-        <div class="ex-header">📝 ${ex.statement.replace(/\*\*/g, "")}</div>
-        ${questionsHTML ? `<ol class="questions">${questionsHTML}</ol>` : ""}
+      <div class="ex">
+        <h3>${ex.statement.replace(/\*\*/g, "")}</h3>
+        ${questionsHTML}
       </div>
     `;
   }).join("");
@@ -63,53 +63,43 @@ function generateTopicHTML(exam) {
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
-.exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
-.exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
-.questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
-.questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة — معلومات الامتحان */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.q{margin:8px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.q strong{color:#000}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">${exam.type} ${exam.number}</div>
-  <h1>${exam.title}</h1>
-  <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
-  <div class="info">
-    <div class="info-item">⏱️ المدة: ${exam.duration}</div>
-    <div class="info-item">📅 ${exam.date}</div>
-    <div class="info-item">🎓 ${exam.stream}</div>
+<div class="header">
+  <div class="title">${exam.title}</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
   </div>
-</div>
-<div class="exam-meta">
-  <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
-  <div class="row"><span class="label">النوع:</span> <span>${exam.type} رقم ${exam.number}</span></div>
-  <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل ${exam.trimester}</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>${exam.duration}</span></div>
-  <div class="row"><span class="label">عدد التمارين:</span> <span>${exam.topic.exercises.length} تمارين شاملة</span></div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> ${exam.stream}</div>
+    <div><strong>المدة:</strong> ${exam.duration}</div>
+    <div><strong>التاريخ:</strong> ${exam.date}</div>
+  </div>
 </div>
 ${exercisesHTML}
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>منصة تعليمية لطلبة السنة الثالثة ثانوي — الجزائر 🇩🇿</p>
-  <p>📧 asaadadli9393@gmail.com | بإشراف الأستاذ عدلي أسعد</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -133,12 +123,12 @@ document.addEventListener('DOMContentLoaded', function() {
 function generateSolutionHTML(exam) {
   const exercisesHTML = exam.solution.exercises.map((ex, idx) => {
     const stepsHTML = (ex.steps || [])
-      .map((s, si) => `<div class="step"><span class="step-num">${si + 1})</span><div class="step-content">${processMathContent(s)}</div></div>`)
+      .map((s, si) => `<p class="step">${processMathContent(s)}</p>`)
       .join("");
     return `
-      <div class="exercise">
-        <div class="ex-header">${ex.statement.replace(/\*\*/g, "")}</div>
-        <div class="steps">${stepsHTML}</div>
+      <div class="ex">
+        <h3>${ex.statement.replace(/\*\*/g, "")}</h3>
+        ${stepsHTML}
       </div>
     `;
   }).join("");
@@ -152,44 +142,43 @@ function generateSolutionHTML(exam) {
 <script src="/katex/katex.min.js"></script>
 <script src="/katex/auto-render.min.js"></script>
 <style>
-@page{size:A4;margin:1.5cm}
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
-.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#15803d,#166534);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
-.cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
-.cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
-.exercise{background:white;border:1px solid #d1fae5;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#166534;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #86efac;line-height:1.6}
-.steps{display:flex;flex-direction:column;gap:10px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#f0fdf4;border-radius:8px;border-right:3px solid #10b981}
-.step-num{font-weight:700;color:#047857;flex-shrink:0;background:#d1fae5;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:11px}
-.step-content{flex:1;line-height:1.9}
-.step-content strong{color:#047857}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
-.footer h3{color:#86efac;font-size:16px;margin-bottom:5px}
-.footer p{font-size:11px;opacity:0.8}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+/* رأس الصفحة */
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+/* كل تمرين */
+.ex{margin-bottom:22px;page-break-inside:avoid}
+.ex h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:10px;text-align:right;color:#000}
+.ex p.step{margin:6px 0;padding-right:22px;text-indent:-22px;font-size:13px;line-height:1.9}
+.ex p.step strong{color:#000;background:#f0f0f0;padding:1px 4px;border-radius:2px}
+/* تذييل */
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+/* KaTeX */
 .katex{font-size:1.0em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f0fdf4;border-radius:6px;overflow-x:auto}
+.katex-display{margin:8px 0;text-align:center}
 </style>
 </head>
 <body>
-<div class="cover">
-  <div class="badge">✅ الحل النموذجي المفصّل</div>
-  <h1>${exam.title}</h1>
-  <div class="subtitle">الحل النموذجي الشامل — منصة الرياضيات</div>
-  <div class="info">
-    <div class="info-item">📝 ${exam.topic.exercises.length} تمارين محلولة</div>
-    <div class="info-item">📅 ${exam.date}</div>
-    <div class="info-item">🎓 ${exam.stream}</div>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — ${exam.title}</div>
+  <div class="meta">
+    <div><strong>المؤسسة:</strong> منصة الرياضيات — الأستاذ عدلي أسعد</div>
+    <div><strong>السنة الدراسية:</strong> 2026/2027</div>
+  </div>
+  <div class="meta">
+    <div><strong>المستوى:</strong> ${exam.stream}</div>
+    <div><strong>المدة:</strong> ${exam.duration}</div>
+    <div><strong>عدد التمارين:</strong> ${exam.topic.exercises.length}</div>
   </div>
 </div>
 ${exercisesHTML}
 <div class="footer">
-  <h3>منصة الرياضيات</h3>
-  <p>الحل النموذجي — بإشراف الأستاذ عدلي أسعد</p>
-  <p>📧 asaadadli9393@gmail.com | الجزائر 🇩🇿</p>
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
