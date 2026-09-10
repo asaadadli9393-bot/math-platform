@@ -12,8 +12,8 @@ const { chromium } = require("playwright");
 
 // قراءة المحتوى من ملفات TS
 const { trimesterExamsContent } = require("../src/data/trimester-exams-content.ts");
-const { trimesterExamsContentP2 } = require("../src/data/trimester-exams-content-2.ts");
-const examsContent = [...trimesterExamsContent, ...trimesterExamsContentP2];
+const { trimesterExamsContentExtra } = require("../src/data/trimester-exams-content-extra.ts");
+const examsContent = [...trimesterExamsContent, ...trimesterExamsContentExtra];
 
 const outputDir = path.join(__dirname, "..", "public", "courses");
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
