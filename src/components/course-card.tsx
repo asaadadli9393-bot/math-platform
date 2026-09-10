@@ -18,6 +18,8 @@ import {
   Calendar,
   Lock,
   ShieldCheck,
+  Download,
+  FileText,
 } from "lucide-react";
 import type { Course, CourseModule } from "@/data/courses";
 import {
@@ -207,6 +209,59 @@ export function CourseDetail({ course, onBack }: CourseDetailProps) {
               </Badge>
             ))}
           </div>
+
+          {/* ✅ سلسلة الأستاذ عدلي أسعد PDF + الحلول النموذجية */}
+          {course.pdfUrl && (
+            <div className="mt-4 space-y-3">
+              {/* السلسلة */}
+              <div className="p-4 rounded-lg border-2 border-primary/30 bg-primary/5">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-8 h-8 text-primary" />
+                    <div>
+                      <div className="font-bold text-primary">سلسلة الأستاذ عدلي أسعد (PDF)</div>
+                      <div className="text-xs text-muted-foreground">حمّل السلسلة الكاملة</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href={course.pdfUrl} download className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+                      <Download className="w-4 h-4" />
+                      تحميل السلسلة
+                    </a>
+                    <a href={course.pdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-primary text-primary hover:bg-primary/10 px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+                      <FileText className="w-4 h-4" />
+                      عرض
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* الحلول النموذجية */}
+              {course.isPremium && (
+                <div className="p-4 rounded-lg border-2 border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                      <div>
+                        <div className="font-bold text-emerald-700 dark:text-emerald-300">الحلول النموذجية المفصلة (PDF)</div>
+                        <div className="text-xs text-muted-foreground">حمّل كل الحلول خطوة بخطوة مع المعادلات الرياضية</div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <a href={`/courses/solutions/${course.slug}-solutions.pdf`} download className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+                        <Download className="w-4 h-4" />
+                        تحميل الحلول PDF
+                      </a>
+                      <a href={`/courses/solutions/${course.slug}-solutions.pdf`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 px-4 py-2 rounded-lg font-bold text-sm transition-colors">
+                        <FileText className="w-4 h-4" />
+                        عرض الحلول
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
