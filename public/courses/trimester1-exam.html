@@ -9,26 +9,26 @@
 <style>
 @page{size:A4;margin:1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:13px}
-.cover{text-align:center;padding:30px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:5px 15px;border-radius:20px;font-size:12px;margin-bottom:15px}
+body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
+.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
+.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
 .cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
 .cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;gap:25px;margin-top:15px;font-size:12px;opacity:0.95}
+.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
 .info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:13px}
+.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
 .exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
 .exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:18px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px dashed #cbd5e1}
+.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
 .questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:8px 12px;background:#f8fafc;border-radius:6px;margin-top:6px;border-right:3px solid #64748b}
+.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
 .questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white}
+.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
 .footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:12px;opacity:0.8}
-.katex{font-size:1.05em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px}
+.footer p{font-size:11px;opacity:0.8}
+.katex{font-size:1.0em}
+.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -37,7 +37,7 @@ body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;m
   <h1>الاختبار الفصلي الأول</h1>
   <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
   <div class="info">
-    <div class="info-item">⏱️ المدة: ساعتان</div>
+    <div class="info-item">⏱️ المدة: ساعتان ونصف</div>
     <div class="info-item">📅 ديسمبر 2026</div>
     <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
   </div>
@@ -46,32 +46,33 @@ body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;m
   <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
   <div class="row"><span class="label">النوع:</span> <span>اختبار رقم 1</span></div>
   <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل 1</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>ساعتان</span></div>
+  <div class="row"><span class="label">المدة:</span> <span>ساعتان ونصف</span></div>
+  <div class="row"><span class="label">عدد التمارين:</span> <span>5 تمارين شاملة</span></div>
 </div>
 
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 1 (4 نقاط) — لتكن $f(x) = \frac{x^2 - 4}{x^2 + 1}$ معرفة على $\mathbb{R}$.</div>
-        <ol class="questions"><li class="question">أدرس زوجية $f$.</li><li class="question">احسب $f'(x)$ ثم أدرس تغيرات $f$.</li><li class="question">احسب $\lim_{x \to \pm\infty} f(x)$ و استنتج المستقيمات المقاربة.</li><li class="question">ارسم منحنى $f$.</li></ol>
+        <div class="ex-header">📝 التمرين 1 (4 نقاط) — دراسة دالة + تطبيقات — لتكن $f(x) = \frac{x^2 - 4}{x^2 + 1}$ معرفة على $\mathbb{R}$.</div>
+        <ol class="questions"><li class="question"><li>ادرس زوجية $f$. ماذا تستنتج لمنحنى $(\mathcal{C}_f)$؟</li></li><li class="question"><li>احسب $\lim_{x \to \pm\infty} f(x)$ و استنتج المستقيمات المقاربة.</li></li><li class="question"><li>احسب $f'(x)$ و أدرس إشارها.</li></li><li class="question"><li>أنشئ جدول تغيرات $f$ على $\mathbb{R}$.</li></li><li class="question"><li>أوجد معادلة المماس $T$ لـ $(\mathcal{C}_f)$ في النقطة $\Omega(0, -4)$.</li></li><li class="question"><li>ادرس موضع $(\mathcal{C}_f)$ بالنسبة لـ $T$ قرب $\Omega$.</li></li><li class="question"><li>ارسم $(\mathcal{C}_f)$ و $T$ في معلم متعامد.</li></li><li class="question"><li>بيّن أن المعادلة $f(x) = -2$ يقبل حلًّا وحيدًا، عيّنه.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 2 (4 نقاط) — نعتبر المتتالية $(u_n)$ المعرفة بـ $u_0 = 2$ و $u_{n+1} = \frac{u_n + 1}{2}$.</div>
-        <ol class="questions"><li class="question">احسب $u_1, u_2, u_3$.</li><li class="question">برهن بالتراجع أن $1 < u_n \leq 2$ لكل $n \in \mathbb{N}$.</li><li class="question">أدرس رتابة $(u_n)$ واثبت أنها متقاربة.</li><li class="question">حدد نهاية $(u_n)$.</li></ol>
+        <div class="ex-header">📝 التمرين 2 (4 نقاط) — متتالية + برهنة بالتراجع — نعتبر المتتالية $(u_n)$ المعرفة بـ $u_0 = 2$ و $u_{n+1} = \frac{u_n + 1}{2}$ لكل $n \in \mathbb{N}$.</div>
+        <ol class="questions"><li class="question"><li>احسب $u_1, u_2, u_3$ (إعطِ الكسور المختصرة).</li></li><li class="question"><li>برهن بالتراجع أن $1 < u_n \leq 2$ لكل $n \in \mathbb{N}$.</li></li><li class="question"><li>أدرس رتابة $(u_n)$.</li></li><li class="question"><li>بيّن أن $(u_n)$ متقاربة و حدد نهايتها $\ell$.</li></li><li class="question"><li>لتكن $(v_n)$ المعرفة بـ $v_n = u_n - 1$. اكتب $v_{n+1}$ بدلالة $v_n$.</li></li><li class="question"><li>بيّن أن $(v_n)$ هندسية، اكتب $v_n$ ثم $u_n$ بدلالة $n$.</li></li><li class="question"><li>احسب $\sum_{k=0}^n v_k$ ثم استنتج $\sum_{k=0}^n (u_k - 1)$.</li></li><li class="question"><li>احسب $\lim_{n \to +\infty} \sum_{k=0}^n v_k$.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 3 (4 نقاط) — في فضاء منسوب إلى معلم متعامد، نعتبر النقاط $A(1; 0; 0)$، $B(0; 1; 0)$، $C(0; 0; 1)$.</div>
-        <ol class="questions"><li class="question">احسب الجداء السلمي $\vec{AB} \cdot \vec{AC}$.</li><li class="question">استنتج أن المثلث $ABC$ قائم في $A$.</li><li class="question">احسب مساحة المثلث $ABC$.</li></ol>
+        <div class="ex-header">📝 التمرين 3 (4 نقاط) — حساب النهايات و المتتاليات — احسب النهايات التالية أو بيّن عدم وجودها:</div>
+        <ol class="questions"><li class="question"><li>$\lim_{x \to +\infty} \frac{x^3 - 2x + 1}{x^2 + x}$</li></li><li class="question"><li>$\lim_{x \to 0} \frac{e^{2x} - 1}{x}$</li></li><li class="question"><li>$\lim_{x \to +\infty} x - \ln(x + 1)$</li></li><li class="question"><li>$\lim_{n \to +\infty} \left(1 + \frac{1}{n}\right)^{n+1}$</li></li><li class="question"><li>$\lim_{n \to +\infty} \frac{2^n}{n!}$ (شهيرة)</li></li><li class="question"><li>لتكن $(w_n)$ معرفة بـ $w_n = \frac{(-1)^n}{n + 1}$. هل $(w_n)$ متقاربة؟</li></li><li class="question"><li>احسب $\lim_{n \to +\infty} \frac{n^2 + (-1)^n n}{n^2 + 1}$.</li></li><li class="question"><li>ادرس رتابة $(w_n)$ المعرّفة في السؤال 6 (إن أمكن).</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 4 (4 نقاط) — حل في $\mathbb{R}$:</div>
-        <ol class="questions"><li class="question">$\ln(x - 1) + \ln(x + 2) = \ln 4$</li><li class="question">$e^{2x} - 5e^x + 6 = 0$</li></ol>
+        <div class="ex-header">📝 التمرين 4 (4 نقاط) — تطبيقات على الدوال الزوجية + متتاليات — لتكن $g(x) = x^2 \sin\left(\frac{1}{x}\right)$ معرفة على $\mathbb{R}^*$، نمددها بـ $g(0) = 0$.</div>
+        <ol class="questions"><li class="question"><li>بيّن أن $g$ متصلة عند 0.</li></li><li class="question"><li>هل $g$ قابلة للاشتقاق عند 0؟ احسب $g'(0)$ إن أمكن.</li></li><li class="question"><li>احسب $g'(x)$ لـ $x \neq 0$.</li></li><li class="question"><li>هل $g'$ متصلة عند 0؟</li></li><li class="question"><li>لتكن $(u_n) = g\left(\frac{1}{n\pi}\right)$ لـ $n \geq 1$. احسب $u_n$ صراحةً.</li></li><li class="question"><li>احسب $\lim_{n \to +\infty} u_n$.</li></li><li class="question"><li>لتكن $(v_n) = n u_n = n g\left(\frac{1}{n\pi}\right)$. احسب $v_n$ و $\lim v_n$.</li></li><li class="question"><li>بيّن أن $(\mathcal{C}_g)$ يقبل تقاربًا مهتزًّا حول المحور السيني قرب $0$.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 5 (4 نقاط) — احسب:</div>
-        <ol class="questions"><li class="question">$\lim_{x \to 0} \frac{\sin x}{x}$</li><li class="question">$\lim_{x \to +\infty} \frac{e^x}{x^2}$</li><li class="question">$\int_0^1 (x^2 + 2x)\, dx$</li></ol>
+        <div class="ex-header">📝 التمرين 5 (4 نقاط) — مسألة شاملة (دالة + متتالية + تكامل) — لتكن $f(x) = \ln x - \frac{1}{x}$ معرفة على $(0, +\infty)$.</div>
+        <ol class="questions"><li class="question"><li>احسب $\lim_{x \to 0^+} f(x)$ و $\lim_{x \to +\infty} f(x)$.</li></li><li class="question"><li>احسب $f'(x)$ و ادرس إشارها.</li></li><li class="question"><li>بيّن أن المعادلة $f(x) = 0$ يقبل حلاً وحيدًا $\alpha$ على $(0, +\infty)$، بيّن أن $\alpha \in (1, 2)$.</li></li><li class="question"><li>أعطٍ تقريبًا لـ $\alpha$ بدقة $10^{-1}$ (بطريقة التنصيف).</li></li><li class="question"><li>احسب $\int_1^e f(x)\, dx$ (استعمل التكامل بالتجزئة إن لزم).</li></li><li class="question"><li>لتكن $(u_n)$ معرفة بـ $u_n = \int_1^{1 + 1/n} f(x)\, dx$. احسب $\lim u_n$ دون حساب $u_n$.</li></li><li class="question"><li>احسب $\int_1^e \frac{1}{x}\, dx$ ثم استنتج مساحة المنطقة المحصورة بين $(\mathcal{C}_f)$ و المحور السيني على $[1, \alpha]$.</li></li><li class="question"><li>بيّن أن $f$ تقبل دالة عكسية $f^{-1}$ على مجال مناسب، حدّده.</li></li></ol>
       </div>
     
 <div class="footer">

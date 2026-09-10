@@ -9,26 +9,26 @@
 <style>
 @page{size:A4;margin:1.5cm}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:13px}
-.cover{text-align:center;padding:30px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px}
-.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:5px 15px;border-radius:20px;font-size:12px;margin-bottom:15px}
+body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;margin:0 auto;padding:25px;color:#1a1a2e;line-height:1.9;font-size:12px}
+.cover{text-align:center;padding:35px 20px;background:linear-gradient(135deg,#1e40af,#1e3a8a);border-radius:16px;color:white;margin-bottom:25px;page-break-after:avoid}
+.cover .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:6px 18px;border-radius:20px;font-size:12px;margin-bottom:15px}
 .cover h1{font-size:24px;font-weight:900;margin-bottom:5px}
 .cover .subtitle{font-size:13px;opacity:0.9;margin:5px 0}
-.cover .info{display:flex;justify-content:center;gap:25px;margin-top:15px;font-size:12px;opacity:0.95}
+.cover .info{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-top:18px;font-size:11px;opacity:0.95}
 .info-item{display:flex;align-items:center;gap:5px}
-.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:13px}
+.exam-meta{background:#f1f5f9;border-right:4px solid #1e40af;padding:15px 20px;border-radius:8px;margin-bottom:25px;font-size:12px}
 .exam-meta .row{display:flex;justify-content:space-between;padding:3px 0}
 .exam-meta .label{font-weight:700;color:#1e40af}
-.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:18px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px dashed #cbd5e1}
+.exercise{background:white;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:20px;padding:18px 22px;page-break-inside:avoid;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.ex-header{font-weight:700;color:#1e40af;font-size:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:2px dashed #cbd5e1;line-height:1.6}
 .questions{list-style:none;padding-right:0;margin-top:10px}
-.questions li{padding:8px 12px;background:#f8fafc;border-radius:6px;margin-top:6px;border-right:3px solid #64748b}
+.questions li{padding:10px 12px;background:#f8fafc;border-radius:6px;margin-top:8px;border-right:3px solid #64748b;line-height:1.8}
 .questions li strong{color:#1e40af}
-.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white}
+.footer{text-align:center;margin-top:30px;padding:20px;background:#1a1a2e;border-radius:12px;color:white;page-break-inside:avoid}
 .footer h3{color:#fbbf24;font-size:16px;margin-bottom:5px}
-.footer p{font-size:12px;opacity:0.8}
-.katex{font-size:1.05em}
-.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px}
+.footer p{font-size:11px;opacity:0.8}
+.katex{font-size:1.0em}
+.katex-display{margin:10px 0;text-align:center;padding:8px;background:#f8fafc;border-radius:6px;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -37,7 +37,7 @@ body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;m
   <h1>الاختبار الفصلي الثاني</h1>
   <div class="subtitle">منصة الرياضيات — الأستاذ عدلي أسعد</div>
   <div class="info">
-    <div class="info-item">⏱️ المدة: ساعتان</div>
+    <div class="info-item">⏱️ المدة: ساعتان ونصف</div>
     <div class="info-item">📅 مارس 2027</div>
     <div class="info-item">🎓 علوم تجريبية / رياضيات / تقني رياضي</div>
   </div>
@@ -46,32 +46,33 @@ body{font-family:'Cairo',Tahoma,Arial,sans-serif;direction:rtl;max-width:210mm;m
   <div class="row"><span class="label">المادة:</span> <span>الرياضيات — السنة الثالثة ثانوي</span></div>
   <div class="row"><span class="label">النوع:</span> <span>اختبار رقم 1</span></div>
   <div class="row"><span class="label">الفصل الدراسي:</span> <span>الفصل 2</span></div>
-  <div class="row"><span class="label">المدة:</span> <span>ساعتان</span></div>
+  <div class="row"><span class="label">المدة:</span> <span>ساعتان ونصف</span></div>
+  <div class="row"><span class="label">عدد التمارين:</span> <span>5 تمارين شاملة</span></div>
 </div>
 
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 1 (4 نقاط) — لتكن $f(x) = e^x \sin x$.</div>
-        <ol class="questions"><li class="question">أدرس زوجية $f$.</li><li class="question">احسب $f'(x)$ ثم $f''(x)$.</li><li class="question">أثبت أن $f$ حل لمعادلة تفاضلية من الشكل $y'' - 2y' + 2y = 0$.</li></ol>
+        <div class="ex-header">📝 التمرين 1 (4 نقاط) — دالة أسية + معادلة تفاضلية — لتكن $f(x) = e^x \sin x$ معرفة على $\mathbb{R}$.</div>
+        <ol class="questions"><li class="question"><li>ادرس زوجية $f$.</li></li><li class="question"><li>احسب $f'(x)$ ثم $f''(x)$.</li></li><li class="question"><li>أثبت أن $f$ حل لمعادلة تفاضلية من الشكل $y'' - 2y' + 2y = 0$.</li></li><li class="question"><li>حل المعادلة التفاضلية العامة $y'' + 4y' + 4y = 0$.</li></li><li class="question"><li>بيّن أن $g(x) = e^x \cos x$ هو أيضًا حل لـ $y'' - 2y' + 2y = 0$.</li></li><li class="question"><li>احسب $\int_0^{\pi/4} e^x \sin x\, dx$ (بالتجزئة مرتين أو صيغة أويلر).</li></li><li class="question"><li>احسب $\lim_{x \to +\infty} \frac{f(x)}{e^x}$ و علّل.</li></li><li class="question"><li>بيّن أن المعادلة $f(x) = 1$ يقبل عددًا منتهيًا من الحلول على $[0, 2\pi]$.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 2 (4 نقاط) — لتكن $z = 1 - i$.</div>
-        <ol class="questions"><li class="question">احسب $z^2$ و $|z|$.</li><li class="question">اكتب $z$ على الشكل الأسي.</li><li class="question">احسب $z^{10}$.</li></ol>
+        <div class="ex-header">📝 التمرين 2 (4 نقاط) — أعداد مركبة + هندسة — لتكن $z = \sqrt{3} - i$.</div>
+        <ol class="questions"><li class="question"><li>احسب $|z|$, $\arg(z)$.</li></li><li class="question"><li>اكتب $z$ على الشكل الأسي.</li></li><li class="question"><li>احسب $z^2$ على الشكل الأسي ثم الجبري.</li></li><li class="question"><li>احسب $z^{12}$ (استعمل صيغة موافري).</li></li><li class="question"><li>لتكن $A$ النقطة من التمثيل الهندسي لـ $z$ في المستوي المركب. أوجد إحداثياتها.</li></li><li class="question"><li>نضع $Z = z^2$. أوجد $Z + \bar Z$ و $Z - \bar Z$.</li></li><li class="question"><li>حل في $\mathbb{C}$: $z^2 = -8i$ (تعطى الحلول على الشكل الأسي).</li></li><li class="question"><li>بيّن أن $z, z^2, z^3, \ldots, z^6$ تقع على دائرة مركزها $O$, احسب نصف قطرها.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 3 (4 نقاط) — احسب التكاملات:</div>
-        <ol class="questions"><li class="question">$\int_0^{\ln 2} \frac{e^x}{e^x + 1}\, dx$</li><li class="question">$\int_0^1 x^2 e^{x^3}\, dx$</li></ol>
+        <div class="ex-header">📝 التمرين 3 (4 نقاط) — تكامل + متتالية + برهنة بالتراجع</div>
+        <ol class="questions"><li class="question"><li>برهن بالتراجع أن $\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$ لكل $n \geq 1$.</li></li><li class="question"><li>استنتج $\sum_{k=1}^n (k^2 + k)$ بدلالة $n$.</li></li><li class="question"><li>احسب $\int_0^1 x^2 (1 - x)\, dx$ بدلالة $n$ (ثابت).</li></li><li class="question"><li>بيّن بالتراجع أن $\int_0^1 x^n (1 - x)\, dx = \frac{1}{(n+1)(n+2)}$ لكل $n \geq 0$.</li></li><li class="question"><li>لتكن $I_n = \int_0^{\pi/2} \sin^n x\, dx$. برهن بالتجزئة أن $I_n = \frac{n-1}{n} I_{n-2}$ لـ $n \geq 2$.</li></li><li class="question"><li>احسب $I_0$ و $I_1$.</li></li><li class="question"><li>احسب $I_2$ و $I_4$.</li></li><li class="question"><li>بيّن أن $(I_n)$ متناقية لـ $n \geq 1$ و استنتج $\lim I_n$.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 4 (4 نقاط) — احتمالات:</div>
-        <ol class="questions"><li class="question">نرمي حجر نرد متوازن مرتين. احسب احتمال أن يكون المجموع 7.</li><li class="question">نرمي 3 عملات معدنية. احسب احتمال الحصول على وجهين على الأقل.</li></ol>
+        <div class="ex-header">📝 التمرين 4 (4 نقاط) — احتمالات + توزيع ذو الحدين — نموذج بنك فيه 60% من العملات سليمة و 40% معيبة. نسحب 5 عملات عشوائيًا مع إعادة.</div>
+        <ol class="questions"><li class="question"><li>لتكن $X$ المتغيرة العشوائية "عدد العملات السليمة". ما نوع توزيع $X$؟ حدد بارامتراته.</li></li><li class="question"><li>احسب $P(X = 0)$, $P(X = 5)$.</li></li><li class="question"><li>احسب $P(X = 3)$.</li></li><li class="question"><li>احسب $P(X \geq 3)$.</li></li><li class="question"><li>احسب الأمل الرياضي $E(X)$ و التباين $V(X)$.</li></li><li class="question"><li>احسب $P(X \geq 4 | X \geq 3)$ (احتمال شرطي).</li></li><li class="question"><li>ما أصغر $n$ بحيث $P(X \geq 1) \geq 0.95$ (نغير عدد السحوبات)؟</li></li><li class="question"><li>بيّن أن $P(X = k) = \binom{5}{k} (0.6)^k (0.4)^{5-k}$.</li></li></ol>
       </div>
     
       <div class="exercise">
-        <div class="ex-header">📝 التمرين 5 (4 نقاط) — أثبت بالتراجع أن $\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$ لكل $n \geq 1$.</div>
-        
+        <div class="ex-header">📝 التمرين 5 (4 نقاط) — مسألة شاملة (دالة + تكامل + متتالية + برهان) — لتكن $f(x) = x \ln x - x$ معرفة على $(0, +\infty)$.</div>
+        <ol class="questions"><li class="question"><li>احسب $\lim_{x \to 0^+} f(x)$ (استعمل $x \ln x \to 0$).</li></li><li class="question"><li>احسب $\lim_{x \to +\infty} f(x)$.</li></li><li class="question"><li>احسب $f'(x)$ و ادرس إشارها.</li></li><li class="question"><li>أنشئ جدول تغيرات $f$.</li></li><li class="question"><li>احسب $\int_1^e f(x)\, dx$.</li></li><li class="question"><li>لتكن $(u_n) = f\left(1 + \frac{1}{n}\right)$. احسب $\lim u_n$.</li></li><li class="question"><li>بيّن أن $f(x) \geq -1$ لكل $x \in (0, +\infty)$. في أي نقطة يتحقق المساواة؟</li></li><li class="question"><li>بيّن أن $f$ تقبل دالة عكسية على $[1, +\infty)$ و اكتب $f^{-1}(y)$ ضمنيًا.</li></li></ol>
       </div>
     
 <div class="footer">
