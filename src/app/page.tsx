@@ -81,6 +81,9 @@ import {
   LineChart,
   TrendingUp,
   User,
+  UserCog,
+  LogIn,
+  LogOut,
   LayoutDashboard,
   Users,
   Menu,
@@ -119,6 +122,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FunctionPlot } from "@/components/function-plot";
 import { AIAssistant } from "@/components/ai-assistant";
+import { MockExamView } from "@/components/mock-exam-view";
+import { AuthModal } from "@/components/auth-modal";
+import { loginUser, registerUser, fetchCurrentUser, logout, getToken, isLoggedIn, type AuthUser } from "@/lib/auth-client";
 import { premiumCourses } from "@/data/premium-courses";
 
 // خريطة الأيقونات
@@ -133,7 +139,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -183,6 +189,8 @@ export default function HomePage() {
   const [selectedPlanId, setSelectedPlanId] = React.useState<PlanTier | null>(null);
   const [selectedProductSlug, setSelectedProductSlug] = React.useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
+  const [authOpen, setAuthOpen] = React.useState(false);
 
   const stats = getCurriculumStats();
   const profile = useStudentStore((s) => s.profile);
@@ -191,6 +199,31 @@ export default function HomePage() {
   const lastVisitedUnit = useStudentStore((s) => s.lastVisitedUnit);
   const setLastVisitedUnit = useStudentStore((s) => s.setLastVisitedUnit);
   const { toast } = useToast();
+
+  // ✅ استرجاع المستخدم الحالي عند التحميل (إذا كان لديه JWT محفوظ)
+  React.useEffect(() => {
+    (async () => {
+      const user = await fetchCurrentUser();
+      setAuthUser(user);
+    })();
+  }, []);
+
+  function handleAuthSuccess(user: AuthUser) {
+    setAuthUser(user);
+    toast({
+      title: `مرحباً ${user.name}!`,
+      description: "تم تسجيل الدخول بنجاح",
+    });
+  }
+
+  function handleLogout() {
+    logout();
+    setAuthUser(null);
+    toast({
+      title: "تم تسجيل الخروج",
+      description: "نراك قريباً!",
+    });
+  }
 
   // ✅ نظام الاشتراك الأمن + صلاحية المشرف
   // المشرف (SUPERVISOR) يصل لكل الدورات المميزة بدون اشتراك
@@ -265,6 +298,10 @@ export default function HomePage() {
                 <Trophy className="w-4 h-4 ml-2" />
                 المواضيع
               </NavButton>
+              <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
+                <GraduationCap className="w-4 h-4 ml-2" />
+                امتحان تجريبي
+              </NavButton>
               <NavButton active={view === "courses"} onClick={() => navigateTo("courses")}>
                 <PlayCircle className="w-4 h-4 ml-2" />
                 الدورات
@@ -299,6 +336,30 @@ export default function HomePage() {
               </NavButton>
             </nav>
 
+            {/* زر تسجيل الدخول/الخروج */}
+            {authUser ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden md:inline text-sm text-muted-foreground">
+                  {authUser.name}
+                </span>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="w-4 h-4 ml-1" />
+                  <span className="hidden md:inline">خروج</span>
+                </Button>
+              </div>
+            ) : (
+              <Button size="sm" onClick={() => setAuthOpen(true)}>
+                <LogIn className="w-4 h-4 ml-1" />
+                <span className="hidden md:inline">دخول</span>
+              </Button>
+            )}
+
+            <AuthModal
+              open={authOpen}
+              onClose={() => setAuthOpen(false)}
+              onAuth={handleAuthSuccess}
+            />
+
             {/* زر القائمة على الجوال */}
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
@@ -322,6 +383,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("exams")}>
                     <Trophy className="w-4 h-4 ml-2" /> المواضيع الشاملة
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("mock-exam")}>
+                    <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("courses")}>
                     <PlayCircle className="w-4 h-4 ml-2" /> الدورات
@@ -439,6 +503,8 @@ export default function HomePage() {
         )}
 
         {view === "parent" && <ParentPortal />}
+
+        {view === "mock-exam" && <MockExamView />}
 
         {view === "about" && <AboutView />}
       </main>
