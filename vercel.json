@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
+  "outputDirectory": ".next/standalone",
+  "framework": "nextjs",
+  "regions": ["cdg1"],
+  "env": {
+    "ADMIN_KEY": "adli2024",
+    "ADMIN_EMAIL": "asaadadli9393@gmail.com"
+  }
+}
