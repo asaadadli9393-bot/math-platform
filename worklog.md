@@ -377,3 +377,45 @@
 **تاريخ الإنجاز**: 2026-09-09
 **المدة**: ~35 دقيقة
 **عدد الملفات**: 14 (4 صفحات خطأ + next.config + tsconfig + schema + سكربت + page.tsx + 5 مكوّنات + student-store)
+
+---
+Task ID: upgrade-batch-1
+Agent: main (Super Z)
+Task: تنفيذ التحسينات الاحترافية المقترحة (Vercel + PostgreSQL + Auth + Grading + Progress + Mock Exam)
+
+Work Log:
+- تبديل تلقائي لمزوّد Prisma (SQLite ↔ PostgreSQL) عبر scripts/set-prisma-provider.sh
+- إنشاء نظام مصادقة كامل (JWT + scrypt):
+  * src/lib/jwt.ts (jose HS256, 30 يوم)
+  * src/lib/password.ts (scrypt N=16384)
+  * src/lib/auth-client.ts (localStorage + helpers)
+  * src/components/auth-modal.tsx (نافذة دخول/تسجيل)
+  * /api/auth/register, /api/auth/login, /api/auth/me
+- إنشاء API التصحيح التلقائي:
+  * /api/exercises/grade (حفظ محاولات + تحديث تقدم الوحدة + سجل يومي)
+- إنشاء API تتبع التقدم:
+  * /api/progress (إحصائيات + سجل يومي + 10 شارات إنجاز)
+- إنشاء وضع الامتحان التجريبي:
+  * /api/mock-exam (GET: توليد عشوائي / POST: تصحيح فوري)
+  * src/components/mock-exam-view.tsx (مؤقّت + مراجعة + تصحيح)
+- إضافة أزرار في القائمة: "امتحان تجريبي" + زر دخول/خروج في الرأس
+- تحديث README.md + .env.example
+- إصلاح vercel.json: إزالة outputDirectory غير المتوافق
+- محاولة النشر على Vercel: نجح كـ temporary deployment
+
+Stage Summary:
+- ✅ Build ناجح (0 أخطاء TypeScript)
+- ✅ Pushed إلى GitHub (3 commits)
+- ✅ منشور مؤقتًا على Vercel: https://temporary-spry-celesta-ds0jnoy.vercel.app
+- ✅ رابط استملاك المنصة: https://vercel.com/claim-deployment?code=1351f1ac-aac0-42b2-8f9d-eae5cbec7bf7
+- ⚠️ المنصة المؤقتة تنتهي بعد 58 دقيقة — يجب على الأستاذ استملاكها + ربط قاعدة بيانات PostgreSQL
+- 🔑 23 API route (8 جديدة)
+- 📦 17 ملف تغيّر/أُضيف، 2519 سطر جديد
+
+**الخطوات التالية للأستاذ:**
+1. فتح رابط الاستملاك وحفظ المنصة
+2. إنشاء قاعدة بيانات PostgreSQL على neon.tech
+3. إضافة DATABASE_URL في إعدادات Vercel
+4. تشغيل `npx prisma db push` على قاعدة البيانات البعيدة
+5. تشغيل `bun run scripts/seed-admin-settings.ts` على قاعدة البيانات البعيدة
+6. (اختياري) إنشاء كلمة تطبيق Gmail وتفعيل الإشعارات في /admin
