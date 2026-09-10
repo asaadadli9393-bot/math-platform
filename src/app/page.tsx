@@ -91,6 +91,8 @@ import {
   Award,
   ChevronLeft,
   ChevronRight,
+  ClipboardCheck,
+  AlertCircle,
   Sparkles,
   Target,
   Heart,
@@ -139,7 +141,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -302,13 +304,13 @@ export default function HomePage() {
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
               </NavButton>
+              <NavButton active={view === "trimester-exams"} onClick={() => navigateTo("trimester-exams")}>
+                <ClipboardCheck className="w-4 h-4 ml-2" />
+                الفروض والاختبارات
+              </NavButton>
               <NavButton active={view === "courses"} onClick={() => navigateTo("courses")}>
                 <PlayCircle className="w-4 h-4 ml-2" />
                 الدورات
-              </NavButton>
-              <NavButton active={view === "products"} onClick={() => navigateTo("products")}>
-                <ShoppingBag className="w-4 h-4 ml-2" />
-                المتجر
               </NavButton>
               <NavButton active={view === "pricing"} onClick={() => navigateTo("pricing")}>
                 <CreditCard className="w-4 h-4 ml-2" />
@@ -387,11 +389,11 @@ export default function HomePage() {
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
                   </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("trimester-exams")}>
+                    <ClipboardCheck className="w-4 h-4 ml-2" /> الفروض والاختبارات الفصلية
+                  </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("courses")}>
                     <PlayCircle className="w-4 h-4 ml-2" /> الدورات
-                  </MobileNavButton>
-                  <MobileNavButton onClick={() => navigateTo("products")}>
-                    <ShoppingBag className="w-4 h-4 ml-2" /> المتجر
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("pricing")}>
                     <CreditCard className="w-4 h-4 ml-2" /> الباقات والأسعار
@@ -488,15 +490,7 @@ export default function HomePage() {
           />
         )}
 
-        {view === "products" && (
-          <ProductsView
-            onPurchase={(slug) => {
-              setSelectedProductSlug(slug);
-              setView("payment-product");
-            }}
-            onNavigateToPricing={() => navigateTo("pricing")}
-          />
-        )}
+        {view === "trimester-exams" && <TrimesterExamsView />}
 
         {view === "courses" && (
           <CoursesView
@@ -593,11 +587,11 @@ export default function HomePage() {
                 </li>
                 <li>
                   <button
-                    onClick={() => navigateTo("products")}
+                    onClick={() => navigateTo("trimester-exams")}
                     className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
                   >
-                    <ShoppingBag className="w-3 h-3" />
-                    المتجر
+                    <ClipboardCheck className="w-3 h-3" />
+                    الفروض والاختبارات الفصلية
                   </button>
                 </li>
                 <li>
@@ -2291,6 +2285,317 @@ function ExamsView() {
                 <li>راجع الحل النموذجي بعد كل تمرين لتفهم المنهجية الرسمية.</li>
                 <li>كرر المواضيع القديمة — البكالوريا يعيد نفس الأنماط!</li>
               </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ===================================================
+//  عرض الفروض والاختبارات الفصلية (TrimesterExamsView)
+// ===================================================
+//  - 3 فصول دراسية
+//  - لكل فصل: الفرض الأول، الفرض الثاني، الاختبار الفصلي
+//  - روابط PDF قابلة للتحميل (تُحدّث لاحقاً بالملفات الفعلية)
+// ===================================================
+
+interface TrimesterExam {
+  id: string;
+  type: "فرض" | "اختبار";
+  number: number; // 1 or 2 for فرض, 1 for اختبار
+  title: string;
+  duration: string;
+  date: string;
+  pdfUrl: string;
+  solutionPdfUrl?: string;
+  available: boolean;
+}
+
+const trimesterExamsData: Record<1 | 2 | 3, {
+  title: string;
+  period: string;
+  color: string;
+  gradient: string;
+  exams: TrimesterExam[];
+}> = {
+  1: {
+    title: "الفصل الأول",
+    period: "سبتمبر — ديسمبر",
+    color: "#2D6A4F",
+    gradient: "from-emerald-600 to-green-700",
+    exams: [
+      {
+        id: "t1-f1",
+        type: "فرض",
+        number: 1,
+        title: "الفرض الأول — الفصل الأول",
+        duration: "ساعة",
+        date: "أكتوبر 2026",
+        pdfUrl: "/courses/trimester1-fard1.pdf",
+        solutionPdfUrl: "/courses/trimester1-fard1-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t1-f2",
+        type: "فرض",
+        number: 2,
+        title: "الفرض الثاني — الفصل الأول",
+        duration: "ساعة",
+        date: "نوفمبر 2026",
+        pdfUrl: "/courses/trimester1-fard2.pdf",
+        solutionPdfUrl: "/courses/trimester1-fard2-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t1-e1",
+        type: "اختبار",
+        number: 1,
+        title: "الاختبار الفصلي الأول",
+        duration: "ساعتان",
+        date: "ديسمبر 2026",
+        pdfUrl: "/courses/trimester1-exam.pdf",
+        solutionPdfUrl: "/courses/trimester1-exam-solution.pdf",
+        available: false,
+      },
+    ],
+  },
+  2: {
+    title: "الفصل الثاني",
+    period: "جانفي — مارس",
+    color: "#7F5539",
+    gradient: "from-amber-700 to-orange-700",
+    exams: [
+      {
+        id: "t2-f1",
+        type: "فرض",
+        number: 1,
+        title: "الفرض الأول — الفصل الثاني",
+        duration: "ساعة",
+        date: "فيفري 2027",
+        pdfUrl: "/courses/trimester2-fard1.pdf",
+        solutionPdfUrl: "/courses/trimester2-fard1-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t2-f2",
+        type: "فرض",
+        number: 2,
+        title: "الفرض الثاني — الفصل الثاني",
+        duration: "ساعة",
+        date: "مارس 2027",
+        pdfUrl: "/courses/trimester2-fard2.pdf",
+        solutionPdfUrl: "/courses/trimester2-fard2-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t2-e1",
+        type: "اختبار",
+        number: 1,
+        title: "الاختبار الفصلي الثاني",
+        duration: "ساعتان",
+        date: "مارس 2027",
+        pdfUrl: "/courses/trimester2-exam.pdf",
+        solutionPdfUrl: "/courses/trimester2-exam-solution.pdf",
+        available: false,
+      },
+    ],
+  },
+  3: {
+    title: "الفصل الثالث",
+    period: "أفريل — جوان",
+    color: "#1D3557",
+    gradient: "from-blue-700 to-indigo-800",
+    exams: [
+      {
+        id: "t3-f1",
+        type: "فرض",
+        number: 1,
+        title: "الفرض الأول — الفصل الثالث",
+        duration: "ساعة",
+        date: "أفريل 2027",
+        pdfUrl: "/courses/trimester3-fard1.pdf",
+        solutionPdfUrl: "/courses/trimester3-fard1-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t3-f2",
+        type: "فرض",
+        number: 2,
+        title: "الفرض الثاني — الفصل الثالث",
+        duration: "ساعة",
+        date: "ماي 2027",
+        pdfUrl: "/courses/trimester3-fard2.pdf",
+        solutionPdfUrl: "/courses/trimester3-fard2-solution.pdf",
+        available: false,
+      },
+      {
+        id: "t3-e1",
+        type: "اختبار",
+        number: 1,
+        title: "الاختبار الفصلي الثالث",
+        duration: "ساعتان",
+        date: "جوان 2027",
+        pdfUrl: "/courses/trimester3-exam.pdf",
+        solutionPdfUrl: "/courses/trimester3-exam-solution.pdf",
+        available: false,
+      },
+    ],
+  },
+};
+
+function TrimesterExamsView() {
+  const [activeTrimester, setActiveTrimester] = React.useState<1 | 2 | 3>(1);
+  const data = trimesterExamsData[activeTrimester];
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+          <ClipboardCheck className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          الفروض والاختبارات الفصلية
+        </h1>
+        <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          مجموعة الفروض والاختبارات الفصلية لكل فصل دراسي مع الحلول النموذجية المفصلة،
+          لإعداد الطلبة بشكل متدرّج نحو امتحان البكالوريا. بإشراف الأستاذ عدلي أسعد.
+        </p>
+      </div>
+
+      {/* بطاقات الفصول الثلاثة للاختيار */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {([1, 2, 3] as const).map((t) => {
+          const tData = trimesterExamsData[t];
+          const isActive = activeTrimester === t;
+          return (
+            <Card
+              key={t}
+              className={`cursor-pointer transition-all hover:-translate-y-1 ${
+                isActive
+                  ? "border-2 shadow-lg"
+                  : "border hover:shadow-md"
+              }`}
+              style={isActive ? { borderColor: tData.color } : {}}
+              onClick={() => setActiveTrimester(t)}
+            >
+              <CardContent className="pt-6">
+                <div
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${tData.gradient} text-white mb-3`}
+                >
+                  <ClipboardCheck className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-xl mb-1">{tData.title}</h3>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+                  <Clock className="w-3 h-3" />
+                  <span>{tData.period}</span>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <Badge variant="outline">
+                    {tData.exams.filter((e) => e.type === "فرض").length} فروض
+                  </Badge>
+                  <Badge variant="outline">
+                    {tData.exams.filter((e) => e.type === "اختبار").length} اختبار
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* عرض الفروض والاختبارات للفصل المختار */}
+      <Card className="overflow-hidden border-2" style={{ borderColor: data.color }}>
+        <div className={`bg-gradient-to-l ${data.gradient} text-white p-6`}>
+          <div className="flex items-center gap-3 mb-2">
+            <ClipboardCheck className="w-8 h-8" />
+            <div>
+              <h2 className="text-2xl font-bold">{data.title}</h2>
+              <p className="text-white/80 italic">{data.period}</p>
+            </div>
+          </div>
+          <p className="text-white/90 leading-relaxed">
+            الفروض والاختبارات الفصلية لـ{data.title} — تشمل فروض المراقبة المستمرة
+            والاختبار الفصلي الختامي، مع الحلول النموذجية المفصلة.
+          </p>
+        </div>
+
+        <CardContent className="pt-6 space-y-4">
+          <div className="grid md:grid-cols-3 gap-4">
+            {data.exams.map((exam) => (
+              <Card
+                key={exam.id}
+                className={`flex flex-col ${exam.available ? "border-emerald-200" : "border-amber-200 bg-amber-50/30"}`}
+              >
+                <CardContent className="pt-5 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge
+                      className={
+                        exam.type === "اختبار"
+                          ? "bg-amber-100 text-amber-800 border border-amber-300"
+                          : "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                      }
+                    >
+                      {exam.type} {exam.number}
+                    </Badge>
+                    {exam.available ? (
+                      <Badge variant="outline" className="text-emerald-700 border-emerald-300">
+                        متاح
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-amber-700 border-amber-300">
+                        قريباً
+                      </Badge>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-base mb-2 flex-1">{exam.title}</h3>
+                  <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    <span>المدة: {exam.duration}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mb-3 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    <span>التاريخ: {exam.date}</span>
+                  </div>
+
+                  {exam.available ? (
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <a href={exam.pdfUrl} target="_blank" rel="noopener noreferrer" className="w-full">
+                        <Button className="w-full" size="sm">
+                          <FileText className="w-4 h-4 ml-1" />
+                          تحميل الموضوع
+                        </Button>
+                      </a>
+                      {exam.solutionPdfUrl && (
+                        <a href={exam.solutionPdfUrl} target="_blank" rel="noopener noreferrer" className="w-full">
+                          <Button variant="outline" className="w-full" size="sm">
+                            <FileText className="w-4 h-4 ml-1" />
+                            تحميل الحل النموذجي
+                          </Button>
+                        </a>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-xs text-center mt-auto p-2 bg-amber-100 rounded text-amber-800 border border-amber-200">
+                      سيُضاف الموضوع والحل النموذجي قريباً بإشراف الأستاذ عدلي أسعد.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Separator />
+
+          <div className="text-sm text-muted-foreground flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded">
+            <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-blue-900">ملاحظة هامة:</strong> هذه الفروض
+              والاختبارات تتبع المنهاج الرسمي لوزارة التربية الوطنية الجزائرية،
+              وتُعدّ تمريناً أساسياً لتقييم استعداد الطالب قبل امتحان البكالوريا.
+              الحلول النموذجية مُنمّقة وفق متطلبات التصحيح الرسمي.
             </div>
           </div>
         </CardContent>
