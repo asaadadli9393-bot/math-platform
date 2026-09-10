@@ -330,21 +330,35 @@ export function MockExamView() {
           <Separator className="my-4" />
 
           {/* التنقل بين الأسئلة */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
-              disabled={currentIdx === 0}
-            >
-              السابق
-            </Button>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
+                disabled={currentIdx === 0}
+              >
+                السابق
+              </Button>
 
-            <div className="flex flex-wrap gap-1 max-w-md overflow-x-auto">
+              <span className="text-xs text-muted-foreground">
+                {currentIdx + 1} / {exam.questionsCount}
+              </span>
+
+              <Button
+                variant="outline"
+                onClick={() => setCurrentIdx((i) => Math.min(exam.questionsCount - 1, i + 1))}
+                disabled={currentIdx === exam.questionsCount - 1}
+              >
+                التالي
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-1 justify-center max-h-24 overflow-y-auto">
               {exam.questions.map((qq, i) => (
                 <button
                   key={qq.id}
                   onClick={() => setCurrentIdx(i)}
-                  className={`w-7 h-7 text-xs rounded-md border transition-colors ${
+                  className={`w-8 h-8 text-xs rounded-md border transition-colors flex-shrink-0 ${
                     i === currentIdx
                       ? "bg-amber-500 text-white border-amber-500"
                       : answers[qq.id] !== undefined
@@ -356,14 +370,6 @@ export function MockExamView() {
                 </button>
               ))}
             </div>
-
-            <Button
-              variant="outline"
-              onClick={() => setCurrentIdx((i) => Math.min(exam.questionsCount - 1, i + 1))}
-              disabled={currentIdx === exam.questionsCount - 1}
-            >
-              التالي
-            </Button>
           </div>
         </Card>
 

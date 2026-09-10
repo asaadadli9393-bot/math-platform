@@ -336,21 +336,21 @@ export default function HomePage() {
               </NavButton>
             </nav>
 
-            {/* زر تسجيل الدخول/الخروج */}
+            {/* زر تسجيل الدخول/الخروج — على الشاشات الكبيرة فقط */}
             {authUser ? (
-              <div className="flex items-center gap-2">
-                <span className="hidden md:inline text-sm text-muted-foreground">
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">
                   {authUser.name}
                 </span>
                 <Button variant="outline" size="sm" onClick={handleLogout}>
                   <LogOut className="w-4 h-4 ml-1" />
-                  <span className="hidden md:inline">خروج</span>
+                  خروج
                 </Button>
               </div>
             ) : (
-              <Button size="sm" onClick={() => setAuthOpen(true)}>
+              <Button size="sm" onClick={() => setAuthOpen(true)} className="hidden md:inline-flex">
                 <LogIn className="w-4 h-4 ml-1" />
-                <span className="hidden md:inline">دخول</span>
+                دخول
               </Button>
             )}
 
@@ -414,6 +414,40 @@ export default function HomePage() {
                   <MobileNavButton onClick={() => navigateTo("admin")}>
                     <ShieldCheck className="w-4 h-4 ml-2" /> المشرف
                   </MobileNavButton>
+
+                  {/* فاصل + زر تسجيل الدخول/الخروج على الجوال */}
+                  <div className="h-px bg-border my-2" />
+                  {authUser ? (
+                    <>
+                      <div className="text-xs text-muted-foreground text-center px-2 py-1">
+                        مرحباً، {authUser.name}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          handleLogout();
+                          setSheetOpen(false);
+                        }}
+                        className="w-full"
+                      >
+                        <LogOut className="w-4 h-4 ml-2" />
+                        تسجيل الخروج
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setAuthOpen(true);
+                        setSheetOpen(false);
+                      }}
+                      className="w-full"
+                    >
+                      <LogIn className="w-4 h-4 ml-2" />
+                      تسجيل الدخول / حساب جديد
+                    </Button>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
