@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الاختبار الفصلي الثاني — الفصل الثاني (تنسيق بكالوريا) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الاختبار الفصلي الثاني — الفصل الثاني (تنسيق بكالوريا)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> ساعتان ونصف</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — دراسة دالة لوغاريتمية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>عند $0^+$:</strong><br/>- $\lim x \ln x = 0$ (شهيرة)<br/>- $\lim f = 0 - 0 = 0$</p><p><strong>عند $+\infty$:</strong><br/>- $f(x) = x(\ln x - 1)$<br/>- $\ln x \to +\infty$, $\lim f = +\infty$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الاشتقاق:</strong><br/>$$f'(x) = \ln x + x \cdot \frac{1}{x} - 1 = \ln x + 1 - 1 = \ln x$$</p><p><strong>الإشارة:</strong><br/>- $f'(x) \geq 0 \iff \ln x \geq 0 \iff x \geq e$<br/>- $f$ تناقص على $(0, e]$, تزايد على $[e, +\infty)$</p><p><strong>القيمة الصغرى:</strong> $f(e) = e \cdot 1 - e = 0$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>النقاط:</strong><br/>- $(1, -1)$: $f(1) = 0 - 1 = -1$<br/>- $(e, 0)$: القيمة الصغرى<br/>- المنحنى يقترب من $(0, 0)$ و يرتفع نحو $+\infty$</p><p>الشكل: يبدأ من $0$ عند $0^+$, ينخفض إلى $-1$ عند $x = 1$, يستمر في الانخفاض إلى $(e, 0)$, ثم يرتفع.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong><br/>$$\int_1^e (x \ln x - x)\, dx = \int_1^e x \ln x\, dx - \int_1^e x\, dx$$</p><p><strong>$\int x \ln x\, dx$ (بالتجزئة):</strong><br/>- $u = \ln x$, $v' = x$<br/>- $\int x \ln x\, dx = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} \cdot \frac{1}{x}\, dx = \frac{x^2}{2} \ln x - \frac{x^2}{4}$</p><p>$$\int_1^e x \ln x\, dx = \left[\frac{x^2}{2} \ln x - \frac{x^2}{4}\right]_1^e = \frac{e^2}{2} \cdot 1 - \frac{e^2}{4} - (0 - 1/4) = \frac{e^2}{4} + \frac{1}{4} = \frac{e^2 + 1}{4}$$</p><p><strong>$\int_1^e x\, dx = \frac{e^2 - 1}{2}$</strong></p><p><strong>النتيجة:</strong><br/>$$\int_1^e f(x)\, dx = \frac{e^2 + 1}{4} - \frac{e^2 - 1}{2} = \frac{e^2 + 1 - 2e^2 + 2}{4} = \frac{3 - e^2}{4}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>ملاحظة:</strong> من جدول التغيّرات, $f$ يصل قيمة صغرى $f(e) = 0$.<br/>- على $(0, e]$: $f$ تناقص من 0 إلى 0 — لا, من $\lim_{0^+} f = 0$ إلى $f(e) = 0$, لكن في الوسط $f(1) = -1 < 0$.</p><p>ملاحظة: $f$ ليست $\geq 0$ دائمًا. مثلاً $f(1) = -1 < 0$.</p><p><strong>النتيجة:</strong> $f(x) \geq 0$ غير صحيح. لكن $f(x) \geq -1$ على $(0, 1]$ و $f(x) \geq 0$ على $[e, +\infty)$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — متتالية عودية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الحسابات:</strong><br/>- $u_1 = \frac{1}{2}\left(1 + 1\right) = 1$<br/>- $u_2 = \frac{1}{2}\left(1 + 1\right) = 1$</p><p>المتتالية ثابتة عند 1.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>التهيئة:</strong> $u_0 = 1 > 0$ ✓</p><p><strong>الفرضية:</strong> $u_n > 0$.</p><p><strong>النتيجة:</strong> $u_{n+1} = \frac{1}{2}(u_n + 1/u_n)$. <br/>- $u_n > 0 \Rightarrow 1/u_n > 0$<br/>- $u_n + 1/u_n > 0$<br/>- $\Rightarrow u_{n+1} > 0$ ✓</p><p><strong>الخلاصة:</strong> بالتراجع, $u_n > 0$ لكل $n$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$u_{n+1}^2 = \frac{1}{4}(u_n + 1/u_n)^2 = \frac{u_n^2 + 2 + 1/u_n^2}{4} = \frac{u_n^4 + 2u_n^2 + 1}{4u_n^2}$$</p><p>$$u_{n+1}^2 - 1 = \frac{u_n^4 + 2u_n^2 + 1 - 4u_n^2}{4u_n^2} = \frac{u_n^4 - 2u_n^2 + 1}{4u_n^2} = \frac{(u_n^2 - 1)^2}{4u_n^2}$$</p><p><strong>النتيجة:</strong> $(u_n^2 - 1)^2 \geq 0$ و $4u_n^2 > 0$, إذن $u_{n+1}^2 - 1 \geq 0 \Rightarrow u_{n+1} \geq 1$ (لأن $u_{n+1} > 0$).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الرتابة:</strong><br/>$$u_{n+1} - u_n = \frac{1}{2}\left(u_n + \frac{1}{u_n}\right) - u_n = \frac{1}{2u_n} - \frac{u_n}{2} = \frac{1 - u_n^2}{2u_n}$$</p><p>من السؤال 3: $u_n \geq 1$ (لـ $n \geq 1$), إذن $1 - u_n^2 \leq 0 \Rightarrow u_{n+1} \leq u_n$.</p><p>$(u_n)$ <strong>متناقصة</strong> لـ $n \geq 1$.</p><p><strong>التقارب:</strong> متناقصة + محدودة سفلًا بـ 1 → متقاربة.</p><p><strong>النهاية:</strong> $\ell = \frac{1}{2}(\ell + 1/\ell) \Rightarrow 2\ell = \ell + 1/\ell \Rightarrow \ell = 1/\ell \Rightarrow \ell^2 = 1 \Rightarrow \ell = 1$ (موجب).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$u_{n+1} - 1 = \frac{1}{2}(u_n + 1/u_n) - 1 = \frac{u_n^2 - 2u_n + 1}{2u_n} = \frac{(u_n - 1)^2}{2u_n}$$</p><p>$$\frac{u_{n+1} - 1}{u_n - 1} = \frac{(u_n - 1)^2}{2u_n (u_n - 1)} = \frac{u_n - 1}{2u_n}$$</p><p>عند $n \to +\infty$: $u_n \to 1$, إذن $\lim = \frac{1 - 1}{2 \cdot 1} = 0$.</p><p><strong>النتيجة:</strong> $\lim = 0$ (تقارب سريع).</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — أعداد مركبة + هندسة</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>- $|z| = \sqrt{3 + 1} = 2$<br/>- $\arg(z) = \arctan(1/\sqrt{3}) = \pi/6$</p><p><strong>ب):</strong> $z = 2 e^{i\pi/6}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الأسي:</strong> $z^6 = 2^6 e^{i6\pi/6} = 64 e^{i\pi} = -64$</p><p><strong>الجبري:</strong> $-64 + 0i = -64$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الصيغة الأسيّة:</strong> $-4 = 4 e^{i\pi}$</p><p><strong>الحلول:</strong> $z = 2 e^{i(\pi + 2k\pi)/2} = 2 e^{i\pi/2}$ أو $2 e^{i3\pi/2}$<br/>- $z_1 = 2i$<br/>- $z_2 = -2i$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.75 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>- $A(\sqrt{3}, 1)$<br/>- $z^2 = (\sqrt{3} + i)^2 = 3 + 2i\sqrt{3} - 1 = 2 + 2i\sqrt{3}$<br/>- $B(2, 2\sqrt{3})$</p><p><strong>ب):</strong><br/>- $AB = |z^2 - z| = |z(z - 1)| = |z| \cdot |z - 1| = 2 \cdot \sqrt{(\sqrt{3} - 1)^2 + 1} = 2\sqrt{3 - 2\sqrt{3} + 1 + 1} = 2\sqrt{5 - 2\sqrt{3}}$<br/>- $\widehat{AOB} = |\arg(z^2) - \arg(z)| = |2\arg(z) - \arg(z)| = |\arg(z)| = \pi/6$ (30°)</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — احتمالات + توزيع ذي الحدين</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>عدد السحوبات:</strong> $\binom{10}{4} = 210$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>$P(4 \text{حمراء})$:</strong><br/>$$P = \frac{\binom{5}{4}}{210} = \frac{5}{210} = \frac{1}{42}$$</p><p><strong>$P(2\text{ح و 2ب})$:</strong><br/>$$P = \frac{\binom{5}{2} \binom{5}{2}}{210} = \frac{10 \cdot 10}{210} = \frac{100}{210} = \frac{10}{21}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>النوع:</strong> $X \sim \mathcal{B}(4, 0.5)$ (توزيع ذي الحدين, $n = 4$, $p = 5/10 = 0.5$).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الأمل:</strong> $E(X) = 4 \cdot 0.5 = 2$</p><p><strong>التباين:</strong> $V(X) = 4 \cdot 0.5 \cdot 0.5 = 1$</p><p><strong>$P(X = 2)$:</strong><br/>$$P(X = 2) = \binom{4}{2}(0.5)^4 = 6 \cdot 0.0625 = 0.375$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$P(X \geq 3) = P(X = 3) + P(X = 4) = \binom{4}{3}(0.5)^4 + (0.5)^4 = 4 \cdot 0.0625 + 0.0625 = 0.25 + 0.0625 = 0.3125$$</p><p><strong>النتيجة:</strong> $P(X \geq 3) = 0.3125$ ($31,25\%$).</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

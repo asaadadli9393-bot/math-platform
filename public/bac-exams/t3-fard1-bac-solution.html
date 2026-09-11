@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الفرض الأول — الفصل الثالث (تنسيق بكالوريا) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الفرض الأول — الفصل الثالث (تنسيق بكالوريا)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — حساب التكاليل</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong> $u = x$, $v' = e^{-x}$, $u' = 1$, $v = -e^{-x}$</p><p>$$\int_0^1 x e^{-x}\, dx = [-x e^{-x}]_0^1 + \int_0^1 e^{-x}\, dx$$<br/>$$= -e^{-1} + [-e^{-x}]_0^1 = -e^{-1} + (-e^{-1} + 1) = 1 - \frac{2}{e}$$</p><p><strong>النتيجة:</strong> $1 - \frac{2}{e}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong> $u = \ln x$, $v' = 1/x^2$, $u' = 1/x$, $v = -1/x$</p><p>$$\int_1^e \frac{\ln x}{x^2}\, dx = \left[-\frac{\ln x}{x}\right]_1^e + \int_1^e \frac{1}{x^2}\, dx$$<br/>$$= -1 + \left[-\frac{1}{x}\right]_1^e = -1 + \left(-\frac{1}{e} + 1\right) = -\frac{1}{e}$$</p><p><strong>النتيجة:</strong> $-\frac{1}{e}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير:</strong> $u = \cos x$, $du = -\sin x\, dx$<br/>- عند $x = 0$: $u = 1$<br/>- عند $x = \pi/2$: $u = 0$</p><p>$$\int_0^{\pi/2} \sin x (1 - \cos^2 x)\, dx = -\int_1^0 (1 - u^2)\, du = \int_0^1 (1 - u^2)\, du = \left[u - \frac{u^3}{3}\right]_0^1 = 1 - \frac{1}{3} = \frac{2}{3}$$</p><p><strong>النتيجة:</strong> $\frac{2}{3}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير:</strong> $u = 1 + e^x$, $du = e^x\, dx$<br/>- عند $x = 0$: $u = 2$<br/>- عند $x = \ln 2$: $u = 3$</p><p>$$\int_0^{\ln 2} \frac{e^x}{1 + e^x}\, dx = \int_2^3 \frac{1}{u}\, du = \ln 3 - \ln 2 = \ln\frac{3}{2}$$</p><p><strong>النتيجة:</strong> $\ln\frac{3}{2}$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — دالة + تكامل + مساحة</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\int_{-1}^1 (x^2 - 1)\, dx = \left[\frac{x^3}{3} - x\right]_{-1}^1 = \left(\frac{1}{3} - 1\right) - \left(-\frac{1}{3} + 1\right) = -\frac{2}{3} - \frac{2}{3} = -\frac{4}{3}$$</p><p>ملاحظة: $f$ فردية, إذن $\int_{-1}^1 f = 0$ — لكن $f(x) = x^2 - 1$ زوجية, ليس فردية.</p><p>بالأحرى: $f(-x) = (-x)^2 - 1 = x^2 - 1 = f(x)$ — زوجية. إذن:<br/>$$\int_{-1}^1 f\, dx = 2 \int_0^1 (x^2 - 1)\, dx = 2 \left[\frac{x^3}{3} - x\right]_0^1 = 2 \left(-\frac{2}{3}\right) = -\frac{4}{3}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>ملاحظات:</strong><br/>- $f(\pm 1) = 0$ (نقطا تقاطع)<br/>- $f(0) = -1$ (قيمة صغرى)<br/>- $f$ زوجية, متماثلة بالنسبة لمحور التراتيب<br/>- $f(x) \leq 0$ على $[-1, 1]$</p><p><strong>المساحة:</strong><br/>$$\mathcal{S} = \left|\int_{-1}^1 f(x)\, dx\right| = \left|-\frac{4}{3}\right| = \frac{4}{3}$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = \frac{4}{3} \text{ unit}^2$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>ملاحظة:</strong> $g = -f$, $g(x) \geq 0$ على $[-1, 1]$.</p><p>$$\mathcal{S} = \int_{-1}^1 g(x)\, dx = -\int_{-1}^1 f(x)\, dx = \frac{4}{3}$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = \frac{4}{3} \text{ unit}^2$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الفكرة:</strong> $f$ تحت $g$ على $[-1, 1]$ (لأن $g - f = 2 - 2x^2 \geq 0$).</p><p>$$\mathcal{S} = \int_{-1}^1 (g(x) - f(x))\, dx = \int_{-1}^1 (2 - 2x^2)\, dx = 2 \int_{-1}^1 (1 - x^2)\, dx$$<br/>$$= 2 \left[x - \frac{x^3}{3}\right]_{-1}^1 = 2 \left[\left(1 - \frac{1}{3}\right) - \left(-1 + \frac{1}{3}\right)\right] = 2 \cdot \frac{4}{3} = \frac{8}{3}$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = \frac{8}{3} \text{ unit}^2$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الزوجية:</strong> $x^4$ زوجية ($(-x)^4 = x^4$), إذن:<br/>$$\int_{-1}^1 x^4\, dx = 2 \int_0^1 x^4\, dx = 2 \left[\frac{x^5}{5}\right]_0^1 = 2 \cdot \frac{1}{5} = \frac{2}{5}$$</p><p><strong>النتيجة:</strong> $\frac{2}{5}$ ✓.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — متتالية باستعمال التكامل</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>$I_0$:</strong><br/>$$I_0 = \int_0^1 1\, dx = 1$$</p><p><strong>$I_1$:</strong><br/>$$I_1 = \int_0^1 x\, dx = \frac{1}{2}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$I_n = \int_0^1 x^n\, dx = \left[\frac{x^{n+1}}{n+1}\right]_0^1 = \frac{1}{n+1}$$ ✓</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>النهاية:</strong><br/>$$\lim_{n \to +\infty} I_n = \lim \frac{1}{n+1} = 0$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong><br/>- $J_n = \int_0^1 x^n\, dx - \int_0^1 x^{n+1}\, dx = I_n - I_{n+1} = \frac{1}{n+1} - \frac{1}{n+2}$</p><p>$$= \frac{(n+2) - (n+1)}{(n+1)(n+2)} = \frac{1}{(n+1)(n+2)}$$ ✓</p><p>أو بالتجزئة مباشرة: $u = 1 - x$, $v' = x^n$...</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>$\lim J_n$:</strong><br/>$$\lim \frac{1}{(n+1)(n+2)} = 0$$</p><p><strong>$\lim (n \cdot J_n)$:</strong><br/>$$n \cdot J_n = \frac{n}{(n+1)(n+2)} \sim \frac{n}{n^2} = \frac{1}{n} \to 0$$</p><p><strong>النتيجة:</strong> $\lim J_n = 0$ و $\lim (n \cdot J_n) = 0$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — تكاليل + تغيير متغير متقدّم</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong> $u = x$, $v' = \sin x$, $u' = 1$, $v = -\cos x$</p><p>$$\int_0^\pi x \sin x\, dx = [-x \cos x]_0^\pi + \int_0^\pi \cos x\, dx$$<br/>$$= -\pi \cdot (-1) + [\sin x]_0^\pi = \pi + 0 = \pi$$</p><p><strong>النتيجة:</strong> $\pi$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الشهيرة:</strong><br/>$$\int \frac{1}{1 + x^2}\, dx = \arctan x$$</p><p>$$\int_0^1 \frac{1}{1 + x^2}\, dx = [\arctan x]_0^1 = \arctan 1 - \arctan 0 = \frac{\pi}{4}$$</p><p><strong>النتيجة:</strong> $\frac{\pi}{4}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\int_0^{\sqrt{3}} \frac{1}{1 + x^2}\, dx = [\arctan x]_0^{\sqrt{3}} = \arctan \sqrt{3} - 0 = \frac{\pi}{3}$$</p><p>(لأن $\tan(\pi/3) = \sqrt{3}$.)</p><p><strong>النتيجة:</strong> $\frac{\pi}{3}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير:</strong> $u = -x^3$, $du = -3x^2\, dx$<br/>- $x^2\, dx = -\frac{du}{3}$<br/>- عند $x = 0$: $u = 0$<br/>- عند $x = 1$: $u = -1$</p><p>$$\int_0^1 x^2 e^{-x^3}\, dx = -\frac{1}{3}\int_0^{-1} e^u\, du = \frac{1}{3}\int_{-1}^0 e^u\, du = \frac{1}{3}[e^u]_{-1}^0 = \frac{1}{3}(1 - e^{-1}) = \frac{e - 1}{3e}$$</p><p><strong>النتيجة:</strong> $\frac{e - 1}{3e}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>التكامل غير المنتظم:</strong><br/>$$\int_0^{+\infty} \frac{1}{1 + x^2}\, dx = \lim_{A \to +\infty} [\arctan x]_0^A = \lim_{A \to +\infty} \arctan A - 0 = \frac{\pi}{2}$$</p><p><strong>النتيجة:</strong> $\frac{\pi}{2}$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

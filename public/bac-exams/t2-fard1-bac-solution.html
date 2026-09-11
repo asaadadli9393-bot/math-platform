@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الفرض الأول — الفصل الثاني (تنسيق بكالوريا) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الفرض الأول — الفصل الثاني (تنسيق بكالوريا)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> ساعتان</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — دراسة دالة أسية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>عند $+\infty$:</strong> $\lim (x-1) = +\infty$, $\lim e^{x-2} = +\infty$, إذن $f \to +\infty$.</p><p><strong>عند $-\infty$:</strong><br/>- نضع $X = -x \to +\infty$<br/>- $f(x) = (-X - 1) e^{-X - 2} = -(X + 1) e^{-X} \cdot e^{-2}$<br/>- $\lim (X+1)/e^X = 0$ (الأسية تتفوق)<br/>- إذن $f(x) \to 0$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الاشتقاق:</strong><br/>$$f'(x) = e^{x-2} + (x - 1) e^{x-2} = x \cdot e^{x-2}$$</p><p><strong>الإشارة:</strong><br/>- $e^{x-2} > 0$ دائمًا<br/>- $f'(x) \geq 0 \iff x \geq 0$<br/>- $f' < 0$ على $(-\infty, 0)$, $f' > 0$ على $(0, +\infty)$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>جدول التغيّرات:</strong><br/>- $f$ تناقص على $(-\infty, 0]$, تزايد على $[0, +\infty)$<br/>- القيمة الصغرى: $f(0) = (-1) \cdot e^{-2} = -e^{-2} \approx -0,135$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>- $f(1) = 0 \cdot e^{-1} = 0$, $A(1, 0)$<br/>- $f'(1) = 1 \cdot e^{-1} = 1/e$</p><p><strong>المماس:</strong> $y = \frac{1}{e}(x - 1)$, أي $y = \frac{x - 1}{e}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الحل:</strong><br/>$$f(x) = 0 \iff (x - 1) e^{x - 2} = 0$$</p><p>بما أنّ $e^{x-2} > 0$ دائمًا, $f(x) = 0 \iff x - 1 = 0 \iff x = 1$.</p><p><strong>النتيجة:</strong> حل وحيد $\alpha = 1$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — معادلات أسية ولوغاريتمية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>التحويل:</strong><br/>نضع $X = e^x$ ($X > 0$):<br/>$$X^2 - 5X + 6 = 0 \Rightarrow (X - 2)(X - 3) = 0 \Rightarrow X = 2 \text{ أو } X = 3$$</p><p><strong>الحلول:</strong><br/>- $x = \ln 2$ أو $x = \ln 3$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>شروط الوجود:</strong><br/>- $x + 1 > 0 \Rightarrow x > -1$<br/>- $x - 2 > 0 \Rightarrow x > 2$<br/>- إذن $x > 2$</p><p><strong>الحل:</strong><br/>$$\ln[(x + 1)(x - 2)] = \ln 6 \iff (x + 1)(x - 2) = 6$$<br/>$$x^2 - x - 2 = 6 \iff x^2 - x - 8 = 0$$<br/>$$\Delta = 1 + 32 = 33, \quad x = \frac{1 \pm \sqrt{33}}{2}$$</p><p><strong>نختار $x > 2$:</strong> $x = \frac{1 + \sqrt{33}}{2} \approx 3,37$ ✓<br/>(الحل الآخر $\frac{1 - \sqrt{33}}{2} \approx -2,37$ مرفوض)</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>التحويل:</strong><br/>نضع $Y = \ln x$ ($Y \in \mathbb{R}$):<br/>$$Y^2 - 4Y + 3 = 0 \Rightarrow (Y - 1)(Y - 3) = 0 \Rightarrow Y = 1 \text{ أو } Y = 3$$</p><p><strong>الحلول:</strong><br/>- $\ln x = 1 \Rightarrow x = e$<br/>- $\ln x = 3 \Rightarrow x = e^3$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>التحويل:</strong><br/>نضع $X = e^x$ ($X > 0$):<br/>$$X + \frac{1}{X} = 3 \iff X^2 - 3X + 1 = 0$$</p><p><strong>الجذور:</strong><br/>$$\Delta = 9 - 4 = 5, \quad X = \frac{3 \pm \sqrt{5}}{2}$$</p><p>كلاهما موجب, إذن:<br/>- $x_1 = \ln\left(\frac{3 + \sqrt{5}}{2}\right)$<br/>- $x_2 = \ln\left(\frac{3 - \sqrt{5}}{2}\right)$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\ln 6 + \ln 4 - \ln 8 = \ln\left(\frac{6 \cdot 4}{8}\right) = \ln\left(\frac{24}{8}\right) = \ln 3$$</p><p><strong>النتيجة:</strong> $\ln 3$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — متتالية هندسية ذات أساس $e$</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) الطبيعة الهندسية:</strong><br/>$$\frac{u_{n+1}}{u_n} = \frac{e^{2(n+1)}}{e^{2n}} = e^2$$</p><p>إذن $(u_n)$ متتالية هندسية أساسها $q = e^2$.</p><p><strong>ب) الحدود:</strong><br/>- $u_0 = e^0 = 1$<br/>- $u_1 = e^2 \approx 7,39$<br/>- $u_2 = e^4 \approx 54,6$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>مجموع المتتالية الهندسية:</strong><br/>$$S_n = u_0 \cdot \frac{1 - q^{n+1}}{1 - q} = \frac{1 - (e^2)^{n+1}}{1 - e^2} = \frac{1 - e^{2(n+1)}}{1 - e^2} = \frac{e^{2(n+1)} - 1}{e^2 - 1}$$</p><p>(نستعمل $1 - e^2 = -(e^2 - 1)$ لتبسيط الإشارة.)</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>النهاية:</strong><br/>- $e^{2(n+1)} \to +\infty$ (الأسية تتفوق)<br/>- إذن $S_n \to +\infty$</p><p><strong>النتيجة:</strong> $\lim S_n = +\infty$ (المجموع متشعّب).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$v_n = \ln u_n = \ln e^{2n} = 2n$$</p><p><strong>النتيجة:</strong> $v_n = 2n$, إذن $(v_n)$ متتالية حسابية أساسها $r = v_{n+1} - v_n = 2$ و حدّها الأول $v_0 = 0$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>مجموع المتتالية الحسابية:</strong><br/>$$\sum_{k=0}^n v_k = \frac{(n + 1)(v_0 + v_n)}{2} = \frac{(n + 1)(0 + 2n)}{2} = n(n + 1)$$</p><p><strong>النتيجة:</strong> $\sum_{k=0}^n v_k = n(n + 1)$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — تكاليل الدالة الأسية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\int_0^1 e^{2x}\, dx = \left[\frac{e^{2x}}{2}\right]_0^1 = \frac{e^2 - e^0}{2} = \frac{e^2 - 1}{2}$$</p><p><strong>النتيجة:</strong> $\frac{e^2 - 1}{2}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>التكامل بالتجزئة:</strong><br/>- $u = x$, $v' = e^x$<br/>- $u' = 1$, $v = e^x$</p><p>$$\int_0^1 x e^x\, dx = [x e^x]_0^1 - \int_0^1 e^x\, dx = (e - 0) - (e - 1) = 1$$</p><p><strong>النتيجة:</strong> $1$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التكامل بالتجزئة (مرة 1):</strong><br/>- $u = x^2$, $v' = e^x$<br/>- $\int x^2 e^x\, dx = x^2 e^x - \int 2x e^x\, dx = x^2 e^x - 2 \int x e^x\, dx$</p><p><strong>استعمال النتيجة السابقة:</strong><br/>$$\int_0^1 x^2 e^x\, dx = [x^2 e^x]_0^1 - 2 \int_0^1 x e^x\, dx = e - 0 - 2 \cdot 1 = e - 2$$</p><p><strong>النتيجة:</strong> $e - 2 \approx 0,718$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير المتغير:</strong><br/>- $u = 1 + e^x$, $du = e^x\, dx$<br/>- عند $x = 0$: $u = 2$<br/>- عند $x = \ln 2$: $u = 1 + 2 = 3$</p><p>$$\int_0^{\ln 2} \frac{e^x}{1 + e^x}\, dx = \int_2^3 \frac{1}{u}\, du = [\ln u]_2^3 = \ln 3 - \ln 2 = \ln\frac{3}{2}$$</p><p><strong>النتيجة:</strong> $\ln\frac{3}{2}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير المتغير:</strong><br/>- $u = -x^2$, $du = -2x\, dx$<br/>- $x\, dx = -\frac{du}{2}$<br/>- عند $x = 0$: $u = 0$<br/>- عند $x = 1$: $u = -1$</p><p>$$\int_0^1 x e^{-x^2}\, dx = -\frac{1}{2}\int_0^{-1} e^u\, du = \frac{1}{2}\int_{-1}^0 e^u\, du = \frac{1}{2}[e^u]_{-1}^0 = \frac{1}{2}(1 - e^{-1}) = \frac{e - 1}{2e}$$</p><p><strong>النتيجة:</strong> $\frac{e - 1}{2e}$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>
