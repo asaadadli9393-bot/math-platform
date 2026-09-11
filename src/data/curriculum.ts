@@ -306,11 +306,11 @@ $$u_n = u_0 + nr = u_p + (n-p)r$$
 $$S = u_0 + u_1 + \\cdots + u_{n-1} = \\frac{n(u_0 + u_{n-1})}{2}$$
 
 أو بشكل عام:
-$$S = \\frac{(\\text{عدد الحدود})(\\text{الحد الأول} + \\text{الحد الأخير})}{2}$$
+$$S = \\frac{(n)(u_0 + u_n)}{2}$$
 
 ### خاصية مميزة
 ثلاثة أعداد متتالية على الترتيب $a, b, c$ تكون حدود متتالية حسابية إذا وفقط إذا:
-$$2b = a + c \\quad \\text{(أي } b - a = c - b\\text{)}$$
+$$2b = a + c \\quad \\text{(i.e. } b - a = c - b\\text{)}$$
 `,
           durationMin: 35,
           keyPoints: [
@@ -342,7 +342,7 @@ $$\\sum_{n=0}^{+\\infty} u_n = \\frac{u_0}{1 - q}$$
 
 ### خاصية مميزة
 ثلاثة حدود متتالية $a, b, c$ (مع $a, b \\neq 0$) تكون حدود متتالية هندسية إذا وفقط إذا:
-$$b^2 = a \\cdot c \\quad \\text{أي} \\quad \\frac{b}{a} = \\frac{c}{b}$$
+$$b^2 = a \\cdot c \\quad \\text{(i.e.)} \\quad \\frac{b}{a} = \\frac{c}{b}$$
 `,
           durationMin: 35,
           keyPoints: [
@@ -516,7 +516,7 @@ $$\\exp(x) = e^x$$
 ### الخصائص الأساسية
 
 **1. العلاقة مع اللوغاريتم:**
-$$\\forall x > 0, \\quad \\ln(e^x) = x \\quad \\text{و} \\quad e^{\\ln x} = x$$
+$$\\forall x > 0, \\quad \\ln(e^x) = x \\quad \\text{and} \\quad e^{\\ln x} = x$$
 
 **2. خاصية الأسس:**
 $$e^{a+b} = e^a \\cdot e^b, \\quad e^{a-b} = \\frac{e^a}{e^b}, \\quad (e^a)^b = e^{ab}$$
@@ -525,7 +525,7 @@ $$e^{a+b} = e^a \\cdot e^b, \\quad e^{a-b} = \\frac{e^a}{e^b}, \\quad (e^a)^b = 
 $$e^x > 0 \\quad \\forall x \\in \\mathbb{R}$$
 
 **4. الاشتقاق:**
-$$(e^x)' = e^x \\quad \\text{و} \\quad (e^{u(x)})' = u'(x) \\cdot e^{u(x)}$$
+$$(e^x)' = e^x \\quad \\text{and} \\quad (e^{u(x)})' = u'(x) \\cdot e^{u(x)}$$
 
 ### النهايات الأساسية
 $$\\lim_{x \\to +\\infty} e^x = +\\infty, \\quad \\lim_{x \\to -\\infty} e^x = 0^+$$
@@ -553,7 +553,7 @@ $$\\lim_{x \\to -\\infty} x \\cdot e^x = 0, \\quad \\lim_{x \\to 0} \\frac{e^x -
 
 **للحل، نستعمل اللوغاريتم النيبيري $\\ln$:**
 $$e^a = e^b \\iff a = b$$
-$$e^a > e^b \\iff a > b \\; \\text{(لأن exp تزايدية قطعاً)}$$
+$$e^a > e^b \\iff a > b \\; \\text{(exp is strictly increasing)}$$
 
 ### أمثلة محلولة
 
@@ -737,7 +737,7 @@ $$\\ln(a^n) = n \\ln a \\;\\; (a > 0, n \\in \\mathbb{Z})$$
 $$\\ln(\\sqrt{a}) = \\frac{1}{2}\\ln a$$
 
 **3. الاشتقاق:**
-$$(\\ln x)' = \\frac{1}{x} \\quad \\text{على} \\; ]0, +\\infty[$$
+$$(\\ln x)' = \\frac{1}{x} \\quad \\text{on} \\; ]0, +\\infty[$$
 $$(\\ln|u(x)|)' = \\frac{u'(x)}{u(x)}$$
 
 **4. النهايات:**
@@ -785,7 +785,7 @@ $$C = 2\\ln(5) - \\ln(25) = \\ln(5^2) - \\ln(25) = \\ln(25) - \\ln(25) = 0$$
           hint: "حدد مجال التعريف أولاً (معطيات اللوغاريتم موجبة).",
           solution: `
 **1. مجال التعريف:** يجب أن تكون معطيات اللوغاريتم موجبة قطعاً:
-$$x + 1 > 0 \\implies x > -1 \\quad \\text{و} \\quad x - 2 > 0 \\implies x > 2$$
+$$x + 1 > 0 \\implies x > -1 \\quad \\text{and} \\quad x - 2 > 0 \\implies x > 2$$
 إذن $x > 2$، أي $D = \\;]2, +\\infty[$
 
 **2. حل المعادلة:** على المجال D:
@@ -796,7 +796,7 @@ $$x^2 - x - 2 = 4 \\iff x^2 - x - 6 = 0$$
 
 **حل التربيعية:**
 المميز $\\Delta = 1 + 24 = 25$
-$$x = \\frac{1 \\pm 5}{2} \\implies x = 3 \\;\\text{أو}\\; x = -2$$
+$$x = \\frac{1 \\pm 5}{2} \\implies x = 3 \\;\\text{or}\\; x = -2$$
 
 **3. اختيار الحلول حسب المجال:**
 - $x = 3 \\in D$ ✓ (لأن $3 > 2$)
@@ -943,7 +943,7 @@ $$\\Delta = b^2 - 4ac = (-2)^2 - 4(1)(5) = 4 - 20 = -16$$
 $$z = \\frac{-b \\pm i\\sqrt{-\\Delta}}{2a} = \\frac{2 \\pm i\\sqrt{16}}{2} = \\frac{2 \\pm 4i}{2}$$
 
 إذن:
-$$z_1 = 1 + 2i \\quad \\text{و} \\quad z_2 = 1 - 2i$$
+$$z_1 = 1 + 2i \\quad \\text{and} \\quad z_2 = 1 - 2i$$
 
 **التحقق لـ $z_1$:**
 $$z_1^2 - 2z_1 + 5 = (1+2i)^2 - 2(1+2i) + 5$$
@@ -1198,9 +1198,9 @@ $$P(B) = \\frac{2}{6} = \\frac{1}{3}$$
 $$P(C) = \\frac{3}{6} = \\frac{1}{2}$$
 
 **النتائج:**
-- $P(\\text{زوجي}) = \\frac{1}{2}$
+- $P(\\text{(even)}) = \\frac{1}{2}$
 - $P(>4) = \\frac{1}{3}$
-- $P(\\text{أولي}) = \\frac{1}{2}$
+- $P(\\text{(odd)}) = \\frac{1}{2}$
 `,
           methodology: "حساب احتمال = (عدد الحالات المواتية) / (عدد الحالات الكلي).",
           difficulty: "PREREQUISITE",
@@ -1346,7 +1346,7 @@ $$\\vec{u} \\cdot \\vec{u}' = |\\vec{u}| \\cdot |\\vec{u}'| \\cdot \\cos(\\wideh
 - $\\vec{u} \\cdot \\vec{u}' = \\vec{u}' \\cdot \\vec{u}$ (تبديلية)
 - $\\vec{u} \\cdot (\\vec{v} + \\vec{w}) = \\vec{u} \\cdot \\vec{v} + \\vec{u} \\cdot \\vec{w}$
 - $\\vec{u} \\cdot \\vec{u} = |\\vec{u}|^2 = x^2 + y^2 + z^2$
-- $\\vec{u} \\cdot \\vec{u}' = 0 \\iff \\vec{u} \\perp \\vec{u}' \\text{ أو } \\vec{u} = \\vec{0}$
+- $\\vec{u} \\cdot \\vec{u}' = 0 \\iff \\vec{u} \\perp \\vec{u}' \\text{ or } \\vec{u} = \\vec{0}$
 
 ### المعيار
 $$|\\vec{u}| = \\sqrt{x^2 + y^2 + z^2}$$
@@ -1636,7 +1636,7 @@ $$\\text{pgcd}(154, 35) = 7$$
           hint: "أوجد حلاً خاصاً، ثم استعمل نظرية بيزو للحل العام.",
           solution: `
 **1. قابلية الحل:**
-$$\\text{pgcd}(9, 15) = 3 \\quad \\text{و} \\quad 3 | 21 \\;\\checkmark$$
+$$\\text{pgcd}(9, 15) = 3 \\quad \\text{and} \\quad 3 | 21 \\;\\checkmark$$
 إذن المعادلة لها حلول.
 
 **2. حل خاص:**
@@ -1782,7 +1782,7 @@ $f'(x)$ باستعمال قواعد الاشتقاق المعروفة.
 **الشرط:** المقام $x^2 - 4 \\neq 0$.
 
 **حل $x^2 - 4 = 0$:**
-$$x^2 = 4 \\implies x = 2 \\text{ أو } x = -2$$
+$$x^2 = 4 \\implies x = 2 \\text{ or } x = -2$$
 
 **مجال التعريف:**
 $$D_f = \\mathbb{R} \\setminus \\{-2, 2\\} = \\;]-\\infty, -2[ \\,\\cup\\, ]-2, 2[ \\,\\cup\\, ]2, +\\infty[$$
@@ -1802,7 +1802,7 @@ $$D_f = \\mathbb{R} \\setminus \\{-2, 2\\} = \\;]-\\infty, -2[ \\,\\cup\\, ]-2, 
           hint: "عند اللانهائية: قيادة بالحد الأعلى. عند x=2: مقام يؤول إلى 0.",
           solution: `
 **1. النهاية عند $+\\infty$:**
-$$\\lim_{x\\to+\\infty} f(x) = \\lim \\frac{3x}{x} = 3 \\quad \\text{(بالحد الأعلى)}$$
+$$\\lim_{x\\to+\\infty} f(x) = \\lim \\frac{3x}{x} = 3 \\quad \\text{(leading term)}$$
 
 **2. النهاية عند $-\\infty$:**
 $$\\lim_{x\\to-\\infty} f(x) = \\lim \\frac{3x}{x} = 3$$
