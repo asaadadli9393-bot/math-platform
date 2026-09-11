@@ -17,8 +17,10 @@ export interface BacExamPart {
 export interface BacExamQuestion {
   number: string;      // 1) 2) 3)
   statement: string;   // نص السؤال بـ LaTeX
+  points?: number;     // عدد النقاط (من 20) — سلّم التنقيط (اختياري للتوافق مع المواضيع القديمة)
   hint?: string;
   solution: string;   // الحل النموذجي بـ LaTeX
+  rubric?: string[];   // سلّم التنقيط التفصيلي (توزيع النقاط)
   plot?: {
     functions: Array<{ expr: string; color: string; label?: string; width?: number; dashed?: boolean; }>;
     xRange?: [number, number];

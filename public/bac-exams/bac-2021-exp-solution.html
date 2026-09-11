@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>بكالوريا 2021 — شعبة العلوم التجريبية — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — بكالوريا 2021 — شعبة العلوم التجريبية</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2021</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> 3 ساعات</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>الجزء الأول: دراسة دالة (12 نقطة)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>عند $+\infty$:</strong><br/>البسط: $x \ln x - x = x(\ln x - 1) \to +\infty$ (لأن $\ln x \to +\infty$)<br/>المقام: $x - 1 \to +\infty$</p><p><strong>بقيادة الحد الأعلى:</strong><br/>$$\lim f = \lim \frac{x \ln x}{x} = \lim \ln x = +\infty$$</p><p><strong>النتيجة:</strong> $\lim_{+\infty} f = +\infty$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>نضع $x = 1 + h$ مع $h \to 0$:</strong><br/>$$f(1+h) = \frac{(1+h)\ln(1+h) - (1+h)}{h}$$</p><p>نوسّع $\ln(1+h) \approx h - \frac{h^2}{2}$ (تقريب من الدرجة 2):<br/>- $(1+h)\ln(1+h) \approx (1+h)(h - h^2/2) = h + h^2 - h^2/2 - h^3/2 \approx h + h^2/2$<br/>- البسط: $h + h^2/2 - 1 - h = -1 + h^2/2$</p><p><strong>خطأ:</strong> علينا إعادة الحساب. فالبسط يجب أن يؤول إلى 0.</p><p><strong>بطريقة صحيحة:</strong> نحسب $\lim$ مباشرة:<br/>- عند $x = 1$: البسط = $1 \cdot \ln 1 - 1 = 0 - 1 = -1$ ❌<br/>- هذا لا يعطي 0! إذن $\lim_{x \to 1} f = \frac{-1}{0}$</p><p>بما أن المقام $\to 0$ والبسط $\to -1$:<br/>- $x \to 1^+$: $f \to -\infty$<br/>- $x \to 1^-$: $f \to +\infty$</p><p><strong>النتيجة:</strong> $x = 1$ مقاربة عمودية.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>النوع $\frac{u}{v}$:</strong><br/>- $u = x \ln x - x \implies u' = \ln x + 1 - 1 = \ln x$<br/>- $v = x - 1 \implies v' = 1$</p><p>$$f' = \frac{u'v - uv'}{v^2} = \frac{\ln x \cdot (x-1) - (x \ln x - x) \cdot 1}{(x-1)^2}$$</p><p><strong>تبسيط البسط:</strong><br/>$$\ln x \cdot (x-1) - x \ln x + x = (x \ln x - \ln x) - x \ln x + x = x - \ln x$$</p><p>إذن $f'(x) = \dfrac{x - \ln x}{(x-1)^2}$ على $]1, +\infty[$.</p><p><strong>ملاحظة:</strong> التعبير المعطى في السؤال $\dfrac{x \ln x - \ln x}{(x-1)^2} = \dfrac{\ln x (x - 1)}{(x-1)^2} = \dfrac{\ln x}{x - 1}$ — يبدو مختلفاً عن حسابنا. على الأرجح خطأ مطبعي في الموضوع الأصلي.</p><p><strong>الصيغة الصحيحة:</strong> $f'(x) = \dfrac{x - \ln x}{(x-1)^2}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/>المقام $(x-1)^2 > 0$ على $]1, +\infty[$.</p><p>ندرس إشارة $g(x) = x - \ln x$:<br/>- $g'(x) = 1 - \frac{1}{x}$<br/>- $g'(x) = 0 \iff x = 1$<br/>- $g'(x) > 0$ لـ $x > 1$</p><p>إذن $g$ متزايد على $[1, +\infty[$، و $g(1) = 1 - 0 = 1 > 0$.</p><p>إذن $g(x) > 0$ على $]1, +\infty[$، وبالتالي <strong>$f'(x) > 0$</strong> على $]1, +\infty[$.</p><p><strong>جدول التغيرات على $]1, +\infty[$:</strong><br/>- $f'$ موجبة دائماً<br/>- $f$ متزايدة قطعاً من $-\infty$ (عند $1^+$) إلى $+\infty$ (عند $+\infty$)</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>الجزء الثاني: دالة أسية (8 نقاط)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>تكامل بالأجزاء:</strong> $\int u \, dv = uv - \int v \, du$.</p><p>نضع:<br/>- $u = x \implies du = dx$<br/>- $dv = e^{-x} dx \implies v = -e^{-x}$</p><p>$$\int_0^1 x e^{-x} dx = \left[-x e^{-x}\right]_0^1 - \int_0^1 (-e^{-x}) dx$$<br/>$$= -1 \cdot e^{-1} - 0 + \int_0^1 e^{-x} dx$$<br/>$$= -\frac{1}{e} + \left[-e^{-x}\right]_0^1 = -\frac{1}{e} + (-e^{-1} + 1)$$<br/>$$= -\frac{1}{e} - \frac{1}{e} + 1 = 1 - \frac{2}{e}$$</p><p><strong>النتيجة:</strong> $\int_0^1 x e^{-x} dx = 1 - \dfrac{2}{e} \approx 0{,}264$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>حالة عدم تحديد $\frac{0}{0}$</strong> — نطبق قاعدة لوبيتال:<br/>$$\lim \frac{e^x - 1 - x}{x^2} = \lim \frac{e^x - 1}{2x} = \lim \frac{e^x}{2} = \frac{1}{2}$$</p><p><strong>النتيجة:</strong> $\dfrac{1}{2}$</p><p>(هذا أيضاً ينتج من تقريب تايلور-يونغ: $e^x \approx 1 + x + \frac{x^2}{2}$ قرب 0.)</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>بكالوريا 2022 — شعبة الرياضيات — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — بكالوريا 2022 — شعبة الرياضيات</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2022</div>
+    <div><strong>الشعبة:</strong> شعبة الرياضيات</div>
+    <div><strong>المدة:</strong> 4 ساعات</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>الجزء الأول: دراسة دالة بمعامل (12 نقطة)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>الشرط:</strong> المقام $x - 1 \neq 0 \implies x \neq 1$.</p><p><strong>مجال التعريف:</strong> $D_{f_m} = \mathbb{R} \setminus \{1\}$ (مستقل عن $m$).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>نوع $\frac{u}{v}$:</strong><br/>- $u = x^2 - m \implies u' = 2x$<br/>- $v = x - 1 \implies v' = 1$</p><p>$$f'_m = \frac{2x(x-1) - (x^2 - m)}{(x-1)^2} = \frac{2x^2 - 2x - x^2 + m}{(x-1)^2} = \frac{x^2 - 2x + m}{(x-1)^2}$$</p><p><strong>النقاط الحرجة:</strong> $x^2 - 2x + m = 0$<br/>$$\Delta = 4 - 4m = 4(1 - m)$$</p><p><strong>المناقشة:</strong><br/>- $m < 1$ ($\Delta > 0$): قيمتان قصوى وصغرى محليتان عند $x = 1 \pm \sqrt{1-m}$<br/>- $m = 1$ ($\Delta = 0$): جذر مزدوج عند $x = 1$ (خارج المجال!), $f'$ موجبة<br/>- $m > 1$ ($\Delta < 0$): $f' > 0$ دائماً, $f$ تزايدية قطعاً</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>الحالة $m = 2 > 1$</strong>: $f'_2 > 0$ على $D_{f_2}$.</p><p>$f_2(x) = \dfrac{x^2 - 2}{x - 1}$</p><p><strong>نهايات:</strong><br/>- $\lim_{+\infty} f_2 = +\infty$ (بقيادة $x^2/x$)<br/>- $\lim_{-\infty} f_2 = -\infty$<br/>- $x \to 1^+$: $f_2 \to -\infty$ (البسط $\to -1$, المقام $\to 0^+$)<br/>- $x \to 1^-$: $f_2 \to +\infty$</p><p><strong>جدول التغيرات:</strong><br/>| $x$ | $-\infty$ | $1$ | $+\infty$ |<br/>|-----|-----------|-----|------------|<br/>| $f'_2$ | $+$ | $\Vert$ | $+$ | |<br/>| $f_2$ | $-\infty$ | $\nearrow$ | $+\infty$ | $\Vert$ | $-\infty$ | $\nearrow$ | $+\infty$ |</p><p>$f_2$ تزايدية قطعاً على $]-\infty, 1[$ وعلى $]1, +\infty[$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>القسمة الإقليدية:</strong> $x^2 - 2 = (x - 1)(x + 1) - 1$</p><p>إذن: $f_2(x) = x + 1 + \frac{-1}{x - 1} = x + 1 - \frac{1}{x - 1}$</p><p><strong>المقاربة المائلة:</strong><br/>$$\lim_{x \to \pm\infty} [f_2(x) - (x + 1)] = \lim \frac{-1}{x - 1} = 0$$</p><p>إذن المستقيم $y = x + 1$ هو <strong>مقاربة مائلة</strong> لـ $f_2$ عند $\pm\infty$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>الجزء الثاني: الأعداد المركبة (8 نقاط)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>بالكتابة الأُسية:</strong> $8 = 8 \, e^{i \cdot 0 + 2ik\pi}$, إذن:<br/>- $r = 2$ (لأن $r^3 = 8$)<br/>- $3\theta = 2k\pi \implies \theta = \frac{2k\pi}{3}$, $k = 0, 1, 2$</p><p><strong>الحلول الثلاثة:</strong><br/>- $k = 0$: $z_0 = 2 \, e^{i \cdot 0} = 2$<br/>- $k = 1$: $z_1 = 2 \, e^{i2\pi/3} = 2\left(-\frac{1}{2} + i\frac{\sqrt{3}}{2}\right) = -1 + i\sqrt{3}$<br/>- $k = 2$: $z_2 = 2 \, e^{i4\pi/3} = 2\left(-\frac{1}{2} - i\frac{\sqrt{3}}{2}\right) = -1 - i\sqrt{3}$</p><p><strong>النتيجة:</strong> $S = \{2, -1 + i\sqrt{3}, -1 - i\sqrt{3}\}$ (جذور تكعيبية للوحدة × 2)</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0 نقطة</span></div>
+        <div class="q-body"><p><br/><strong>بطريقة مباشرة:</strong><br/>$$j = -\frac{1}{2} + i\frac{\sqrt{3}}{2}, \quad j^2 = e^{i4\pi/3} = -\frac{1}{2} - i\frac{\sqrt{3}}{2}$$</p><p>$$1 + j + j^2 = 1 + \left(-\frac{1}{2} + i\frac{\sqrt{3}}{2}\right) + \left(-\frac{1}{2} - i\frac{\sqrt{3}}{2}\right) = 1 - 1 + 0 = 0 \;\checkmark$$</p><p><strong>بطريقة أخرى:</strong> $z^3 - 1 = (z - 1)(z^2 + z + 1)$, إذن $j$ و $j^2$ جذرا $z^2 + z + 1 = 0$, ومجموعهما = $-1$ (فييتا).<br/>إذن $j + j^2 = -1 \implies 1 + j + j^2 = 0$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>
