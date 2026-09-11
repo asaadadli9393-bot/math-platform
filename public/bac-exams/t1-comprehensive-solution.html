@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الموضوع الشامل — الفصل الأول (الدوال + النهايات + الاشتقاقية + المتتاليات) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الموضوع الشامل — الفصل الأول (الدوال + النهايات + الاشتقاقية + المتتاليات)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> 3 ساعات</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — دراسة شاملة لدالة + مقارب مائل + مركز تناظر</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>عند $2^+$:</strong> $\lim x^2 + 1 = 5$, $\lim (x - 2) = 0^+$, إذن $\lim f = +\infty$.</p><p><strong>عند $2^-$:</strong> $\lim (x - 2) = 0^-$, إذن $\lim f = -\infty$.</p><p><strong>عند $\pm\infty$:</strong><br/>- نحسب $\frac{f(x)}{x} = \frac{x^2 + 1}{x(x - 2)} = \frac{x^2 + 1}{x^2 - 2x} \to 1$ (نسبة الحدود الأعلى)<br/>- إذن $f(x) - x = \frac{x^2 + 1 - x(x - 2)}{x - 2} = \frac{2x + 1}{x - 2} \to 2$<br/>- إذن $(\Delta): y = x + 2$ مقارب مائل<br/>- $\lim_{\pm\infty} f(x) = \pm\infty$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>المقاربات:</strong><br/>- $x = 2$ مقارب عمودي (نهايتان لا نهائيتان متعاكستان)<br/>- $y = x + 2$ مقارب مائل عند $+\infty$ و $-\infty$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الاشتقاق:</strong><br/>$$f'(x) = \frac{2x(x - 2) - (x^2 + 1)}{(x - 2)^2} = \frac{2x^2 - 4x - x^2 - 1}{(x - 2)^2} = \frac{x^2 - 4x - 1}{(x - 2)^2}$$</p><p><strong>جذور البسط:</strong> $x^2 - 4x - 1 = 0 \Rightarrow x = 2 \pm \sqrt{5}$<br/>- $\alpha_1 = 2 - \sqrt{5} \approx -0,24$<br/>- $\alpha_2 = 2 + \sqrt{5} \approx 4,24$</p><p><strong>إشارة $f'$:</strong> $(x-2)^2 > 0$ دائمًا, إذن إشارة $f'$ = إشارة $x^2 - 4x - 1$:<br/>- موجبة على $(-\infty, \alpha_1) \cup (\alpha_2, +\infty)$<br/>- سالبة على $(\alpha_1, 2) \cup (2, \alpha_2)$</p><p><strong>جدول التغيّرات:</strong><br/>- $f$ تزايد على $(-\infty, \alpha_1]$, تناقص على $[\alpha_1, 2)$, تناقص على $(2, \alpha_2]$, تزايد على $[\alpha_2, +\infty)$<br/>- عظمى محلية عند $\alpha_1$: $f(\alpha_1) \approx -1,24$<br/>- صغرى محلية عند $\alpha_2$: $f(\alpha_2) \approx 8,24$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الطريقة:</strong> نتحقق أنّ $\frac{f(2 + h) + f(2 - h)}{2} = 4$ لكل $h \neq 0$.</p><p>$$f(2 + h) = \frac{(2+h)^2 + 1}{h} = \frac{h^2 + 4h + 5}{h}$$<br/>$$f(2 - h) = \frac{(2-h)^2 + 1}{-h} = \frac{h^2 - 4h + 5}{-h} = \frac{-h^2 + 4h - 5}{h}$$</p><p>$$f(2+h) + f(2-h) = \frac{h^2 + 4h + 5 - h^2 + 4h - 5}{h} = \frac{8h}{h} = 8$$</p><p>إذن $\frac{f(2+h) + f(2-h)}{2} = 4$ ✓</p><p><strong>الخلاصة:</strong> $\Omega(2, 4)$ مركز تناظر.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>على $[3, 4]$: $f(x) - (x + 2) = \frac{2x + 1}{x - 2}$</p><p>بما أنّ $x \geq 3 > 2$, $\frac{2x + 1}{x - 2} > 0$, إذن $(\mathcal{C}_f)$ فوق $(\Delta)$ على $[3, 4]$.</p><p>$$\mathcal{S} = \int_3^4 \frac{2x + 1}{x - 2}\, dx$$</p><p>نحوّل: $\frac{2x + 1}{x - 2} = 2 + \frac{5}{x - 2}$ (قسمة مطوّلة)</p><p>$$\mathcal{S} = \int_3^4 \left(2 + \frac{5}{x - 2}\right)\, dx = [2x + 5 \ln|x - 2|]_3^4$$<br/>$$= (8 + 5 \ln 2) - (6 + 5 \ln 1) = 2 + 5 \ln 2$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = 2 + 5 \ln 2 \approx 5,47 \text{ unit}^2$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — متتالية عودية + متتالية مساعدة + برهنة بالتراجع</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الحسابات:</strong><br/>- $u_1 = \frac{3 \cdot 2 + 1}{2 + 3} = \frac{7}{5}$<br/>- $u_2 = \frac{3 \cdot \frac{7}{5} + 1}{\frac{7}{5} + 3} = \frac{\frac{21}{5} + \frac{5}{5}}{\frac{7}{5} + \frac{15}{5}} = \frac{\frac{26}{5}}{\frac{22}{5}} = \frac{26}{22} = \frac{13}{11}$<br/>- $u_3 = \frac{3 \cdot \frac{13}{11} + 1}{\frac{13}{11} + 3} = \frac{\frac{39}{11} + \frac{11}{11}}{\frac{13}{11} + \frac{33}{11}} = \frac{\frac{50}{11}}{\frac{46}{11}} = \frac{50}{46} = \frac{25}{23}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>التهيئة ($n = 1$):</strong> $u_1 = \frac{7}{5}$... لكن $\frac{7}{5} > 1$! </p><p>ملاحظة: $u_0 = 2$, $u_1 = 7/5 = 1,4$, $u_2 = 13/11 \approx 1,18$, $u_3 = 25/23 \approx 1,087$. المتتالية تقترب من 1 من فوق.</p><p>لِنُعدّل السؤال: برهن بالتراجع أنّ $1 < u_n \leq 2$ لكل $n \in \mathbb{N}$.</p><p><strong>التهيئة ($n = 0$):</strong> $u_0 = 2 \in (1, 2]$ ✓</p><p><strong>الفرضية:</strong> نفرض $1 < u_n \leq 2$.</p><p><strong>النتيجة ($n + 1$):</strong> ندرس $u_{n+1} = \frac{3u_n + 1}{u_n + 3}$.<br/>- <strong>إيجابية:</strong> $u_n > 0 \Rightarrow 3u_n + 1 > 0$ و $u_n + 3 > 0$, إذن $u_{n+1} > 0$ ✓<br/>- <strong>$u_{n+1} > 1$:</strong> <br/>$$u_{n+1} > 1 \iff 3u_n + 1 > u_n + 3 \iff 2u_n > 2 \iff u_n > 1$$ ✓<br/>- <strong>$u_{n+1} \leq 2$:</strong><br/>$$u_{n+1} \leq 2 \iff 3u_n + 1 \leq 2(u_n + 3) \iff 3u_n + 1 \leq 2u_n + 6 \iff u_n \leq 5$$ ✓</p><p>إذن $1 < u_{n+1} \leq 2$ ✓.</p><p><strong>الخلاصة:</strong> بالتراجع, $1 < u_n \leq 2$ لكل $n \in \mathbb{N}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$u_{n+1} - u_n = \frac{3u_n + 1 - u_n(u_n + 3)}{u_n + 3} = \frac{3u_n + 1 - u_n^2 - 3u_n}{u_n + 3} = \frac{1 - u_n^2}{u_n + 3} = \frac{(1 - u_n)(1 + u_n)}{u_n + 3}$$</p><p>من السؤال 2, $u_n > 1$:<br/>- $1 - u_n < 0$<br/>- $1 + u_n > 0$<br/>- $u_n + 3 > 0$<br/>- إذن $u_{n+1} - u_n < 0$</p><p><strong>النتيجة:</strong> $(u_n)$ <strong>متناقصة</strong>.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>التقارب:</strong><br/>- $(u_n)$ متناقصة (من السؤال 3)<br/>- محدودة سفلًا بـ 1 (من السؤال 2)<br/>- إذن متقاربة حسب مبرهنة الرتابة المحدودة</p><p><strong>حساب $\ell$:</strong><br/>نأخذ النهاية في $u_{n+1} = \frac{3u_n + 1}{u_n + 3}$:<br/>$$\ell = \frac{3\ell + 1}{\ell + 3} \Rightarrow \ell(\ell + 3) = 3\ell + 1 \Rightarrow \ell^2 + 3\ell = 3\ell + 1 \Rightarrow \ell^2 = 1$$<br/>$$\ell = \pm 1$$</p><p>بما أنّ $u_n > 1$, $\ell \geq 1$, إذن $\ell = 1$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) الطبيعة الهندسية:</strong><br/>$$v_{n+1} = \frac{u_{n+1} - 1}{u_{n+1} + 1} = \frac{\frac{3u_n + 1}{u_n + 3} - 1}{\frac{3u_n + 1}{u_n + 3} + 1} = \frac{3u_n + 1 - (u_n + 3)}{3u_n + 1 + (u_n + 3)} = \frac{2u_n - 2}{4u_n + 4} = \frac{2(u_n - 1)}{4(u_n + 1)} = \frac{1}{2} v_n$$</p><p>إذن $(v_n)$ متتالية هندسية أساسها $q = \frac{1}{2}$.</p><p>الحد الأول: $v_0 = \frac{u_0 - 1}{u_0 + 1} = \frac{2 - 1}{2 + 1} = \frac{1}{3}$.</p><p><strong>ب) الصيغ الصريحة:</strong><br/>$$v_n = v_0 \cdot q^n = \frac{1}{3} \cdot \left(\frac{1}{2}\right)^n = \frac{1}{3 \cdot 2^n}$$</p><p>من $v_n = \frac{u_n - 1}{u_n + 1}$, نحل:<br/>$$u_n = \frac{1 + v_n}{1 - v_n} = \frac{1 + \frac{1}{3 \cdot 2^n}}{1 - \frac{1}{3 \cdot 2^n}} = \frac{3 \cdot 2^n + 1}{3 \cdot 2^n - 1}$$</p><p><strong>ج) المجموع والنهاية:</strong><br/>$$\sum_{k=0}^n v_k = v_0 \cdot \frac{1 - q^{n+1}}{1 - q} = \frac{1}{3} \cdot \frac{1 - (1/2)^{n+1}}{1/2} = \frac{2}{3}\left(1 - \frac{1}{2^{n+1}}\right)$$</p><p><strong>النهاية:</strong> $\lim \sum v_k = \frac{2}{3}$ (لأن $(1/2)^{n+1} \to 0$).</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — نهايات + استمرارية + IVT + مبرهنة لاغرنج</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ)</strong> $\lim \frac{3x^2 - 5x + 1}{x^2 - 4x + 7} = \frac{3}{1} = 3$ (نسبة الحدود الأعلى)</p><p><strong>ب)</strong> عند $x = 2$: شكل غير معرّف $\frac{0}{0}$. نبسّط:<br/>$$\frac{x^3 - 8}{x^2 - 4} = \frac{(x - 2)(x^2 + 2x + 4)}{(x - 2)(x + 2)} = \frac{x^2 + 2x + 4}{x + 2}$$<br/>$$\lim_{x \to 2} = \frac{4 + 4 + 4}{4} = 3$$</p><p><strong>ج)</strong> بالضرب بالمرافق:<br/>$$\sqrt{x^2 + 3x} - x = \frac{(\sqrt{x^2+3x})^2 - x^2}{\sqrt{x^2+3x} + x} = \frac{3x}{\sqrt{x^2+3x} + x}$$<br/>$$= \frac{3}{\sqrt{1 + 3/x} + 1} \to \frac{3}{2}$$</p><p><strong>د)</strong> نستعمل $1 - \cos x = 2 \sin^2(x/2)$:<br/>$$\frac{1 - \cos x}{x^2} = \frac{2 \sin^2(x/2)}{x^2} = \frac{2}{4} \cdot \left(\frac{\sin(x/2)}{x/2}\right)^2 = \frac{1}{2} \cdot 1 = \frac{1}{2}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) قيمة $a$ للاتصال:</strong><br/>$$\lim_{x \to 0} \frac{\sin x}{x} = 1 \text{ (شهيرة)}$$</p><p>للاتصال: $g(0) = a = 1$, إذن $\boxed{a = 1}$.</p><p><strong>ب) القابلية للاشتقاق:</strong><br/>$$g'(0) = \lim_{x \to 0} \frac{g(x) - g(0)}{x - 0} = \lim_{x \to 0} \frac{\frac{\sin x}{x} - 1}{x} = \lim \frac{\sin x - x}{x^2}$$</p><p>باستعمال تaylor: $\sin x = x - x^3/6 + O(x^5)$, إذن $\sin x - x = -x^3/6 + O(x^5)$.<br/>$$\frac{\sin x - x}{x^2} = \frac{-x^3/6}{x^2} + O(x^3) = -\frac{x}{6} + O(x^3) \to 0$$</p><p>إذن $g'(0) = 0$ — $g$ قابلة للاشتقاق عند $0$ ✓.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الدراسة:</strong><br/>- $h'(x) = 3x^2 - 3 = 3(x^2 - 1) = 3(x - 1)(x + 1)$<br/>- النقاط الحرجة: $x = -1$ و $x = 1$<br/>- $h(-\infty) = -\infty$, $h(+\infty) = +\infty$<br/>- $h(-1) = -1 + 3 + 1 = 3$ (عظمى محلية)<br/>- $h(1) = 1 - 3 + 1 = -1$ (صغرى محلية)</p><p><strong>التطبيق (IVT على كل مجال):</strong><br/>- على $(-\infty, -1)$: $h$ تزايد من $-\infty$ إلى $3$, يقطع $0$ مرة واحدة → حل $\alpha_1 < -1$<br/>- على $(-1, 1)$: $h$ تناقص من $3$ إلى $-1$, يقطع $0$ مرة واحدة → حل $\alpha_2 \in (-1, 1)$<br/>- على $(1, +\infty)$: $h$ تزايد من $-1$ إلى $+\infty$, يقطع $0$ مرة واحدة → حل $\alpha_3 > 1$</p><p><strong>النتيجة:</strong> 3 حلول على $\mathbb{R}$ ✓.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>شروط لاغرنج:</strong><br/>- $\varphi$ متصلة على $[1, e]$ ✓<br/>- $\varphi$ قابلة للاشتقاق على $(1, e)$ ✓</p><p><strong>التطبيق:</strong><br/>$$\frac{\varphi(e) - \varphi(1)}{e - 1} = \varphi'(c)$$<br/>$$\frac{\ln e - \ln 1}{e - 1} = \frac{1}{c}$$<br/>$$\frac{1 - 0}{e - 1} = \frac{1}{c}$$<br/>$$c = e - 1 \approx 1,718$$</p><p>$c = e - 1 \in (1, e)$ ✓.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>نطبّق لاغرنج على $f(t) = \ln(t + 1)$ على $[0, x]$:<br/>- $f'(t) = \frac{1}{t + 1}$<br/>- يوجد $c \in (0, x)$ بحيث $\frac{f(x) - f(0)}{x - 0} = f'(c)$<br/>- $\frac{\ln(x+1) - 0}{x} = \frac{1}{c+1}$<br/>- $\ln(x+1) = \frac{x}{c+1}$</p><p><strong>الترتيب:</strong> $0 < c < x \Rightarrow 1 < c + 1 < x + 1 \Rightarrow \frac{1}{x+1} < \frac{1}{c+1} < 1$</p><p>$$\frac{x}{x+1} < \frac{x}{c+1} < x \Rightarrow \frac{x}{x+1} < \ln(x+1) < x$$ ✓</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — احتمالات + توزيع ذي الحدين + احتمال شرطي</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) عدد السحوبات:</strong> $\binom{10}{3} = 120$</p><p><strong>ب) $P(3 \text{حمراء})$:</strong><br/>- عدد الحالات المواتية: $\binom{4}{3} = 4$<br/>- $P = \frac{4}{120} = \frac{1}{30}$</p><p><strong>ج) $P(\text{نفس اللون}) = P(3 \text{حمراء}) + P(3 \text{بيضاء})$:</strong><br/>- $P(3 \text{بيضاء}) = \frac{\binom{6}{3}}{120} = \frac{20}{120} = \frac{1}{6}$<br/>- $P(\text{نفس اللون}) = \frac{1}{30} + \frac{1}{6} = \frac{1 + 5}{30} = \frac{6}{30} = \frac{1}{5}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>بالحادثة المضادة:</strong><br/>$$P(\geq 1 \text{حمراء}) = 1 - P(0 \text{حمراء}) = 1 - \frac{\binom{6}{3}}{120} = 1 - \frac{20}{120} = 1 - \frac{1}{6} = \frac{5}{6}$$</p><p>أي $\approx 83,3\%$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.75 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) النوع:</strong> $X \sim \mathcal{B}(3, 0.4)$ — توزيع ذي الحدين, $n = 3$, $p = 4/10 = 0.4$.</p><p><strong>ب) قانون التوزيع:</strong><br/>$$P(X = k) = \binom{3}{k} (0.4)^k (0.6)^{3-k}$$</p><p>| $k$ | 0 | 1 | 2 | 3 |<br/>|---|:---:|:---:|:---:|:---:|<br/>| $P(X = k)$ | $0.216$ | $0.432$ | $0.288$ | $0.064$ |</p><p>- $P(X = 0) = (0.6)^3 = 0.216$<br/>- $P(X = 1) = 3 \cdot 0.4 \cdot 0.36 = 0.432$<br/>- $P(X = 2) = 3 \cdot 0.16 \cdot 0.6 = 0.288$<br/>- $P(X = 3) = (0.4)^3 = 0.064$</p><p><strong>التحقق:</strong> $0.216 + 0.432 + 0.288 + 0.064 = 1$ ✓</p><p><strong>ج) الأمل والتباين:</strong><br/>- $E(X) = np = 3 \cdot 0.4 = 1.2$<br/>- $V(X) = np(1-p) = 3 \cdot 0.4 \cdot 0.6 = 0.72$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>$P(X \geq 2)$:</strong><br/>$$P(X \geq 2) = P(X = 2) + P(X = 3) = 0.288 + 0.064 = 0.352$$</p><p><strong>$P(X = 2 | X \geq 1)$:</strong><br/>$$P(X \geq 1) = 1 - P(X = 0) = 1 - 0.216 = 0.784$$<br/>$$P(X = 2 | X \geq 1) = \frac{P(X = 2)}{P(X \geq 1)} = \frac{0.288}{0.784} \approx 0.367$$</p><p>أي حوالي $36,7\%$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>ليكن $Y \sim \mathcal{B}(n, 0.4)$ عدد الكرات الحمراء في $n$ سحبة.</p><p>$$P(Y \geq 1) = 1 - (0.6)^n \geq 0.95$$<br/>$$(0.6)^n \leq 0.05$$<br/>$$n \ln 0.6 \leq \ln 0.05$$<br/>$$n \geq \frac{\ln 0.05}{\ln 0.6} \approx \frac{-2.996}{-0.511} \approx 5.86$$</p><p><strong>النتيجة:</strong> $n_{\min} = 6$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

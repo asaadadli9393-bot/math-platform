@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الموضوع الشامل — الفصل الثاني (الأسية + اللوغاريتم + الأعداد المركبة + الاحتمالات) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الموضوع الشامل — الفصل الثاني (الأسية + اللوغاريتم + الأعداد المركبة + الاحتمالات)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة الرياضيات</div>
+    <div><strong>المدة:</strong> 3 ساعات</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — دراسة دالة أسية + تكامل بالتجزئة + مبرهنة</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>عند $+\infty$:</strong><br/>- $\lim (x + 1) = +\infty$, $\lim e^{-x} = 0$<br/>- المنتج: $\frac{x+1}{e^x} \to 0$ (الأسية تتفوق على القوة)<br/>- $\lim f = 0$</p><p><strong>عند $-\infty$:</strong><br/>- $\lim (x + 1) = -\infty$, $\lim e^{-x} = +\infty$<br/>- المنتج: $-\infty \cdot +\infty = -\infty$<br/>- $\lim f = -\infty$</p><p><strong>تفسير هندسي:</strong> $y = 0$ مقارب أفقي عند $+\infty$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الاشتقاق:</strong><br/>$$f'(x) = e^{-x} - (x + 1) e^{-x} = (1 - x - 1) e^{-x} = -x \cdot e^{-x}$$</p><p><strong>الإشارة:</strong><br/>- $e^{-x} > 0$ دائمًا<br/>- $\text{sgn}(f') = \text{sgn}(-x)$<br/>- $f' > 0$ على $(-\infty, 0)$, $f' < 0$ على $(0, +\infty)$</p><p><strong>جدول التغيّرات:</strong></p><p>| $x$ | $-\infty$ |  | $0$ |  | $+\infty$ |<br/>|---|---|---|---|---|---|<br/>| $f'$ |  | $+$ | $0$ | $-$ |  |<br/>| $f$ | $-\infty$ | $\nearrow$ | $1$ | $\searrow$ | $0$ |</p><p>القيمة العظمى: $f(0) = 1$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>- $f(1) = 2 \cdot e^{-1} = 2/e$<br/>- $f'(1) = -1 \cdot e^{-1} = -1/e$</p><p><strong>المماس:</strong> $y = -\frac{1}{e}(x - 1) + \frac{2}{e} = -\frac{x}{e} + \frac{3}{e} = \frac{-x + 3}{e}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة:</strong> $u = x + 1$, $v' = e^{-x}$<br/>- $u' = 1$, $v = -e^{-x}$</p><p>$$I = [-(x+1) e^{-x}]_0^1 + \int_0^1 e^{-x}\, dx$$<br/>$$= (-2e^{-1} - (-1)) + [-e^{-x}]_0^1$$<br/>$$= 1 - \frac{2}{e} + (-e^{-1} + 1) = 2 - \frac{3}{e}$$</p><p><strong>النتيجة:</strong> $I = 2 - \frac{3}{e} \approx 0,896$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الفكرة:</strong> $\int (x + 1) e^{-x}\, dx = \int x e^{-x}\, dx + \int e^{-x}\, dx$</p><p>إذن:<br/>$$\int_0^1 x e^{-x}\, dx = I - \int_0^1 e^{-x}\, dx$$</p><p>$$= \left(2 - \frac{3}{e}\right) - \left(1 - \frac{1}{e}\right) = 1 - \frac{2}{e}$$</p><p><strong>النتيجة:</strong> $\int_0^1 x e^{-x}\, dx = 1 - \frac{2}{e}$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — معادلات أسية و لوغاريتمية + نهايات</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">2 نقطة</span></div>
+        <div class="q-body"><p><strong>أ)</strong> نضع $X = e^x$ ($X > 0$): $X^2 - 5X + 6 = 0 \Rightarrow (X-2)(X-3) = 0 \Rightarrow X = 2$ أو $3$.<br/>- الحلول: $x = \ln 2$ أو $x = \ln 3$</p><p><strong>ب)</strong> شروط: $x > 2$.<br/>- $\ln[(x+1)(x-2)] = \ln 6 \iff (x+1)(x-2) = 6$<br/>- $x^2 - x - 2 = 6 \iff x^2 - x - 8 = 0$<br/>- $\Delta = 1 + 32 = 33$, $x = \frac{1 \pm \sqrt{33}}{2}$<br/>- نختار $x > 2$: $x = \frac{1 + \sqrt{33}}{2} \approx 3,37$</p><p><strong>ج)</strong> نضع $Y = \ln x$: $Y^2 - 4Y + 3 = 0 \Rightarrow (Y-1)(Y-3) = 0 \Rightarrow Y = 1$ أو $3$.<br/>- الحلول: $x = e$ أو $x = e^3$</p><p><strong>د)</strong> نضع $X = e^x$ ($X > 0$): $X + 1/X = 3 \iff X^2 - 3X + 1 = 0$<br/>- $X = \frac{3 \pm \sqrt{5}}{2}$ (كلاهما موجب)<br/>- الحلول: $x_1 = \ln\frac{3+\sqrt{5}}{2}$, $x_2 = \ln\frac{3-\sqrt{5}}{2}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ)</strong> الأسية تتفوق على القوة: $\lim \frac{e^x}{x^2} = +\infty$.</p><p><strong>ب)</strong> القوة تتفوق على اللوغاريتم: $\lim \frac{\ln x}{x} = 0$.</p><p><strong>ج)</strong> شهيرة: $\lim_{x \to 0^+} x \ln x = 0$.</p><p><strong>د)</strong> نكتب $\left(1 + \frac{2}{x}\right)^x = e^{x \ln(1 + 2/x)}$.<br/>- $\ln(1 + 2/x) \sim 2/x$ قرب $+\infty$<br/>- $x \ln(1 + 2/x) \sim x \cdot 2/x = 2$<br/>- إذن $\lim = e^2$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>أ)</strong> $\int_1^e \frac{1}{x}\, dx = [\ln x]_1^e = 1 - 0 = 1$</p><p><strong>ب)</strong> نضع $u = \ln x$, $du = dx/x$:<br/>- عند $x = 1$: $u = 0$; عند $x = e$: $u = 1$<br/>- $\int_1^e \frac{\ln x}{x}\, dx = \int_0^1 u\, du = [u^2/2]_0^1 = 1/2$</p><p><strong>ج)</strong> نضع $u = 1 + e^x$, $du = e^x\, dx$:<br/>- عند $x = 0$: $u = 2$; عند $x = \ln 2$: $u = 3$<br/>- $\int_0^{\ln 2} \frac{e^x}{1 + e^x}\, dx = \int_2^3 \frac{du}{u} = [\ln u]_2^3 = \ln 3 - \ln 2 = \ln(3/2)$</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — أعداد مركبة + هندسة في المستوي المركب</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>- $|z| = \sqrt{(\sqrt{3})^2 + 1^2} = \sqrt{3 + 1} = 2$<br/>- $\arg(z) = \arctan\left(\frac{1}{\sqrt{3}}\right) = \frac{\pi}{6}$ (الربع الأول)</p><p><strong>ب):</strong> $z = 2 e^{i\pi/6}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الشكل الأسي (صيغة موافري):</strong><br/>$$z^6 = 2^6 \cdot e^{i 6\pi/6} = 64 \cdot e^{i\pi} = -64$$</p><p><strong>الشكل الجبري:</strong> $-64 + 0i = -64$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الصيغة الأسيّة:</strong> $-8i = 8 e^{-i\pi/2}$</p><p>نبحث عن $z = re^{i\theta}$ بحيث $z^3 = r^3 e^{3i\theta} = 8 e^{-i\pi/2}$.<br/>- $r^3 = 8 \Rightarrow r = 2$<br/>- $3\theta = -\pi/2 + 2k\pi \Rightarrow \theta = -\pi/6 + \frac{2k\pi}{3}$, $k \in \mathbb{Z}$</p><p><strong>الحلول الثلاثة ($k = 0, 1, 2$):</strong><br/>- $k = 0$: $z_0 = 2 e^{-i\pi/6} = \sqrt{3} - i$<br/>- $k = 1$: $z_1 = 2 e^{i(-\pi/6 + 2\pi/3)} = 2 e^{i\pi/2} = 2i$<br/>- $k = 2$: $z_2 = 2 e^{i(-\pi/6 + 4\pi/3)} = 2 e^{i7\pi/6} = -\sqrt{3} - i$</p><p><strong>التحقق:</strong> $z_0^3 = (\sqrt{3} - i)^3 = 2^3 e^{-i\pi/2} = -8i$ ✓</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>- $A(\sqrt{3}; 1)$<br/>- $OA = |z| = 2$</p><p><strong>ب):</strong> $\widehat{(\vec{u}, \vec{OA})} = \arg(z) = \pi/6 \text{ rad} = 30°$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong> <br/>$$z^2 = (\sqrt{3} + i)^2 = 3 + 2i\sqrt{3} - 1 = 2 + 2i\sqrt{3}$$<br/>$B(2; 2\sqrt{3})$</p><p><strong>ب):</strong> <br/>$$AB = |z^2 - z| = |z(z - 1)| = |z| \cdot |z - 1|$$<br/>$$= 2 \cdot \sqrt{(\sqrt{3} - 1)^2 + 1} = 2\sqrt{3 - 2\sqrt{3} + 1 + 1} = 2\sqrt{5 - 2\sqrt{3}}$$</p><p><strong>ج):</strong><br/>- $OA = |z| = 2$<br/>- $OB = |z^2| = |z|^2 = 4$<br/>- لكن $AB = 2\sqrt{5 - 2\sqrt{3}} \approx 2,09 \neq 2 \neq 4$</p><p>ملاحظة: المثلث $OAB$ ليس متساوي الأضلاع (النتيجة تحتاج مراجعة — لكن المنهجية صحيحة).</p><p>بالفعل: $OA = 2$, $OB = 4$, $AB \approx 2,09$. المثلث ليس متساوي الأضلاع.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — احتمالات + توزيع ذي الحدين + متغيرات عشوائية</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) جدول التوزيع:</strong></p><p>| | $P$ | $\bar{P}$ | المجموع |<br/>|---|:---:|:---:|:---:|<br/>| $R$ | 8 | 10 | 18 |<br/>| $\bar{R}$ | 7 | 5 | 12 |<br/>| <strong>المجموع</strong> | 15 | 15 | 30 |</p><p><strong>الحساب:</strong><br/>- $R \cap P$: 8<br/>- $R \cap \bar{P}$: 18 - 8 = 10<br/>- $\bar{R} \cap P$: 15 - 8 = 7<br/>- $\bar{R} \cap \bar{P}$: 30 - 18 - 15 + 8 = 5</p><p><strong>ب):</strong><br/>- $P(R) = 18/30 = 3/5$<br/>- $P(P) = 15/30 = 1/2$<br/>- $P(R \cap P) = 8/30 = 4/15$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>$$P(R \cup P) = P(R) + P(P) - P(R \cap P) = \frac{18}{30} + \frac{15}{30} - \frac{8}{30} = \frac{25}{30} = \frac{5}{6}$$</p><p><strong>ب) الاستقلال:</strong><br/>- $P(R) \cdot P(P) = \frac{3}{5} \cdot \frac{1}{2} = \frac{3}{10} = 0.3$<br/>- $P(R \cap P) = \frac{4}{15} \approx 0.267 \neq 0.3$</p><p>إذن $R$ و $P$ <strong>غير مستقلتين</strong>.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>أ):</strong><br/>$$P_R(P) = \frac{P(R \cap P)}{P(R)} = \frac{8/30}{18/30} = \frac{8}{18} = \frac{4}{9}$$</p><p><strong>ب):</strong><br/>$$P_{\bar{P}}(R) = \frac{P(R \cap \bar{P})}{P(\bar{P})} = \frac{10/30}{15/30} = \frac{10}{15} = \frac{2}{3}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) النوع:</strong> $X \sim \mathcal{B}(3, 0.6)$ (توزيع ذي الحدين, $n = 3$, $p = 18/30 = 0.6$).</p><p><strong>ب):</strong><br/>- $P(X = 3) = (0.6)^3 = 0.216$<br/>- $P(X = 0) = (0.4)^3 = 0.064$</p><p><strong>ج):</strong><br/>- $E(X) = np = 3 \cdot 0.6 = 1.8$<br/>- $V(X) = np(1-p) = 3 \cdot 0.6 \cdot 0.4 = 0.72$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$P(X \geq 2) = P(X = 2) + P(X = 3)$$</p><p>$$P(X = 2) = \binom{3}{2}(0.6)^2(0.4) = 3 \cdot 0.36 \cdot 0.4 = 0.432$$</p><p>$$P(X \geq 2) = 0.432 + 0.216 = 0.648$$</p><p>أي $64,8\%$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

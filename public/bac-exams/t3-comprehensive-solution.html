@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الموضوع الشامل — الفصل الثالث (التكامل + المعادلات التفاضلية + هندسة الفضاء + الحساب) — الحل النموذجي</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:10px;background:#f8f9fa;border-right:3px solid #444;border-radius:3px;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{background:#fff3a3;padding:1px 4px;border-radius:2px}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">✅ الحل النموذجي — الموضوع الشامل — الفصل الثالث (التكامل + المعادلات التفاضلية + هندسة الفضاء + الحساب)</div>
+  <div class="subtitle">الحل النموذجي الرسمي المفصّل — الأستاذ عدلي أسعد</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة الرياضيات</div>
+    <div><strong>المدة:</strong> 3 ساعات</div>
+  </div>
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — تكاليل (بالتجزئة + تغيير متغير + مساحة)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التجزئة (مرة 1):</strong> $u = x^2$, $v' = e^{-x}$, $u' = 2x$, $v = -e^{-x}$</p><p>$$I = [-x^2 e^{-x}]_0^1 + 2 \int_0^1 x e^{-x}\, dx = -e^{-1} + 2 J$$</p><p>حيث $J = \int_0^1 x e^{-x}\, dx$.</p><p><strong>التجزئة (مرة 2):</strong> $u = x$, $v' = e^{-x}$<br/>$$J = [-x e^{-x}]_0^1 + \int_0^1 e^{-x}\, dx = -e^{-1} + (1 - e^{-1}) = 1 - \frac{2}{e}$$</p><p><strong>النتيجة:</strong><br/>$$I = -\frac{1}{e} + 2\left(1 - \frac{2}{e}\right) = 2 - \frac{5}{e}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير المتغير:</strong> $u = 1 + e^x$, $du = e^x\, dx$<br/>- عند $x = 0$: $u = 2$<br/>- عند $x = \ln 2$: $u = 3$</p><p>$$K = \int_2^3 \frac{du}{u} = [\ln u]_2^3 = \ln 3 - \ln 2 = \ln\frac{3}{2}$$</p><p><strong>النتيجة:</strong> $K = \ln\frac{3}{2}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>تغيير:</strong> $u = \cos x$, $du = -\sin x\, dx$<br/>- $\sin^2 x = 1 - \cos^2 x = 1 - u^2$<br/>- عند $x = 0$: $u = 1$; عند $x = \pi/2$: $u = 0$</p><p>$$L = \int_0^{\pi/2} \sin x (1 - \cos^2 x)\, dx = -\int_1^0 (1 - u^2)\, du = \int_0^1 (1 - u^2)\, du$$<br/>$$= \left[u - \frac{u^3}{3}\right]_0^1 = 1 - \frac{1}{3} = \frac{2}{3}$$</p><p><strong>النتيجة:</strong> $L = 2/3$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong> على $[0, 2]$, $f(x) = x^2 \geq 0$.</p><p>$$\mathcal{S} = \int_0^2 x^2\, dx = \left[\frac{x^3}{3}\right]_0^2 = \frac{8}{3}$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = 8/3 \text{ unit}^2$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>الفكرة:</strong> على $[0, 1]$, $x \geq x^2$ (لأن $0 \leq x \leq 1 \Rightarrow x^2 \leq x$).</p><p>$$\mathcal{S} = \int_0^1 (x - x^2)\, dx = \left[\frac{x^2}{2} - \frac{x^3}{3}\right]_0^1 = \frac{1}{2} - \frac{1}{3} = \frac{1}{6}$$</p><p><strong>النتيجة:</strong> $\mathcal{S} = 1/6 \text{ unit}^2$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — معادلة تفاضلية + حل بالشرط الإبتدائي</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>المعادلة الموافقة:</strong> $y' = -2y$ (درجة 1, معامل ثابت)</p><p><strong>الحل العام:</strong> $y(x) = C e^{-2x}$, $C \in \mathbb{R}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">2 نقطة</span></div>
+        <div class="q-body"><p><strong>نضع $y(x) = C(x) e^{-2x}$:</strong><br/>- $y'(x) = C'(x) e^{-2x} - 2 C(x) e^{-2x}$</p><p><strong>التعويض في $(E')$:</strong><br/>$$C'(x) e^{-2x} - 2 C(x) e^{-2x} + 2 C(x) e^{-2x} = e^{-x}$$<br/>$$C'(x) e^{-2x} = e^{-x}$$<br/>$$C'(x) = e^{x}$$<br/>$$C(x) = e^{x} + K, \quad K \in \mathbb{R}$$</p><p><strong>الحل العام:</strong><br/>$$y(x) = (e^x + K) e^{-2x} = e^{-x} + K e^{-2x}$$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>تطبيق الشرط:</strong><br/>- $f(0) = e^0 + K = 1 + K = 2$<br/>- إذن $K = 1$</p><p><strong>الحل الوحيد:</strong> $f(x) = e^{-x} + e^{-2x}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>النهاية:</strong><br/>- $e^{-x} \to 0$, $e^{-2x} \to 0$ عند $+\infty$<br/>- إذن $\lim f = 0$</p><p><strong>الإيجابية:</strong> $e^{-x} > 0$ و $e^{-2x} > 0$ على $\mathbb{R}$, إذن $f(x) > 0$ على $\mathbb{R}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\int_0^1 (e^{-x} + e^{-2x})\, dx = \int_0^1 e^{-x}\, dx + \int_0^1 e^{-2x}\, dx$$<br/>$$= [-e^{-x}]_0^1 + \left[-\frac{e^{-2x}}{2}\right]_0^1$$<br/>$$= (-e^{-1} + 1) + \left(-\frac{e^{-2}}{2} + \frac{1}{2}\right)$$<br/>$$= \frac{3}{2} - \frac{1}{e} - \frac{1}{2e^2}$$</p><p><strong>النتيجة:</strong> $\frac{3}{2} - \frac{1}{e} - \frac{1}{2e^2}$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — هندسة في الفضاء (جداء سلمي/شعاعي + مستوي + مسافة)</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>الإحداثيات:</strong><br/>- $\vec{AB} = (2-1; -1-2; 1-3) = (1; -3; -2)$<br/>- $\vec{AC} = (3-1; 0-2; -1-3) = (2; -2; -4)$<br/>- $\vec{AD} = (0-1; 1-2; 4-3) = (-1; -1; 1)$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>$\vec{AB} \cdot \vec{AC}$:</strong><br/>$$(1)(2) + (-3)(-2) + (-2)(-4) = 2 + 6 + 8 = 16$$</p><p><strong>$\vec{AB} \cdot \vec{AD}$:</strong><br/>$$(1)(-1) + (-3)(-1) + (-2)(1) = -1 + 3 - 2 = 0$$</p><p><strong>ملاحظة:</strong> $\vec{AB} \perp \vec{AD}$ (الجداء السلمي = 0).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>الحساب:</strong><br/>$$\vec{AB} \wedge \vec{AC} = \begin{vmatrix} \vec{i} & \vec{j} & \vec{k} \\ 1 & -3 & -2 \\ 2 & -2 & -4 \end{vmatrix}$$</p><p>$$= \vec{i}((-3)(-4) - (-2)(-2)) - \vec{j}((1)(-4) - (-2)(2)) + \vec{k}((1)(-2) - (-3)(2))$$<br/>$$= \vec{i}(12 - 4) - \vec{j}(-4 + 4) + \vec{k}(-2 + 6)$$<br/>$$= 8\vec{i} - 0\vec{j} + 4\vec{k} = (8; 0; 4)$$</p><p>(أو مبسّط: $(2; 0; 1)$ بضرب في $1/4$.)</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>المتجه العادي للمستوي $(ABC)$:</strong> $\vec{n} = \vec{AB} \wedge \vec{AC} = (8; 0; 4)$ (أو $(2; 0; 1)$ مبسّط).</p><p><strong>المعادلة:</strong> $2x + z + d = 0$ (نستعمل المتجه المبسّط)</p><p>بـ $A(1; 2; 3)$: $2(1) + 3 + d = 0 \Rightarrow d = -5$</p><p><strong>معادلة المستوي:</strong> $\boxed{2x + z - 5 = 0}$</p><p><strong>التحقق:</strong> <br/>- $B(2; -1; 1)$: $2(2) + 1 - 5 = 0$ ✓<br/>- $C(3; 0; -1)$: $2(3) + (-1) - 5 = 0$ ✓</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>أ) المسافة من $D(0; 1; 4)$:</strong><br/>$$d(D, (ABC)) = \frac{|2 \cdot 0 + 1 \cdot 4 - 5|}{\sqrt{4 + 0 + 1}} = \frac{|-1|}{\sqrt{5}} = \frac{1}{\sqrt{5}} = \frac{\sqrt{5}}{5}$$</p><p><strong>ب) الجداء المختلط:</strong><br/>$$[\vec{AB}, \vec{AC}, \vec{AD}] = (\vec{AB} \wedge \vec{AC}) \cdot \vec{AD} = (8; 0; 4) \cdot (-1; -1; 1) = -8 + 0 + 4 = -4$$</p><p>(باستعمال المتجه المبسّط $(2; 0; 1)$: النتيجة $= -1$، و الحجم $\frac{|-1|}{6/4} = \frac{2}{3}$.)</p><p>بالأحرى مع $(8, 0, 4)$: $V = \frac{|-4|}{6} = \frac{2}{3}$.</p><p><strong>حجم الرباعي $ABCD$:</strong> $V = \frac{2}{3}$ وحدة حجم.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — حساب و قابلية القسمة + نظرية فيرما</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>التهيئة ($n = 1$):</strong><br/>$3^3 + 2^3 = 27 + 8 = 35 = 5 \times 7$ ✓ (35 قابل للقسمة على 7)</p><p><strong>الفرضية:</strong> نفرض أنّ $7 | (3^{2n+1} + 2^{n+2})$ لـ $n$ معيّن.</p><p><strong>النتيجة ($n + 1$):</strong> نحسب $3^{2(n+1)+1} + 2^{(n+1)+2} = 3^{2n+3} + 2^{n+3}$.</p><p>نلاحظ:<br/>$$3^{2n+3} = 9 \cdot 3^{2n+1}, \quad 2^{n+3} = 2 \cdot 2^{n+2}$$</p><p>إذن:<br/>$$3^{2n+3} + 2^{n+3} = 9 \cdot 3^{2n+1} + 2 \cdot 2^{n+2}$$</p><p>نضيف و نطرح:<br/>$$= 9(3^{2n+1} + 2^{n+2}) - 9 \cdot 2^{n+2} + 2 \cdot 2^{n+2}$$<br/>$$= 9(3^{2n+1} + 2^{n+2}) - 7 \cdot 2^{n+2}$$</p><p>بما أنّ $7 | (3^{2n+1} + 2^{n+2})$ (فرضية) و $7 | 7 \cdot 2^{n+2}$, إذن $7 | (3^{2n+3} + 2^{n+3})$ ✓.</p><p><strong>الخلاصة:</strong> بالتراجع, $7 | (3^{2n+1} + 2^{n+2})$ لكل $n \geq 1$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p><strong>نظرية فيرما الصغرية:</strong> إذا $p$ أولي و $\gcd(a, p) = 1$, فإن $a^{p-1} \equiv 1 \pmod{p}$.</p><p>- $p = 7$ (أولي), $a = 2$ ($\gcd(2, 7) = 1$)<br/>- إذن $2^6 \equiv 1 \pmod{7}$</p><p><strong>تفكيك $2^{2024}$:</strong><br/>- $2024 = 6 \times 337 + 2$<br/>- $2^{2024} = (2^6)^{337} \cdot 2^2 = 1^{337} \cdot 4 = 4$</p><p>(لأن $2^6 \equiv 1 \pmod 7 \Rightarrow (2^6)^{337} \equiv 1 \pmod 7$, و $2^2 = 4$.)</p><p><strong>النتيجة:</strong> باقي قسمة $2^{2024}$ على 7 هو $\boxed{4}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p><strong>خوارزمية إقليدس:</strong><br/>- $84 = 2 \times 30 + 24$<br/>- $30 = 1 \times 24 + 6$<br/>- $24 = 4 \times 6 + 0$</p><p><strong>النتيجة:</strong> $\gcd(84, 30) = 6$.</p><p><strong>نظرية بيزو:</strong> نرجع backwards:<br/>- من $30 = 1 \times 24 + 6$: $6 = 30 - 1 \times 24$<br/>- من $84 = 2 \times 30 + 24$: $24 = 84 - 2 \times 30$<br/>- نعوّض: $6 = 30 - 1 \times (84 - 2 \times 30) = 30 - 84 + 2 \times 30 = 3 \times 30 - 84$</p><p>أي: $6 = (-1) \times 84 + 3 \times 30$</p><p><strong>النتيجة:</strong> $u = -1$, $v = 3$ ✓ (تحقق: $-84 + 90 = 6$ ✓).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p><strong>البرهنة:</strong></p><p>نضع $a = da'$ و $b = db'$, حيث $\gcd(a', b')$ هو المطلوب إيجاده.</p><p>نفرض أنّ $\gcd(a', b') = d' > 1$, أي $d' | a'$ و $d' | b'$.</p><p>إذن $d \cdot d' | d \cdot a' = a$ و $d \cdot d' | d \cdot b' = b$.</p><p>إذن $d \cdot d'$ قاسم مشترك لـ $a$ و $b$. لكن $d \cdot d' > d$ (لأن $d' > 1$).</p><p>هذا يتناقض مع كون $d = \gcd(a, b)$ هو <strong>أكبر</strong> قاسم مشترك.</p><p>إذن $d' = 1$, أي $\gcd\left(\frac{a}{d}, \frac{b}{d}\right) = 1$ ✓.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p><strong>نظرية فيرما:</strong> $5^6 \equiv 1 \pmod{7}$.</p><p><strong>تفكيك:</strong><br/>- $2025 = 6 \times 337 + 3$<br/>- $5^{2025} = (5^6)^{337} \cdot 5^3 = 1^{337} \cdot 125$</p><p>نختزل $125 \pmod 7$:<br/>- $125 = 17 \times 7 + 6$<br/>- $125 \equiv 6 \pmod 7$</p><p><strong>النتيجة:</strong> باقي قسمة $5^{2025}$ على 7 هو $\boxed{6}$.</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

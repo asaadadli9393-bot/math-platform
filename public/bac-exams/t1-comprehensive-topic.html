@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الموضوع الشامل — الفصل الأول (الدوال + النهايات + الاشتقاقية + المتتاليات) — الموضوع</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:1.8cm 1.5cm 2cm 1.5cm}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#ffffff}
+body{font-family:'Cairo','Amiri',Tahoma,Arial,sans-serif;direction:rtl;color:#000;line-height:1.85;font-size:13px;max-width:210mm;margin:0 auto;padding:0}
+.header{border:2px solid #000;padding:10px 14px;margin-bottom:18px;text-align:center;font-size:12px}
+.header .title{font-size:16px;font-weight:900;margin-bottom:4px}
+.header .subtitle{font-size:11px;color:#444;margin-bottom:6px}
+.header .meta{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11px}
+.header .meta div{padding:2px 8px;border:1px solid #999;border-radius:3px}
+.warn{background:#fff8e1;border:1px solid #f5c842;padding:8px 12px;margin-bottom:18px;text-align:center;font-size:11px;border-radius:4px}
+.part{margin-bottom:24px;page-break-inside:avoid}
+.part h3{font-size:14px;font-weight:700;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:12px;text-align:right}
+.q{margin:10px 0;padding:8px 0;border-bottom:1px dashed #ccc;page-break-inside:avoid}
+.q-head{font-weight:700;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.q-head .pts{font-size:11px;background:#e8e8e8;padding:2px 8px;border-radius:3px;border:1px solid #999}
+.q-body{font-size:13px;line-height:1.9;padding-right:14px}
+.q-body strong{color:#000}
+.footer{margin-top:30px;padding-top:8px;border-top:1px solid #999;text-align:center;font-size:10px;color:#666}
+.katex{font-size:1.0em}
+.katex-display{margin:8px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">الموضوع الشامل — الفصل الأول (الدوال + النهايات + الاشتقاقية + المتتاليات)</div>
+  <div class="subtitle">الأستاذ عدلي أسعد — منصة الرياضيات</div>
+  <div class="meta">
+    <div><strong>السنة:</strong> 2027</div>
+    <div><strong>الشعبة:</strong> شعبة العلوم التجريبية</div>
+    <div><strong>المدة:</strong> 3 ساعات</div>
+    <div><strong>المعامل:</strong> 5</div>
+    <div><strong>المجموع:</strong> 20/20</div>
+  </div>
+</div>
+<div class="warn">
+  ⚠️ يُمنع استعمال الآلة الحاسبة في بعض المواضيع. اقرأ التعليمات بعناية. ساعة الرسم المعتمدة هي CTM-991ES.
+</div>
+
+      <div class="part">
+        <h3>التمرين الأول (5 نقاط) — دراسة شاملة لدالة + مقارب مائل + مركز تناظر</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p>لتكن $f$ الدالة المعرفة على $\mathbb{R} \setminus \{2\}$ بـ: $f(x) = \frac{x^2 + 1}{x - 2}$.</p><p>أحسب النهايات التالية: $\lim_{x \to 2^+} f(x)$, $\lim_{x \to 2^-} f(x)$, $\lim_{x \to +\infty} f(x)$, و $\lim_{x \to -\infty} f(x)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>استنتج وجود مقاربات لمنحنى $(\mathcal{C}_f)$ و عيّنها.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p>أحسب $f'(x)$, أدرس إشارها, ثم أنشئ جدول تغيّرات $f$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p>بيّن أنّ $\Omega(2, 4)$ (تقاطع المقاربتين) مركز تناظر لـ $(\mathcal{C}_f)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p>أحسب المساحة المحصورة بين $(\mathcal{C}_f)$ و المقارب المائل $y = x + 2$ على $[3, 4]$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثاني (5 نقاط) — متتالية عودية + متتالية مساعدة + برهنة بالتراجع</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>لتكن $(u_n)$ المتتالية المعرفة على $\mathbb{N}$ بـ: $u_0 = 2$ و $u_{n+1} = \frac{3u_n + 1}{u_n + 3}$ لكل $n \in \mathbb{N}$.</p><p>احسب $u_1, u_2, u_3$ (إعطِ الكسور المختصرة).</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p>برهن بالتراجع أنّ $0 < u_n < 1$ لكل $n \in \mathbb{N}^*$.</p><p>*(ملاحظة: $u_0 = 2$ لا ينطبق عليه الشرط, لذا نبدأ التراجع من $n = 1$.)*</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p>أدرس رتابة المتتالية $(u_n)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p>بيّن أنّ $(u_n)$ متقاربة, ثم أحسب نهايتها $\ell$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p>لتكن $(v_n)$ المتتالية المعرفة بـ: $v_n = \frac{u_n - 1}{u_n + 1}$.</p><p>أ) بيّن أنّ $(v_n)$ متتالية هندسية, حدد أساسها $q$.<br/>ب) اكتب $v_n$ و $u_n$ بدلالة $n$.<br/>ج) احسب $\sum_{k=0}^n v_k$ ثم $\lim_{n \to +\infty} \sum_{k=0}^n v_k$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الثالث (5 نقاط) — نهايات + استمرارية + IVT + مبرهنة لاغرنج</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p>احسب النهايات التالية (مع التعليل بإيجاد الطريقة):</p><p>أ) $\lim_{x \to +\infty} \frac{3x^2 - 5x + 1}{x^2 - 4x + 7}$<br/>ب) $\lim_{x \to 2} \frac{x^3 - 8}{x^2 - 4}$<br/>ج) $\lim_{x \to +\infty} \sqrt{x^2 + 3x} - x$<br/>د) $\lim_{x \to 0} \frac{1 - \cos x}{x^2}$</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">1.5 نقطة</span></div>
+        <div class="q-body"><p>لتكن $g$ الدالة المعرفة على $\mathbb{R}$ بـ: $g(x) = \begin{cases} \frac{\sin x}{x} & \text{إذا } x \neq 0 \\ a & \text{إذا } x = 0 \end{cases}$</p><p>أ) ما قيمة $a$ بحيث تكون $g$ متصلة عند $0$؟<br/>ب) هل $g$ قابلة للاشتقاق عند $0$؟</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1 نقطة</span></div>
+        <div class="q-body"><p>لتكن $h(x) = x^3 - 3x + 1$ على $[0, 2]$. بيّن أنّ المعادلة $h(x) = 0$ يقبل 3 حلول على $\mathbb{R}$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>لتكن $\varphi(x) = \ln x$ على $[1, e]$. طبّق مبرهنة لاغرنج لإيجاد $c \in (1, e)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>استعمل مبرهنة لاغرنج لإثبات أنّ: $\forall x > 0: \frac{x}{x + 1} < \ln(x + 1) < x$.</p></div>
+      </div>
+      </div>
+    
+      <div class="part">
+        <h3>التمرين الرابع (5 نقاط) — احتمالات + توزيع ذي الحدين + احتمال شرطي</h3>
+        <div class="q">
+        <div class="q-head">السؤال 1) <span class="pts">1.25 نقطة</span></div>
+        <div class="q-body"><p>في صندوق 4 كرات حمراء مرقّمة من 1 إلى 4, و 6 كرات بيضاء مرقّمة من 1 إلى 6. نسحب 3 كرات دفعة واحدة.</p><p>أ) كم عدد السحوبات الممكنة؟<br/>ب) احسب احتمال الحصول على 3 كرات حمراء.<br/>ج) احسب احتمال الحصول على 3 كرات من نفس اللون.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 2) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p>احسب احتمال الحصول على كرة حمراء واحدة على الأقل.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 3) <span class="pts">1.75 نقطة</span></div>
+        <div class="q-body"><p>نُعيد الكرة بعد كل سحب (3 سحوبات مستقلة). لتكن $X$ المتغيرة العشوائية "عدد الكرات الحمراء المسحوبة".</p><p>أ) ما نوع توزيع $X$؟ حدد بارامتراته.<br/>ب) احسب $P(X = 0)$, $P(X = 1)$, $P(X = 2)$, و $P(X = 3)$.<br/>ج) احسب الأمل الرياضي $E(X)$ و التباين $V(X)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 4) <span class="pts">0.75 نقطة</span></div>
+        <div class="q-body"><p>احسب $P(X \geq 2)$ ثم $P(X = 2 | X \geq 1)$.</p></div>
+      </div><div class="q">
+        <div class="q-head">السؤال 5) <span class="pts">0.5 نقطة</span></div>
+        <div class="q-body"><p>ما أصغر $n$ بحيث, بسحب $n$ كرة مع إعادة, يكون احتمال الحصول على كرة حمراء واحدة على الأقل $\geq 0.95$؟</p></div>
+      </div>
+      </div>
+    
+<div class="footer">
+  منصة الرياضيات — الأستاذ عدلي أسعد | asaadadli9393@gmail.com | الجزائر 🇩🇿
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>
