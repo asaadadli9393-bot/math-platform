@@ -18,7 +18,8 @@ const { bacExamsExtra } = require("../src/data/bac-exams-extra.ts");
 const { bacExamsComplete } = require("../src/data/bac-exams-complete.ts");
 const { trimesterExamsBacFormat } = require("../src/data/trimester-exams-bac-format.ts");
 const { trimesterExamsComprehensive } = require("../src/data/trimester-exams-comprehensive.ts");
-const allBacExams = [...bacExams, ...bacExamsExtra, ...bacExamsComplete, ...trimesterExamsBacFormat, ...trimesterExamsComprehensive];
+const { bacExamsForeignComprehensive } = require("../src/data/bac-exams-foreign-comprehensive.ts");
+const allBacExams = [...bacExams, ...bacExamsExtra, ...bacExamsComplete, ...trimesterExamsBacFormat, ...trimesterExamsComprehensive, ...bacExamsForeignComprehensive];
 
 const outputDir = path.join(__dirname, "..", "public", "bac-exams");
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
