@@ -15,7 +15,8 @@ const { chromium } = require("playwright");
 
 const { bacExams } = require("../src/data/bac-exams.ts");
 const { bacExamsExtra } = require("../src/data/bac-exams-extra.ts");
-const allBacExams = [...bacExams, ...bacExamsExtra];
+const { bacExamsComplete } = require("../src/data/bac-exams-complete.ts");
+const allBacExams = [...bacExams, ...bacExamsExtra, ...bacExamsComplete];
 
 const outputDir = path.join(__dirname, "..", "public", "bac-exams");
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
