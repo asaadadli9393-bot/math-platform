@@ -72,6 +72,7 @@ import { useStudentStore } from "@/lib/student-store";
 import {
   GraduationCap,
   BookOpen,
+  Files,
   Calculator,
   Sigma,
   CircleDot,
@@ -141,7 +142,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -300,6 +301,10 @@ export default function HomePage() {
                 <Trophy className="w-4 h-4 ml-2" />
                 المواضيع
               </NavButton>
+              <NavButton active={view === "comprehensive-topics"} onClick={() => navigateTo("comprehensive-topics")}>
+                <Files className="w-4 h-4 ml-2" />
+                مواضيع شاملة
+              </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
@@ -385,6 +390,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("exams")}>
                     <Trophy className="w-4 h-4 ml-2" /> المواضيع الشاملة
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("comprehensive-topics")}>
+                    <Files className="w-4 h-4 ml-2" /> مواضيع شاملة
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
@@ -482,6 +490,8 @@ export default function HomePage() {
         )}
 
         {view === "exams" && <ExamsView />}
+
+        {view === "comprehensive-topics" && <ComprehensiveTopicsView />}
 
         {view === "pricing" && (
           <PricingView
@@ -2096,6 +2106,167 @@ function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCo
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// ===================================================
+//  عرض المواضيع الشاملة (ComprehensiveTopicsView)
+//  يعرض كل البكالوريات الشاملة: الجزائرية + الأجنبية
+// ===================================================
+
+function ComprehensiveTopicsView() {
+  // قائمة البكالوريات الشاملة المتاحة للتحميل
+  const comprehensiveExams = [
+    // بكالوريات جزائرية شاملة (2025 + سابقة)
+    { id: "bac-2025-exp-comprehensive", year: 2025, country: "🇩🇿 الجزائر", stream: "علوم تجريبية", title: "بكالوريا 2025 — شعبة العلوم التجريبية", duration: "3 ساعات", points: 20, available: true,isNew: true },
+    { id: "bac-2024-exp-complete", year: 2024, country: "🇩🇿 الجزائر", stream: "علوم تجريبية", title: "بكالوريا 2024 — شعبة العلوم التجريبية (كاملة)", duration: "3 ساعات", points: 20, available: true },
+    { id: "bac-2024-math-complete", year: 2024, country: "🇩🇿 الجزائر", stream: "رياضيات", title: "بكالوريا 2024 — شعبة الرياضيات (كاملة)", duration: "3 ساعات", points: 20, available: true },
+    { id: "bac-2024-tech-complete", year: 2024, country: "🇩🇿 الجزائر", stream: "تقني رياضي", title: "بكالوريا 2024 — شعبة التقني رياضي (كاملة)", duration: "3 ساعات", points: 20, available: true },
+    // بكالوريات أجنبية شاملة
+    { id: "bac-morocco-2024-comprehensive", year: 2024, country: "🇲🇦 المغرب", stream: "الشعبة العلمية", title: "بكالوريا مغربية 2024 — الشعبة العلمية", duration: "3 ساعات", points: 20, available: true, isNew: true },
+    { id: "bac-tunisia-2024-comprehensive", year: 2024, country: "🇹🇳 تونس", stream: "رياضيات", title: "بكالوريا تونسية 2024 — شعبة الرياضيات", duration: "4 ساعات", points: 20, available: true, isNew: true },
+    { id: "bac-france-2024-comprehensive", year: 2024, country: "🇫🇷 فرنسا", stream: "Série S", title: "بكالوريا فرنسية 2024 — Série S", duration: "4 ساعات", points: 20, available: true, isNew: true },
+    // مواضيع شاملة فصلية
+    { id: "t1-comprehensive", year: 2027, country: "🇩🇿 الجزائر", stream: "شامل (ف1)", title: "الموضوع الشامل — الفصل الأول", duration: "3 ساعات", points: 20, available: true },
+    { id: "t2-comprehensive", year: 2027, country: "🇩🇿 الجزائر", stream: "شامل (ف2)", title: "الموضوع الشامل — الفصل الثاني", duration: "3 ساعات", points: 20, available: true },
+    { id: "t3-comprehensive", year: 2027, country: "🇩🇿 الجزائر", stream: "شامل (ف3)", title: "الموضوع الشامل — الفصل الثالث", duration: "3 ساعات", points: 20, available: true },
+  ];
+
+  // تجميع حسب الدولة
+  const byCountry = comprehensiveExams.reduce((acc, exam) => {
+    if (!acc[exam.country]) acc[exam.country] = [];
+    acc[exam.country].push(exam);
+    return acc;
+  }, {} as Record<string, typeof comprehensiveExams>);
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+          <Files className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+          المواضيع الشاملة
+        </h1>
+        <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          مجموعة شاملة من بكالوريات جزائرية و أجنبية, كل موضوع يحتوي على 4 تمارين كاملة مع الحلول النموذجية المفصّلة و سلّم التنقيط الرسمي.
+        </p>
+      </div>
+
+      {/* إحصائيات */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Files className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold">{comprehensiveExams.length}</div>
+            <div className="text-xs text-muted-foreground">موضوع شامل</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <FileText className="w-6 h-6 text-emerald-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{comprehensiveExams.length * 4}</div>
+            <div className="text-xs text-muted-foreground">تمرين شامل</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Trophy className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">{comprehensiveExams.length * 20}</div>
+            <div className="text-xs text-muted-foreground">نقطة (20 لكل موضوع)</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 text-center">
+            <Award className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold">4</div>
+            <div className="text-xs text-muted-foreground">دول (الجزائر, المغرب, تونس, فرنسا)</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* عرض حسب الدولة */}
+      {Object.entries(byCountry).map(([country, exams]) => (
+        <Card key={country} className="overflow-hidden">
+          <div className="bg-gradient-to-l from-primary/10 to-accent/10 px-6 py-4 border-b">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <span className="text-2xl">{country.split(" ")[0]}</span>
+              {country}
+              <Badge variant="outline" className="ml-2">{exams.length} موضوع</Badge>
+            </h2>
+          </div>
+          <CardContent className="pt-6 space-y-4">
+            {exams.map((exam) => (
+              <Card key={exam.id} className="border-2 hover:shadow-lg transition-all">
+                <CardContent className="pt-5">
+                  <div className="flex items-start justify-between flex-wrap gap-3 mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        {exam.isNew && (
+                          <Badge className="bg-emerald-500 text-white">جديد</Badge>
+                        )}
+                        <Badge variant="outline" className="text-xs">{exam.stream}</Badge>
+                        <Badge variant="outline" className="text-xs">{exam.year}</Badge>
+                        <Badge variant="outline" className="text-xs">⏱️ {exam.duration}</Badge>
+                        <Badge variant="outline" className="text-xs">{exam.points} نقطة</Badge>
+                      </div>
+                      <h3 className="font-bold text-lg mb-1">{exam.title}</h3>
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-3 gap-3 mt-4">
+                    <a href={`/bac-exams/${exam.id}-topic.pdf`} target="_blank" rel="noopener noreferrer">
+                      <Button className="w-full gap-2" size="sm">
+                        <FileText className="w-4 h-4" />
+                        تحميل الموضوع
+                      </Button>
+                    </a>
+                    <a href={`/bac-exams/${exam.id}-solution.pdf`} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="w-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-50" size="sm">
+                        <CheckCircle2 className="w-4 h-4" />
+                        الحل النموذجي
+                      </Button>
+                    </a>
+                    <a href={`/bac-exams/${exam.id}-rubric.pdf`} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="w-full gap-2 border-amber-500 text-amber-700 hover:bg-amber-50" size="sm">
+                        <Award className="w-4 h-4" />
+                        سلّم التنقيط
+                      </Button>
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+
+      {/* ملاحظة */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-bold text-blue-900 mb-2">معلومات عن البكالوريات</h3>
+              <ul className="text-sm text-blue-800 space-y-1 list-disc pr-5">
+                <li>كل بكالوريا يحتوي على <strong>4 تمارين</strong> × 5 نقاط = <strong>20 نقطة</strong>.</li>
+                <li>كل تمرين يجمع عدة محاور معاً (نمط المواضيع الشاملة الفعلية).</li>
+                <li>الحلول النموذجية مفصّلة خطوة بخطوة مع التعليقات.</li>
+                <li>سلّم التنقيط الرسمي موزّع بدرجات 0.25 / 0.5 / 1.0 نقطة.</li>
+                <li>البكالوريات الأجنبية تساعد على رؤية أنماط مختلفة من الأسئلة.</li>
+                <li>جميع البكالوريات بصيغة PDF قابلة للتحميل و الطباعة.</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* تذييل */}
+      <div className="text-center text-sm text-muted-foreground p-4 border-t">
+        بإشراف الأستاذ عدلي أسعد — منصة الرياضيات للسنة الثالثة ثانوي
+      </div>
     </div>
   );
 }
