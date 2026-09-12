@@ -88,6 +88,8 @@ import {
   KeyRound,
   Video,
   AlertTriangle,
+  Loader2,
+  Sparkles,
 } from "lucide-react";
 
 // ============================================================
@@ -446,6 +448,10 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
               <SettingsIcon className="size-4" />
               الإعدادات
             </TabsTrigger>
+            <TabsTrigger value="content-check">
+              <ShieldCheck className="size-4" />
+              فحص المحتوى
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="payments" className="mt-4">
@@ -459,6 +465,9 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
           </TabsContent>
           <TabsContent value="settings" className="mt-4">
             <SettingsTab token={token} />
+          </TabsContent>
+          <TabsContent value="content-check" className="mt-4">
+            <ContentCheckTab />
           </TabsContent>
         </Tabs>
       </main>
@@ -1430,6 +1439,249 @@ function Step({ n, children }: { n: number; children: React.ReactNode }) {
         {n}
       </div>
       <p className="pt-0.5">{children}</p>
+    </div>
+  );
+}
+
+// ============================================================
+//  ContentCheckTab — فحص آلي للمحتوى الرياضي
+//  يستعمل المساعد الذكي لكشف الأخطا وأنواعها
+// ============================================================
+
+function ContentCheckTab() {
+  const [scanning, setScanning] = React.useState(false);
+  const [results, setResults] = React.useState<any>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [customContent, setCustomContent] = React.useState("");
+  const [customResults, setCustomResults] = React.useState<any>(null);
+  const [customLoading, setCustomLoading] = React.useState(false);
+
+  async function handleFullScan() {
+    setScanning(true);
+    setError(null);
+    setResults(null);
+    try {
+      const res = await fetch("/api/ai-content-check", {
+        headers: { Authorization: `Bearer adli2024` },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setResults(data);
+      } else {
+        setError(data.error || "فشل الفحص");
+      }
+    } catch (err) {
+      setError("تعذّر الاتصال بالخادم");
+    }
+    setScanning(false);
+  }
+
+  async function handleCustomCheck() {
+    if (!customContent.trim()) return;
+    setCustomLoading(true);
+    setError(null);
+    setCustomResults(null);
+    try {
+      const res = await fetch("/api/ai-content-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: customContent, fileType: "محتوى مخصص" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCustomResults(data);
+      } else {
+        setError(data.error || "فشل الفحص");
+      }
+    } catch {
+      setError("تعذّر الاتصال بالخادم");
+    }
+    setCustomLoading(false);
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* رأس القسم */}
+      <Card className="border-r-4 border-primary">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShieldCheck className="w-6 h-6 text-primary" />
+            الفحص الآلي للمحتوى
+          </CardTitle>
+          <CardDescription>
+            نظام ذكي يستعمل المساعد الذكي لفحص كل المحتوى الرياضي في المنصة وكشف الأخطا تلقائياً: أخطا LaTeX، أخطا رياضية، أخطا بيداغوجية، وأخطا التسميات.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={handleFullScan} disabled={scanning} size="lg" className="w-full gap-2">
+            {scanning ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                جارٍ فحص المحتوى...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                ابدأ الفحص الشامل
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* نتائج الفحص الشامل */}
+      {results && (
+        <Card>
+          <CardHeader>
+            <CardTitle>نتائج الفحص الشامل</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* إحصائيات */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <div className="text-center p-3 bg-muted rounded-lg">
+                <div className="text-2xl font-bold">{results.stats?.unitsChecked || 0}</div>
+                <div className="text-xs text-muted-foreground">وحدات مفحوصة</div>
+              </div>
+              <div className="text-center p-3 bg-red-50 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">{results.stats?.errors || 0}</div>
+                <div className="text-xs text-muted-foreground">أخطا</div>
+              </div>
+              <div className="text-center p-3 bg-amber-50 rounded-lg">
+                <div className="text-2xl font-bold text-amber-600">{results.stats?.warnings || 0}</div>
+                <div className="text-xs text-muted-foreground">تحذيرات</div>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">{results.stats?.byType?.latex || 0}</div>
+                <div className="text-xs text-muted-foreground">LaTeX</div>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">{results.stats?.byType?.math || 0}</div>
+                <div className="text-xs text-muted-foreground">رياضية</div>
+              </div>
+            </div>
+
+            {/* تفاصيل الأخطا */}
+            {results.results?.map((unitResult: any, idx: number) => (
+              <div key={idx} className="space-y-2">
+                <h3 className="font-bold text-sm">{unitResult.unit}</h3>
+                {unitResult.issues.length === 0 ? (
+                  <p className="text-xs text-green-600 pr-4">✅ لا أخطا</p>
+                ) : (
+                  unitResult.issues.map((issue: any, i: number) => (
+                    <div
+                      key={i}
+                      className={`p-3 rounded-lg border text-sm ${
+                        issue.severity === "error"
+                          ? "border-red-300 bg-red-50"
+                          : "border-amber-300 bg-amber-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge
+                          variant="outline"
+                          className={
+                            issue.severity === "error"
+                              ? "text-red-700 border-red-400"
+                              : "text-amber-700 border-amber-400"
+                          }
+                        >
+                          {issue.severity === "error" ? "خطأ" : "تحذير"}
+                        </Badge>
+                        <Badge variant="outline">{issue.type}</Badge>
+                      </div>
+                      <p className="text-sm">{issue.description}</p>
+                      {issue.suggestion && (
+                        <p className="text-xs text-green-700 mt-1">
+                          ✏️ التصحيح: {issue.suggestion}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* فحص مخصص */}
+      <Card>
+        <CardHeader>
+          <CardTitle>فحص محتوى مخصص</CardTitle>
+          <CardDescription>
+            الصق أي محتوى رياضي (نص، معادلات، حلول) لفحصه آلياً.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Textarea
+            value={customContent}
+            onChange={(e) => setCustomContent(e.target.value)}
+            placeholder="الصق هنا المحتوى الذي تريد فحصه..."
+            className="min-h-[200px] font-mono text-sm"
+            dir="rtl"
+          />
+          <Button onClick={handleCustomCheck} disabled={customLoading || !customContent.trim()} className="w-full gap-2">
+            {customLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                جارٍ الفحص...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                افحص المحتوى
+              </>
+            )}
+          </Button>
+
+          {/* نتائج الفحص المخصص */}
+          {customResults && (
+            <div className="space-y-2 mt-4">
+              <div className="text-sm font-bold">
+                {customResults.stats?.total || 0} مشكلة مكتشفة
+              </div>
+              {customResults.issues?.map((issue: any, i: number) => (
+                <div
+                  key={i}
+                  className={`p-3 rounded-lg border text-sm ${
+                    issue.severity === "error"
+                      ? "border-red-300 bg-red-50"
+                      : issue.severity === "warning"
+                      ? "border-amber-300 bg-amber-50"
+                      : "border-blue-300 bg-blue-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="outline" className={
+                      issue.severity === "error" ? "text-red-700 border-red-400" :
+                      issue.severity === "warning" ? "text-amber-700 border-amber-400" :
+                      "text-blue-700 border-blue-400"
+                    }>
+                      {issue.severity === "error" ? "خطأ" : issue.severity === "warning" ? "تحذير" : "معلومة"}
+                    </Badge>
+                    <Badge variant="outline">{issue.type}</Badge>
+                  </div>
+                  <p className="text-sm">{issue.description}</p>
+                  {issue.suggestion && (
+                    <p className="text-xs text-green-700 mt-1">✏️ {issue.suggestion}</p>
+                  )}
+                  {issue.snippet && (
+                    <p className="text-xs text-muted-foreground mt-1 font-mono">
+                      "{issue.snippet.substring(0, 100)}"
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          ⚠️ {error}
+        </div>
+      )}
     </div>
   );
 }
