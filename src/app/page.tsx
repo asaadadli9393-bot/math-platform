@@ -297,21 +297,13 @@ export default function HomePage() {
                 <Calculator className="w-4 h-4 ml-2" />
                 المنهاج
               </NavButton>
-              <NavButton active={view === "exams"} onClick={() => navigateTo("exams")}>
+              <NavButton active={view === "exams" || view === "comprehensive-topics" || view === "trimester-exams"} onClick={() => navigateTo("exams")}>
                 <Trophy className="w-4 h-4 ml-2" />
-                المواضيع
-              </NavButton>
-              <NavButton active={view === "comprehensive-topics"} onClick={() => navigateTo("comprehensive-topics")}>
-                <Files className="w-4 h-4 ml-2" />
-                مواضيع شاملة
+                المواضيع والفروض
               </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
-              </NavButton>
-              <NavButton active={view === "trimester-exams"} onClick={() => navigateTo("trimester-exams")}>
-                <ClipboardCheck className="w-4 h-4 ml-2" />
-                الفروض والاختبارات
               </NavButton>
               <NavButton active={view === "courses"} onClick={() => navigateTo("courses")}>
                 <PlayCircle className="w-4 h-4 ml-2" />
@@ -389,16 +381,10 @@ export default function HomePage() {
                     <Calculator className="w-4 h-4 ml-2" /> المنهاج
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("exams")}>
-                    <Trophy className="w-4 h-4 ml-2" /> المواضيع الشاملة
-                  </MobileNavButton>
-                  <MobileNavButton onClick={() => navigateTo("comprehensive-topics")}>
-                    <Files className="w-4 h-4 ml-2" /> مواضيع شاملة
+                    <Trophy className="w-4 h-4 ml-2" /> المواضيع والفروض
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
-                  </MobileNavButton>
-                  <MobileNavButton onClick={() => navigateTo("trimester-exams")}>
-                    <ClipboardCheck className="w-4 h-4 ml-2" /> الفروض والاختبارات الفصلية
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("courses")}>
                     <PlayCircle className="w-4 h-4 ml-2" /> الدورات
@@ -491,8 +477,6 @@ export default function HomePage() {
 
         {view === "exams" && <ExamsView />}
 
-        {view === "comprehensive-topics" && <ComprehensiveTopicsView />}
-
         {view === "pricing" && (
           <PricingView
             onSelectPlan={() => {}}
@@ -500,7 +484,7 @@ export default function HomePage() {
           />
         )}
 
-        {view === "trimester-exams" && <TrimesterExamsView />}
+        {/* الفروض والاختبارات مدمجة في ExamsView بتبويبات */}
 
         {view === "courses" && (
           <CoursesView
@@ -597,11 +581,11 @@ export default function HomePage() {
                 </li>
                 <li>
                   <button
-                    onClick={() => navigateTo("trimester-exams")}
+                    onClick={() => navigateTo("exams")}
                     className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
                   >
-                    <ClipboardCheck className="w-3 h-3" />
-                    الفروض والاختبارات الفصلية
+                    <Trophy className="w-3 h-3" />
+                    المواضيع والفروض
                   </button>
                 </li>
                 <li>
@@ -611,15 +595,6 @@ export default function HomePage() {
                   >
                     <CreditCard className="w-3 h-3" />
                     الباقات والأسعار
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => navigateTo("exams")}
-                    className="hover:text-accent transition-colors flex items-center gap-1 font-semibold"
-                  >
-                    <Trophy className="w-3 h-3" />
-                    مواضيع البكالوريا
                   </button>
                 </li>
               </ul>
@@ -2276,6 +2251,50 @@ function ComprehensiveTopicsView() {
 // ===================================================
 
 function ExamsView() {
+  const [activeTab, setActiveTab] = React.useState<"bac" | "comprehensive" | "trimester">("bac");
+
+  return (
+    <div className="space-y-6">
+      {/* التبويبات */}
+      <div className="flex flex-wrap gap-2 justify-center">
+        <Button
+          variant={activeTab === "bac" ? "default" : "outline"}
+          size="lg"
+          onClick={() => setActiveTab("bac")}
+          className="gap-2"
+        >
+          <Trophy className="w-5 h-5" />
+          البكالوريات السابقة
+        </Button>
+        <Button
+          variant={activeTab === "comprehensive" ? "default" : "outline"}
+          size="lg"
+          onClick={() => setActiveTab("comprehensive")}
+          className="gap-2"
+        >
+          <Files className="w-5 h-5" />
+          المواضيع الشاملة
+        </Button>
+        <Button
+          variant={activeTab === "trimester" ? "default" : "outline"}
+          size="lg"
+          onClick={() => setActiveTab("trimester")}
+          className="gap-2"
+        >
+          <ClipboardCheck className="w-5 h-5" />
+          الفروض والاختبارات
+        </Button>
+      </div>
+
+      {/* المحتوى حسب التبويب */}
+      {activeTab === "bac" && <ExamsBacContent />}
+      {activeTab === "comprehensive" && <ComprehensiveTopicsView />}
+      {activeTab === "trimester" && <TrimesterExamsView />}
+    </div>
+  );
+}
+
+function ExamsBacContent() {
   const [filterStream, setFilterStream] = React.useState<"ALL" | BacStream>("ALL");
   const [filterYear, setFilterYear] = React.useState<number | "ALL">("ALL");
   const stats = getBacExamsStats();
