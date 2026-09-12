@@ -177,7 +177,7 @@ $$P(R_1 \\cap B_2) = P(R_1) \\cdot P_{R_1}(B_2) = \\frac{5}{8} \\cdot \\frac{3}{
 $$P(BB) = \\frac{3}{8} \\cdot \\frac{2}{7} = \\frac{6}{56} = \\frac{3}{28}$$
 
 **النتيجة:**
-$$P(\\text{حمراء واحدة على الأقل}) = 1 - P(BB) = 1 - \\frac{3}{28} = \\frac{25}{28} \\approx 0{,}893$$`,
+$$P(\\text{at least one red}) = 1 - P(BB) = 1 - \\frac{3}{28} = \\frac{25}{28} \\approx 0{,}893$$`,
         },
       ],
     },

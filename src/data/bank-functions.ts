@@ -457,7 +457,7 @@ $$\\lim_{x \\to +\\infty} \\dfrac{3x - 1}{x + 2} = \\lim \\dfrac{3x}{x} = 3$$
     solution: `
 نحلل: $x^2 - 4 = (x - 2)(x + 2)$.
 
-$$\\dfrac{x^2 - 4}{x - 2} = \\dfrac{(x-2)(x+2)}{x-2} = x + 2 \\quad \\text{إذا } x \\neq 2$$
+$$\\dfrac{x^2 - 4}{x - 2} = \\dfrac{(x-2)(x+2)}{x-2} = x + 2 \\quad \\text{if } x \\neq 2$$
 
 إذن:
 $$\\lim_{x \\to 2} \\dfrac{x^2 - 4}{x - 2} = \\lim_{x \\to 2} (x + 2) = 4$$
@@ -578,7 +578,7 @@ $$\\lim_{x \\to 1^+} f(x) = +\\infty, \\quad \\lim_{x \\to 1^-} f(x) = -\\infty$
 $$\\sqrt{x^2 + 1} - x = \\dfrac{(\\sqrt{x^2+1} - x)(\\sqrt{x^2+1} + x)}{\\sqrt{x^2+1} + x} = \\dfrac{x^2 + 1 - x^2}{\\sqrt{x^2+1} + x} = \\dfrac{1}{\\sqrt{x^2+1} + x}$$
 
 عند $x \\to +\\infty$:
-$$\\sqrt{x^2+1} + x \\to +\\infty, \\quad \\text{إذن } \\dfrac{1}{\\sqrt{x^2+1} + x} \\to 0^+$$
+$$\\sqrt{x^2+1} + x \\to +\\infty, \\quad \\text{therefore } \\dfrac{1}{\\sqrt{x^2+1} + x} \\to 0^+$$
 
 إذن:
 $$\\lim_{x \\to +\\infty} \\left(\\sqrt{x^2 + 1} - x\\right) = 0^+$$
@@ -2230,7 +2230,7 @@ $\\lim_{x \\to 1} f(x) = \\lim (x - 2) = -1$ (منتهية) → **لا مقار�
 
 **3. الاشتقاق:**
 بما أن $f(x) = x - 2$ على $D_f$:
-$$f'(x) = 1 > 0 \\text{ على } D_f$$
+$$f'(x) = 1 > 0 \\text{ on } D_f$$
 
 إذن $f$ تزايدية قطعاً على كل من $]-\\infty, 1[$ و $]1, +\\infty[$.
 
@@ -2268,11 +2268,11 @@ $$f'(x) = 1 > 0 \\text{ على } D_f$$
 **1. النهايات:**
 
 - **عند $0^+$:**
-  $$\\lim_{x \\to 0^+} x \\ln(x) = 0 \\text{ (نهاية معروفة)}$$
+  $$\\lim_{x \\to 0^+} x \\ln(x) = 0 \\text{(standard limit)}$$
   $$\\lim_{x \\to 0^+} f(x) = 0 - 0 = 0$$
 
 - **عند $+\\infty$:**
-  $$f(x) = x(\\ln(x) - 1) \\to +\\infty \\text{ (لأن $\\ln(x) \\to +\\infty$)}$$
+  $$f(x) = x(\\ln(x) - 1) \\to +\\infty \\\text{( $\\ln(x) \\to +\\infty$)}$$
 
 **2. الاشتقاق:**
 $$f'(x) = 1 \\cdot \\ln(x) + x \\cdot \\dfrac{1}{x} - 1 = \\ln(x) + 1 - 1 = \\ln(x)$$
@@ -2388,7 +2388,7 @@ $$\\Delta = 36 - 24 = 12, \\quad x = \\dfrac{6 \\pm \\sqrt{12}}{2} = 3 \\pm \\sq
 **1. النهايات:**
 
 - **عند $+\\infty$:**
-  $$\\sqrt{x^2 + 1} \\sim x \\text{ (لأن $x > 0$)}, \\quad \\dfrac{\\sqrt{x^2+1}}{x} \\to \\dfrac{x}{x} = 1$$
+  $$\\sqrt{x^2 + 1} \\sim x \\\text{( $x > 0$)}, \\quad \\dfrac{\\sqrt{x^2+1}}{x} \\to \\dfrac{x}{x} = 1$$
 
 - **عند $-\\infty$:** $\\sqrt{x^2+1} \\sim |x| = -x$ (لأن $x < 0$).
   $$\\dfrac{\\sqrt{x^2+1}}{x} \\to \\dfrac{-x}{x} = -1$$
@@ -3932,7 +3932,7 @@ $$V(x) = (30 - 2x)^2 \\cdot x = x(900 - 120x + 4x^2) = 4x^3 - 120x^2 + 900x$$
 $$V'(x) = 12x^2 - 240x + 900 = 12(x^2 - 20x + 75)$$
 
 **النقاط الحرجة:** $x^2 - 20x + 75 = 0$.
-$$\\Delta = 400 - 300 = 100, \\quad x = \\dfrac{20 \\pm 10}{2} = 15 \\text{ أو } 5$$
+$$\\Delta = 400 - 300 = 100, \\quad x = \\dfrac{20 \\pm 10}{2} = 15 \\text{ or } 5$$
 
 - $x = 15$: غير مقبول (يصنع صندوقاً مسطحاً).
 - $x = 5$: مقبول ✓.
@@ -4433,7 +4433,7 @@ $f(2) = 2 + \\dfrac{4}{2} = 2 + 2 = 4$.
     hint: "ابنِ دالة المساواة: $f(x) = x + \\dfrac{a^2}{x}$ (مع $a = \\sqrt{xy}$).",
     solution: `
 لنثبت المتباينة، نأخذ $a = \\sqrt{xy}$ ثابت، ونناقش الدالة:
-$$f(x) = x + \\dfrac{a^2}{x} \\text{ على } ]0, +\\infty[$$
+$$f(x) = x + \\dfrac{a^2}{x} \\text{ on } ]0, +\\infty[$$
 
 من الأمثلية (تمرين 28 بحالة $m = a^2$): القيمة الصغرى المطلقة $2a = 2\\sqrt{xy}$ عند $x = a$.
 

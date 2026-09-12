@@ -231,7 +231,7 @@ $\\exp : \\mathbb{R} \\to \\;]0, +\\infty[$ **تقابل قطعي** (دالة م
 - ينمو بسرعة كبيرة عند $+\\infty$
 
 ### 9. نهايات مرجعية مهمة
-$$\\lim_{x \\to +\\infty} \\frac{e^x}{x^n} = +\\infty \\quad \\text{(الأُسية تتفوق على القوى)}$$
+$$\\lim_{x \\to +\\infty} \\frac{e^x}{x^n} = +\\infty \\quad \\text{(exp dominates powers)}$$
 $$\\lim_{x \\to -\\infty} x^n e^x = 0$$
 $$\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$$
 `,
@@ -318,7 +318,7 @@ $\\ln : \\;]0, +\\infty[ \\to \\mathbb{R}$ **تقابل قطعي** (دالة م�
 
 ### 8. نهايات مرجعية
 $$\\lim_{x \\to 0} \\frac{\\ln(1+x)}{x} = 1$$
-$$\\lim_{x \\to +\\infty} \\frac{\\ln x}{x} = 0 \\quad \\text{(اللوغاريتم أبطأ من القوى)}$$
+$$\\lim_{x \\to +\\infty} \\frac{\\ln x}{x} = 0 \\quad \\text{(log is slower than powers)}$$
 $$\\lim_{x \\to +\\infty} \\frac{\\ln x}{x^n} = 0 \\quad (n > 0)$$
 $$\\lim_{x \\to 0^+} x \\ln x = 0$$
 
@@ -463,7 +463,7 @@ $$a^2 - b^2 + 2abi = a - bi$$
 ### 2. المعادلات الهندسية
 
 **معادلة دائرة:** مركز $z_0$, نصف قطر $R$:
-$$|z - z_0| = R \\iff z \\in \\text{الدائرة}(z_0, R)$$
+$$|z - z_0| = R \\iff z \\in \\text{circle}(z_0, R)$$
 
 **معادلة قرص:** $|z - z_0| \\leq R$
 
@@ -550,7 +550,7 @@ $$P(X = 2) = \\frac{\\binom{5}{2} \\binom{5}{1}}{\\binom{10}{3}} = \\frac{10 \\c
 `,
       durationMin: 60,
       keyPoints: [
-        "نظرية الضرب: $P(A_1 \\cap \\cdots \\cap A_n) = \\prod P_{\\text{شرطي}}$",
+        "نظرية الضرب: $P(A_1 \\cap \\cdots \\cap A_n) = \\prod P_{\\text{conditional}}$",
         "التوزع المنتظم (Hypergeometric)",
         "مع/دون إعادة: استقلالية أم لا",
       ],

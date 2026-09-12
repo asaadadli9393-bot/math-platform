@@ -243,7 +243,7 @@ $$\\frac{3n^2 + 2n + 1}{n^2 - 5} = \\frac{3 + 2/n + 1/n^2}{1 - 5/n^2}$$
 ### القاعدة العامة
 للأكثري الحدود، الحد الأعلى يحدد النهاية.
 `,
-        highlight: "القيادة بالحد الأعلى = نقسم على $n^{\\text{الأعلى}}$",
+        highlight: "القيادة بالحد الأعلى = نقسم على $n^{\\text{max}}$",
         animation: "slide",
       },
       {
@@ -1296,7 +1296,7 @@ $\\exp$ عكسية $\\ln$:
 
 ### الرتابة
 بما أن $(e^x)' = e^x > 0$ لكل $x$:
-$$\\exp \\text{ متزايدة قطعاً على } \\mathbb{R}$$
+$$\\exp \\text{ strictly increasing on } \\mathbb{R}$$
 
 ### التقابل
 $\\exp : \\mathbb{R} \\to \\;]0, +\\infty[$ **تقابل قطعي**.
@@ -1446,7 +1446,7 @@ $\\ln$ عكسية $\\exp$:
 
 ### الرتابة
 بما أن $(\\ln x)' = 1/x > 0$ على $]0, +\\infty[$:
-$$\\ln \\text{ متزايدة قطعاً على } \\;]0, +\\infty[$$
+$$\\ln \\text{ strictly increasing on } \\;]0, +\\infty[$$
 
 ### التقابل
 $\\ln : \\;]0, +\\infty[ \\to \\mathbb{R}$ **تقابل قطعي**.
@@ -1644,7 +1644,7 @@ $$S'(x) = 40 - 4x$$
 $$S'(x) = 0 \\implies 40 - 4x = 0 \\implies x = 10$$
 
 ### 6. التحقق
-$$S''(x) = -4 < 0 \\implies \\text{قيمة قصوى محلية} \\;\\checkmark$$
+$$S''(x) = -4 < 0 \\implies \\text{local max} \\;\\checkmark$$
 
 ### 7. النتيجة
 - $x = 10$ m
@@ -1812,7 +1812,7 @@ $$S = \\frac{n(u_p + u_{n-1})}{2}$$ (لـ $n$ حد من $u_p$)
 - $r = 3$, $u_0 = 7$, $u_{19} = 7 + 19 \\times 3 = 64$
 - $S = \\frac{20(7 + 64)}{2} = 10 \\times 71 = 710$
 `,
-        highlight: "$S = \\frac{n(\\text{أول} + \\text{أخير})}{2}$",
+        highlight: "$S = \\frac{n(\\text{odd} + \\text{last})}{2}$",
         animation: "zoom",
       },
       {
@@ -1856,7 +1856,7 @@ $$u_{n+1} - u_n = (n+1)^2 - n^2 = 2n + 1$$
 3. مجموع: $S = \\frac{n(u_0 + u_{n-1})}{2}$
 
 **الخاصية المميزة:**
-$$2b = a + c \\iff a, b, c \\text{ حسابية}$$
+$$2b = a + c \\iff a, b, c \\text{ arithmetic}$$
 
 **كيف نثبت:**
 - نحسب $u_{n+1} - u_n$
@@ -1997,7 +1997,7 @@ $0{,}333\\ldots = 0{,}3 + 0{,}03 + 0{,}003 + \\cdots$
 $$S = \\frac{u_0}{1 - q}$$
 
 **الخاصية المميزة:**
-$$b^2 = a \\cdot c \\iff a, b, c \\text{ هندسية}$$
+$$b^2 = a \\cdot c \\iff a, b, c \\text{ geometric}$$
 
 **كيف نثبت:**
 - نحسب $\\frac{u_{n+1}}{u_n}$
@@ -2054,7 +2054,7 @@ $$1 = \\frac{1 \\times 2}{2} = 1 \\;\\checkmark$$
 **المطلوب:** إثبات $\\sum_{k=1}^{n+1} k = \\frac{(n+1)(n+2)}{2}$.
 
 **الإثبات:**
-$$\\sum_{k=1}^{n+1} k = \\underbrace{\\sum_{k=1}^n k}_{\\text{الفرضية}} + (n+1)$$
+$$\\sum_{k=1}^{n+1} k = \\underbrace{\\sum_{k=1}^n k}_{\\text{hypothesis}} + (n+1)$$
 $$= \\frac{n(n+1)}{2} + (n+1) = (n+1)\\left(\\frac{n}{2} + 1\\right) = (n+1) \\cdot \\frac{n+2}{2} \\;\\checkmark$$
 
 ### 3. الاستنتاج
@@ -2079,7 +2079,7 @@ $$2^1 = 2 > 1 \\;\\checkmark$$
 **المطلوب:** $2^{k+1} > k + 1$.
 
 **الإثبات:**
-$$2^{k+1} = 2 \\cdot 2^k > 2k \\quad \\text{(من الفرضية: } 2^k > k\\text{)}$$
+$$2^{k+1} = 2 \\cdot 2^k > 2k \\quad \\text{(from hypothesis: } 2^k > k\\text{)}$$
 
 نريد: $2k > k + 1$, أي $k > 1$.
 
@@ -2112,7 +2112,7 @@ $$2^{k+1} = 2 \\cdot 2^k > 2k \\quad \\text{(من الفرضية: } 2^k > k\\tex
 
 ### مثال: $u_n = \\frac{1}{1 + n^2}$
 $f(x) = \\frac{1}{1+x^2}$
-$$f'(x) = \\frac{-2x}{(1+x^2)^2} \\leq 0 \\text{ لـ } x \\geq 0$$
+$$f'(x) = \\frac{-2x}{(1+x^2)^2} \\leq 0 \\text{ for } x \\geq 0$$
 
 $f$ متناقصة على $[0, +\\infty[$ → $(u_n)$ **متناقصة**.
 

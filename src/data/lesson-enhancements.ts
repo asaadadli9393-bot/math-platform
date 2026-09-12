@@ -167,7 +167,7 @@ export const lessonSummariesBySlug: Record<string, string> = {
 - نمو: $N(t) = N_0 e^{kt}$ ($k > 0$ نمو, $k < 0$ اضمحلال)
 - نصف العمر: $T_{1/2} = \\frac{\\ln 2}{\\lambda}$
 - تبريد نيوتن: $T(t) = T_a + (T_0 - T_a) e^{-kt}$
-- قاعدة 72: $t_{\\text{مضاعفة}} \\approx \\frac{72}{100r}$
+- قاعدة 72: $t_{\\text{doubling}} \\approx \\frac{72}{100r}$
 
 **🎯 القاعدة:** كل نمو/اضمحلال يتبع أسية. حدد $k$ من معطى ثم حل.
 `,
@@ -214,7 +214,7 @@ export const lessonSummariesBySlug: Record<string, string> = {
 - مقياس ريختر: $M = \\log_{10}\\frac{I}{I_0}$
 - pH: $\\text{pH} = -\\log_{10}[H^+]$
 - الديسيبل: $L = 10 \\log_{10}\\frac{I}{I_0}$
-- قاعدة 72: $t_{\\text{مضاعفة}} \\approx \\frac{72}{100r}$
+- قاعدة 72: $t_{\\text{doubling}} \\approx \\frac{72}{100r}$
 
 **🎯 القاعدة:** اللوغاريتم مثالي لحساب الأزمنة في النمو الأُسي.
 `,
@@ -949,9 +949,9 @@ $$P_B(A) = P(A|B) = \\frac{P(A \\cap B)}{P(B)}$$
 
 **الفضاء:** 14 كرة
 
-$P(\\text{حمراء}) = 8/14 = 4/7$
+$P(\\text{red}) = 8/14 = 4/7$
 
-$P(\\text{حمراء} | \\text{كبيرة}) = \\frac{5}{5+2} = \\frac{5}{7}$
+$P(\\text{red} | \\text{large}) = \\frac{5}{5+2} = \\frac{5}{7}$
 
 لاحظ الفرق! الشرط غيّر الاحتمال.
 `,
@@ -1357,7 +1357,7 @@ $$S'(x) = 40 - 4x$$
 $$S'(x) = 0 \\implies 40 - 4x = 0 \\implies x = 10$$
 
 ### 6. التحقق
-$$S''(x) = -4 < 0 \\implies \\text{قيمة قصوى محلية} \\;\\checkmark$$
+$$S''(x) = -4 < 0 \\implies \\text{local max} \\;\\checkmark$$
 
 ### 7. النتيجة
 - $x = 10$ m
