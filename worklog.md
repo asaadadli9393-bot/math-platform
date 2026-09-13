@@ -508,3 +508,49 @@ Stage Summary:
 2. إضافة DATABASE_URL إلى Vercel → Settings → Environment Variables
 3. إعادة النشر: npx vercel --prod (بعد npx vercel login)
 4. اختبار: تسجيل دخول + امتحان تجريبي + /admin
+
+---
+Task ID: programmatic-deployment
+Agent: main (Super Z)
+Task: تفعيل النشر البرمجي على Vercel (CI/CD عبر GitHub Actions)
+
+Work Log:
+- إنشاء scripts/deploy-vercel.sh (سكربت نشر برمجي كامل):
+  * يحلل الأوامر: --prod / --preview / --link
+  * يتحقق من VERCEL_TOKEN
+  * يبدّل مزوّد Prisma إلى postgresql
+  * يولّد Prisma Client
+  * يربط المشروع (إن لم يكن مرتبطًا) عبر --link
+  * ينشر على Vercel مع --token
+  * يعيد ضبط Prisma لـ SQLite محلي بعد النشر
+- إنشاء scripts/sync-vercel-env.sh (مزامنة متغيرات البيئة):
+  * يقرأ 8 متغيرات من .env (DATABASE_URL, ADMIN_KEY, ADMIN_EMAIL, NEXTAUTH_SECRET, SMTP_*)
+  * يحذف القديم ثم يرفع الجديد لتفادي التكرار
+  * يدعم --preview / --all / --prod لاستهداف بيئات
+- إنشاء .github/workflows/deploy-vercel.yml:
+  * يُطلق عند push على main أو تشغيل يدوي
+  * يستعمل bun + node 20
+  * يبني المشروع مع PostgreSQL ويرفعه إلى Vercel
+  * يتطلب 11 سر GitHub: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, DATABASE_URL, ADMIN_KEY, ...
+- إنشاء .github/workflows/pr-check.yml:
+  * فحوصات قبل الدمج: TypeScript + Lint + Build
+  * يُطلق على كل PR أو push على main
+- README.md محدّث بقسم النشر البرمجي الكامل
+- git push (commit cde286b)
+
+Stage Summary:
+- ✅ scripts/deploy-vercel.sh — نشر إنتاج بـ VERCEL_TOKEN
+- ✅ scripts/sync-vercel-env.sh — مزامنة متغيرات البيئة
+- ✅ .github/workflows/deploy-vercel.yml — CI/CD تلقائي
+- ✅ .github/workflows/pr-check.yml — فحوصات قبل الدمج
+- ✅ README محدّث بالكامل
+- ✅ Pushed to GitHub (commit cde286b)
+
+**الخطوات التالية للأستاذ:**
+1. الذهاب إلى https://vercel.com/account/tokens
+2. إنشاء Vercel Access Token
+3. إضافته إلى .env: `VERCEL_TOKEN=vercel_xxx...`
+4. تشغيل `bash scripts/sync-vercel-env.sh` لرفع المتغيرات
+5. تشغيل `bash scripts/deploy-vercel.sh --link` أول مرة لربط المشروع
+6. ثم `bash scripts/deploy-vercel.sh` للنشر
+7. (اختياري) إضافة الأسرار إلى GitHub لتفعيل النشر التلقائي
