@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getZAI } from "@/lib/z-ai";
 
 // ============================================================
 //  API المساعد الذكي — منصة الرياضيات | الأستاذ عدلي أسعد
@@ -13,9 +14,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "السؤال مطلوب" }, { status: 400 });
     }
 
-    // استيراد z-ai-web-dev-sdk
-    const ZAI = (await import("z-ai-web-dev-sdk")).default;
-    const zai = await ZAI.create();
+    // استيراد z-ai-web-dev-sdk عبر الـ helper الموحّد
+    const zai = await getZAI();
 
     // بناء الـ prompt بالعربية — متطور مع سياق المنهاج
     const systemPrompt = `أنت مساعد ذكي متطور لمنصة الرياضيات للأستاذ عدلي أسعد، مخصص لطلبة السنة الثالثة ثانوي في الجزائر (الشعب العلمية: علوم تجريبية، رياضيات، تقني رياضي).

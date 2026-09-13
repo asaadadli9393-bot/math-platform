@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-scripts/sync-vercel-env.py
+scripts/sync-vercel-env.py (enhanced)
 منصة الرياضيات | الأستاذ عدلي أسعد
 
 يرفع متغيرات البيئة من .env.production إلى Vercel عبر REST API.
-يتفادى الحاجة إلى Vercel CLI.
 """
 import os
 import sys
@@ -13,15 +12,9 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
-# ============================================================
-# إعدادات
-# ============================================================
 ENV_FILE = "/home/z/my-project/.env.production"
 REPO_ROOT = "/home/z/my-project"
 
-# ============================================================
-# قراءة ملف .env.production
-# ============================================================
 def load_env(path):
     env = {}
     if not os.path.exists(path):
@@ -30,10 +23,7 @@ def load_env(path):
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            # تخطّي التعليقات والأسطر الفارغة
-            if not line or line.startswith("#"):
-                continue
-            if "=" not in line:
+            if not line or line.startswith("#") or "=" not in line:
                 continue
             key, _, value = line.partition("=")
             key = key.strip()
@@ -42,9 +32,6 @@ def load_env(path):
                 env[key] = value
     return env
 
-# ============================================================
-# استدعاء Vercel API
-# ============================================================
 def vercel_api(method, path, token, body=None):
     url = f"https://api.vercel.com{path}"
     headers = {
@@ -57,13 +44,13 @@ def vercel_api(method, path, token, body=None):
         with urllib.request.urlopen(req, timeout=30) as resp:
             return resp.status, json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        return e.code, json.loads(e.read().decode("utf-8"))
+        try:
+            return e.code, json.loads(e.read().decode("utf-8"))
+        except Exception:
+            return e.code, {"error": "non-JSON"}
     except Exception as e:
         return 0, {"error": str(e)}
 
-# ============================================================
-# الرفع
-# ============================================================
 def main():
     env = load_env(ENV_FILE)
 
@@ -80,38 +67,44 @@ def main():
     print(f"🔐 Token:   {VERCEL_TOKEN[:14]}...")
     print()
 
-    # المتغيرات المراد رفعها
+    # المتغيرات المراد رفعها (مع رفع Z_AI_* الجديدة)
     ENV_VARS = [
-        ("DATABASE_URL", "encrypted"),
-        ("ADMIN_KEY", "encrypted"),
-        ("ADMIN_EMAIL", "encrypted"),
-        ("NEXTAUTH_SECRET", "encrypted"),
-        ("SMTP_HOST", "encrypted"),
-        ("SMTP_PORT", "encrypted"),
-        ("SMTP_USER", "encrypted"),
-        ("SMTP_PASS", "encrypted"),
+        "DATABASE_URL",
+        "ADMIN_KEY",
+        "ADMIN_EMAIL",
+        "NEXTAUTH_SECRET",
+        "SMTP_HOST",
+        "SMTP_PORT",
+        "SMTP_USER",
+        "SMTP_PASS",
+        # Z-AI SDK
+        "Z_AI_BASE_URL",
+        "Z_AI_API_KEY",
+        "Z_AI_CHAT_ID",
+        "Z_AI_USER_ID",
+        "Z_AI_TOKEN",
     ]
 
     success = 0
     failed = 0
     skipped = 0
 
-    for name, _type in ENV_VARS:
+    for name in ENV_VARS:
         value = env.get(name, "")
         if not value:
             print(f"  ⚠️  {name}: فارغ، تخطّي")
             skipped += 1
             continue
 
-        # إخفاء القيمة عند الطباعة
         masked = value[:30] + "..." if len(value) > 30 else value
         if name == "DATABASE_URL":
             masked = value.split("//")[0] + "//" + value.split("//")[1].split("@")[0].split(":")[0] + ":****@" + value.split("@")[1][:30] + "..."
+        elif name == "Z_AI_TOKEN":
+            masked = value[:20] + "..."
         print(f"  • {name} ({masked}): ", end="", flush=True)
 
-        # حذف المتغير إن كان موجودًا (PUT لن يفلت)
+        # حذف المتغير إن كان موجودًا
         path = f"/v9/projects/{PROJECT_ID}/env/{name}?teamId={ORG_ID}"
-        # نحاول الحذف بأمان
         try:
             vercel_api("DELETE", path, VERCEL_TOKEN)
         except Exception:
@@ -121,8 +114,8 @@ def main():
         body = {
             "key": name,
             "value": value,
-            "type": _type,
-            "target": ["production"],  # تطبيق على بيئة الإنتاج
+            "type": "encrypted",
+            "target": ["production"],
         }
         path = f"/v10/projects/{PROJECT_ID}/env?teamId={ORG_ID}"
         status, response = vercel_api("POST", path, VERCEL_TOKEN, body=body)
@@ -132,9 +125,7 @@ def main():
             success += 1
         else:
             error_msg = response.get("error", {}).get("message", str(response)) if isinstance(response, dict) else str(response)
-            # إن كان المتغير موجودًا مسبقًا، نحدّثه
             if "already exists" in str(error_msg).lower() or status == 409:
-                # محاولة التحديث
                 path = f"/v1/projects/{PROJECT_ID}/env/{name}?teamId={ORG_ID}"
                 patch_body = {"value": value}
                 status2, response2 = vercel_api("PATCH", path, VERCEL_TOKEN, body=patch_body)
@@ -166,9 +157,8 @@ def main():
         envs = response.get("envs", [])
         for e in envs:
             key = e.get("key", "?")
-            target = e.get("target", ["?"])
             env_type = e.get("type", "?")
-            print(f"  • {key} ({env_type}, target={target})")
+            print(f"  • {key} ({env_type})")
 
 if __name__ == "__main__":
     main()

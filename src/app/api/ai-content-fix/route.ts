@@ -4,6 +4,7 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
+import { getZAI } from "@/lib/z-ai";
 
 export const runtime = "nodejs";
 
@@ -15,8 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "المحتوى مطلوب" }, { status: 400 });
     }
 
-    const ZAI = (await import("z-ai-web-dev-sdk")).default;
-    const zai = await ZAI.create();
+    const zai = await getZAI();
 
     const templateGuide = `القالب الموحد لكل درس:
 1. عنوان رئيسي (## عنوان)

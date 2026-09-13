@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getZAI } from "@/lib/z-ai";
 
 // ============================================================
 //  API لتوليد الصوت من النص (TTS) — يدعم العربية
@@ -20,9 +21,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // استيراد z-ai-web-dev-sdk (backend only)
-    const ZAI = (await import("z-ai-web-dev-sdk")).default;
-    const zai = await ZAI.create();
+    // تحميل Z-AI عبر الـ helper الموحّد
+    const zai = await getZAI();
 
     // توليد الصوت
     const response = await zai.audio.tts.create({

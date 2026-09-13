@@ -10,6 +10,7 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
+import { getZAI } from "@/lib/z-ai";
 
 export const runtime = "nodejs";
 
@@ -34,9 +35,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // استيراد z-ai-web-dev-sdk
-    const ZAI = (await import("z-ai-web-dev-sdk")).default;
-    const zai = await ZAI.create();
+    // تحميل Z-AI عبر الـ helper الموحّد
+    const zai = await getZAI();
 
     // تقسيم المحتوى إلى أجزاء (إذا كان طويلاً)
     const MAX_CHARS = 3000;
@@ -152,8 +152,7 @@ export async function GET() {
     const { curriculum } = require("@/data/curriculum");
     const { bacExams } = require("@/data/bac-exams");
 
-    const ZAI = (await import("z-ai-web-dev-sdk")).default;
-    const zai = await ZAI.create();
+    const zai = await getZAI();
 
     const results: Array<{
       unit: string;
