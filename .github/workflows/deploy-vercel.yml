@@ -1,0 +1,96 @@
+# ============================================================
+#  .github/workflows/deploy-vercel.yml
+#  منصة الرياضيات | الأستاذ عدلي أسعد
+# ============================================================
+#  GitHub Actions workflow للنشر التلقائي على Vercel
+#  عند كل push إلى فرع main.
+#
+#  المتطلبات (GitHub Secrets):
+#    - VERCEL_TOKEN  → من https://vercel.com/account/tokens
+#    - VERCEL_ORG_ID → من Project Settings (أو سيتلقاه الـ workflow)
+#    - VERCEL_PROJECT_ID → من Project Settings
+#
+#  البديل: بدلًا من VERCEL_ORG_ID/PROJECT_ID يمكن استخدام
+#  سكربت scripts/deploy-vercel.sh مع VERCEL_TOKEN فقط.
+# ============================================================
+
+name: 🚀 Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # تشغيل يدوي من GitHub UI
+
+permissions:
+  contents: read
+
+env:
+  # تُقرأ من GitHub Secrets
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 📦 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install dependencies
+        run: bun install --frozen-lockfile || npm ci
+
+      - name: 🔄 Switch Prisma provider to PostgreSQL
+        run: |
+          if grep -q 'provider = "sqlite"' prisma/schema.prisma; then
+            sed -i 's|provider = "sqlite"|provider = "postgresql"|' prisma/schema.prisma
+            echo "✓ Switched to postgresql"
+          else
+            echo "✓ Already postgresql"
+          fi
+
+      - name: 🔨 Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: 🏗️ Build
+        run: npx next build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ADMIN_KEY: ${{ secrets.ADMIN_KEY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+
+      - name: 🚀 Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: 🔗 Pull Vercel Environment
+        run: vercel link --yes --token $VERCEL_TOKEN
+        continue-on-error: true
+
+      - name: 🚀 Deploy to Vercel (Production)
+        run: vercel deploy --prod --yes --token $VERCEL_TOKEN
+        id: deploy
+
+      - name: 📊 Print deployment URL
+        run: |
+          echo "### 🚀 Deployment URL: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "Deployed at $(date)" >> $GITHUB_STEP_SUMMARY

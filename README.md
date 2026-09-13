@@ -90,35 +90,74 @@ DATABASE_URL="postgresql://..." bun run scripts/setup-postgres.ts --skip-migrate
 
 ### الخطوة 2: النشر على Vercel
 
-#### الطريقة 1: عبر CLI (الأسرع)
+#### الطريقة 1: النشر البرمجي (مُوصى به — تفعيل تلقائي عبر `git push`)
 
+**1. احصل على Vercel Access Token:**
+- اذهب إلى [vercel.com/account/tokens](https://vercel.com/account/tokens)
+- اضغط **Create Token** → اسم: `math-platform-deploy`
+- Scope: Full Account
+- انسخ التوكن (لن يُعرض مرة أخرى)
+
+**2. احفظ التوكن محليًا:**
 ```bash
-# استملاك منصة مؤقتة ثم استبدالها بمشروع رسمي
-npx vercel              # اتبع التعليمات (سجل بـ GitHub)
-npx vercel --prod       # نشر إنتاج
+echo "VERCEL_TOKEN=vercel_xxx..." >> .env
 ```
 
-#### الطريقة 2: عبر Dashboard
+**3. امزامنة متغيرات البيئة مع Vercel:**
+```bash
+bash scripts/sync-vercel-env.sh
+```
+يرفع 8 متغيرات (DATABASE_URL, ADMIN_KEY, ADMIN_EMAIL, NEXTAUTH_SECRET, SMTP_*).*
+
+**4. شغّل النشر البرمجي:**
+```bash
+bash scripts/deploy-vercel.sh
+```
+يقوم السكربت بـ:
+- تبديل مزوّد Prisma إلى postgresql
+- توليد Prisma Client
+- بناء Next.js
+- رفع المشروع إلى Vercel (production)
+- إعادة ضبط Prisma لـ SQLite محلي
+
+**5. (اختياري) تفعيل النشر التلقائي عبر GitHub Actions:**
+
+أضف هذه الأسرار إلى المستودع على GitHub (Settings → Secrets → Actions):
+
+| Secret | القيمة |
+|--------|--------|
+| `VERCEL_TOKEN` | نفس `VERCEL_TOKEN` من .env |
+| `VERCEL_ORG_ID` | من Vercel → Project → Settings |
+| `VERCEL_PROJECT_ID` | من Vercel → Project → Settings |
+| `DATABASE_URL` | `postgresql://...` (Neon) |
+| `ADMIN_KEY` | `adli2024` |
+| `ADMIN_EMAIL` | `asaadadli9393@gmail.com` |
+| `NEXTAUTH_SECRET` | `math-platform-adli-2026-secure-secret-key` |
+| `SMTP_HOST` | `smtp.gmail.com` |
+| `SMTP_PORT` | `587` |
+| `SMTP_USER` | `asaadadli9393@gmail.com` |
+| `SMTP_PASS` | كلمة تطبيق Gmail |
+
+بعد ذلك، كل `git push origin main` سيُطلق نشرًا تلقائيًا على Vercel.
+
+#### الطريقة 2: النشر اليدوي عبر Dashboard
 
 1. اذهب إلى [vercel.com](https://vercel.com) ← سجّل بـ GitHub
 2. اختر المستودع `asaadadli9393-bot/math-platform`
-3. أضف متغيرات البيئة التالية (في Settings → Environment Variables):
+3. أضف متغيرات البيئة يدويًا (في Settings → Environment Variables):
 
 | المتغير | القيمة |
 |---------|--------|
-| `DATABASE_URL` | `postgresql://...` (من Neon/Supabase، مع `?sslmode=require`) |
+| `DATABASE_URL` | `postgresql://...` (من Neon، مع `?sslmode=require`) |
 | `ADMIN_KEY` | `adli2024` |
 | `ADMIN_EMAIL` | `asaadadli9393@gmail.com` |
-| `NEXTAUTH_SECRET` | `math-platform-adli-2026-secure-secret-key` (أي سلسلة 32+ حرف) |
+| `NEXTAUTH_SECRET` | `math-platform-adli-2026-secure-secret-key` |
 | `SMTP_HOST` | `smtp.gmail.com` |
 | `SMTP_PORT` | `587` |
 | `SMTP_USER` | `asaadadli9393@gmail.com` |
 | `SMTP_PASS` | كلمة تطبيق Gmail (16 حرف) |
 
-4. اضغط **Deploy** — سيقوم Vercel تلقائياً بـ:
-   - تبديل مزوّد Prisma إلى PostgreSQL (script: `set-prisma-provider.sh`)
-   - توليد Prisma Client
-   - بناء Next.js
+4. اضغط **Deploy** — Vercel سيقوم تلقائيًا بتبديل مزوّد Prisma عبر `set-prisma-provider.sh` في `vercel.json`
 
 5. بعد أول نشر، تأكد من أن قاعدة البيانات جاهزة:
 
