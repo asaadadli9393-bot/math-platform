@@ -452,6 +452,10 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
               <ShieldCheck className="size-4" />
               فحص المحتوى
             </TabsTrigger>
+            <TabsTrigger value="content-fix">
+              <Sparkles className="size-4" />
+              إصلاح وإثراء
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="payments" className="mt-4">
@@ -468,6 +472,9 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
           </TabsContent>
           <TabsContent value="content-check" className="mt-4">
             <ContentCheckTab />
+          </TabsContent>
+          <TabsContent value="content-fix" className="mt-4">
+            <ContentFixTab />
           </TabsContent>
         </Tabs>
       </main>
@@ -1676,6 +1683,187 @@ function ContentCheckTab() {
           )}
         </CardContent>
       </Card>
+
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          ⚠️ {error}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
+//  ContentFixTab — إصلاح + إثراء + توحيد آلي
+// ============================================================
+
+function ContentFixTab() {
+  const [content, setContent] = React.useState("");
+  const [mode, setMode] = React.useState<"fix" | "enrich" | "full">("full");
+  const [loading, setLoading] = React.useState(false);
+  const [result, setResult] = React.useState<any>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [copied, setCopied] = React.useState(false);
+
+  async function handleFix() {
+    if (!content.trim()) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch("/api/ai-content-fix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, mode }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setResult(data.result);
+      } else {
+        setError(data.error || "فشل الإصلاح");
+      }
+    } catch {
+      setError("تعذّر الاتصال بالخادم");
+    }
+    setLoading(false);
+  }
+
+  function copyFixed() {
+    if (result?.fixed) {
+      navigator.clipboard.writeText(result.fixed);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* الرأس */}
+      <Card className="border-r-4 border-emerald-500">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-emerald-600" />
+            الإصلاح والإثراء الآلي
+          </CardTitle>
+          <CardDescription>
+            نظام ذكي يصلح الأخطا، يثري المحتوى، ويوحّد القالب — كل ذلك آلياً.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/* اختيار الوضع */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <Button
+              variant={mode === "full" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setMode("full")}
+              className="gap-1"
+            >
+              <Sparkles className="w-4 h-4" /> إصلاح + إثراء + توحيد
+            </Button>
+            <Button
+              variant={mode === "fix" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setMode("fix")}
+            >
+              إصلاح فقط
+            </Button>
+            <Button
+              variant={mode === "enrich" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setMode("enrich")}
+            >
+              إثراء فقط
+            </Button>
+          </div>
+
+          {/* المحتوى الأصلي */}
+          <div className="space-y-2">
+            <Label className="font-bold">المحتوى الأصلي:</Label>
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="الصق المحتوى الرياضي هنا..."
+              className="min-h-[200px] font-mono text-sm"
+              dir="rtl"
+            />
+            <Button onClick={handleFix} disabled={loading || !content.trim()} className="w-full gap-2">
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  جارٍ الإصلاح والإثراء...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  ابدأ الإصلاح والإثراء
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* النتائج */}
+      {result && (
+        <>
+          {/* إحصائيات */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="text-center p-3 bg-emerald-50 rounded-lg">
+              <div className="text-2xl font-bold text-emerald-600">{result.stats?.totalChanges || 0}</div>
+              <div className="text-xs text-muted-foreground">تغييرات</div>
+            </div>
+            <div className="text-center p-3 bg-blue-50 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600">{result.stats?.byType?.latex || 0}</div>
+              <div className="text-xs text-muted-foreground">LaTeX</div>
+            </div>
+            <div className="text-center p-3 bg-amber-50 rounded-lg">
+              <div className="text-2xl font-bold text-amber-600">{result.stats?.byType?.pedagogy || 0}</div>
+              <div className="text-xs text-muted-foreground">بيداغوجية</div>
+            </div>
+            <div className="text-center p-3 bg-purple-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600">{result.stats?.byType?.terminology || 0}</div>
+              <div className="text-xs text-muted-foreground">تسميات</div>
+            </div>
+          </div>
+
+          {/* قائمة التغييرات */}
+          {result.changes?.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>التغييرات المُنجزة</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {result.changes.map((change: any, i: number) => (
+                  <div
+                    key={i}
+                    className="p-2 rounded-lg bg-muted/30 border-r-2 border-emerald-400 text-sm"
+                  >
+                    <Badge variant="outline" className="text-xs mb-1">{change.type}</Badge>
+                    <p>{change.description}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* المحتوى المصلح */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>المحتوى بعد الإصلاح والإثراء</CardTitle>
+                <Button size="sm" variant="outline" onClick={copyFixed} className="gap-1">
+                  {copied ? "✓ تم النسخ" : "نسخ المحتوى"}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <pre className="p-4 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap max-h-[400px] overflow-y-auto" dir="rtl">
+                {result.fixed}
+              </pre>
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
