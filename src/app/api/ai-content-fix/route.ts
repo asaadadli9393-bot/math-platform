@@ -4,9 +4,10 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { getZAI } from "@/lib/z-ai";
+import { chat } from "@/lib/llm";
 
 export const runtime = "nodejs";
+export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,8 +17,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "المحتوى مطلوب" }, { status: 400 });
     }
 
-    const zai = await getZAI();
-
     const templateGuide = `القالب الموحد لكل درس:
 1. عنوان رئيسي (## عنوان)
 2. تعريف (### تعريف)
@@ -26,7 +25,7 @@ export async function POST(req: NextRequest) {
 5. نقاط أساسية (### نقاط أساسية)
 لا تستعمل نصاً عربياً داخل \\text{} في LaTeX.`;
 
-    let systemPrompt = `أنت مساعد ذكي متطور لإصلاح وإثراء المحتوى الرياضي.
+    const systemPrompt = `أنت مساعد ذكي متطور لإصلاح وإثراء المحتوى الرياضي.
 ${templateGuide}
 القواعد: استعمل المصطلحات الجزائرية الرسمية (شعاع، اشتقاق، نهاية، لوغاريتم نيبيري).
 أعد المحتوى المصلح كاملاً ثم قائمة التغييرات:
@@ -36,16 +35,15 @@ ${templateGuide}
 1. [نوع]: [وصف]
 ---END---`;
 
-    const response = await zai.chat.completions.create({
-      messages: [
+    const result = await chat(
+      [
         { role: "system", content: systemPrompt },
         { role: "user", content: content.substring(0, 2500) },
       ],
-      temperature: 0.3,
-      max_tokens: 1500,
-    });
+      { temperature: 0.3, max_tokens: 1500 }
+    );
 
-    const answer = response.choices?.[0]?.message?.content || "";
+    const answer = result.content;
 
     // استخراج
     const contentMatch = answer.match(/---CONTENT---\n?([\s\S]*?)---(?:CHANGES|END)/);
@@ -70,6 +68,8 @@ ${templateGuide}
         original: content,
         fixed: fixedContent,
         changes,
+        provider: result.provider,
+        model: result.model,
         stats: {
           totalChanges: changes.length,
           byType: changes.reduce((acc, c) => {
@@ -79,10 +79,11 @@ ${templateGuide}
         },
       },
     });
-  } catch (error: any) {
-    console.error("Content fix error:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("Content fix error:", msg);
     return NextResponse.json(
-      { success: false, error: "تعذّر الإصلاح.", details: error?.message },
+      { success: false, error: "تعذّر الإصلاح.", details: msg },
       { status: 500 }
     );
   }

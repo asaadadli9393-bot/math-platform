@@ -67,7 +67,7 @@ def main():
     print(f"🔐 Token:   {VERCEL_TOKEN[:14]}...")
     print()
 
-    # المتغيرات المراد رفعها (مع رفع Z_AI_* الجديدة)
+    # المتغيرات المراد رفعها (مع رفع LLM_* الجديدة)
     ENV_VARS = [
         "DATABASE_URL",
         "ADMIN_KEY",
@@ -77,12 +77,11 @@ def main():
         "SMTP_PORT",
         "SMTP_USER",
         "SMTP_PASS",
-        # Z-AI SDK
-        "Z_AI_BASE_URL",
-        "Z_AI_API_KEY",
-        "Z_AI_CHAT_ID",
-        "Z_AI_USER_ID",
-        "Z_AI_TOKEN",
+        # LLM (المساعد الذكي + TTS + فحص المحتوى)
+        "LLM_PROVIDER",
+        "LLM_API_KEY",
+        "LLM_MODEL",
+        "LLM_BASE_URL",
     ]
 
     success = 0

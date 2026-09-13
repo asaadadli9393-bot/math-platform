@@ -2,7 +2,7 @@
 //  /api/ai-content-check — فحص آلي للمحتوى الرياضي
 //  منصة الرياضيات | الأستاذ عدلي أسعد
 // ============================================================
-//  يستعمل z-ai-web-dev-sdk لفحص:
+//  يستعمل LLM لفحص:
 //  - أخطاء LaTeX (عربية في \text{}, أقواس غير متوازنة)
 //  - أخطاء رياضية (حسابات خاطئة, صيغ غير صحيحة)
 //  - أخطاء بيداغوجية (شرح غير واضح, خطوات ناقصة)
@@ -10,9 +10,10 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { getZAI } from "@/lib/z-ai";
+import { chat } from "@/lib/llm";
 
 export const runtime = "nodejs";
+export const maxDuration = 30;
 
 interface ContentIssue {
   file: string;
@@ -34,9 +35,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // تحميل Z-AI عبر الـ helper الموحّد
-    const zai = await getZAI();
 
     // تقسيم المحتوى إلى أجزاء (إذا كان طويلاً)
     const MAX_CHARS = 3000;
@@ -70,21 +68,20 @@ export async function POST(req: NextRequest) {
 
 إذا لم تجد أخطاء، أعطِ: []`;
 
-      const response = await zai.chat.completions.create({
-        messages: [
+      const result = await chat(
+        [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `فحص هذا المحتوى (${fileType || "محتوى رياضي"}):\n\n${chunk}` },
+          {
+            role: "user",
+            content: `فحص هذا المحتوى (${fileType || "محتوى رياضي"}):\n\n${chunk}`,
+          },
         ],
-        temperature: 0.3,
-        max_tokens: 1000,
-      });
-
-      const answer = response.choices?.[0]?.message?.content || "[]";
+        { temperature: 0.3, max_tokens: 1000 }
+      );
 
       // محاولة تحليل JSON
       try {
-        // استخراج JSON من الإجابة
-        const jsonMatch = answer.match(/\[[\s\S]*\]/);
+        const jsonMatch = result.content.match(/\[[\s\S]*\]/);
         if (jsonMatch) {
           const issues = JSON.parse(jsonMatch[0]);
           for (const issue of issues) {
@@ -98,14 +95,14 @@ export async function POST(req: NextRequest) {
             });
           }
         }
-      } catch (parseError) {
-        // إذا فشل تحليل JSON، نضيف الإجابة كنص
+      } catch {
+        // إذا فشل تحليل JSON
         allIssues.push({
           file: fileType || "محتوى",
           type: "pedagogy",
           severity: "info",
           description: "تعذّر تحليل نتيجة الفحص. راجع المحتوى يدوياً.",
-          snippet: answer.substring(0, 200),
+          snippet: result.content.substring(0, 200),
         });
       }
     }
@@ -129,13 +126,14 @@ export async function POST(req: NextRequest) {
       issues: allIssues,
       stats,
     });
-  } catch (error: any) {
-    console.error("Content check error:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("Content check error:", msg);
     return NextResponse.json(
       {
         success: false,
         error: "تعذّر فحص المحتوى. حاول مرة أخرى.",
-        details: error?.message,
+        details: msg,
       },
       { status: 500 }
     );
@@ -145,14 +143,9 @@ export async function POST(req: NextRequest) {
 // ============================================================
 //  GET — فحص شامل لكل المحتوى التلقائي
 // ============================================================
-
 export async function GET() {
   try {
-    // استيراد البيانات
     const { curriculum } = require("@/data/curriculum");
-    const { bacExams } = require("@/data/bac-exams");
-
-    const zai = await getZAI();
 
     const results: Array<{
       unit: string;
@@ -166,9 +159,9 @@ export async function GET() {
 الوصف: ${unit.description}
 
 الدروس:
-${unit.chapters.map((ch: any) => `
+${unit.chapters.map((ch: { title: string; lessons: { content?: string }[] }) => `
 - ${ch.title}
-  ${ch.lessons.map((l: any) => l.content?.substring(0, 500) || "").join("\n")}
+  ${ch.lessons.map((l: { content?: string }) => l.content?.substring(0, 500) || "").join("\n")}
 `).join("\n")}
 `;
 
@@ -177,20 +170,18 @@ ${unit.chapters.map((ch: any) => `
 إذا لا أخطاء: []`;
 
       try {
-        const response = await zai.chat.completions.create({
-          messages: [
+        const result = await chat(
+          [
             { role: "system", content: systemPrompt },
             { role: "user", content: unitContent.substring(0, 2000) },
           ],
-          temperature: 0.3,
-          max_tokens: 500,
-        });
+          { temperature: 0.3, max_tokens: 500 }
+        );
 
-        const answer = response.choices?.[0]?.message?.content || "[]";
-        const jsonMatch = answer.match(/\[[\s\S]*\]/);
+        const jsonMatch = result.content.match(/\[[\s\S]*\]/);
         let issues: ContentIssue[] = [];
         if (jsonMatch) {
-          issues = JSON.parse(jsonMatch[0]).map((i: any) => ({
+          issues = JSON.parse(jsonMatch[0]).map((i: Partial<ContentIssue>) => ({
             file: unit.title,
             type: i.type || "math",
             severity: i.severity || "warning",
@@ -205,7 +196,6 @@ ${unit.chapters.map((ch: any) => `
       }
     }
 
-    // إحصائيات شاملة
     const allIssues = results.flatMap((r) => r.issues);
     const stats = {
       unitsChecked: results.length,
@@ -225,13 +215,14 @@ ${unit.chapters.map((ch: any) => `
       results,
       stats,
     });
-  } catch (error: any) {
-    console.error("Auto check error:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("Auto check error:", msg);
     return NextResponse.json(
       {
         success: false,
         error: "تعذّر الفحص التلقائي.",
-        details: error?.message,
+        details: msg,
       },
       { status: 500 }
     );

@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getZAI } from "@/lib/z-ai";
+import { tts } from "@/lib/llm";
 
 // ============================================================
 //  API لتوليد الصوت من النص (TTS) — يدعم العربية
-//  يستعمل z-ai-web-dev-sdk السحابي — يعمل على كل الأجهزة
+//  يستعمل Pollinations TTS السحابي (مجاني، بدون مفتاح)
 // ============================================================
+
+export const runtime = "nodejs";
+export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, speed = 1.0 } = await req.json();
+    const { text, speed = 1.0, voice = "tongtong" } = await req.json();
 
     if (!text || text.trim().length === 0) {
       return NextResponse.json({ error: "النص مطلوب" }, { status: 400 });
@@ -21,35 +24,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // تحميل Z-AI عبر الـ helper الموحّد
-    const zai = await getZAI();
+    // توليد الصوت عبر Pollinations (مجاني)
+    const result = await tts(text.trim(), voice);
 
-    // توليد الصوت
-    const response = await zai.audio.tts.create({
-      input: text.trim(),
-      voice: "tongtong",
-      speed: Math.min(Math.max(speed, 0.5), 2.0),
-      response_format: "wav",
-      stream: false,
-    });
+    const buffer = Buffer.from(new Uint8Array(result.audio));
 
-    // استخراج البيانات الصوتية
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(new Uint8Array(arrayBuffer));
-
-    // إرجاع الصوت كـ WAV
     return new NextResponse(buffer, {
       status: 200,
       headers: {
-        "Content-Type": "audio/wav",
+        "Content-Type": `audio/${result.format}`,
         "Content-Length": buffer.length.toString(),
         "Cache-Control": "public, max-age=86400",
       },
     });
-  } catch (error) {
-    console.error("TTS API Error:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("TTS API Error:", msg);
     return NextResponse.json(
-      { error: "فشل توليد الصوت" },
+      { error: "فشل توليد الصوت", details: msg },
       { status: 500 }
     );
   }

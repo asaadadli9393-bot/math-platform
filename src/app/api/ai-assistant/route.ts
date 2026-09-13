@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getZAI } from "@/lib/z-ai";
+import { chat } from "@/lib/llm";
 
 // ============================================================
 //  API المساعد الذكي — منصة الرياضيات | الأستاذ عدلي أسعد
-//  يستعمل z-ai-web-dev-sdk للإجابة على أسئلة الرياضيات بالعربية
+//  يستعمل LLM متعدد المزوّدين (Pollinations/ZhipuAI/DeepSeek/Groq/OpenAI)
 // ============================================================
+
+export const runtime = "nodejs";
+export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,9 +16,6 @@ export async function POST(req: NextRequest) {
     if (!question || !question.trim()) {
       return NextResponse.json({ error: "السؤال مطلوب" }, { status: 400 });
     }
-
-    // استيراد z-ai-web-dev-sdk عبر الـ helper الموحّد
-    const zai = await getZAI();
 
     // بناء الـ prompt بالعربية — متطور مع سياق المنهاج
     const systemPrompt = `أنت مساعد ذكي متطور لمنصة الرياضيات للأستاذ عدلي أسعد، مخصص لطلبة السنة الثالثة ثانوي في الجزائر (الشعب العلمية: علوم تجريبية، رياضيات، تقني رياضي).
@@ -61,25 +61,25 @@ export async function POST(req: NextRequest) {
     // إضافة السؤال الحالي
     messages.push({ role: "user", content: question });
 
-    const response = await zai.chat.completions.create({
-      messages,
+    const result = await chat(messages, {
       temperature: 0.7,
       max_tokens: 800,
     });
 
-    const answer = response.choices?.[0]?.message?.content || "عذراً، لم أتمكن من الإجابة. حاول مرة أخرى.";
-
     return NextResponse.json({
       success: true,
-      answer,
+      answer: result.content,
+      provider: result.provider,
+      model: result.model,
     });
-  } catch (error: any) {
-    console.error("AI Assistant error:", error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("AI Assistant error:", msg);
     return NextResponse.json(
       {
         success: false,
         error: "تعذّر الاتصال بالمساعد الذكي. حاول مرة أخرى.",
-        details: error?.message,
+        details: msg,
       },
       { status: 500 }
     );
