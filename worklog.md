@@ -598,3 +598,51 @@ Stage Summary:
 7. أخذ VERCEL_ORG_ID + VERCEL_PROJECT_ID من .vercel/project.json
 8. عدّل .env.production بالـ IDs الجديدة وأعد رفع الأسرار
 9. git push origin main (سيُطلق النشر التلقائي)
+
+---
+Task ID: production-deploy-success
+Agent: main (Super Z)
+Task: النشر البرمجي الكامل على Vercel عبر REST API
+
+Work Log:
+- استلام VERCEL_TOKEN (vcp_...) من الأستاذ
+- اكتشاف أن التوكن يعمل على /v9/projects ولكن لا على /v2/user (نوع خاص)
+- جلب معلومات المشروع الموجود مسبقًا على Vercel:
+  * Project ID: prj_fmumwoENNgTzguMu4xAKkyqJAC3t
+  * Org ID: team_JZvbO8QvFAimHHtQkjDVUJx1
+  * Repo: asaadadli9393-bot/math-platform
+- حفظ الـ IDs في .env.production
+- إنشاء .vercel/project.json محليًا للربط
+- إنشاء scripts/sync-vercel-env.py (رفع متغيرات البيئة إلى Vercel):
+  * استعمل Vercel REST API v10 (POST /v10/projects/{id}/env)
+  * رفع 7 متغيرات بنجاح (DATABASE_URL, ADMIN_*, NEXTAUTH_SECRET, SMTP_*)
+  * تخطّي SMTP_PASS لأنه فارغ
+- إنشاء scripts/vercel-deploy-github.py (نشر عبر Git source):
+  * POST /v13/deployments مع gitSource من GitHub
+  * Vercel يسحب الكود من GitHub تلقائيًا ويبنيه
+  * تتبّع حالة البناء عبر polling على /v13/deployments/{id}
+- محاولة أولى فشلت: "incorrect_git_source_info" — الكود المحلي غير مدفوع لـ GitHub
+- دفع الكود لـ GitHub (commit b23c99d)
+- محاولة ثانية نجحت:
+  * Deployment ID: dpl_Cpw536RMgZfPnVVSVSTAH8ezyWpJ
+  * مدة البناء: 216 ثانية (3.6 دقائق)
+  * Production URL: https://math-platform-weld.vercel.app
+  * Aliases: 3 روابط (math-platform-weld, math-platform-git-main, math-platform-math-d34c)
+
+Stage Summary:
+- ✅ المنصة منشورة على الإنتاج: https://math-platform-weld.vercel.app
+- ✅ الصفحة الرئيسية: HTTP 200
+- ✅ /admin: HTTP 200
+- ✅ /api/mock-exam: HTTP 200 (يعمل بشكل صحيح، أعاد 10 أسئلة)
+- ⚠️  /api/auth/register: HTTP 500 (يحتاج إلى فحص قاعدة البيانات)
+- 🔑 معلومات الإنتاج:
+  * Project ID: prj_fmumwoENNgTzguMu4xAKkyqJAC3t
+  * Org ID: team_JZvbO8QvFAimHHtQkjDVUJx1
+  * Production URL: https://math-platform-weld.vercel.app
+  * Deployment ID: dpl_Cpw536RMgZfPnVVSVSTAH8ezyWpJ
+
+**الخطوات التالية للأستاذ:**
+1. فتح https://math-platform-weld.vercel.app واختبار المنصة
+2. إن كان /api/auth/register يفشل: نتحقق من بنية قاعدة البيانات على Neon
+3. إضافة SMTP_PASS لتشغيل إشعارات البريد
+4. تفعيل النشر التلقائي: أي git push سيُطلق نشرًا جديدًا تلقائيًا (المشروع مربوط بـ GitHub)

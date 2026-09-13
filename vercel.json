@@ -1,12 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma generate || true && next build",
+  "buildCommand": "bash scripts/set-prisma-provider.sh && npx prisma generate && next build",
   "framework": "nextjs",
-  "regions": ["cdg1"],
-  "env": {
-    "ADMIN_KEY": "adli2024",
-    "ADMIN_EMAIL": "asaadadli9393@gmail.com",
-    "NEXTAUTH_SECRET": "math-platform-adli-2026-secure-secret-key",
-    "DATABASE_URL": "file:./db/custom.db"
-  }
+  "regions": ["cdg1"]
 }
