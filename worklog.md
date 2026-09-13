@@ -469,3 +469,42 @@ Stage Summary:
 3. تشغيل: bash scripts/postgres-wizard.sh
 4. إضافة DATABASE_URL إلى Vercel → Settings → Environment Variables
 5. إعادة النشر: npx vercel --prod (بعد تسجيل الدخول)
+
+---
+Task ID: pg-migration-success
+Agent: main (Super Z)
+Task: تنفيذ الإعداد الكامل لقاعدة PostgreSQL على Neon المقدّمة من الأستاذ
+
+Work Log:
+- تثبيت better-sqlite3 (للترحيل) + tsx (لتشغيل TS بـ Node.js)
+- محاولة أولى بـ bun فشلت (NAPI crash مع better-sqlite3)
+- تشغيل بنجاح عبر npx tsx:
+  * تبديل مزوّد Prisma إلى postgresql ✅
+  * prisma generate + db push: 18 جدول منشأة في PostgreSQL ✅
+  * ترحيل بيانات SQLite (1 user + 5 adminSetting = 6 صفوف) ✅
+  * seed-admin-settings: 4 مفاتيح مزروعة ✅
+  * تقرير نهائي مطبوع ✅
+- إصلاح سكربت الترحيل:
+  * إضافة DATETIME_COLUMNS لتحويل Unix ms → Date
+  * SQLite يخزّن DateTime كـ Int، PostgreSQL يتوقع Date
+  * قبل الإصلاح: فشل ترحيل User بـ "Invalid value for updatedAt"
+  * بعد الإصلاح: نجح الترحيل بالكامل
+- إعادة ضبط Prisma لـ SQLite محلي (set-prisma-provider.sh)
+- git push (commit e23262e)
+
+Stage Summary:
+- ✅ قاعدة PostgreSQL جاهزة على Neon (eu-central-1 Frankfurt)
+- ✅ 18 جدول منشأة + 6 صفوف مُرحّلة
+- ✅ 4 مفاتيح AdminSetting مزروعة
+- ✅ نسخة احتياطية: db/custom.db.backup
+- 🔑 معلومات الاتصال:
+  - Host: ep-rough-leaf-b1c6lxfr-pooler.c-5.eu-central-1.aws.neon.tech
+  - Database: neondb
+  - User: neondb_owner
+  - SSL: require + channel_binding=require
+
+**الخطوات التالية للأستاذ:**
+1. استملاك المنصة المؤقتة على Vercel (تنتهي خلال 59 دقيقة)
+2. إضافة DATABASE_URL إلى Vercel → Settings → Environment Variables
+3. إعادة النشر: npx vercel --prod (بعد npx vercel login)
+4. اختبار: تسجيل دخول + امتحان تجريبي + /admin
