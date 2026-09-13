@@ -154,11 +154,33 @@ async function main(): Promise<void> {
           console.log(`   • ${table}: ${rows.length} صفوف جارٍ الترحيل...`);
 
           // تنظيف البيانات
+          // - BigInt → Number
+          // - Buffer → string
+          // - الأرقام الكبيرة في أعمدة DateTime (updatedAt, createdAt) → Date
+          //   (SQLite يخزّنها كـ Int Unix timestamp بالمللي ثانية)
+          const DATETIME_COLUMNS = new Set([
+            "createdAt",
+            "updatedAt",
+            "lastVisitedAt",
+            "date",
+            "scheduledAt",
+            "sentAt",
+            "paidAt",
+            "expiresAt",
+            "watchedAt",
+            "completedAt",
+            "startedAt",
+            "finishedAt",
+          ]);
+
           const cleaned = rows.map((row) => {
             const out: Record<string, unknown> = {};
             for (const [k, v] of Object.entries(row)) {
               if (v === null) {
                 out[k] = null;
+              } else if (DATETIME_COLUMNS.has(k) && typeof v === "number") {
+                // تحويل Unix ms → Date
+                out[k] = new Date(v);
               } else if (typeof v === "bigint") {
                 out[k] = Number(v);
               } else if (Buffer.isBuffer(v)) {

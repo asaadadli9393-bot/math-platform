@@ -89,10 +89,12 @@
     "@types/katex": "^0.16.8",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "better-sqlite3": "^13.0.3",
     "bun-types": "^1.3.4",
     "eslint": "^9",
     "eslint-config-next": "^16.1.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   }
