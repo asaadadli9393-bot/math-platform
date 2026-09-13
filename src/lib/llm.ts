@@ -21,11 +21,12 @@
 // ============================================================
 
 import { openaiCompatibleChat } from "@/lib/llm-providers";
+import { getLocalAnswer } from "@/lib/llm-local";
 
 // ---------------------------------------------------------------------------
 //  أنواع
 // ---------------------------------------------------------------------------
-export type Provider = "pollinations" | "zhipu" | "deepseek" | "groq" | "openai" | "custom";
+export type Provider = "pollinations" | "zhipu" | "deepseek" | "groq" | "openai" | "custom" | "local";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -95,6 +96,13 @@ const PROVIDERS: Record<Provider, ProviderConfig> = {
     model: process.env.LLM_MODEL || "default",
     needsAuth: !!process.env.LLM_API_KEY,
     apiKeyEnv: "LLM_API_KEY",
+  },
+  local: {
+    baseUrl: "",
+    model: "preset",
+    needsAuth: false,
+    apiKeyEnv: "",
+    noAuth: true,
   },
 };
 
@@ -206,11 +214,39 @@ export async function chat(
     }
   }
 
+  // فشل كل المزوّدين — نرجع خطأً واضحًا
   throw new Error(
     `تعذّر الحصول على رد من أي مزوّد. آخر خطأ: ${
       lastError instanceof Error ? lastError.message : String(lastError)
     }`
   );
+}
+
+// ---------------------------------------------------------------------------
+//  chatWithFallback — مثل chat، لكن يرجع ردًا محليًا عند الفشل
+//  بدلًا من رمي استثناء
+// ---------------------------------------------------------------------------
+export async function chatWithFallback(
+  messages: ChatMessage[],
+  options: ChatOptions & { fallbackQuestion?: string } = {}
+): Promise<ChatResult & { usedFallback: boolean; suggestedUnit?: string }> {
+  try {
+    const result = await chat(messages, options);
+    return { ...result, usedFallback: false };
+  } catch {
+    // استعمال الـ fallback المحلي
+    const question = options.fallbackQuestion ||
+      messages.findLast((m) => m.role === "user")?.content ||
+      "";
+    const local = getLocalAnswer(question);
+    return {
+      content: local?.content ?? "عذراً، تعذّر الإجابة حاليًا. حاول لاحقًا.",
+      provider: "local",
+      model: "preset",
+      usedFallback: true,
+      suggestedUnit: local?.suggestedUnit,
+    };
+  }
 }
 
 // ---------------------------------------------------------------------------

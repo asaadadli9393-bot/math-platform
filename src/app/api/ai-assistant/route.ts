@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chat } from "@/lib/llm";
+import { chatWithFallback } from "@/lib/llm";
 
 // ============================================================
 //  API المساعد الذكي — منصة الرياضيات | الأستاذ عدلي أسعد
@@ -61,16 +61,22 @@ export async function POST(req: NextRequest) {
     // إضافة السؤال الحالي
     messages.push({ role: "user", content: question });
 
-    const result = await chat(messages, {
-      temperature: 0.7,
-      max_tokens: 800,
-    });
+    const result = await chatWithFallback(
+      messages,
+      {
+        temperature: 0.7,
+        max_tokens: 800,
+        fallbackQuestion: question,
+      }
+    );
 
     return NextResponse.json({
       success: true,
       answer: result.content,
       provider: result.provider,
       model: result.model,
+      usedFallback: result.usedFallback,
+      suggestedUnit: result.suggestedUnit,
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
