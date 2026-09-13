@@ -68,16 +68,29 @@ export async function POST(req: NextRequest) {
 
 إذا لم تجد أخطاء، أعطِ: []`;
 
-      const result = await chat(
-        [
-          { role: "system", content: systemPrompt },
-          {
-            role: "user",
-            content: `فحص هذا المحتوى (${fileType || "محتوى رياضي"}):\n\n${chunk}`,
-          },
-        ],
-        { temperature: 0.3, max_tokens: 1000 }
-      );
+      let result;
+      try {
+        result = await chat(
+          [
+            { role: "system", content: systemPrompt },
+            {
+              role: "user",
+              content: `فحص هذا المحتوى (${fileType || "محتوى رياضي"}):\n\n${chunk}`,
+            },
+          ],
+          { temperature: 0.3, max_tokens: 1000 }
+        );
+      } catch {
+        // Fallback ذكي عند فشل LLM
+        allIssues.push({
+          file: fileType || "محتوى",
+          type: "pedagogy",
+          severity: "info",
+          description: "تعذّر الفحص التلقائي عبر LLM. راجع المحتوى يدويًا.",
+          snippet: chunk.substring(0, 200),
+        });
+        continue;
+      }
 
       // محاولة تحليل JSON
       try {

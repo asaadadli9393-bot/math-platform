@@ -35,13 +35,34 @@ ${templateGuide}
 1. [نوع]: [وصف]
 ---END---`;
 
-    const result = await chat(
-      [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: content.substring(0, 2500) },
-      ],
-      { temperature: 0.3, max_tokens: 1500 }
-    );
+    let result;
+    try {
+      result = await chat(
+        [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: content.substring(0, 2500) },
+        ],
+        { temperature: 0.3, max_tokens: 1500 }
+      );
+    } catch {
+      // Fallback ذكي عند فشل LLM
+      return NextResponse.json({
+        success: true,
+        result: {
+          original: content,
+          fixed: content, // نرجع المحتوى الأصلي دون تغيير
+          changes: [],
+          provider: "local",
+          model: "no-change",
+          stats: {
+            totalChanges: 0,
+            byType: {},
+          },
+          fallback: true,
+          message: "خدمة الإصلاح التلقائي غير متاحة حاليًا. تم إرجاع المحتوى الأصلي دون تغييرات.",
+        },
+      });
+    }
 
     const answer = result.content;
 
