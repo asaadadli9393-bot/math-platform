@@ -857,3 +857,48 @@ Stage Summary:
 - ✅ Gemini يدعم العربية بشكل ممتاز ويذكر المحاور من المنهاج
 - ⚠️ TTS ما زال يحتاج إلى حل بديل
 - 🔑 المفتاح المُستعمل: AQ.Ab8RN6LkE8W... (Google AI Studio)
+
+---
+Task ID: real-tts-and-domain-fix
+Agent: main (Super Z)
+Task: تفعيل TTS حقيقي + معالجة ظهور المنصة على النطاق المخصص
+
+Work Log:
+- 1) TTS الحقيقي:
+  * اكتشاف أن Google Translate TTS يدعم العربية ممتاز بدون مفتاح
+  * تحديث src/lib/llm.ts: tts() متعدد المزوّدين:
+    - Google Translate TTS (يفضّل — يدعم العربية)
+    - Pollinations TTS (fallback)
+    - WAV فارغ (fallback نهائي)
+  * تحديث /api/tts/route.ts:
+    - إرجاع MP3 بدلًا من WAV (أصغر وأكثر توافقًا)
+    - X-TTS-Provider header لكشف المزوّد
+    - Cache-Control: 24 ساعة
+  * اختبار على الإنتاج: 42048 bytes MP3 صوتي حقيقي بالعربية ✅
+
+- 2) مشكل ظهور المنصة على math-adli.com:
+  * تشخيص: DNS غير مُهيّأ (A record ناقص)
+  * dig +short math-adli.com A → فارغ
+  * Vercel تأكد: النطاق مُضاف لكن بانتظار DNS
+  * إنشاء scripts/check-domain-dns.py:
+    - فحص DNS عبر 3 خوادم (Cloudflare, Google, Quad9)
+    - اختبار HTTP/HTTPS
+    - تعليمات DNS واضحة للأستاذ
+  * النطاق الافتراضي math-platform-weld.vercel.app يعمل بشكل كامل ✅
+
+- 3) الاختبار الشامل على الإنتاج:
+  * TTS: 42KB MP3 صوتي حقيقي بالعربية ✅
+  * المساعد الذكي (Gemini): نجح، LaTeX صحيح ✅
+  * المصادقة: نجح ✅
+  * امتحان تجريبي: HTTP 200 ✅
+  * الصفحة الرئيسية: HTTP 200 ✅
+
+Stage Summary:
+- ✅ TTS حقيقي يعمل عبر Google Translate TTS (يدعم العربية ممتاز)
+- ✅ المساعد الذكي يعمل عبر Google Gemini
+- ✅ كل APIs تعمل على الرابط الافتراضي
+- ⏳ النطاق المخصص math-adli.com بانتظار سجلات DNS من الأستاذ
+- 🔑 معلومات الإنتاج:
+  * الرابط الافتراضي (شغّال): https://math-platform-weld.vercel.app
+  * النطاق المخصص: https://math-adli.com (بانتظار DNS)
+  * آخر Deployment ID: dpl_Apz7ceqGjFPXE2GXgpojApWGxev6
