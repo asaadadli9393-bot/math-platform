@@ -90,55 +90,86 @@ DATABASE_URL="postgresql://..." bun run scripts/setup-postgres.ts --skip-migrate
 
 ### الخطوة 2: النشر على Vercel
 
-#### الطريقة 1: النشر البرمجي (مُوصى به — تفعيل تلقائي عبر `git push`)
+#### الطريقة 1: النشر البرمجي الكامل (مُوصى به — CI/CD تلقائي)
 
-**1. احصل على Vercel Access Token:**
-- اذهب إلى [vercel.com/account/tokens](https://vercel.com/account/tokens)
-- اضغط **Create Token** → اسم: `math-platform-deploy`
-- Scope: Full Account
-- انسخ التوكن (لن يُعرض مرة أخرى)
+هذه الطريقة تُفعّل نشرًا تلقائيًا على Vercel عند كل `git push` عبر GitHub Actions.
 
-**2. احفظ التوكن محليًا:**
+**1. جهّز ملف `.env.production`:**
+
 ```bash
-echo "VERCEL_TOKEN=vercel_xxx..." >> .env
+cp .env.production.example .env.production
+nano .env.production
+```
+
+املأ القيم الفارغة:
+
+| المتغير | كيف تحصل عليه |
+|---------|---------------|
+| `VERCEL_TOKEN` | https://vercel.com/account/tokens → Create Token (Full Account) |
+| `GITHUB_TOKEN` | https://github.com/settings/tokens?type=beta → Generate (repo + Actions + Secrets) |
+| `VERCEL_ORG_ID` | Vercel → Project → Settings → General (يظهر بعد أول ربط) |
+| `VERCEL_PROJECT_ID` | Vercel → Project → Settings → General (يظهر بعد أول ربط) |
+| `SMTP_PASS` | كلمة تطبيق Gmail (16 حرف) من myaccount.google.com/apppasswords |
+
+`DATABASE_URL`, `ADMIN_KEY`, `ADMIN_EMAIL`, `NEXTAUTH_SECRET`, `SMTP_HOST/PORT/USER` — مُعبّأة مسبقًا.
+
+**2. امزامنة الأسرار مع GitHub دفعة واحدة:**
+
+```bash
+bash scripts/sync-github-secrets.sh
+```
+
+سيقوم السكربت بـ:
+- قراءة 11 متغيرًا من `.env.production`
+- تشفيرها باستخدام `pynacl` (مفتاح تشفير المستودع العام)
+- رفعها إلى GitHub عبر REST API
+- التحقق النهائي من نجاح الرفع
+
+بدائل:
+```bash
+bash scripts/sync-github-secrets.sh --verify    # طباعة حالة الأسرار فقط
+bash scripts/sync-github-secrets.sh --delete    # حذف كل الأسرار
 ```
 
 **3. امزامنة متغيرات البيئة مع Vercel:**
+
 ```bash
+# استعمل نفس الملف
 bash scripts/sync-vercel-env.sh
 ```
+
 يرفع 8 متغيرات (DATABASE_URL, ADMIN_KEY, ADMIN_EMAIL, NEXTAUTH_SECRET, SMTP_*).*
 
-**4. شغّل النشر البرمجي:**
+**4. شغّل النشر الأول (مع ربط المشروع):**
+
 ```bash
-bash scripts/deploy-vercel.sh
+bash scripts/deploy-vercel.sh --link
 ```
-يقوم السكربت بـ:
-- تبديل مزوّد Prisma إلى postgresql
-- توليد Prisma Client
-- بناء Next.js
-- رفع المشروع إلى Vercel (production)
-- إعادة ضبط Prisma لـ SQLite محلي
 
-**5. (اختياري) تفعيل النشر التلقائي عبر GitHub Actions:**
+بعد النشر الأول، ستجد `VERCEL_ORG_ID` و `VERCEL_PROJECT_ID` في:
+- Vercel → Project → Settings → General
+- أو في ملف `.vercel/project.json` محليًا
 
-أضف هذه الأسرار إلى المستودع على GitHub (Settings → Secrets → Actions):
+**5. أعد تعبئة `.env.production` بالـ IDs الجديدة:**
 
-| Secret | القيمة |
-|--------|--------|
-| `VERCEL_TOKEN` | نفس `VERCEL_TOKEN` من .env |
-| `VERCEL_ORG_ID` | من Vercel → Project → Settings |
-| `VERCEL_PROJECT_ID` | من Vercel → Project → Settings |
-| `DATABASE_URL` | `postgresql://...` (Neon) |
-| `ADMIN_KEY` | `adli2024` |
-| `ADMIN_EMAIL` | `asaadadli9393@gmail.com` |
-| `NEXTAUTH_SECRET` | `math-platform-adli-2026-secure-secret-key` |
-| `SMTP_HOST` | `smtp.gmail.com` |
-| `SMTP_PORT` | `587` |
-| `SMTP_USER` | `asaadadli9393@gmail.com` |
-| `SMTP_PASS` | كلمة تطبيق Gmail |
+```bash
+nano .env.production
+# فعّل VERCEL_ORG_ID و VERCEL_PROJECT_ID
+# ثم أعد رفع الأسرار:
+bash scripts/sync-github-secrets.sh
+```
 
-بعد ذلك، كل `git push origin main` سيُطلق نشرًا تلقائيًا على Vercel.
+**6. النشر اللاحق (تلقائي عبر GitHub):**
+
+```bash
+git push origin main
+# سيُطلق workflow النشر تلقائيًا
+```
+
+أو نشر يدوي من GitHub UI:
+- اذهب إلى https://github.com/asaadadli9393-bot/math-platform/actions
+- اختر workflow "🚀 Deploy to Vercel"
+- اضغط "Run workflow"
 
 #### الطريقة 2: النشر اليدوي عبر Dashboard
 
