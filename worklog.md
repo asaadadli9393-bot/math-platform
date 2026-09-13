@@ -554,3 +554,47 @@ Stage Summary:
 5. تشغيل `bash scripts/deploy-vercel.sh --link` أول مرة لربط المشروع
 6. ثم `bash scripts/deploy-vercel.sh` للنشر
 7. (اختياري) إضافة الأسرار إلى GitHub لتفعيل النشر التلقائي
+
+---
+Task ID: github-secrets-sync
+Agent: main (Super Z)
+Task: إنشاء سكربت لمزامنة أسرار GitHub دفعة واحدة (لتشغيل CI/CD)
+
+Work Log:
+- إنشاء scripts/sync-github-secrets.sh (سكربت شامل):
+  * يقرأ 11 متغيرًا من .env.production
+  * يجلب مفتاح تشفير المستودع العام من GitHub API
+  * يشفر كل سر باستخدام pynacl (Sodium)
+  * يرفع الأسرار المشفرة إلى GitHub عبر REST API (PUT)
+  * يدعم 3 أوضاع: push (افتراضي), --verify (طباعة حالة), --delete (حذف)
+  * لا يحتاج gh CLI — فقط curl + python3
+  * تحقق نهائي من نجاح كل عملية رفع
+  * مخرجات ملوّنة وملخّص نهائي
+- إنشاء .env.production.example و .env.production:
+  * ملف منفصل عن .env (التطوير المحلي يبقى SQLite)
+  * يحوي VERCEL_TOKEN, GITHUB_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+  * + DATABASE_URL (Neon), ADMIN_*, NEXTAUTH_SECRET, SMTP_*
+  * مُضاف إلى .gitignore
+- تثبيت pynacl عبر pip3 (مكتبة التشفير)
+- README محدّث بقسم النشر البرمجي الكامل بالخطوات الست
+- git push (commit 3649bf7)
+
+Stage Summary:
+- ✅ scripts/sync-github-secrets.sh — 3 أوضاع (push/verify/delete)
+- ✅ .env.production + .env.production.example
+- ✅ pynacl مثبّت للتشفير
+- ✅ README محدّث بالكامل
+- ✅ Pushed to GitHub (commit 3649bf7)
+
+**الخطوات التالية للأستاذ:**
+1. احصل على GitHub PAT: https://github.com/settings/tokens?type=beta
+   - Repository access: asaadadli9393-bot/math-platform
+   - Permissions: Actions (R/W), Secrets (R/W)
+2. احصل على Vercel Token: https://vercel.com/account/tokens
+3. عدّل .env.production: عبّأ VERCEL_TOKEN و GITHUB_TOKEN
+4. شغّل: bash scripts/sync-github-secrets.sh
+5. ثم: bash scripts/sync-vercel-env.sh
+6. ثم: bash scripts/deploy-vercel.sh --link (أول نشر)
+7. أخذ VERCEL_ORG_ID + VERCEL_PROJECT_ID من .vercel/project.json
+8. عدّل .env.production بالـ IDs الجديدة وأعد رفع الأسرار
+9. git push origin main (سيُطلق النشر التلقائي)
