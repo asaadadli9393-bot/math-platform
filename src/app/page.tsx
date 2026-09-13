@@ -33,6 +33,7 @@ import {
 import { MarkdownMath } from "@/components/math-renderer";
 import { VariationTable, type VariationRow } from "@/components/variation-table";
 import { LiveClasses } from "@/components/live-classes";
+import { SearchView, StudentNotes, StudyPlanner, DarkModeToggle } from "@/components/student-tools";
 import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";
@@ -129,6 +130,9 @@ import {
   Gift,
   RefreshCw,
   Copy,
+  Search,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FunctionPlot } from "@/components/function-plot";
@@ -147,11 +151,15 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Box,
   Divide,
   LineChart,
+  Search,
+  Sun,
+  Moon,
+  Calendar,
   Video,
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics" | "live-classes";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics" | "live-classes" | "search" | "study-tools";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -314,6 +322,14 @@ export default function HomePage() {
                 <Video className="w-4 h-4 ml-2" />
                 حصص Zoom
               </NavButton>
+              <NavButton active={view === "search"} onClick={() => navigateTo("search")}>
+                <Search className="w-4 h-4 ml-2" />
+                بحث
+              </NavButton>
+              <NavButton active={view === "study-tools"} onClick={() => navigateTo("study-tools")}>
+                <Calendar className="w-4 h-4 ml-2" />
+                أدوات الدراسة
+              </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
@@ -398,6 +414,12 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("live-classes")}>
                     <Video className="w-4 h-4 ml-2" /> حصص Zoom
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("search")}>
+                    <Search className="w-4 h-4 ml-2" /> بحث
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("study-tools")}>
+                    <Calendar className="w-4 h-4 ml-2" /> أدوات الدراسة
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
@@ -494,6 +516,26 @@ export default function HomePage() {
         {view === "exams" && <ExamsView />}
 
         {view === "live-classes" && <LiveClasses />}
+
+        {view === "search" && <SearchView onNavigate={(v, slug) => navigateTo(v as MainView, slug)} />}
+
+        {view === "study-tools" && (
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-3">
+                <Calendar className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 academic-divider mx-auto">
+                أدوات الدراسة
+              </h1>
+              <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                ملاحظات شخصية + مخطط دراسة أسبوعي + تتبّع التقدّم
+              </p>
+            </div>
+            <StudyPlanner />
+            <StudentNotes />
+          </div>
+        )}
 
         {view === "pricing" && (
           <PricingView
