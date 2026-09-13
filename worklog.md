@@ -725,3 +725,44 @@ Stage Summary:
 4. انتظار 5-30 دقيقة
 5. تشغيل: python3 scripts/vercel-check-domain.py
 6. Vercel سيُفعّل SSL تلقائيًا بمجرد انتشاره DNS
+
+---
+Task ID: ai-assistant-fix-attempt
+Agent: main (Super Z)
+Task: إصلاح فشل المساعد الذكي + TTS + فحص المحتوى على الإنتاج
+
+Work Log:
+- اكتشاف المشكلة الأصلية: 4 API routes تفشل على Vercel
+  * /api/ai-assistant, /api/ai-content-check, /api/ai-content-fix, /api/tts
+  * الخطأ: "Configuration file not found or invalid"
+  * السبب: z-ai-web-dev-sdk يبحث عن .z-ai-config في 3 مسارات
+    - process.cwd()/.z-ai-config
+    - ~/.z-ai-config (غير متوفر على Vercel)
+    - /etc/.z-ai-config (غير متوفر على Vercel)
+- إنشاء src/lib/z-ai.ts (helper موحّد):
+  * يقرأ Z_AI_* env vars
+  * يكتب ملف .z-ai-config مؤقّت في cwd + /tmp + HOME
+  * cache لـ ZAI instance
+  * testZAI() للتحقق
+- تحديث 4 API routes لاستعمال getZAI()
+- رفع 5 متغيرات Z_AI_* إلى Vercel (Z_AI_BASE_URL, Z_AI_API_KEY, Z_AI_CHAT_ID, Z_AI_USER_ID, Z_AI_TOKEN)
+- إعادة النشر على Vercel:
+  * النطاق math-adli.com أصبح يستجيب! (DNS انتشر)
+  * لكن المساعد الذكي لا يزال يفشل بـ "fetch failed"
+- التحقيق في السبب:
+  * Z_AI_BASE_URL = https://internal-api.z.ai/v1
+  * internal-api.z.ai هو API داخلي لا يُوصل إليه من Vercel serverless
+  * جرّبنا open.bigmodel.cn (ZhipuAI العام) لكن الـ JWT لا يعمل كـ API key
+
+Stage Summary:
+- ✅ النشر نجح على math-adli.com
+- ⚠️  المساعد الذكي يحتاج إلى API key حقيقي على open.bigmodel.cn
+- 🔑 الحل المطلوب:
+  1. إنشاء حساب على https://open.bigmodel.cn
+  2. توليد API key بصيغة xxx.yyy (معرف.سر)
+  3. استبدال Z_AI_BASE_URL و Z_AI_API_KEY و Z_AI_TOKEN في .env.production
+  4. إعادة المزامنة + النشر
+
+**ملاحظة:** Z_AI_BASE_URL يجب أن يكون https://open.bigmodel.cn/api/paas/v4
+            Z_AI_API_KEY يجب أن يكون بصيغة xxx.yyy (معرف.سر)
+            Z_AI_TOKEN يمكن أن يُترك فارغًا (لن يُستعمل)
