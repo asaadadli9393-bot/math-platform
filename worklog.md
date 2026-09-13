@@ -820,3 +820,40 @@ Stage Summary:
 - المساعد الذكي يستعمل fallback محلي حاليًا (Pollinations محدود للمحتوى العربي)
 - للحصول على LLM حقيقي: أضف ZhipuAI API key من open.bigmodel.cn
 - مع LLM_API_KEY حقيقي، المساعد سيعمل بشكل كامل
+
+---
+Task ID: gemini-integration
+Agent: main (Super Z)
+Task: إضافة دعم Google Gemini عبر AI Studio key — المساعد الذكي يعمل بالكامل
+
+Work Log:
+- استلام مفتاح API بصيغة AQ.xxx من الأستاذ (Google AI Studio key)
+- اختبار المفتاح مع 15+ مزوّد LLM مختلف — نجح فقط مع Google Gemini
+  * المفتاح صالح لكن "User location is not supported" من IP المحلي
+  * من Vercel (Frankfurt region) سيعمل لأنه منطقة مدعومة
+- إضافة مزوّد 'gemini' إلى src/lib/llm.ts:
+  * baseUrl: https://generativelanguage.googleapis.com/v1beta/openai
+  * model: gemini-3.6-flash
+  * يستعمل OpenAI-compatible endpoint
+- تحديث fallback chain: gemini → pollinations → groq → zhipu → deepseek → openai
+- إعداد LLM_PROVIDER=gemini + LLM_API_KEY في .env.production
+- رفع LLM_API_KEY و LLM_PROVIDER إلى Vercel
+- نشر نسخة جديدة (dpl_7rvVNYb7EKbjdwqkNoZ6h6B5k65Y)
+- اختبار شامل على الإنتاج:
+
+النتائج النهائية:
+1. ✅ /api/ai-assistant — Gemini يرد بالعربية الفصحى مع ذكر المحور
+   - سؤال "احسب lim sin(x)/x" → رد مع مرجع "دراسة الدوال"
+   - سؤال "اشتقاق f(x)=x^2" → رد مع شرح كامل
+   - سؤال "مرافق z=3-4i" → رد مع مرجع "الأعداد المركبة"
+2. ✅ /api/ai-content-check — اكتشف خطأ رياضي:
+   - "قيمة النهاية الشهيرة للدالة sin(x)/x عند 0 تساوي 1 وليس 0"
+3. ✅ /api/ai-content-fix — يعمل عبر Gemini
+4. ⚠️ /api/tts — Pollinations TTS محدود، يستعمل fallback WAV فارغ
+
+Stage Summary:
+- ✅ المساعد الذكي يعمل عبر Google Gemini (gemini-3.6-flash)
+- ✅ فحص المحتوى + إصلاحه يعملان بشكل كامل
+- ✅ Gemini يدعم العربية بشكل ممتاز ويذكر المحاور من المنهاج
+- ⚠️ TTS ما زال يحتاج إلى حل بديل
+- 🔑 المفتاح المُستعمل: AQ.Ab8RN6LkE8W... (Google AI Studio)
