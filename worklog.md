@@ -646,3 +646,41 @@ Stage Summary:
 2. إن كان /api/auth/register يفشل: نتحقق من بنية قاعدة البيانات على Neon
 3. إضافة SMTP_PASS لتشغيل إشعارات البريد
 4. تفعيل النشر التلقائي: أي git push سيُطلق نشرًا جديدًا تلقائيًا (المشروع مربوط بـ GitHub)
+
+---
+Task ID: production-fix-and-verify
+Agent: main (Super Z)
+Task: إصلاح فشل المصادقة + التحقق النهائي من المنصة على الإنتاج
+
+Work Log:
+- اكتشاف المشكلة: vercel.json كان يحوي DATABASE_URL="file:./db/custom.db"
+  * هذا التجاوز يتجاوز المتغير المرفوع على Vercel
+  * النتيجة: Prisma Client يُولّد بـ SQLite بدلاً من PostgreSQL
+  * /api/auth/register و /api/auth/login يفشلان بـ HTTP 500
+- إصلاح vercel.json:
+  * حذف كل المتغيرات المضمنة (تُؤخذ من Vercel env vars)
+  * تحديث buildCommand لاستدعاء set-prisma-provider.sh تلقائيًا
+- دفع الإصلاح إلى GitHub (commit f7077d8)
+- إعادة النشر عبر Vercel API:
+  * Deployment ID: dpl_FCPdGqyeR7f8axsTM17k4JN7fK4o
+  * مدة البناء: 214 ثانية (3.5 دقائق)
+- التحقق النهائي من الإنتاج:
+  * ✅ /api/auth/register: HTTP 200 — أنشأ مستخدم "newuser@example.com" وأعاد JWT
+  * ✅ /api/auth/login: HTTP 200 — سجّل دخول بنجاح وأعاد JWT
+  * ✅ /api/auth/me: HTTP 200 — أعاد بيانات المستخدم بالـ JWT
+  * ✅ /api/mock-exam: HTTP 200 — أعاد 10 أسئلة رياضيات
+  * ✅ الصفحة الرئيسية: HTTP 200
+  * ✅ /admin: HTTP 200
+
+Stage Summary:
+- ✅ المنصة تعمل بالكامل على الإنتاج
+- ✅ المصادقة تعمل (register + login + JWT + me)
+- ✅ قاعدة بيانات Neon PostgreSQL متصلة بشكل صحيح
+- ✅ API التصحيح + الامتحان التجريبي يعملان
+- 🔑 معلومات الإنتاج النهائية:
+  * Production URL: https://math-platform-weld.vercel.app
+  * Project ID: prj_fmumwoENNgTzguMu4xAKkyqJAC3t
+  * Org ID: team_JZvbO8QvFAimHHtQkjDVUJx1
+  * Deployment ID: dpl_FCPdGqyeR7f8axsTM17k4JN7fK4o
+
+**النشر التلقائي مُفعّل**: أي git push على main سيُطلق نشرًا جديدًا تلقائيًا
