@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { MarkdownMath } from "@/components/math-renderer";
 import { VariationTable, type VariationRow } from "@/components/variation-table";
+import { LiveClasses } from "@/components/live-classes";
 import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";
@@ -92,6 +93,7 @@ import {
   LogIn,
   LogOut,
   LayoutDashboard,
+  Video,
   Users,
   Menu,
   Star,
@@ -145,10 +147,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Box,
   Divide,
   LineChart,
+  Video,
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics" | "live-classes";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -307,6 +310,10 @@ export default function HomePage() {
                 <Trophy className="w-4 h-4 ml-2" />
                 المواضيع والفروض
               </NavButton>
+              <NavButton active={view === "live-classes"} onClick={() => navigateTo("live-classes")}>
+                <Video className="w-4 h-4 ml-2" />
+                حصص Zoom
+              </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
@@ -388,6 +395,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("exams")}>
                     <Trophy className="w-4 h-4 ml-2" /> المواضيع والفروض
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("live-classes")}>
+                    <Video className="w-4 h-4 ml-2" /> حصص Zoom
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
@@ -482,6 +492,8 @@ export default function HomePage() {
         )}
 
         {view === "exams" && <ExamsView />}
+
+        {view === "live-classes" && <LiveClasses />}
 
         {view === "pricing" && (
           <PricingView
