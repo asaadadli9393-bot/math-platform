@@ -55,21 +55,61 @@ npm run dev
 ## 🌐 النشر على Vercel (إنتاج)
 
 ### الخطوة 1: قاعدة بيانات PostgreSQL مجانية
+
+#### الطريقة السريعة (السكربت التفاعلي)
+
+```bash
+# شغّل المعالج التفاعلي
+bash scripts/postgres-wizard.sh
+```
+
+سيقوم المعالج بـ:
+- طلب `DATABASE_URL` منك بأمان
+- إضافة `sslmode=require` تلقائيًا (مطلوب لـ Neon)
+- حفظ القيمة في `.env`
+- تبديل مزوّد Prisma إلى postgresql
+- إنشاء الجداول في PostgreSQL
+- ترحيل بيانات SQLite المحلي إن وُجدت (اختياري)
+- زرع إعدادات المدير الافتراضية
+- طباعة تقرير ملخّص
+
+#### الطريقة اليدوية
+
 1. اذهب إلى [neon.tech](https://neon.tech) أو [supabase.com](https://supabase.com)
-2. أنشئ قاعدة بيانات جديدة (مجانية)
+2. أنشئ قاعدة بيانات جديدة (مجانية — region Frankfurt أو أي قريب)
 3. انسخ `connection string` (يبدأ بـ `postgresql://`)
+4. شغّل سكربت الإعداد:
+
+```bash
+# تهيئة كاملة + ترحيل البيانات
+DATABASE_URL="postgresql://..." bun run scripts/setup-postgres.ts
+
+# أو تخطّي الترحيل (إنشاء جداول جديدة فقط)
+DATABASE_URL="postgresql://..." bun run scripts/setup-postgres.ts --skip-migrate
+```
 
 ### الخطوة 2: النشر على Vercel
+
+#### الطريقة 1: عبر CLI (الأسرع)
+
+```bash
+# استملاك منصة مؤقتة ثم استبدالها بمشروع رسمي
+npx vercel              # اتبع التعليمات (سجل بـ GitHub)
+npx vercel --prod       # نشر إنتاج
+```
+
+#### الطريقة 2: عبر Dashboard
+
 1. اذهب إلى [vercel.com](https://vercel.com) ← سجّل بـ GitHub
 2. اختر المستودع `asaadadli9393-bot/math-platform`
-3. أضف متغيرات البيئة التالية:
+3. أضف متغيرات البيئة التالية (في Settings → Environment Variables):
 
 | المتغير | القيمة |
 |---------|--------|
-| `DATABASE_URL` | `postgresql://...` (من Neon/Supabase) |
+| `DATABASE_URL` | `postgresql://...` (من Neon/Supabase، مع `?sslmode=require`) |
 | `ADMIN_KEY` | `adli2024` |
 | `ADMIN_EMAIL` | `asaadadli9393@gmail.com` |
-| `NEXTAUTH_SECRET` | (أي سلسلة عشوائية 32+ حرف) |
+| `NEXTAUTH_SECRET` | `math-platform-adli-2026-secure-secret-key` (أي سلسلة 32+ حرف) |
 | `SMTP_HOST` | `smtp.gmail.com` |
 | `SMTP_PORT` | `587` |
 | `SMTP_USER` | `asaadadli9393@gmail.com` |
@@ -80,13 +120,21 @@ npm run dev
    - توليد Prisma Client
    - بناء Next.js
 
-5. بعد أول نشر، شغّل على جهازك:
+5. بعد أول نشر، تأكد من أن قاعدة البيانات جاهزة:
+
 ```bash
-# تهيئة قاعدة البيانات على PostgreSQL
+# إن لم تكن شغّلت سكربت الإعداد من قبل
 DATABASE_URL=postgresql://... npx prisma db push --accept-data-loss
-# زرع إعدادات المدير الافتراضية
 DATABASE_URL=postgresql://... bun run scripts/seed-admin-settings.ts
 ```
+
+### الخطوة 3: استملاك منصة Vercel مؤقتة (مهم!)
+
+إن نشرت دون تسجيل دخول (deploy temporary)، ستحصل على رابط استملاك مثل:
+```
+https://vercel.com/claim-deployment?code=xxxxx
+```
+افتحه فورًا واحفظ المنصة باسم مشروع رسمي قبل انتهاء المدة (60 دقيقة).
 
 ## 🔑 كلمات السر
 
