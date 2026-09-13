@@ -31,6 +31,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { MarkdownMath } from "@/components/math-renderer";
+import { VariationTable, type VariationRow } from "@/components/variation-table";
 import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";

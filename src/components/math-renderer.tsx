@@ -2,6 +2,7 @@
 
 import React from "react";
 import katex from "katex";
+import { VariationTable, TikZRenderer, type VariationRow } from "./variation-table";
 
 interface MathProps {
   tex: string;
@@ -192,6 +193,10 @@ export function MarkdownMath({ content, className = "" }: MarkdownMathProps) {
             return <Math key={idx} tex={block.content ?? ""} display />;
           case "table":
             return <MarkdownTable key={idx} table={block.rows ?? []} />;
+          case "tikz":
+            return <TikZRenderer key={idx} code={block.content ?? ""} />;
+          case "variation":
+            return <VariationTableRenderer key={idx} content={block.content ?? ""} />;
           default:
             return null;
         }
@@ -209,7 +214,9 @@ interface MarkdownBlock {
     | "code"
     | "paragraph"
     | "display"
-    | "table";
+    | "table"
+    | "tikz"
+    | "variation";
   content?: string;
   items?: string[];
   rows?: string[][];
@@ -273,8 +280,9 @@ function parseMarkdownBlocks(content: string): MarkdownBlock[] {
       continue;
     }
 
-    // Code block
+    // Code block — يمكن أن يحتوي على tikz أو variation
     if (trimmed.startsWith("```")) {
+      const lang = trimmed.slice(3).trim().toLowerCase();
       i++;
       let codeContent = "";
       while (i < lines.length && !lines[i].trim().startsWith("```")) {
@@ -282,6 +290,19 @@ function parseMarkdownBlocks(content: string): MarkdownBlock[] {
         i++;
       }
       i++; // skip closing ```
+      codeContent = codeContent.trimEnd();
+
+      // إذا كان tikz — نعرض عبر TikZRenderer
+      if (lang === "tikz") {
+        blocks.push({ type: "tikz", content: codeContent });
+        continue;
+      }
+      // إذا كان variation — نعرض جدول التغيرات
+      if (lang === "variation") {
+        blocks.push({ type: "variation", content: codeContent });
+        continue;
+      }
+      // وإلا — كود عادي
       blocks.push({ type: "code", content: codeContent });
       continue;
     }
@@ -360,4 +381,45 @@ function MarkdownTable({ table }: { table: string[][] }) {
       </table>
     </div>
   );
+}
+
+// ============================================================
+//  VariationTableRenderer — يحلل نص جدول التغيرات
+// ============================================================
+
+function VariationTableRenderer({ content }: { content: string }) {
+  const lines = content.split("\n").filter((l) => l.trim());
+  let columns: string[] = [];
+  const rows: VariationRow[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.toLowerCase().startsWith("columns:")) {
+      columns = trimmed.slice(8).split(",").map((s) => s.trim());
+    } else if (trimmed.includes(":")) {
+      const [label, rest] = trimmed.split(":").map((s) => s.trim());
+      if (rest.toLowerCase().startsWith("arrows:")) {
+        const arrowParts = rest.slice(7).split(",").map((s) => s.trim());
+        const arrows = arrowParts.map((p) => {
+          const m = p.match(/(up|down)\(([^)]+)\)/);
+          if (m) return { direction: m[1] as "up" | "down", from: "", to: m[2] };
+          return { direction: "up" as const, from: "", to: p };
+        });
+        rows.push({ label, arrows });
+      } else {
+        const values = rest.split(",").map((s) => s.trim());
+        rows.push({ label, values });
+      }
+    }
+  }
+
+  if (columns.length === 0 || rows.length === 0) {
+    return (
+      <div className="p-3 bg-muted/30 rounded text-sm text-muted-foreground">
+        تنسيق غير صحيح لجدول التغيرات
+      </div>
+    );
+  }
+
+  return <VariationTable columns={columns} rows={rows} />;
 }
