@@ -213,6 +213,7 @@ export default function HomePage() {
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
   const [authOpen, setAuthOpen] = React.useState(false);
+  const [studyTab, setStudyTab] = React.useState<"planner" | "notes" | "mindmap">("planner");
 
   const stats = getCurriculumStats();
   const profile = useStudentStore((s) => s.profile);
@@ -308,13 +309,9 @@ export default function HomePage() {
                 <Home className="w-4 h-4 ml-2" />
                 الرئيسية
               </NavButton>
-              <NavButton active={view === "trimesters"} onClick={() => navigateTo("trimesters")}>
-                <Calendar className="w-4 h-4 ml-2" />
-                الفصول
-              </NavButton>
-              <NavButton active={view === "curriculum"} onClick={() => navigateTo("curriculum")}>
+              <NavButton active={view === "curriculum" || view === "trimesters"} onClick={() => navigateTo("curriculum")}>
                 <Calculator className="w-4 h-4 ml-2" />
-                المنهاج
+                المنهاج والفصول
               </NavButton>
               <NavButton active={view === "exams" || view === "comprehensive-topics" || view === "trimester-exams"} onClick={() => navigateTo("exams")}>
                 <Trophy className="w-4 h-4 ml-2" />
@@ -328,13 +325,9 @@ export default function HomePage() {
                 <Search className="w-4 h-4 ml-2" />
                 بحث
               </NavButton>
-              <NavButton active={view === "study-tools"} onClick={() => navigateTo("study-tools")}>
+              <NavButton active={view === "study-tools" || view === "mind-map"} onClick={() => navigateTo("study-tools")}>
                 <Calendar className="w-4 h-4 ml-2" />
                 أدوات الدراسة
-              </NavButton>
-              <NavButton active={view === "mind-map"} onClick={() => navigateTo("mind-map")}>
-                <GitBranch className="w-4 h-4 ml-2" />
-                خرائط ذهنية
               </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
@@ -409,11 +402,8 @@ export default function HomePage() {
                   <MobileNavButton onClick={() => navigateTo("home")}>
                     <Home className="w-4 h-4 ml-2" /> الرئيسية
                   </MobileNavButton>
-                  <MobileNavButton onClick={() => navigateTo("trimesters")}>
-                    <Calendar className="w-4 h-4 ml-2" /> الفصول الدراسية
-                  </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("curriculum")}>
-                    <Calculator className="w-4 h-4 ml-2" /> المنهاج
+                    <Calculator className="w-4 h-4 ml-2" /> المنهاج والفصول
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("exams")}>
                     <Trophy className="w-4 h-4 ml-2" /> المواضيع والفروض
@@ -426,9 +416,6 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("study-tools")}>
                     <Calendar className="w-4 h-4 ml-2" /> أدوات الدراسة
-                  </MobileNavButton>
-                  <MobileNavButton onClick={() => navigateTo("mind-map")}>
-                    <GitBranch className="w-4 h-4 ml-2" /> خرائط ذهنية
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
@@ -504,14 +491,14 @@ export default function HomePage() {
       <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
         {view === "home" && <HomeView onNavigate={navigateTo} />}
 
-        {view === "trimesters" && (
-          <TrimestersView onSelectUnit={(slug) => navigateTo("unit", slug)} onNavigateCurriculum={() => navigateTo("curriculum")} />
-        )}
-
         {view === "curriculum" && (
           <CurriculumView
             onSelectUnit={(slug) => navigateTo("unit", slug)}
           />
+        )}
+
+        {view === "trimesters" && (
+          <TrimestersView onSelectUnit={(slug) => navigateTo("unit", slug)} onNavigateCurriculum={() => navigateTo("curriculum")} />
         )}
 
         {view === "unit" && selectedUnit && (
@@ -538,16 +525,45 @@ export default function HomePage() {
                 أدوات الدراسة
               </h1>
               <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                ملاحظات شخصية + مخطط دراسة أسبوعي + تتبّع التقدّم
+                ملاحظات شخصية + مخطط دراسة + خرائط ذهنية
               </p>
             </div>
-            <StudyPlanner />
-            <StudentNotes />
-          </div>
-        )}
 
-        {view === "mind-map" && (
-          <MindMapView onNavigate={(slug) => navigateTo("curriculum", slug)} />
+            {/* تبويبات داخلية */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              <Button
+                variant={studyTab === "planner" ? "default" : "outline"}
+                size="lg"
+                onClick={() => setStudyTab("planner")}
+                className="gap-2"
+              >
+                <Calendar className="w-5 h-5" />
+                مخطط الدراسة
+              </Button>
+              <Button
+                variant={studyTab === "notes" ? "default" : "outline"}
+                size="lg"
+                onClick={() => setStudyTab("notes")}
+                className="gap-2"
+              >
+                <FileText className="w-5 h-5" />
+                ملاحظاتي
+              </Button>
+              <Button
+                variant={studyTab === "mindmap" ? "default" : "outline"}
+                size="lg"
+                onClick={() => setStudyTab("mindmap")}
+                className="gap-2"
+              >
+                <GitBranch className="w-5 h-5" />
+                خرائط ذهنية
+              </Button>
+            </div>
+
+            {studyTab === "planner" && <StudyPlanner />}
+            {studyTab === "notes" && <StudentNotes />}
+            {studyTab === "mindmap" && <MindMapView onNavigate={(slug) => navigateTo("curriculum", slug)} />}
+          </div>
         )}
 
         {view === "pricing" && (
