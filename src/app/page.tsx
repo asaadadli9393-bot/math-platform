@@ -34,6 +34,7 @@ import { MarkdownMath } from "@/components/math-renderer";
 import { VariationTable, type VariationRow } from "@/components/variation-table";
 import { LiveClasses } from "@/components/live-classes";
 import { SearchView, StudentNotes, StudyPlanner, DarkModeToggle } from "@/components/student-tools";
+import { MindMapView, MindMapExport } from "@/components/mind-map";
 import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";
@@ -133,6 +134,7 @@ import {
   Search,
   Sun,
   Moon,
+  GitBranch,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FunctionPlot } from "@/components/function-plot";
@@ -159,7 +161,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics" | "live-classes" | "search" | "study-tools";
+type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics" | "live-classes" | "search" | "study-tools" | "mind-map";
 
 // ===================================================
 //  مكوّن القفل — يُظهر رسالة للمستخدم غير المشترك
@@ -330,6 +332,10 @@ export default function HomePage() {
                 <Calendar className="w-4 h-4 ml-2" />
                 أدوات الدراسة
               </NavButton>
+              <NavButton active={view === "mind-map"} onClick={() => navigateTo("mind-map")}>
+                <GitBranch className="w-4 h-4 ml-2" />
+                خرائط ذهنية
+              </NavButton>
               <NavButton active={view === "mock-exam"} onClick={() => navigateTo("mock-exam")}>
                 <GraduationCap className="w-4 h-4 ml-2" />
                 امتحان تجريبي
@@ -420,6 +426,9 @@ export default function HomePage() {
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("study-tools")}>
                     <Calendar className="w-4 h-4 ml-2" /> أدوات الدراسة
+                  </MobileNavButton>
+                  <MobileNavButton onClick={() => navigateTo("mind-map")}>
+                    <GitBranch className="w-4 h-4 ml-2" /> خرائط ذهنية
                   </MobileNavButton>
                   <MobileNavButton onClick={() => navigateTo("mock-exam")}>
                     <GraduationCap className="w-4 h-4 ml-2" /> امتحان تجريبي
@@ -535,6 +544,10 @@ export default function HomePage() {
             <StudyPlanner />
             <StudentNotes />
           </div>
+        )}
+
+        {view === "mind-map" && (
+          <MindMapView onNavigate={(slug) => navigateTo("curriculum", slug)} />
         )}
 
         {view === "pricing" && (
