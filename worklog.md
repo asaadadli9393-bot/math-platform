@@ -684,3 +684,44 @@ Stage Summary:
   * Deployment ID: dpl_FCPdGqyeR7f8axsTM17k4JN7fK4o
 
 **النشر التلقائي مُفعّل**: أي git push على main سيُطلق نشرًا جديدًا تلقائيًا
+
+---
+Task ID: custom-domain-setup
+Agent: main (Super Z)
+Task: ربط نطاق مخصص math-adli.com بالمنصة على Vercel
+
+Work Log:
+- إنشاء scripts/vercel-add-domain.py:
+  * POST /v10/projects/{id}/domains لإضافة نطاق
+  * GET /v9/projects/{id}/domains لجلب القائمة
+  * يطبع سجلات DNS المطلوبة
+- إضافة النطاق الرئيسي math-adli.com إلى Vercel:
+  * الحالة: verified=True, ssl=False
+  * بانتظار سجل A من مزوّف DNS
+- إضافة النطاق الفرعي www.math-adli.com إلى Vercel:
+  * الحالة: verified=True, ssl=False
+  * بانتظار سجل CNAME من مزوّف DNS
+- إنشاء scripts/vercel-check-domain.py:
+  * يجلب كل النطاقات المُسجّلة على Vercel
+  * يفحص DNS محليًا عبر dig
+  * يختبر HTTP/HTTPS لكل نطاق
+  * يطبع ملخص نهائي مع روابط مفيدة
+- git push (commit 5bc2dd7)
+
+Stage Summary:
+- ✅ math-adli.com مُضاف على Vercel
+- ✅ www.math-adli.com مُضاف على Vercel
+- ⏳ بانتظار سجلات DNS من الأستاذ
+- 🔑 سجلات DNS المطلوبة:
+  - A record: math-adli.com → 76.76.21.21
+  - CNAME: www.math-adli.com → cname.vercel-dns.com
+- ✅ Pushed to GitHub (commit 5bc2dd7)
+
+**الخطوات التالية للأستاذ:**
+1. الذهاب إلى مزوّف DNS للنطاق math-adli.com
+   (Cloudflare / Namecheap / GoDaddy / Vercel DNS)
+2. إضافة سجل A: @ → 76.76.21.21
+3. إضافة سجل CNAME: www → cname.vercel-dns.com
+4. انتظار 5-30 دقيقة
+5. تشغيل: python3 scripts/vercel-check-domain.py
+6. Vercel سيُفعّل SSL تلقائيًا بمجرد انتشاره DNS
