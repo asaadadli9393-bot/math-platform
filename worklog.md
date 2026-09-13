@@ -419,3 +419,53 @@ Stage Summary:
 4. تشغيل `npx prisma db push` على قاعدة البيانات البعيدة
 5. تشغيل `bun run scripts/seed-admin-settings.ts` على قاعدة البيانات البعيدة
 6. (اختياري) إنشاء كلمة تطبيق Gmail وتفعيل الإشعارات في /admin
+
+---
+Task ID: vercel-deploy-and-pg-setup
+Agent: main (Super Z)
+Task: نشر نسخة محدّثة على Vercel + إنشاء سكربت شامل لتهيئة PostgreSQL على Neon
+
+Work Log:
+- بناء محلي ناجح (npx next build) — 26 صفحة (17 static + 9 dynamic) في 32s
+- نشر Vercel (anonymous temporary deployment):
+  * رابط: https://temporary-swift-oboe-cyaph0x.vercel.app
+  * رابط الاستملاك: https://vercel.com/claim-deployment?code=e42dca26-1d68-4f3b-8e48-d741f3df7244
+  * مدة الانتهاء: 59 دقيقة من وقت النشر
+- إنشاء scripts/setup-postgres.ts (سكربت TypeScript شامل):
+  * التحقق من DATABASE_URL (postgresql://)
+  * تبديل مزوّد Prisma في schema.prisma تلقائيًا
+  * prisma generate + prisma db push --accept-data-loss
+  * ترحيل 18 جدول من SQLite إلى PostgreSQL (اختياري عبر better-sqlite3)
+  * نسخة احتياطية تلقائية لـ db/custom.db قبل الترحيل
+  * تشغيل seed-admin-settings تلقائيًا
+  * تقرير ملخّص بعدد الصفوف في كل جدول
+  * تخطّي الترحيل عبر --skip-migrate
+- إنشاء scripts/postgres-wizard.sh (معالج Bash تفاعلي):
+  * طلب DATABASE_URL بأمان (read -s)
+  * إضافة sslmode=require تلقائيًا إن لم يكن موجودًا
+  * حفظ في .env + التحقق من .gitignore
+  * تثبيت better-sqlite3 إن لزم (للترحيل)
+  * استدعاء setup-postgres.ts مع DATABASE_URL
+  * طباعة الخطوات التالية بعد الإعداد
+- تحديث README.md:
+  * قسم "النشر على Vercel" موسّع بطريقتين (CLI + Dashboard)
+  * إشارة للسكربتات الجديدة (postgres-wizard + setup-postgres)
+  * تنبيه لاستملاك منصة Vercel مؤقتة
+  * جدول متغيرات البيئة الكامل مع sslmode
+- إنشاء .env.example شامل مع تعليقات لكل متغير
+- إعادة ضبط Prisma إلى SQLite محلي + git push
+
+Stage Summary:
+- ✅ نشر Vercel جديد (URL مؤقت 59 دقيقة)
+- ✅ scripts/setup-postgres.ts (244 سطر) — إعداد كامل
+- ✅ scripts/postgres-wizard.sh (155 سطر) — معالج تفاعلي
+- ✅ README محدّث + .env.example جديد
+- ✅ Pushed to GitHub (commit 199bae8)
+- 🔑 رابط الاستملاك للأستاذ: https://vercel.com/claim-deployment?code=e42dca26-1d68-4f3b-8e48-d741f3df7244
+
+**الخطوات التالية للأستاذ:**
+1. استملاك المنصة المؤقتة فورًا (تنتهي خلال 59 دقيقة)
+2. إنشاء قاعدة Neon PostgreSQL
+3. تشغيل: bash scripts/postgres-wizard.sh
+4. إضافة DATABASE_URL إلى Vercel → Settings → Environment Variables
+5. إعادة النشر: npx vercel --prod (بعد تسجيل الدخول)
