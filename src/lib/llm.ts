@@ -5,17 +5,18 @@
 //  مُساعد LLM متعدد المزوّدين — يفصل المنصة عن أي SDK خاص.
 //
 //  المزوّدون المدعومون:
-//    1. Pollinations.ai    — مجاني، بدون تسجيل (default)
-//    2. ZhipuAI (BigModel) — open.bigmodel.cn (glm-4.6, glm-4-flash)
-//    3. DeepSeek           — api.deepseek.com (deepseek-chat)
-//    4. Groq               — api.groq.com (llama-3.3-70b)
-//    5. OpenAI             — api.openai.com (gpt-4o-mini)
+//    1. Pollinations.ai    — مجاني، بدون تسجيل (default fallback)
+//    2. Gemini             — Google AI Studio (gemini-3.6-flash)
+//    3. ZhipuAI (BigModel) — open.bigmodel.cn (glm-4-flash)
+//    4. DeepSeek           — api.deepseek.com (deepseek-chat)
+//    5. Groq               — api.groq.com (llama-3.3-70b)
+//    6. OpenAI             — api.openai.com (gpt-4o-mini)
 //
 //  الانتقال التلقائي: إن فشل المزوّد الأساسي، يجرّب التالي.
 //
 //  متغيرات البيئة (Vercel env vars):
-//    LLM_PROVIDER     = "pollinations" | "zhipu" | "deepseek" | "groq" | "openai"
-//    LLM_API_KEY      = مفتاح API (إن لزم)
+//    LLM_PROVIDER     = "gemini" | "pollinations" | "zhipu" | "deepseek" | "groq" | "openai" | "custom"
+//    LLM_API_KEY      = مفتاح API (مطلوب لكل مزوّد ما عدا pollinations)
 //    LLM_MODEL        = (اختياري) تجاوز النموذج الافتراضي
 //    LLM_BASE_URL     = (اختياري) تجاوز الـ URL الافتراضي
 // ============================================================
@@ -26,7 +27,7 @@ import { getLocalAnswer } from "@/lib/llm-local";
 // ---------------------------------------------------------------------------
 //  أنواع
 // ---------------------------------------------------------------------------
-export type Provider = "pollinations" | "zhipu" | "deepseek" | "groq" | "openai" | "custom" | "local";
+export type Provider = "gemini" | "pollinations" | "zhipu" | "deepseek" | "groq" | "openai" | "custom" | "local";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -60,6 +61,12 @@ interface ProviderConfig {
 }
 
 const PROVIDERS: Record<Provider, ProviderConfig> = {
+  gemini: {
+    baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
+    model: "gemini-3.6-flash",
+    needsAuth: true,
+    apiKeyEnv: "LLM_API_KEY",
+  },
   pollinations: {
     baseUrl: "https://text.pollinations.ai/openai",
     model: "openai",
@@ -118,10 +125,13 @@ function pickProvider(): Provider {
 
 function buildFallbackChain(): Provider[] {
   const forced = pickProvider();
-  if (forced === "pollinations") {
-    return ["pollinations", "groq", "zhipu", "deepseek", "openai"];
+  if (forced === "gemini") {
+    return ["gemini", "pollinations", "groq", "zhipu", "deepseek", "openai"];
   }
-  return [forced, "pollinations", "groq", "zhipu", "deepseek", "openai"];
+  if (forced === "pollinations") {
+    return ["pollinations", "gemini", "groq", "zhipu", "deepseek", "openai"];
+  }
+  return [forced, "pollinations", "gemini", "groq", "zhipu", "deepseek", "openai"];
 }
 
 // ---------------------------------------------------------------------------
