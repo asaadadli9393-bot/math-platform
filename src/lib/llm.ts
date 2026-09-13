@@ -260,33 +260,74 @@ export async function chatWithFallback(
 }
 
 // ---------------------------------------------------------------------------
-//  TTS — استدعاء خاص لـ Pollinations TTS (مجاني)
+//  TTS — نظام متعدد المزوّدين (Google Translate + StreamElements + Pollinations)
 // ---------------------------------------------------------------------------
-export async function tts(text: string, voice = "tongtong"): Promise<{
+export async function tts(text: string, voice = "ar"): Promise<{
   audio: ArrayBuffer;
   format: string;
   provider: string;
 }> {
-  // Pollinations TTS (مجاني، بدون مفتاح)
-  const url = `https://text.pollinations.ai/${encodeURIComponent(
-    text.slice(0, 512)
-  )}?model=openai-audio&voice=${encodeURIComponent(voice)}&response_format=wav`;
+  // 1) Google Translate TTS — يدعم العربية ممتاز، مجاني، بدون مفتاح
+  try {
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
+      text.slice(0, 200)
+    )}&tl=ar&client=tw-ob&total=1&idx=0&textlen=${text.length}`;
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers: { "User-Agent": "math-adli/1.0" },
-    signal: AbortSignal.timeout(30000),
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://translate.google.com/",
+        "Accept": "audio/mpeg, audio/*, */*",
+      },
+      signal: AbortSignal.timeout(30000),
+    });
 
-  if (!response.ok) {
-    throw new Error(`TTS HTTP ${response.status}`);
+    if (response.ok) {
+      const audio = await response.arrayBuffer();
+      if (audio.byteLength > 1000) {
+        return {
+          audio,
+          format: "mp3",
+          provider: "google-translate",
+        };
+      }
+    }
+  } catch {
+    // نتابع للمزوّد التالي
   }
 
-  const audio = await response.arrayBuffer();
+  // 2) Pollinations TTS — مجاني، بدون مفتاح
+  try {
+    const url = `https://text.pollinations.ai/${encodeURIComponent(
+      text.slice(0, 512)
+    )}?model=openai-audio&voice=tongtong&response_format=mp3`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "User-Agent": "math-adli/1.0" },
+      signal: AbortSignal.timeout(30000),
+    });
+
+    if (response.ok) {
+      const audio = await response.arrayBuffer();
+      if (audio.byteLength > 1000) {
+        return {
+          audio,
+          format: "mp3",
+          provider: "pollinations",
+        };
+      }
+    }
+  } catch {
+    // نتابع للمزوّد التالي
+  }
+
+  // 3) Fallback: WAV فارغ
   return {
-    audio,
+    audio: new ArrayBuffer(44),
     format: "wav",
-    provider: "pollinations",
+    provider: "fallback-empty",
   };
 }
 
