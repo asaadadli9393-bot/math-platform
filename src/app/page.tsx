@@ -621,6 +621,28 @@ export default function HomePage() {
       </main>
 
       {/* =================================================== */}
+      {/*  زر عائم للمساعد الذكي — يظهر دائمًا                 */}
+      {/* =================================================== */}
+      {view !== "assistant" && view !== "admin" && (
+        <button
+          onClick={() => setView("assistant")}
+          className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 bg-gradient-to-br from-primary to-accent text-primary-foreground px-4 py-3 rounded-full shadow-2xl hover:scale-105 transition-transform"
+          title="اسأل المساعد الذكي"
+          aria-label="المساعد الذكي"
+        >
+          <div className="relative">
+            <Sparkles className="w-6 h-6" />
+            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+          </div>
+          <span className="font-bold text-sm hidden sm:inline">المساعد الذكي</span>
+          <span className="text-xs opacity-80 hidden md:inline">— اسألني أي سؤال</span>
+        </button>
+      )}
+
+      {/* =================================================== */}
       {/*  التذييل (Footer)                                    */}
       {/* =================================================== */}
       <footer className="bg-primary text-primary-foreground mt-auto">
