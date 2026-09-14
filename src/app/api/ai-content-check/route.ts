@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { chat } from "@/lib/llm";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 60; // 60 ثانية للسماح بالفحص الشامل
 
 interface ContentIssue {
   file: string;
