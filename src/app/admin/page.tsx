@@ -90,6 +90,7 @@ import {
   AlertTriangle,
   Loader2,
   Sparkles,
+  Wand2,
 } from "lucide-react";
 
 // ============================================================
@@ -456,6 +457,10 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
               <Sparkles className="size-4" />
               إصلاح وإثراء
             </TabsTrigger>
+            <TabsTrigger value="fix-all">
+              <Wand2 className="size-4" />
+              إصلاح الكل
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="payments" className="mt-4">
@@ -475,6 +480,9 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
           </TabsContent>
           <TabsContent value="content-fix" className="mt-4">
             <ContentFixTab />
+          </TabsContent>
+          <TabsContent value="fix-all" className="mt-4">
+            <FixAllTab token={token} />
           </TabsContent>
         </Tabs>
       </main>
@@ -1863,6 +1871,283 @@ function ContentFixTab() {
             </CardContent>
           </Card>
         </>
+      )}
+
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          ⚠️ {error}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
+//  FixAllTab — إصلاح شامل تلقائي للمنصة كاملة
+// ============================================================
+function FixAllTab({ token }: { token: string }) {
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [results, setResults] = React.useState<{
+    stats?: {
+      totalChecked: number;
+      totalFixed: number;
+      totalErrors: number;
+      byUnit?: Record<string, { checked: number; fixed: number; errors: number }>;
+      dryRun?: boolean;
+    };
+    summary?: {
+      totalUnits: number;
+      totalItems: number;
+      successful: number;
+      failed: number;
+      averageChanges: string;
+    };
+    message?: string;
+    results?: Array<{
+      unit: string;
+      chapter?: string;
+      lesson?: string;
+      type: string;
+      changes: Array<{ type: string; description: string }>;
+      provider: string;
+      model: string;
+      success: boolean;
+      error?: string;
+    }>;
+  } | null>(null);
+  const [dryRun, setDryRun] = React.useState(true);
+
+  const runFixAll = async () => {
+    setLoading(true);
+    setError(null);
+    setResults(null);
+    try {
+      const res = await fetch("/api/ai-content-fix-all", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token || "adli2024"}`,
+        },
+        body: JSON.stringify({
+          dryRun,
+          limit: 0, // 0 = كل المحتوى
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "فشل الإصلاح الشامل");
+      }
+      setResults(data);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runPreview = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/ai-content-fix-all", {
+        headers: { Authorization: `Bearer ${token || "adli2024"}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      alert(
+        `📊 معاينة المحتوى:\n• الوحدات: ${data.totalUnits}\n• أول 10 عناصر:\n${data.preview
+          .map((p: { unit: string; chapter: string; lesson: string; contentLength: number }) => `  - ${p.unit} / ${p.chapter} / ${p.lesson} (${p.contentLength} حرف)`)
+          .join("\n")}`
+      );
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Wand2 className="w-6 h-6 text-emerald-600" />
+            إصلاح شامل تلقائي للمنصة
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            يفحص كل وحدة + درس + تمرين في المنهاج، ويصلح الأخطاء تلقائيًا مع تطبيق
+            القالب الموحّد (تعريف، خاصية، أمثلة، نقاط أساسية).
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* خيارات */}
+          <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg">
+            <input
+              type="checkbox"
+              id="dryRun"
+              checked={dryRun}
+              onChange={(e) => setDryRun(e.target.checked)}
+              className="size-4"
+            />
+            <label htmlFor="dryRun" className="text-sm font-medium cursor-pointer">
+              وضع الفحص التجريبي (Dry Run)
+              <span className="text-muted-foreground block text-xs mt-1">
+                يفحص فقط دون تعديل فعلي — موصى به أول مرة
+              </span>
+            </label>
+          </div>
+
+          {/* الأزرار */}
+          <div className="flex flex-wrap gap-3">
+            <Button
+              onClick={runFixAll}
+              disabled={loading}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Wand2 className="w-4 h-4 mr-2" />
+              )}
+              {loading ? "جارٍ الإصلاح..." : dryRun ? "🔍 فحص شامل" : "✨ إصلاح الكل تلقائيًا"}
+            </Button>
+
+            <Button onClick={runPreview} variant="outline" disabled={loading}>
+              <Eye className="w-4 h-4 mr-2" />
+              معاينة المحتوى
+            </Button>
+          </div>
+
+          {/* تنبيه */}
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-lg text-xs text-amber-800 dark:text-amber-200">
+            ⚠️ <strong>تنبيه:</strong> الإصلاح الفعلي قد يستغرق 2-5 دقائق (لعدد الدروس الكبير).
+            ابدأ بـ "وضع الفحص التجريبي" لمعاينة النتائج قبل الإصلاح الفعلي.
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* النتائج */}
+      {results && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-emerald-600" />
+              نتائج الإصلاح الشامل
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* رسالة */}
+            {results.message && (
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-lg text-sm text-emerald-800 dark:text-emerald-200">
+                ✅ {results.message}
+              </div>
+            )}
+
+            {/* ملخص */}
+            {results.summary && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="p-3 bg-muted rounded-lg text-center">
+                  <div className="text-2xl font-bold">{results.summary.totalItems}</div>
+                  <div className="text-xs text-muted-foreground">عنصر مُفحوص</div>
+                </div>
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
+                    {results.summary.successful}
+                  </div>
+                  <div className="text-xs text-muted-foreground">مُصلح بنجاح</div>
+                </div>
+                <div className="p-3 bg-red-50 dark:bg-red-950/30 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-red-700 dark:text-red-300">
+                    {results.summary.failed}
+                  </div>
+                  <div className="text-xs text-muted-foreground">فشل</div>
+                </div>
+                <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                    {results.summary.averageChanges}
+                  </div>
+                  <div className="text-xs text-muted-foreground">متوسط التغييرات/عنصر</div>
+                </div>
+              </div>
+            )}
+
+            {/* توزيع حسب الوحدة */}
+            {results.stats?.byUnit && Object.keys(results.stats.byUnit).length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold mb-2">توزيع الإصلاحات حسب الوحدة:</h3>
+                <div className="space-y-2">
+                  {Object.entries(results.stats.byUnit).map(([unit, data]) => (
+                    <div key={unit} className="flex items-center gap-3 p-2 bg-muted/50 rounded">
+                      <div className="flex-1 text-sm">{unit}</div>
+                      <Badge variant="outline">مُفحوص: {data.checked}</Badge>
+                      <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-100">
+                        مُصلح: {data.fixed}
+                      </Badge>
+                      {data.errors > 0 && (
+                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-100">
+                          أخطاء: {data.errors}
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* عيّنات من العناصر المُصلحة */}
+            {results.results && results.results.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold mb-2">عيّنات من العناصر المُعالجة:</h3>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {results.results.slice(0, 20).map((item, i) => (
+                    <div
+                      key={i}
+                      className={`p-3 border rounded-lg text-xs ${
+                        item.success
+                          ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900"
+                          : "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold">
+                          {item.success ? "✅" : "❌"} {item.unit}
+                        </span>
+                        <Badge variant="outline" className="text-[10px]">
+                          {item.provider}/{item.model}
+                        </Badge>
+                      </div>
+                      {item.chapter && item.lesson && (
+                        <div className="text-muted-foreground mb-1">
+                          📂 {item.chapter} → {item.lesson}
+                        </div>
+                      )}
+                      {item.changes.length > 0 ? (
+                        <ul className="space-y-1">
+                          {item.changes.slice(0, 5).map((c, j) => (
+                            <li key={j} className="text-[11px]">
+                              <strong>{c.type}:</strong> {c.description}
+                            </li>
+                          ))}
+                          {item.changes.length > 5 && (
+                            <li className="text-[10px] text-muted-foreground">
+                              + {item.changes.length - 5} تغييرات أخرى...
+                            </li>
+                          )}
+                        </ul>
+                      ) : (
+                        <div className="text-muted-foreground text-[11px]">لا تغييرات</div>
+                      )}
+                      {item.error && (
+                        <div className="text-red-600 text-[11px] mt-1">⚠️ {item.error}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {error && (
