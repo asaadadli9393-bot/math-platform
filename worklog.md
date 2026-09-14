@@ -930,3 +930,61 @@ Stage Summary:
 1. نطاق فرعي مجاني: math-adli.vercel.app (مجاني عبر Vercel)
 2. نطاق مجاني: math-adli.is-a.dev (مجاني عبر is-a.dev)
 3. شراء نطاق رخيص: 10$/سنة من Namecheap/Cloudflare
+
+---
+Task ID: fix-all-feature
+Agent: main (Super Z)
+Task: إضافة ميزة \"إصلاح شامل تلقائي للكل\" بضغطة واحدة
+
+Work Log:
+- إنشاء /api/ai-content-fix-all (POST + GET):
+  * POST: يفحص ويُصلح كل المنهاج (9 وحدات + 23 درس + 61 تمرين)
+  * GET: معاينة سريعة (10 عناصر أولى)
+  * خيارات:
+    - dryRun (boolean): فحص فقط دون تعديل
+    - limit (number): 0 = كل المحتوى
+    - unitsOnly (string[]): قائمة وحدات محددة
+  * يتطلب Authorization: Bearer adli2024
+  * runtime=nodejs, maxDuration=60
+  * يطبّق القالب الموحّد (تعريف، خاصية، أمثلة، نقاط أساسية)
+  * يطبّق المصطلحات الجزائرية الرسمية (شعاع، اشتقاق، نهاية، لوغاريتم نيبيري)
+  * يرجع:
+    - stats (totalChecked, totalFixed, totalErrors, byUnit)
+    - summary (totalUnits, totalItems, successful, failed, averageChanges)
+    - results (40 عينة من العناصر المُعالجة مع changes)
+    - message
+
+- إضافة FixAllTab component في src/app/admin/page.tsx:
+  * تبويب جديد \"إصلاح الكل\" (Wand2 icon)
+  * checkbox للـ dryRun (موصى به أول مرة)
+  * زر فحص شامل (dry run)
+  * زر إصلاح الكل تلقائيًا
+  * زر معاينة المحتوى
+  * عرض النتائج:
+    - 4 بطاقات إحصائية (عناصر/مُصلحة/فشل/متوسط)
+    - توزيع حسب الوحدة
+    - عيّنات من العناصر المُصلحة (20)
+    - تغييرات لكل عنصر مع type و description
+  * تنبيه: قد يستغرق 2-5 دقائق
+  * استعمال React.useState (consistently مع باقي الصفحة)
+
+- اختبار على الإنتاج:
+  * GET معاينة: نجح ✓ (9 وحدات، 23 عنصر)
+  * POST dry run: نجح ✓ (HTTP 200, 1.26s)
+  * الإحصائيات تعمل: 23 مُفحوص، 0 مُصلح (Gemini محدود)
+  * fallback إلى local في حالة فشل كل المزوّدين
+
+Stage Summary:
+- ✅ API endpoint /api/ai-content-fix-all شغّال
+- ✅ UI في /admin جاهز (تبويب \"إصلاح الكل\")
+- ✅ معاينة المحتوى تعمل (9 وحدات، 23 درس)
+- ✅ dry run يعمل (يفحص 23 عنصر)
+- ⚠️ الإصلاح الفعلي يحتاج Gemini (محدود الآن — quota يومي)
+
+**كيف يستعمل الأستاذ:**
+1. https://math-adli.vercel.app/admin
+2. كلمة السر: adli2024
+3. تبويب \"إصلاح الكل\"
+4. فعّل dry run (موصى به أول مرة)
+5. اضغط \"فحص شامل\" للمعاينة
+6. ألغِ dry run + اضغط \"إصلاح الكل تلقائيًا\"
