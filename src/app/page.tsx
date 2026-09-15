@@ -35,7 +35,7 @@ import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";
 import { ParentPortal } from "@/components/parent-portal";
-import { curriculum, getCurriculumStats } from "@/data/curriculum";
+import { curriculum, getCurriculumStats, curriculum1AS_All, curriculum2AS_All } from "@/data/curriculum";
 import { quizzes } from "@/data/quizzes";
 import { bacExams, getBacExamsStats, streamLabelsBac, type BacStream } from "@/data/bac-exams";
 import { BacExamCard } from "@/components/bac-exam-card";
@@ -199,6 +199,8 @@ export default function HomePage() {
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
   const [authOpen, setAuthOpen] = React.useState(false);
+  // السنة الدراسية المختارة: 1AS / 2AS / 3AS
+  const [activeYear, setActiveYear] = React.useState<"1AS" | "2AS" | "3AS">("3AS");
 
   const stats = getCurriculumStats();
   const profile = useStudentStore((s) => s.profile);
@@ -259,7 +261,24 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const selectedUnit = curriculum.find((u) => u.slug === selectedUnitSlug);
+  // تحديد المنهاج الفعّال حسب السنة المختارة
+  const activeCurriculum: typeof curriculum =
+    activeYear === "1AS" ? curriculum1AS_All : activeYear === "2AS" ? curriculum2AS_All : curriculum;
+
+  // إحصائيات السنة المختارة
+  const activeStats = React.useMemo(() => {
+    let chapters = 0, lessons = 0, exercises = 0;
+    for (const unit of activeCurriculum) {
+      chapters += unit.chapters.length;
+      for (const ch of unit.chapters) {
+        lessons += ch.lessons.length;
+        exercises += ch.exercises.length;
+      }
+    }
+    return { units: activeCurriculum.length, chapters, lessons, exercises };
+  }, [activeCurriculum]);
+
+  const selectedUnit = activeCurriculum.find((u) => u.slug === selectedUnitSlug);
   const selectedQuiz = quizzes.find((q) => q.id === selectedQuizId);
 
   return (
@@ -290,6 +309,29 @@ export default function HomePage() {
 
             {/* القائمة الرئيسية — على الشاشات الكبيرة */}
             <nav className="hidden md:flex items-center gap-2">
+              {/* مُبدّل السنوات الدراسية */}
+              <div className="flex items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50">
+                {(["1AS", "2AS", "3AS"] as const).map((year) => (
+                  <button
+                    key={year}
+                    onClick={() => {
+                      setActiveYear(year);
+                      if (view === "curriculum" || view === "trimesters" || view === "unit") {
+                        setSelectedUnitSlug(null);
+                        setView("curriculum");
+                      }
+                    }}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                      activeYear === year
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    title={`السنة ${year === "1AS" ? "الأولى" : year === "2AS" ? "الثانية" : "الثالثة"} ثانوي`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
               <NavButton active={view === "home"} onClick={() => navigateTo("home")}>
                 <Home className="w-4 h-4 ml-2" />
                 الرئيسية
@@ -469,6 +511,7 @@ export default function HomePage() {
         {view === "curriculum" && (
           <CurriculumView
             onSelectUnit={(slug) => navigateTo("unit", slug)}
+            units={activeCurriculum}
           />
         )}
 
@@ -554,9 +597,9 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-bold mb-3 academic-divider">المحتوى</h4>
+              <h4 className="font-bold mb-3 academic-divider">المحتوى — {activeYear === "1AS" ? "السنة الأولى" : activeYear === "2AS" ? "السنة الثانية" : "السنة الثالثة"} ثانوي</h4>
               <ul className="space-y-1 text-sm text-primary-foreground/80">
-                {curriculum.map((unit) => (
+                {activeCurriculum.map((unit) => (
                   <li key={unit.slug}>
                     <button
                       onClick={() => navigateTo("unit", unit.slug)}
@@ -1458,13 +1501,13 @@ function LessonCard({ lesson }: { lesson: any }) {
 
 // ===================================================
 
-function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void }) {
+function CurriculumView({ onSelectUnit, units }: { onSelectUnit: (slug: string) => void; units: typeof curriculum }) {
   const [filter, setFilter] = React.useState<"ALL" | "MATHEMATICS" | "EXPERIMENTAL_SCIENCES" | "TECHNICAL_MATH">("ALL");
   const [trimesterFilter, setTrimesterFilter] = React.useState<"ALL" | 1 | 2 | 3>("ALL");
   const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
   const toggleFavorite = useStudentStore((s) => s.toggleFavorite);
 
-  const filteredUnits = curriculum.filter(
+  const filteredUnits = units.filter(
     (u) => {
       const streamOK = filter === "ALL" || u.stream === filter || u.stream === "ALL";
       const trimesterOK = trimesterFilter === "ALL" || u.trimester === trimesterFilter;
@@ -1485,9 +1528,29 @@ function CurriculumView({ onSelectUnit }: { onSelectUnit: (slug: string) => void
           شجرة المحتوى المعرفي
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          المنهاج الرسمي كاملاً لطلبة السنة الثالثة ثانوي — الشعب العلمية في الجزائر.
+          المنهاج الرسمي كاملاً — الشعب العلمية في الجزائر، متوافق مع تدرّج 2022.
           كل وحدة تتضمن دروساً نظرية، تمارين متدرجة، وحلولاً نموذجية مفصلة.
         </p>
+      </div>
+
+      {/* إحصائيات السنة المختارة */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-primary">{units.length}</div>
+          <div className="text-xs text-muted-foreground">الوحدات</div>
+        </div>
+        <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-700/10 border border-emerald-500/20 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-emerald-700">{filteredUnits.reduce((acc, u) => acc + u.chapters.length, 0)}</div>
+          <div className="text-xs text-muted-foreground">الفصول</div>
+        </div>
+        <div className="bg-gradient-to-br from-amber-500/10 to-amber-700/10 border border-amber-500/20 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-amber-700">{filteredUnits.reduce((acc, u) => acc + u.chapters.reduce((s, c) => s + c.lessons.length, 0), 0)}</div>
+          <div className="text-xs text-muted-foreground">الدروس</div>
+        </div>
+        <div className="bg-gradient-to-br from-blue-500/10 to-blue-700/10 border border-blue-500/20 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-blue-700">{filteredUnits.reduce((acc, u) => acc + u.chapters.reduce((s, c) => s + c.exercises.length, 0), 0)}</div>
+          <div className="text-xs text-muted-foreground">التمارين</div>
+        </div>
       </div>
 
       {/* مرشحات الشعب */}
