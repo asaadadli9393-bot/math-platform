@@ -1975,8 +1975,16 @@ function mergeUnit(unit: UnitSeed): UnitSeed {
 //  الفصل الثالث (المحاور 7-10): التكامل + المعادلات التفاضلية + هندسة الفضاء + الحساب
 // ============================================================
 import { unitIntegration, unitDifferentialEquations } from "./curriculum-extra-units";
+import { curriculum1AS } from "./curriculum-1as";
+import { curriculum2AS } from "./curriculum-2as";
 
-export const curriculum: UnitSeed[] = [
+// ============================================================
+//  المنهاج الكامل — السنوات الثلاث ثانوي (1AS + 2AS + 3AS)
+// ============================================================
+export const curriculum1AS_All = curriculum1AS;
+export const curriculum2AS_All = curriculum2AS;
+
+export const curriculum3AS: UnitSeed[] = [
   // ─── الفصل الأول (التدرّج المقرر) ───
   unitFunctionsStudy,           // المحور 1: دراسة الدوال
   unitSequences,                // المحور 2: المتتاليات العددية
@@ -1990,6 +1998,11 @@ export const curriculum: UnitSeed[] = [
   unitSpaceGeometry,            // المحور 9: هندسة الفضاء (رياضيات/تقني رياضي)
   unitArithmeticDivisibility,   // المحور 10: الحساب (رياضيات فقط)
 ].map(mergeUnit);
+
+// ============================================================
+//  المنهاج الرسمي — السنة الثالثة ثانوي (للتوافق مع الكود الحالي)
+// ============================================================
+export const curriculum: UnitSeed[] = curriculum3AS;
 
 // ============================================================
 //  إحصائيات المنهاج (لعرضها في الواجهة)
