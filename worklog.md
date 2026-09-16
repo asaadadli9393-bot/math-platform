@@ -560,3 +560,54 @@ Stage Summary:
 - T1: limits-continuity, exponential, space-geometry
 - T2: space-dot-product, logarithm, probability
 - T3: sequences, differential-equations
+
+---
+Task ID: enrich-all-curricula-official-2022
+Agent: main (Super Z)
+Task: إثراء شامل لكل المناهج الـ12 الرسمية وفق التدرّج 2022
+
+Work Log:
+- تحليل الوثيقة الرسمية (4261 سطر) واستخراج كل المناهج الـ12
+- بناء خريطة شاملة للمناهج في docs/curricula-summary.md
+- إنشاء 12 ملف منهج كامل:
+
+**الشعب العلمية (تستعمل وحدات مشتركة غنية):**
+- 1AS-Sciences: 9 وحدات (162 ساعة) — من curriculum-1as.ts
+- 2AS-Math: 4 وحدات مخصصة + 6 مشتركة (189 ساعة)
+- 2AS-TechnicalMath: 10 وحدات مشتركة (162 ساعة)
+- 2AS-Experimental: 10 وحدات مشتركة (135 ساعة)
+- 3AS-Math: 9 وحدات من curriculum.ts (189 ساعة)
+- 3AS-TechnicalMath: 8 وحدات (162 ساعة)
+- 3AS-Experimental: 7 وحدات (135 ساعة)
+
+**الشعب الأدبية والاقتصادية (محتوى مخصص كامل):**
+- 1AS-Literature: 4 وحدات (81 ساعة) — 505 سطر
+- 2AS-Literature: 5 وحدات (54 ساعة) — 392 سطر
+- 2AS-Economy: 5 وحدات (~108 ساعة) — 501 سطر (مع برمجة خطية)
+- 3AS-Literature: 5 وحدات (54 ساعة) — 358 سطر
+- 3AS-Economy: 6 وحدات (108 ساعة) — 285 سطر
+
+- بنية الواجهة (page.tsx):
+  * مُبدّل سنة + شعبة (1AS × 2 شعب، 2AS × 5 شعب، 3AS × 5 شعب)
+  * حفظ في localStorage
+  * عرض المنهاج حسب الشعبة المختارة
+
+- إصلاح اعتماد دائري:
+  * نقل import curriculaByStream من curriculum.ts إلى page.tsx
+  * تفادى: curriculum.ts ← curricula-index.ts ← curriculum-3as-math.ts ← curriculum.ts
+
+- النشر على Vercel:
+  * Deployment ID: dpl_B9hCvrJjLf46oGgD16jBF265JKKe
+  * مدة البناء: 344 ثانية
+  * Production URL: https://adli-math.vercel.app
+
+- اختبار الإنتاج:
+  * HTTP 200 ✓
+  * /api/mock-exam: 10 أسئلة ✓
+  * المساعد الذكي: يعمل ✓
+
+Stage Summary:
+- ✅ 12 منهجًا رسميًا كاملًا وفق التدرّج 2022
+- ✅ كل شعبة لها محتوى مطابق للحجم الساعي الرسمي
+- ✅ الواجهة تدعم تبديل الشعب
+- ✅ المنصة منشورة وتعمل
