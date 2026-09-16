@@ -79,7 +79,7 @@ export interface UnitSeed {
 // ============================================================
 //  الوحدة 1: المتتاليات العددية
 // ============================================================
-const unitSequences: UnitSeed = {
+export const unitSequences: UnitSeed = {
   slug: "numerical-sequences",
   title: "المتتاليات العددية",
   description:
@@ -511,7 +511,7 @@ $$\\lim_{n \\to +\\infty} u_n = 2$$
 // ============================================================
 //  الوحدة 2: الدوال الأسية واللوغاريتمية
 // ============================================================
-const unitExponentialLogarithm: UnitSeed = {
+export const unitExponentialLogarithm: UnitSeed = {
   slug: "exponential-logarithmic-functions",
   title: "الدوال الأسية واللوغاريتمية",
   description:
@@ -848,7 +848,7 @@ $$x = \\frac{1 \\pm 5}{2} \\implies x = 3 \\;\\text{or}\\; x = -2$$
 // ============================================================
 //  الوحدة 3: الأعداد المركبة
 // ============================================================
-const unitComplexNumbers: UnitSeed = {
+export const unitComplexNumbers: UnitSeed = {
   slug: "complex-numbers",
   title: "الأعداد المركبة",
   description:
@@ -1152,7 +1152,7 @@ $$(1+i)^8 = 8 \\times 1 = 8$$
 // ============================================================
 //  الوحدة 4: الاحتمالات
 // ============================================================
-const unitProbability: UnitSeed = {
+export const unitProbability: UnitSeed = {
   slug: "probability",
   title: "الاحتمالات",
   description:
@@ -1339,7 +1339,7 @@ $$P_D(C) = \\frac{0{,}20 \\times 0{,}05}{0{,}029} = \\frac{0{,}010}{0{,}029} \\a
 // ============================================================
 //  الوحدة 5: الهندسة في الفضاء
 // ============================================================
-const unitSpaceGeometry: UnitSeed = {
+export const unitSpaceGeometry: UnitSeed = {
   slug: "space-geometry",
   title: "الهندسة في الفضاء",
   description:
@@ -1533,7 +1533,7 @@ $$5t - 3 = 0 \\implies t = \\frac{3}{5}$$
 // ============================================================
 //  الوحدة 6: الحساب وقابلية القسمة
 // ============================================================
-const unitArithmeticDivisibility: UnitSeed = {
+export const unitArithmeticDivisibility: UnitSeed = {
   slug: "arithmetic-divisibility",
   title: "الحساب وقابلية القسمة",
   description:
@@ -1732,7 +1732,7 @@ $$7^{100} = (7^4)^{25} \\equiv 1^{25} \\equiv 1 \\pmod{5}$$
 // ============================================================
 //  الوحدة 7: دراسة الدوال الشاملة
 // ============================================================
-const unitFunctionsStudy: UnitSeed = {
+export const unitFunctionsStudy: UnitSeed = {
   slug: "functions-comprehensive-study",
   title: "دراسة الدوال الشاملة",
   description:
@@ -1978,8 +1978,12 @@ import { unitIntegration, unitDifferentialEquations } from "./curriculum-extra-u
 import { curriculum1AS } from "./curriculum-1as";
 import { curriculum2AS } from "./curriculum-2as";
 
+// ملاحظة: استيراد المناهج الـ12 الرسمية يتم في src/data/curricula-index.ts (ملف منفصل)
+// لتفادي الاعتماد الدائري بين curriculum.ts و ملفات الـ streams
+
 // ============================================================
 //  المنهاج الكامل — السنوات الثلاث ثانوي (1AS + 2AS + 3AS)
+//  التوافق مع الكود القديم (curriculum1AS_All / curriculum2AS_All)
 // ============================================================
 export const curriculum1AS_All = curriculum1AS;
 export const curriculum2AS_All = curriculum2AS;
@@ -2003,6 +2007,69 @@ export const curriculum3AS: UnitSeed[] = [
 //  المنهاج الرسمي — السنة الثالثة ثانوي (للتوافق مع الكود الحالي)
 // ============================================================
 export const curriculum: UnitSeed[] = curriculum3AS;
+
+// ============================================================
+//  المناهج الـ12 الرسمية حسب السنة والشعبة (2022)
+//  المفاتيح بصيغة `${year}-${stream}`:
+//    year: 1AS | 2AS | 3AS
+//    stream: Sciences | Literature | Math | TechnicalMath | Experimental | Economy
+// ============================================================
+// ملاحظة: curriculaByStream (خريطة المناهج الـ12) معرّفة في src/data/curricula-index.ts
+// لتفادي الاعتماد الدائري بين curriculum.ts و ملفات الـ streams
+// (ملفات الـ streams تستعمل unitSequences و غيرها من curriculum.ts، و curriculum.ts
+// بدورها كانت تستعمل ملفات الـ streams في curriculaByStream)
+export type CurriculumKey =
+  | "1AS-Sciences"
+  | "1AS-Literature"
+  | "2AS-Math"
+  | "2AS-TechnicalMath"
+  | "2AS-Experimental"
+  | "2AS-Literature"
+  | "2AS-Economy"
+  | "3AS-Math"
+  | "3AS-TechnicalMath"
+  | "3AS-Experimental"
+  | "3AS-Literature"
+  | "3AS-Economy";
+
+// re-export curriculaByStream من ملف الفهرس المنفصل (لتوفير استيراد موحد)
+// ملاحظة: تم نقل الاستيراد المباشر إلى page.tsx لتفادي الاعتماد الدائري
+// curriculum.ts ← curricula-index.ts ← curriculum-3as-math.ts ← curriculum.ts
+// للاستيراد من page.tsx استعمل: import { curriculaByStream } from "@/data/curricula-index";
+
+// ============================================================
+//  الشعب المتاحة حسب السنة الدراسية (لواجهة المستخدم)
+// ============================================================
+export type StreamKey =
+  | "Sciences"
+  | "Literature"
+  | "Math"
+  | "TechnicalMath"
+  | "Experimental"
+  | "Economy";
+
+export const streamsByYear: Record<"1AS" | "2AS" | "3AS", StreamKey[]> = {
+  "1AS": ["Sciences", "Literature"],
+  "2AS": ["Math", "TechnicalMath", "Experimental", "Literature", "Economy"],
+  "3AS": ["Math", "TechnicalMath", "Experimental", "Literature", "Economy"],
+};
+
+// عناوين الشعب بالعربية (لواجهة المستخدم)
+export const streamKeyLabelsAr: Record<StreamKey, string> = {
+  Sciences: "جذع مشترك علوم وتكنولوجيا",
+  Literature: "آداب وفلسفة / لغات أجنبية",
+  Math: "رياضيات",
+  TechnicalMath: "تقني رياضي",
+  Experimental: "علوم تجريبية",
+  Economy: "تسيير واقتصاد",
+};
+
+// عناوين السنوات بالعربية
+export const yearLabelsAr: Record<"1AS" | "2AS" | "3AS", string> = {
+  "1AS": "السنة الأولى ثانوي",
+  "2AS": "السنة الثانية ثانوي",
+  "3AS": "السنة الثالثة ثانوي",
+};
 
 // ============================================================
 //  إحصائيات المنهاج (لعرضها في الواجهة)

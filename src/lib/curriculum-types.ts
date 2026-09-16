@@ -22,7 +22,10 @@ export type ExerciseType =
 export type StudentStream =
   | "EXPERIMENTAL_SCIENCES"
   | "MATHEMATICS"
-  | "TECHNICAL_MATH";
+  | "TECHNICAL_MATH"
+  | "LITERATURE"
+  | "ECONOMY"
+  | "ALL";
 
 // عناوين عربية لأنواع الصعوبة
 export const difficultyLabels: Record<ExerciseDifficulty, string> = {
@@ -50,6 +53,8 @@ export const streamLabels: Record<string, string> = {
   EXPERIMENTAL_SCIENCES: "علوم تجريبية",
   MATHEMATICS: "رياضيات",
   TECHNICAL_MATH: "تقني رياضي",
+  LITERATURE: "آداب وفلسفة",
+  ECONOMY: "تسيير واقتصاد",
 };
 
 // ألوان حسب الصعوبة (للشارات)

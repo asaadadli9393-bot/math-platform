@@ -35,7 +35,18 @@ import { ExerciseCard } from "@/components/exercise-card";
 import { InteractiveQuiz } from "@/components/interactive-quiz";
 import { StudentDashboard } from "@/components/student-dashboard";
 import { ParentPortal } from "@/components/parent-portal";
-import { curriculum, getCurriculumStats, curriculum1AS_All, curriculum2AS_All } from "@/data/curriculum";
+import {
+  curriculum,
+  getCurriculumStats,
+  curriculum1AS_All,
+  curriculum2AS_All,
+  streamsByYear,
+  streamKeyLabelsAr,
+  yearLabelsAr,
+  type StreamKey,
+  type CurriculumKey,
+} from "@/data/curriculum";
+import { curriculaByStream } from "@/data/curricula-index";
 import { quizzes } from "@/data/quizzes";
 import { bacExams, getBacExamsStats, streamLabelsBac, type BacStream } from "@/data/bac-exams";
 import { BacExamCard } from "@/components/bac-exam-card";
@@ -86,6 +97,9 @@ import {
   Divide,
   LineChart,
   TrendingUp,
+  Hash,
+  Infinity as InfinityIcon,
+  BarChart3,
   User,
   UserCog,
   LogIn,
@@ -145,6 +159,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Divide,
   LineChart,
   Calculator,
+  Hash,
+  Infinity: InfinityIcon,
+  BarChart3,
+  GraduationCap,
+  BookOpen,
+  Files,
 };
 
 type MainView = "home" | "trimesters" | "curriculum" | "unit" | "quiz" | "exams" | "courses" | "course-detail" | "pricing" | "payment" | "payment-product" | "products" | "dashboard" | "parent" | "about" | "admin" | "function-plotter" | "assistant" | "mock-exam" | "trimester-exams" | "comprehensive-topics";
@@ -201,6 +221,46 @@ export default function HomePage() {
   const [authOpen, setAuthOpen] = React.useState(false);
   // السنة الدراسية المختارة: 1AS / 2AS / 3AS
   const [activeYear, setActiveYear] = React.useState<"1AS" | "2AS" | "3AS">("3AS");
+  // الشعبة المختارة: تتغيّر حسب السنة المختارة
+  const [activeStream, setActiveStream] = React.useState<StreamKey>("Math");
+
+  // استرجاع السنة والشعبة من localStorage عند التحميل
+  React.useEffect(() => {
+    try {
+      const savedYear = localStorage.getItem("activeYear") as "1AS" | "2AS" | "3AS" | null;
+      const savedStream = localStorage.getItem("activeStream") as StreamKey | null;
+      if (savedYear && (savedYear === "1AS" || savedYear === "2AS" || savedYear === "3AS")) {
+        setActiveYear(savedYear);
+        // التأكد من أن الشعبة المحفوظة متاحة للسنة المختارة
+        const availableStreams = streamsByYear[savedYear];
+        if (savedStream && availableStreams.includes(savedStream)) {
+          setActiveStream(savedStream);
+        } else {
+          setActiveStream(availableStreams[0]);
+        }
+      }
+    } catch (e) {
+      // تجاهل الأخطاء (localStorage قد لا يكون متاحًا)
+    }
+  }, []);
+
+  // حفظ السنة والشعبة في localStorage عند تغييرهما
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("activeYear", activeYear);
+      localStorage.setItem("activeStream", activeStream);
+    } catch (e) {
+      // تجاهل
+    }
+  }, [activeYear, activeStream]);
+
+  // عند تغيير السنة، تحديث الشعبة تلقائيًا لتكون أول شعبة متاحة
+  React.useEffect(() => {
+    const availableStreams = streamsByYear[activeYear];
+    if (!availableStreams.includes(activeStream)) {
+      setActiveStream(availableStreams[0]);
+    }
+  }, [activeYear, activeStream]);
 
   const stats = getCurriculumStats();
   const profile = useStudentStore((s) => s.profile);
@@ -261,9 +321,11 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // تحديد المنهاج الفعّال حسب السنة المختارة
+  // تحديد المنهاج الفعّال حسب السنة والشعبة المختارَين (2022 رسمي)
+  const activeCurriculumKey: CurriculumKey = `${activeYear}-${activeStream}` as CurriculumKey;
   const activeCurriculum: typeof curriculum =
-    activeYear === "1AS" ? curriculum1AS_All : activeYear === "2AS" ? curriculum2AS_All : curriculum;
+    curriculaByStream[activeCurriculumKey] ??
+    (activeYear === "1AS" ? curriculum1AS_All : activeYear === "2AS" ? curriculum2AS_All : curriculum);
 
   // إحصائيات السنة المختارة
   const activeStats = React.useMemo(() => {
@@ -309,31 +371,69 @@ export default function HomePage() {
 
             {/* القائمة الرئيسية — على الشاشات الكبيرة */}
             <nav className="hidden md:flex items-center gap-2">
-              {/* مُبدّل السنوات الدراسية */}
-              <div className="flex items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50">
-                {(["1AS", "2AS", "3AS"] as const).map((year) => (
-                  <button
-                    key={year}
-                    onClick={() => {
-                      setActiveYear(year);
-                      // توجيه تلقائي لصفحة المنهاج لرؤية المحتوى المحدّث
-                      setSelectedUnitSlug(null);
-                      if (view !== "curriculum" && view !== "trimesters" && view !== "unit" && view !== "home") {
-                        setView("curriculum");
-                      } else if (view === "home") {
-                        setView("curriculum");
-                      }
-                    }}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
-                      activeYear === year
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
-                    title={`السنة ${year === "1AS" ? "الأولى" : year === "2AS" ? "الثانية" : "الثالثة"} ثانوي`}
-                  >
-                    {year}
-                  </button>
-                ))}
+              {/* مُبدّل السنوات الدراسية + الشعب (2022 رسمي) */}
+              <div className="flex items-center gap-1">
+                {/* مُبدّل السنوات */}
+                <div className="flex items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50">
+                  {(["1AS", "2AS", "3AS"] as const).map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        setActiveYear(year);
+                        // ضبط الشعبة لأول شعبة متاحة لهذه السنة
+                        const available = streamsByYear[year];
+                        if (!available.includes(activeStream)) {
+                          setActiveStream(available[0]);
+                        }
+                        // توجيه تلقائي لصفحة المنهاج لرؤية المحتوى المحدّث
+                        setSelectedUnitSlug(null);
+                        if (view !== "curriculum" && view !== "trimesters" && view !== "unit" && view !== "home") {
+                          setView("curriculum");
+                        } else if (view === "home") {
+                          setView("curriculum");
+                        }
+                      }}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                        activeYear === year
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                      title={yearLabelsAr[year]}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+                {/* مُبدّل الشعب */}
+                <div className="flex items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50">
+                  {streamsByYear[activeYear].map((stream) => (
+                    <button
+                      key={stream}
+                      onClick={() => {
+                        setActiveStream(stream);
+                        setSelectedUnitSlug(null);
+                        if (view !== "curriculum" && view !== "trimesters" && view !== "unit" && view !== "home") {
+                          setView("curriculum");
+                        } else if (view === "home") {
+                          setView("curriculum");
+                        }
+                      }}
+                      className={`px-2.5 py-1.5 text-[10px] font-bold rounded-md transition-all whitespace-nowrap ${
+                        activeStream === stream
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                      title={streamKeyLabelsAr[stream]}
+                    >
+                      {stream === "Sciences" ? "علوم" :
+                        stream === "Literature" ? "آداب" :
+                        stream === "Math" ? "رياضيات" :
+                        stream === "TechnicalMath" ? "تقني رياضي" :
+                        stream === "Experimental" ? "تجريبية" :
+                        stream === "Economy" ? "اقتصاد" : stream}
+                    </button>
+                  ))}
+                </div>
               </div>
               <NavButton active={view === "home"} onClick={() => navigateTo("home")}>
                 <Home className="w-4 h-4 ml-2" />
@@ -428,6 +528,10 @@ export default function HomePage() {
                         key={year}
                         onClick={() => {
                           setActiveYear(year);
+                          const available = streamsByYear[year];
+                          if (!available.includes(activeStream)) {
+                            setActiveStream(available[0]);
+                          }
                           setSelectedUnitSlug(null);
                           setView("curriculum");
                           setSheetOpen(false);
@@ -437,9 +541,36 @@ export default function HomePage() {
                             ? "bg-primary text-primary-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         }`}
-                        title={`السنة ${year === "1AS" ? "الأولى" : year === "2AS" ? "الثانية" : "الثالثة"} ثانوي`}
+                        title={yearLabelsAr[year]}
                       >
                         {year === "1AS" ? "1AS" : year === "2AS" ? "2AS" : "3AS"}
+                      </button>
+                    ))}
+                  </div>
+                  {/* مُبدّل الشعب — للجوال */}
+                  <div className="flex flex-wrap items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50 mb-2">
+                    {streamsByYear[activeYear].map((stream) => (
+                      <button
+                        key={stream}
+                        onClick={() => {
+                          setActiveStream(stream);
+                          setSelectedUnitSlug(null);
+                          setView("curriculum");
+                          setSheetOpen(false);
+                        }}
+                        className={`flex-1 min-w-[80px] px-2.5 py-1.5 text-[10px] font-bold rounded-md transition-all ${
+                          activeStream === stream
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        }`}
+                        title={streamKeyLabelsAr[stream]}
+                      >
+                        {stream === "Sciences" ? "علوم" :
+                          stream === "Literature" ? "آداب" :
+                          stream === "Math" ? "رياضيات" :
+                          stream === "TechnicalMath" ? "تقني رياضي" :
+                          stream === "Experimental" ? "تجريبية" :
+                          stream === "Economy" ? "اقتصاد" : stream}
                       </button>
                     ))}
                   </div>
@@ -537,6 +668,8 @@ export default function HomePage() {
           <CurriculumView
             onSelectUnit={(slug) => navigateTo("unit", slug)}
             units={activeCurriculum}
+            yearLabel={yearLabelsAr[activeYear]}
+            streamLabel={streamKeyLabelsAr[activeStream]}
           />
         )}
 
@@ -622,7 +755,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-bold mb-3 academic-divider">المحتوى — {activeYear === "1AS" ? "السنة الأولى" : activeYear === "2AS" ? "السنة الثانية" : "السنة الثالثة"} ثانوي</h4>
+              <h4 className="font-bold mb-3 academic-divider">المحتوى — {yearLabelsAr[activeYear]} — {streamKeyLabelsAr[activeStream]}</h4>
               <ul className="space-y-1 text-sm text-primary-foreground/80">
                 {activeCurriculum.map((unit) => (
                   <li key={unit.slug}>
@@ -1526,7 +1659,7 @@ function LessonCard({ lesson }: { lesson: any }) {
 
 // ===================================================
 
-function CurriculumView({ onSelectUnit, units }: { onSelectUnit: (slug: string) => void; units: typeof curriculum }) {
+function CurriculumView({ onSelectUnit, units, yearLabel, streamLabel }: { onSelectUnit: (slug: string) => void; units: typeof curriculum; yearLabel: string; streamLabel: string }) {
   const [filter, setFilter] = React.useState<"ALL" | "MATHEMATICS" | "EXPERIMENTAL_SCIENCES" | "TECHNICAL_MATH">("ALL");
   const [trimesterFilter, setTrimesterFilter] = React.useState<"ALL" | 1 | 2 | 3>("ALL");
   const favoriteUnits = useStudentStore((s) => s.favoriteUnits);
@@ -1553,7 +1686,7 @@ function CurriculumView({ onSelectUnit, units }: { onSelectUnit: (slug: string) 
           شجرة المحتوى المعرفي
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          المنهاج الرسمي كاملاً — الشعب العلمية في الجزائر، متوافق مع تدرّج 2022.
+          المنهاج الرسمي كاملاً — {yearLabel} — {streamLabel}، متوافق مع تدرّج وزارة التربية الوطنية 2022.
           كل وحدة تتضمن دروساً نظرية، تمارين متدرجة، وحلولاً نموذجية مفصلة.
         </p>
       </div>
