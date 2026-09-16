@@ -419,3 +419,66 @@ Stage Summary:
 4. تشغيل `npx prisma db push` على قاعدة البيانات البعيدة
 5. تشغيل `bun run scripts/seed-admin-settings.ts` على قاعدة البيانات البعيدة
 6. (اختياري) إنشاء كلمة تطبيق Gmail وتفعيل الإشعارات في /admin
+
+---
+Task ID: quizzes-1as-2as
+Agent: main (Super Z)
+Task: إضافة 17 اختبارًا تفاعليًا للسنة الأولى والثانية ثانوي (128 سؤال)
+
+Work Log:
+- إنشاء src/data/quizzes-1as-2as.ts (1132 سطر جديد):
+  * 8 اختبارات للسنة الأولى ثانوي (1AS):
+    - quiz-1as-real-numbers (6 أسئلة): الأعداد الحقيقية والحساب الفاصلي
+    - quiz-1as-functions (7 أسئلة): الدوال العددية
+    - quiz-1as-plane-geometry (6 أسئلة): الهندسة في المستوى
+    - quiz-1as-dot-product (7 أسئلة): الجداء السلمي
+    - quiz-1as-affine-function (6 أسئلة): الدالة التآلفية والإحصاء
+    - quiz-1as-arithmetic-sequences (6 أسئلة): المتتاليات الحسابية
+    - quiz-1as-vector-calculus (6 أسئلة): الحساب المتجهي
+    - quiz-1as-equations-inequalities (7 أسئلة): المعادلات والمتراجحات
+  * 9 اختبارات للسنة الثانية ثانوي (2AS):
+    - quiz-2as-limits-continuity (7 أسئلة): النهايات والاستمرارية
+    - quiz-2as-exponential (7 أسئلة): الدالة الأسية
+    - quiz-2as-space-geometry (6 أسئلة): الهندسة في الفضاء
+    - quiz-2as-space-dot-product (6 أسئلة): الجداء السلمي في الفضاء
+    - quiz-2as-logarithm (7 أسئلة): الدالة اللوغاريتمية
+    - quiz-2as-probability (7 أسئلة): الاحتمالات
+    - quiz-2as-sequences (7 أسئلة): المتتاليات
+    - quiz-2as-differential-equations (6 أسئلة): المعادلات التفاضلية
+    - quiz-2as-complex-numbers (7 أسئلة): الأعداد المركبة
+
+- كل سؤال يحتوي على:
+  * معادلات LaTeX
+  * 4 خيارات متعددة
+  * شرح مفصل للحل (explanation)
+  * نقاط (1 أو 2 حسب الصعوبة)
+
+- دمج quizzes1AS2AS في quizzes.ts الرئيسي عبر:
+  import { quizzes1AS2AS } from "./quizzes-1as-2as";
+  ...quizzes1AS2AS,
+
+- فحص TypeScript: 0 أخطاء ✓
+- البناء محليًا: نجح ✓
+- إعادة بناء scripts/deploy-vercel.py (ضاع في rebase)
+- النشر على Vercel: نجح
+  * Deployment ID: dpl_FL6TB18t8Vsm2rDX5pMD49hoFm2L
+  * مدة البناء: 204 ثانية
+  * Production URL: https://adli-math.vercel.app
+
+- اختبار الإنتاج:
+  * الصفحة الرئيسية: HTTP 200 ✓
+  * /admin: HTTP 200 ✓
+  * /api/mock-exam: نجح، أعاد 10 أسئلة ✓
+  * المساعد الذكي يعمل ✓
+
+Stage Summary:
+- ✅ 17 اختبارًا جديدًا مُضاف للمنصة
+- ✅ 128 سؤالاً بـ LaTeX + شروحات
+- ✅ منصة الرياضيات الآن تخدم 3 سنوات ثانوي كاملة
+  * السنة الأولى ثانوي (1AS): 8 وحدات + 8 اختبارات
+  * السنة الثانية ثانوي (2AS): 9 وحدات + 9 اختبارات
+  * السنة الثالثة ثانوي (3AS): 9 وحدات + 9 اختبارات
+- 🔑 معلومات الإنتاج:
+  * URL: https://adli-math.vercel.app (alias)
+  * URL: https://math-adli.vercel.app
+  * آخر Deployment: dpl_FL6TB18t8Vsm2rDX5pMD49hoFm2L
