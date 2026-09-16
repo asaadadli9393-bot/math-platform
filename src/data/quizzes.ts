@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { QuizQuestionData } from "@/components/interactive-quiz";
+import { quizzes1AS2AS } from "./quizzes-1as-2as";
 
 export interface QuizSeed {
   id: string;
@@ -824,4 +825,9 @@ export const quizzes: QuizSeed[] = [
       },
     ],
   },
+  // ============================================================
+  //  اختبارات السنة الأولى + الثانية ثانوي (من quizzes-1as-2as.ts)
+  //  17 اختبارًا — 128 سؤالاً
+  // ============================================================
+  ...quizzes1AS2AS,
 ];
