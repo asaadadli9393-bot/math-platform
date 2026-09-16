@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick Vercel deploy script - re-built from worklog
+Quick Vercel deploy script — reads config from env or .env.production
 """
 import os
 import sys
@@ -12,10 +12,35 @@ import urllib.error
 
 REPO_ROOT = "/home/z/my-project"
 
-# Config from worklog
-VERCEL_TOKEN = ""
-PROJECT_ID = "prj_fmumwoENNgTzguMu4xAKkyqJAC3t"
-ORG_ID = "team_JZvbO8QvFAimHHtQkjDVUJx1"
+
+def load_env(path):
+    env = {}
+    if not os.path.exists(path):
+        return env
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key:
+                env[key] = value
+    return env
+
+
+# قراءة الإعدادات من .env.production أو متغيرات البيئة
+_env = load_env(os.path.join(REPO_ROOT, ".env.production"))
+VERCEL_TOKEN = os.environ.get("VERCEL_TOKEN") or _env.get("VERCEL_TOKEN", "")
+PROJECT_ID = os.environ.get("VERCEL_PROJECT_ID") or _env.get("VERCEL_PROJECT_ID", "")
+ORG_ID = os.environ.get("VERCEL_ORG_ID") or _env.get("VERCEL_ORG_ID", "")
+
+if not all([VERCEL_TOKEN, PROJECT_ID, ORG_ID]):
+    print("❌ VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_ORG_ID مطلوبة")
+    print("   أضفها إلى .env.production أو متغيرات البيئة")
+    sys.exit(1)
+
 
 def vercel_api(method, path, body=None):
     url = f"https://api.vercel.com{path}"
@@ -35,6 +60,7 @@ def vercel_api(method, path, body=None):
             return e.code, {"error": "non-JSON"}
     except Exception as e:
         return 0, {"error": str(e)}
+
 
 def main():
     print("🚀 النشر على Vercel...")
@@ -142,6 +168,7 @@ def main():
     print(f"   • Deployment ID: {deployment_id}")
     if alias:
         print(f"   • Production URL: https://{alias[0]}")
+
 
 if __name__ == "__main__":
     main()
