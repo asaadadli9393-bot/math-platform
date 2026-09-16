@@ -28,29 +28,20 @@ import {
 } from "./curriculum-extra-units";
 
 // ============================================================
-//  وحدة إضافية لـ 3AS: الاستمرارية والاشتقاقية (مأخوذة من محتوى unitFunctionsStudy)
-// ============================================================
-const unit3ASMath_ContinuityDerivatives: UnitSeed = {
-  ...unitFunctionsStudy,
-  stream: "MATHEMATICS",
-  trimester: 1,
-  order: 1,
-};
-
-// ============================================================
 //  تصدير المنهاج الكامل للسنة الثالثة شعبة رياضيات
+//  المنهاج الأكثر شمولًا: 9 وحدات + المعادلات التفاضلية
 // ============================================================
 export const curriculum3ASMath: UnitSeed[] = [
-  // === الفصل الأول (T1) ===
-  unit3ASMath_ContinuityDerivatives,    // 1. الدوال العددية (اشتقاقية واستمرارية)
-  unitExponentialLogarithm,             // 2. الدالتان الأسية واللوغاريتمية
-  unitSequences,                        // 3. المتتاليات العددية
-  // === الفصل الثاني (T2) ===
-  unitIntegration,                      // 4. الدوال الأصلية والحساب التكاملي
-  unitArithmeticDivisibility,           // 5. الأعداد والحساب
-  unitProbability,                      // 6. الإحصاء والاحتمالات
-  // === الفصل الثالث (T3) ===
-  unitComplexNumbers,                   // 7. الأعداد المركبة والتحولات النقلية
-  unitSpaceGeometry,                    // 8. الهندسة في الفضاء
-  unitDifferentialEquations,            // 9. المعادلات التفاضلية (إضافية)
+  // === الفصل الأول (T1) === 70 ساعة
+  unitFunctionsStudy,           // 1. الدوال العددية (اشتقاقية واستمرارية) — 14h
+  unitExponentialLogarithm,     // 2. الدالتان الأسية واللوغاريتمية — 14h
+  unitSequences,                // 3. المتتاليات العددية — 14h
+  // === الفصل الثاني (T2) === 63 ساعة
+  unitIntegration,              // 4. الدوال الأصلية والحساب التكاملي — 21h
+  unitArithmeticDivisibility,   // 5. الأعداد والحساب — 21h
+  unitProbability,              // 6. الإحصاء والاحتمالات — 14h
+  // === الفصل الثالث (T3) === 49 ساعة
+  unitComplexNumbers,           // 7. الأعداد المركبة والتحولات النقلية — 21h
+  unitSpaceGeometry,            // 8. الهندسة في الفضاء — 21h
+  unitDifferentialEquations,    // 9. المعادلات التفاضلية — إضافي
 ];
