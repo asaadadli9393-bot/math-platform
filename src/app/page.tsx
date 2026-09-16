@@ -316,15 +316,18 @@ export default function HomePage() {
                     key={year}
                     onClick={() => {
                       setActiveYear(year);
-                      if (view === "curriculum" || view === "trimesters" || view === "unit") {
-                        setSelectedUnitSlug(null);
+                      // توجيه تلقائي لصفحة المنهاج لرؤية المحتوى المحدّث
+                      setSelectedUnitSlug(null);
+                      if (view !== "curriculum" && view !== "trimesters" && view !== "unit" && view !== "home") {
+                        setView("curriculum");
+                      } else if (view === "home") {
                         setView("curriculum");
                       }
                     }}
                     className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
                       activeYear === year
                         ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                     title={`السنة ${year === "1AS" ? "الأولى" : year === "2AS" ? "الثانية" : "الثالثة"} ثانوي`}
                   >
@@ -418,6 +421,28 @@ export default function HomePage() {
                   <SheetTitle className="text-right">القائمة</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-2 mt-6">
+                  {/* مُبدّل السنوات الدراسية — للجوال */}
+                  <div className="flex items-center gap-1 bg-muted/60 rounded-lg p-1 border border-border/50 mb-2">
+                    {(["1AS", "2AS", "3AS"] as const).map((year) => (
+                      <button
+                        key={year}
+                        onClick={() => {
+                          setActiveYear(year);
+                          setSelectedUnitSlug(null);
+                          setView("curriculum");
+                          setSheetOpen(false);
+                        }}
+                        className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                          activeYear === year
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        }`}
+                        title={`السنة ${year === "1AS" ? "الأولى" : year === "2AS" ? "الثانية" : "الثالثة"} ثانوي`}
+                      >
+                        {year === "1AS" ? "1AS" : year === "2AS" ? "2AS" : "3AS"}
+                      </button>
+                    ))}
+                  </div>
                   <MobileNavButton onClick={() => navigateTo("home")}>
                     <Home className="w-4 h-4 ml-2" /> الرئيسية
                   </MobileNavButton>
