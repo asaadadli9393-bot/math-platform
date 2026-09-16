@@ -523,3 +523,40 @@ Stage Summary:
 - ✅ الضغط على أي سنة يوجّه تلقائيًا لصفحة المنهاج
 - ✅ المحتوى يتحدّث فورًا (activeCurriculum)
 - ✅ النشر نجح على https://math-adli.vercel.app
+
+---
+Task ID: rebuild-curriculum-1as-2as
+Agent: main + subagent (general-purpose)
+Task: إعادة بناء منهج 1AS و2AS وفق التدرّج الرسمي 2022
+
+Work Log:
+- تشخيص المشاكل:
+  * 1AS: 8 وحدات مرتبة بشكل خاطئ + فقيرة المحتوى + بدون إحصاء
+  * 2AS: تحتوي على complex-numbers (موضوع 3AS وليس 2AS)
+- تفويض المهمة لمساعد متخصص (general-purpose agent)
+- المساعد أنجز:
+  * إعادة بناء curriculum-1as.ts: 817 → 1617 سطر
+  * تعديل curriculum-2as.ts: حذف complex-numbers (841 → 752 سطر)
+  * تحديث quizzes-1as-2as.ts: حذف quiz-2as-complex-numbers
+- إضافة quiz-1as-statistics (7 أسئلة) لوحدة الإحصاء الجديدة
+- التحقق: TypeScript 0 أخطاء + Next.js build نجح
+- النشر على Vercel: نجح (Deployment dpl_8qnsriFWzB57UUDGsJBh5mzh2GTQ)
+- اختبار الإنتاج: HTTP 200 + /api/mock-exam يعمل
+
+Stage Summary:
+- ✅ 1AS: 9 وحدات بالترتيب الصحيح + وحدة إحصاء جديدة
+- ✅ 2AS: 8 وحدات (بدون complex-numbers)
+- ✅ 17 اختبارًا تفاعليًا (مع quiz-1as-statistics جديد)
+- ✅ المنصة منشورة على https://math-adli.vercel.app
+
+**التدرّج الجديد الكامل:**
+
+1AS (السنة الأولى):
+- T1: real-numbers, functions, vector-calculus
+- T2: equations-inequalities, dot-product, plane-geometry
+- T3: arithmetic-sequences, affine-function, statistics (جديد)
+
+2AS (السنة الثانية):
+- T1: limits-continuity, exponential, space-geometry
+- T2: space-dot-product, logarithm, probability
+- T3: sequences, differential-equations
