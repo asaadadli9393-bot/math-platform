@@ -50,7 +50,9 @@ export function RichText({ text, className = '' }: { text: string; className?: s
       return seg.value
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+        .replace(/>/g, '&gt;')
+        // دعم ماركداون خفيف وارد من البنوك القديمة: **عريض**
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     }).join('');
   }, [text]);
 

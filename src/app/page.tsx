@@ -2,26 +2,30 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookOpenCheck, CalendarRange, GraduationCap, Home as HomeIcon, Layers, Sigma, Sparkles } from 'lucide-react';
+import { BarChart3, BookOpen, BookOpenCheck, CalendarRange, GraduationCap, Home as HomeIcon, Layers, Sigma, Sparkles, Video } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
 import BankView from '@/components/views/BankView';
 import QuizView from '@/components/views/QuizView';
 import DashboardView from '@/components/views/DashboardView';
+import CoursesView from '@/components/views/CoursesView';
+import LiveClassesView from '@/components/views/LiveClassesView';
 import { useProgress } from '@/lib/progress';
 import { useLevel } from '@/lib/level';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard';
+type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'courses' | 'live';
 
 const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
   { id: 'curriculum', label: 'التدرج السنوي', icon: CalendarRange },
   { id: 'chapters', label: 'الفصول', icon: Layers },
   { id: 'bank', label: 'بنك التمارين', icon: BookOpenCheck },
+  { id: 'courses', label: 'الدورات', icon: BookOpen },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
+  { id: 'live', label: 'حصص Zoom', icon: Video },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
 ];
 
@@ -203,6 +207,10 @@ export default function Page() {
             onOpenBank={(id) => navigate('bank', id)}
           />
         )}
+        {view === 'courses' && (
+          <CoursesView isSubscribed onSelectCourse={() => {}} />
+        )}
+        {view === 'live' && <LiveClassesView />}
       </main>
 
       {/* ============ Footer ============ */}
@@ -235,6 +243,8 @@ export default function Page() {
                   <li><button onClick={() => navigate('curriculum')} className="hover:text-emerald-700">التدرج السنوي</button></li>
                   <li><button onClick={() => navigate('chapters')} className="hover:text-emerald-700">الفصول والملخصات</button></li>
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
+                  <li><button onClick={() => navigate('courses')} className="hover:text-emerald-700">الدورات الشاملة</button></li>
+                  <li><button onClick={() => navigate('live')} className="hover:text-emerald-700">حصص Zoom</button></li>
                 </ul>
               </div>
               <div>
