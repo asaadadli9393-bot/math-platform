@@ -39,6 +39,11 @@
   "exclude": [
     "node_modules",
     "scripts",
-    "tests"
+    "tests",
+    "examples",
+    "skills",
+    "mini-services",
+    "db",
+    "tool-results"
   ]
 }

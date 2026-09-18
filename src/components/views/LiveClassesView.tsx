@@ -9,7 +9,7 @@ import { Calendar, Clock, Lock, Mail, ShieldCheck, Trophy, Video } from 'lucide-
 //  LiveClassesView — حصص Zoom المباشرة
 //  منصة الرياضيات | الأستاذ عدلي أسعد
 // ============================================================
-function LiveClassesView() {
+function LiveClassesView({ isPremium = false, onSubscribe }: { isPremium?: boolean; onSubscribe?: () => void }) {
   const [copied, setCopied] = React.useState<string | null>(null);
 
   // جدول الحصص الأسبوعي
@@ -104,40 +104,57 @@ function LiveClassesView() {
                   </Badge>
                 </div>
 
-                {/* معلومات Zoom */}
-                <div className="flex flex-col gap-1 md:w-64 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">معرّف:</span>
-                    <code className="bg-muted px-2 py-0.5 rounded text-xs" dir="ltr">{session.zoomId}</code>
-                    <button
-                      onClick={() => copyToClipboard(session.zoomId, `id-${idx}`)}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      {copied === `id-${idx}` ? "✓ نُسخ" : "نسخ"}
-                    </button>
+                {/* معلومات Zoom — متاحة للمشتركين فقط */}
+                {isPremium ? (
+                  <div className="flex flex-col gap-1 md:w-64 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground">معرّف:</span>
+                      <code className="bg-muted px-2 py-0.5 rounded text-xs" dir="ltr">{session.zoomId}</code>
+                      <button
+                        onClick={() => copyToClipboard(session.zoomId, `id-${idx}`)}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {copied === `id-${idx}` ? "✓ نُسخ" : "نسخ"}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground">الرمز:</span>
+                      <code className="bg-muted px-2 py-0.5 rounded text-xs" dir="ltr">{session.password}</code>
+                      <button
+                        onClick={() => copyToClipboard(session.password, `pwd-${idx}`)}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {copied === `pwd-${idx}` ? "✓ نُسخ" : "نسخ"}
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">الرمز:</span>
-                    <code className="bg-muted px-2 py-0.5 rounded text-xs" dir="ltr">{session.password}</code>
-                    <button
-                      onClick={() => copyToClipboard(session.password, `pwd-${idx}`)}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      {copied === `pwd-${idx}` ? "✓ نُسخ" : "نسخ"}
-                    </button>
+                ) : (
+                  <div className="flex items-center gap-2 md:w-64 text-sm font-bold text-amber-700">
+                    <Lock className="h-4 w-4 shrink-0" />
+                    <span>المعرّف والرمز متاحان للمشتركين</span>
                   </div>
-                </div>
+                )}
 
                 {/* زر الانضمام */}
-                <a
-                  href="https://zoom.us/join"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  <Video className="w-4 h-4" />
-                  انضمام
-                </a>
+                {isPremium ? (
+                  <a
+                    href="https://zoom.us/join"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Video className="w-4 h-4" />
+                    انضمام
+                  </a>
+                ) : (
+                  <button
+                    onClick={onSubscribe}
+                    className="inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-emerald-950 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                  >
+                    <Lock className="w-4 h-4" />
+                    اشترك للانضمام
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -190,13 +207,12 @@ function LiveClassesView() {
                 <li>طرح الأسئلة المباشرة على الأستاذ</li>
                 <li>متابعة شخصية لتقدمك</li>
               </ul>
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              <button
+                onClick={onSubscribe}
                 className="inline-block mt-3 text-amber-700 dark:text-amber-300 font-semibold underline"
               >
                 اشترك الآن ←
-              </a>
+              </button>
             </div>
           </div>
         </CardContent>

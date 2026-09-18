@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookOpen, BookOpenCheck, CalendarRange, GraduationCap, Home as HomeIcon, Layers, Sigma, Sparkles, Video } from 'lucide-react';
+import { BarChart3, BookOpen, BookOpenCheck, CalendarRange, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Sparkles, Video } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -11,12 +11,15 @@ import QuizView from '@/components/views/QuizView';
 import DashboardView from '@/components/views/DashboardView';
 import CoursesView from '@/components/views/CoursesView';
 import LiveClassesView from '@/components/views/LiveClassesView';
+import SubscribeView from '@/components/views/SubscribeView';
+import AdminView from '@/components/views/AdminView';
 import { useProgress } from '@/lib/progress';
 import { useLevel } from '@/lib/level';
+import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'courses' | 'live';
+type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'courses' | 'live' | 'subscribe' | 'admin';
 
 const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
@@ -28,6 +31,9 @@ const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: st
   { id: 'live', label: 'حصص Zoom', icon: Video },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
 ];
+
+/** قائمة الهاتف = القائمة الأساسية + الاشتراك */
+const NAV_MOBILE: typeof NAV = [...NAV, { id: 'subscribe', label: 'الاشتراك', icon: Crown }];
 
 /** مبدّل المستوى الدراسي (أولى / ثانية / ثالثة) */
 function LevelSwitcher({
@@ -66,6 +72,7 @@ export default function Page() {
   const [chapterFocus, setChapterFocus] = useState<string | undefined>(undefined);
   const { state, toggleSolved, markRevealed, addQuizResult, resetAll } = useProgress();
   const { year, setLevel } = useLevel();
+  const { isPremium, daysLeft } = useSubscription();
 
   const navigate = useCallback((v: View, chapterId?: string) => {
     setView(v);
@@ -112,6 +119,28 @@ export default function Page() {
             <LevelSwitcher year={year} onSelect={selectLevel} />
           </div>
 
+          {/* حالة الاشتراك / زر الاشتراك (سطح المكتب) */}
+          <div className="hidden shrink-0 lg:block">
+            {isPremium ? (
+              <button
+                onClick={() => navigate('subscribe')}
+                title={daysLeft === null ? 'اشتراك دائم' : `متبقٍ ${daysLeft} يوماً`}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 ring-1 ring-emerald-200 transition hover:bg-emerald-100"
+              >
+                <Crown className="h-4 w-4 text-amber-500" />
+                مميز{daysLeft === null ? ' — دائم' : ''}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('subscribe')}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-3 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+              >
+                <Crown className="h-4 w-4" />
+                اشترك الآن
+              </button>
+            )}
+          </div>
+
           <nav className="hidden items-center gap-1 lg:flex" aria-label="التنقل الرئيسي">
             {NAV.map((n) => (
               <button
@@ -148,7 +177,7 @@ export default function Page() {
           aria-label="التنقل للهاتف"
         >
           <div className="custom-scroll mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3 py-2">
-            {NAV.map((n) => (
+            {NAV_MOBILE.map((n) => (
               <button
                 key={n.id}
                 onClick={() => navigate(n.id)}
@@ -208,9 +237,15 @@ export default function Page() {
           />
         )}
         {view === 'courses' && (
-          <CoursesView isSubscribed onSelectCourse={() => {}} />
+          <CoursesView
+            isSubscribed={isPremium}
+            onSelectCourse={() => {}}
+            onSubscribe={() => navigate('subscribe')}
+          />
         )}
-        {view === 'live' && <LiveClassesView />}
+        {view === 'live' && <LiveClassesView isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />}
+        {view === 'subscribe' && <SubscribeView />}
+        {view === 'admin' && <AdminView />}
       </main>
 
       {/* ============ Footer ============ */}
@@ -245,6 +280,7 @@ export default function Page() {
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
                   <li><button onClick={() => navigate('courses')} className="hover:text-emerald-700">الدورات الشاملة</button></li>
                   <li><button onClick={() => navigate('live')} className="hover:text-emerald-700">حصص Zoom</button></li>
+                  <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
                 </ul>
               </div>
               <div>
@@ -264,12 +300,21 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-stone-100 pt-5 text-[11px] font-semibold text-stone-400 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-stone-100 pt-5 text-[11px] font-semibold text-stone-400 sm:flex-row">
             <span className="inline-flex items-center gap-1.5">
               <GraduationCap className="h-3.5 w-3.5" />
               تحت إشراف الأستاذ عدلي اسعد — مع تمنياتنا بالنجاح والتفوق
             </span>
-            <span>المحتوى التعليمي وفق المناهج الرسمية الجزائرية — 2022/2023</span>
+            <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <a href={`mailto:${PROFESSOR_EMAIL}`} className="inline-flex items-center gap-1 text-emerald-700 hover:underline">
+                <Mail className="h-3 w-3" />
+                <span dir="ltr">{PROFESSOR_EMAIL}</span>
+              </a>
+              <span className="text-stone-300">|</span>
+              <button onClick={() => navigate('admin')} className="text-stone-400 transition hover:text-emerald-700 hover:underline">
+                لوحة الأستاذ
+              </button>
+            </span>
           </div>
         </div>
       </footer>
