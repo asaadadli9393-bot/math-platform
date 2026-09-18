@@ -1,25 +1,35 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Award, BarChart3, CheckCircle2, History, RotateCcw, Target, Trophy } from 'lucide-react';
-import { CHAPTERS } from '@/data/chapters';
-import { EXERCISES, EXERCISE_COUNT } from '@/data/exercises';
-import { getStream } from '@/data/curriculum';
+import { chaptersOfYear } from '@/data/chapters';
+import { exercisesOfYear } from '@/data/exercises';
+import { getStream, type YearId } from '@/data/curriculum';
 import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
 import type { ProgressState } from '@/lib/progress';
 
 export default function DashboardView({
+  year,
   state,
   onReset,
   onOpenBank,
 }: {
+  year: YearId;
   state: ProgressState;
   onReset: () => void;
   onOpenBank: (chapterId: string) => void;
 }) {
-  const solved = state.solved;
-  const pct = Math.round((solved.length / EXERCISE_COUNT) * 100);
-  const bacSolved = EXERCISES.filter((e) => solved.includes(e.id) && e.difficulty === 'بكالوريا').length;
-  const quizzes = state.quizResults;
+  const yearChapters = chaptersOfYear(year);
+  const yearExercises = exercisesOfYear(year);
+  const yearCount = yearExercises.length;
+  const solvedOfYear = useMemo(
+    () => state.solved.filter((id) => yearExercises.some((e) => e.id === id)),
+    [state.solved, yearExercises],
+  );
+  const solved = solvedOfYear;
+  const pct = yearCount ? Math.round((solved.length / yearCount) * 100) : 0;
+  const bacSolved = yearExercises.filter((e) => solved.includes(e.id) && e.difficulty === 'بكالوريا').length;
+  const quizzes = state.quizResults; // السجل لا يحمل السنة الدراسية — يُعرض كاملاً
   const avgQuiz = quizzes.length
     ? Math.round((quizzes.reduce((s, q) => s + (q.total ? q.score / q.total : 0), 0) / quizzes.length) * 100)
     : null;
@@ -29,7 +39,7 @@ export default function DashboardView({
     : null;
 
   const stats = [
-    { icon: CheckCircle2, label: 'تمارين منجزة', value: `${solved.length} / ${EXERCISE_COUNT}`, cls: 'text-emerald-700' },
+    { icon: CheckCircle2, label: 'تمارين منجزة', value: `${solved.length} / ${yearCount}`, cls: 'text-emerald-700' },
     { icon: Target, label: 'نسبة الإنجاز الكلية', value: `${pct}%`, cls: 'text-amber-600' },
     { icon: Trophy, label: 'تمارين بكالوريا منجزة', value: `${bacSolved}`, cls: 'text-violet-700' },
     { icon: BarChart3, label: 'متوسط الاختبارات', value: avgQuiz === null ? '—' : `${avgQuiz}%`, cls: 'text-teal-700' },
@@ -72,9 +82,9 @@ export default function DashboardView({
       <div className="mb-8 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6">
         <h3 className="mb-4 text-base font-extrabold text-stone-900">الإنجاز حسب الفصل</h3>
         <div className="space-y-4">
-          {CHAPTERS.map((c, i) => {
-            const total = EXERCISES.filter((e) => e.chapterId === c.id).length;
-            const done = EXERCISES.filter((e) => e.chapterId === c.id && solved.includes(e.id)).length;
+          {yearChapters.map((c, i) => {
+            const total = yearExercises.filter((e) => e.chapterId === c.id).length;
+            const done = yearExercises.filter((e) => e.chapterId === c.id && solved.includes(e.id)).length;
             const p = total ? Math.round((done / total) * 100) : 0;
             const th = THEME_STYLES[c.theme];
             return (

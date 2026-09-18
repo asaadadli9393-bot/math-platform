@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { CalendarRange, Clock, FileText, GraduationCap, Wrench } from 'lucide-react';
-import { ANNUAL_PLANS, STREAMS, type StreamId } from '@/data/curriculum';
+import { ANNUAL_PLANS, LEVELS, streamsOfYear, type StreamId, type YearId } from '@/data/curriculum';
 import { SectionTitle } from '@/components/shared';
 
 const KIND_META = {
@@ -18,10 +18,17 @@ function weeksLabel(w: number): string {
   return `${whole} أسابيع ونصف`;
 }
 
-export default function CurriculumView({ onOpenChapter }: { onOpenChapter: (chapterId: string) => void }) {
-  const [stream, setStream] = useState<StreamId>('sciences');
+export default function CurriculumView({
+  year,
+  onOpenChapter,
+}: {
+  year: YearId;
+  onOpenChapter: (chapterId: string) => void;
+}) {
+  const yearStreams = streamsOfYear(year);
+  const [stream, setStream] = useState<StreamId>(yearStreams[0]?.id ?? 'sciences');
   const rows = ANNUAL_PLANS[stream];
-  const info = STREAMS.find((s) => s.id === stream)!;
+  const info = yearStreams.find((s) => s.id === stream) ?? yearStreams[0];
 
   // cumulative week ranges (built without mutating variables inside callbacks)
   const rowsWithRange: Array<(typeof rows)[number] & { start: number; end: number }> = [];
@@ -45,9 +52,28 @@ export default function CurriculumView({ onOpenChapter }: { onOpenChapter: (chap
         sub="الترتيب والأسابيع والحجم الساعي مطابقون لوثيقة «التدرجات السنوية — المادة: رياضيات» الصادرة عن المفتشية العامة للتربية الوطنية ومديرية التعليم الثانوي العام والتكنولوجي، سبتمبر 2022."
       />
 
+      {/* Year selector */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        {LEVELS.map((l) => (
+          <span
+            key={l.id}
+            className={`inline-flex items-center rounded-xl border px-4 py-2 text-sm font-extrabold transition ${
+              l.id === year
+                ? 'border-emerald-700 bg-emerald-700 text-white shadow-md'
+                : 'border-stone-200 bg-stone-100 text-stone-400'
+            }`}
+          >
+            {l.name}
+          </span>
+        ))}
+        <span className="hidden items-center text-xs font-bold text-stone-400 sm:inline-flex">
+          — بدّل المستوى من الشريط العلوي
+        </span>
+      </div>
+
       {/* Stream selector */}
       <div className="mb-6 flex flex-wrap gap-2">
-        {STREAMS.map((s) => (
+        {yearStreams.map((s) => (
           <button
             key={s.id}
             onClick={() => setStream(s.id)}

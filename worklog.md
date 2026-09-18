@@ -57,3 +57,22 @@ Work Log:
 
 Stage Summary:
 - Platform confirmed complete and browser-verified. No code changes needed this pass.
+
+---
+Task ID: 4
+Agent: Super Z (main agent)
+Task: User request: "هل يمكنك ان تجعلها شاملة للسنة اولى والثانية وتدرجها تحت اشراف الاستاذ عدلي اسعد مع ارفاق صورة الاستاذ" → extend platform to 1AS+2AS with their تدرج, brand under supervision of Prof. Adli Asaad, include his photo. (User then asked "هل انهيت" → this pass completed the extension.)
+
+Work Log:
+- Found partially-built extension from prior session: curriculum.ts already refactored (LEVELS/STREAMS/ANNUAL_PLANS for 1AS جذعان + 2AS خمس شعب + 3AS), chapters-1as.ts (8 فصول), chapters-2as.ts (12 فصلاً), exercises-d.ts (35 تمرين 1AS), exercises-e.ts (15 تمرين 2AS); public/teacher-adli.jpg already downloaded from math-adli.vercel.app/teachers/adli-asad.jpg.
+- Wired exercises.ts to merge all 5 banks (119 total) + exercisesOfYear(); created src/lib/level.ts (useSyncExternalStore + localStorage 'tadaruj-level-v1').
+- Fixed broken data files: 5 exercise files imported '../chapters' → './chapters'; fixed 23 wrongly-escaped apostrophes ($M\\'$) in exercises-d.ts via scripts/fix_apostrophes.py.
+- page.tsx: header level switcher (أولى/ثانية/ثالثة, compact on mobile) + professor photo avatar + "تحت إشراف الأستاذ عدلي اسعد" subtitle; year passed to all views with key remount; footer supervision + photo + 119 count.
+- HomeView: professor supervision card (photo, name, role) in hero; level chooser section (3 cards with per-level counts); per-year stats/hero/chapters/streams; year-specific hero formulas; bac CTA adapts when 0.
+- CurriculumView: year tabs + year streams (2AS: 5 شعب verified, 2math 189h). ChaptersView/BankView/QuizView/DashboardView: year-scoped lists, filters, counts, quiz pool, per-chapter bars; quiz bac-only option only for 3AS; StreamChip shows "• أولى/ثانية" suffix.
+- layout.tsx metadata updated to full-cycle branding.
+- Verification: lint 0 errors; tsc src clean; agent-browser: home 3AS (10/69/648h) → switch أولى (8/35/243h) → bank 35 + solution reveal + year chips → switch ثانية → curriculum 5 streams (علوم 135h, رياضيات 189h) → chapter detail (week ranges, 15 KaTeX formula boxes) → quiz full flow 5/5 recorded → dashboard 0/15 scope → 3AS bank still 69 → iPhone 14 mobile header/switcher OK; zero page errors. Screenshots: ext-home-3as/1as/2as, ext-bank-1as, ext-curriculum-2as, ext-dashboard-2as, ext-mobile-2as, ext-levels.
+
+Stage Summary:
+- Platform is now «تدرّج للرياضيات — تحت إشراف الأستاذ عدلي اسعد» covering 1AS (جذعان: 8 فصول/35 تمريناً), 2AS (5 شعب: 12 فصلاً/15 تمريناً), 3AS (5 شعب: 10 فصول/69 تمريناً) = 30 فصلاً و119 تمريناً بحلول نموذجية, كل ذلك وفق جداول التدرج الرسمية 2022-2023 لكل شعبة.
+- Level switcher persisted in localStorage; progress tracking remains per-exercise and correct within each level's scope.

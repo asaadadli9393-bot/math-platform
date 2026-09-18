@@ -1,24 +1,60 @@
 'use client';
 
-import { BookOpenCheck, CalendarRange, Database, GraduationCap, Layers, Target, Trophy } from 'lucide-react';
-import { CHAPTERS } from '@/data/chapters';
-import { EXERCISES } from '@/data/exercises';
-import { ANNUAL_PLANS, STREAMS } from '@/data/curriculum';
+import Image from 'next/image';
+import { BookOpenCheck, CalendarRange, Database, GraduationCap, Layers, Target, Trophy, UserCheck } from 'lucide-react';
+import { chaptersOfYear } from '@/data/chapters';
+import { exercisesOfYear } from '@/data/exercises';
+import { LEVELS, streamsOfYear, type YearId } from '@/data/curriculum';
 import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 
+const HERO_FORMULAS: Record<YearId, string[]> = {
+  '1as': [
+    'القسمة الإقليدية: $a=bq+r,\\; 0\\leq r<b$',
+    'المتطابقات: $(a-b)(a+b)=a^2-b^2$',
+    'دائرة مركزها $(a,b)$: $(x-a)^2+(y-b)^2=r^2$',
+    'الوسط المرجح: $\\bar{x}=\\dfrac{1}{N}\\sum n_i x_i$',
+  ],
+  '2as': [
+    'اشتقاق جداء: $(uv)\'=u\'v+uv\'$',
+    'مستقيم مقارب أفقي: $\\lim_{x\\to\\pm\\infty}f(x)=\\ell$',
+    'الجداء السلمي: $\\vec{u}\\cdot\\vec{v}=\\|\\vec{u}\\|\\,\\|\\vec{v}\\|\\cos\\theta$',
+    'متتالية حسابية: $u_n=u_0+nr$',
+  ],
+  '3as': [
+    'النهاية المرجعية: $\\lim_{x\\to 0}\\dfrac{\\ln(1+x)}{x}=1$',
+    'المكاملة بالتجزئة: $\\int_a^b u\'v\\,dx=[uv]_a^b-\\int_a^b uv\'\\,dx$',
+    'قانون ذا الحدين: $P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}$',
+    'الدوران المركب: $z\'=e^{i\\theta}(z-\\omega)+\\omega$',
+  ],
+};
+
+const HERO_SUB: Record<YearId, string> = {
+  '1as': 'السنة الأولى ثانوي — جذعا علوم وتكنولوجيا وآداب',
+  '2as': 'السنة الثانية ثانوي — من علوم ورياضيات إلى تسيير وآداب',
+  '3as': 'السنة الثالثة ثانوي — التحضير للبكالوريا',
+};
+
 export default function HomeView({
+  year,
   onNavigate,
+  onSetLevel,
 }: {
+  year: YearId;
   onNavigate: (view: 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard', chapterId?: string) => void;
+  onSetLevel: (l: YearId) => void;
 }) {
-  const totalHours = STREAMS.reduce((s, st) => s + st.totalHours, 0);
-  const bacCount = EXERCISES.filter((e) => e.difficulty === 'بكالوريا').length;
+  const chapters = chaptersOfYear(year);
+  const exercises = exercisesOfYear(year);
+  const streams = streamsOfYear(year);
+  const totalHours = streams.reduce((s, st) => s + st.totalHours, 0);
+  const bacCount = exercises.filter((e) => e.difficulty === 'بكالوريا').length;
+  const level = LEVELS.find((l) => l.id === year)!;
 
   const stats = [
-    { icon: Layers, value: `${CHAPTERS.length}`, label: 'فصلاً دراسياً' },
-    { icon: Database, value: `${EXERCISES.length}`, label: 'تمريناً بحل نموذجي' },
-    { icon: GraduationCap, value: `${STREAMS.length}`, label: 'شعب مغطاة' },
+    { icon: Layers, value: `${chapters.length}`, label: 'فصلاً دراسياً' },
+    { icon: Database, value: `${exercises.length}`, label: 'تمريناً بحل نموذجي' },
+    { icon: GraduationCap, value: `${streams.length}`, label: 'شعب مغطاة' },
     { icon: CalendarRange, value: `${totalHours}`, label: 'ساعة في التدرج الرسمي' },
   ];
 
@@ -26,12 +62,12 @@ export default function HomeView({
     {
       icon: CalendarRange,
       title: 'متوافقة مع تدرج 2022-2023',
-      desc: 'بنية الفصول وترتيبها وأحجامها الساعية مستخرجة مباشرة من وثيقة التدرجات السنوية الرسمية الصادرة عن المفتشية العامة للتربية الوطنية، لكل شعبة على حدة.',
+      desc: 'بنية الفصول وترتيبها وأحجامها الساعية مستخرجة مباشرة من وثيقة التدرجات السنوية الرسمية الصادرة عن المفتشية العامة للتربية الوطنية، لكل شعبة وعلى كل مستوى من السنوات الثلاث.',
     },
     {
       icon: Database,
       title: 'بنك تمارين شامل ومصنّف',
-      desc: 'كل تمرين موسوم بالفصل والصعوبة والنوع والشعب المستهدفة، مع حل نموذجي مفصل خطوة بخطوة وتلميح قبل الحل، وبطاقات خاصة بأنماط البكالوريا.',
+      desc: 'كل تمرين موسوم بالفصل والصعوبة والنوع والشعب المستهدفة، مع حل نموذجي مفصل خطوة بخطوة وتلميح قبل الحل، وتمارين مختارة بأنماط الفروض والاختبارات والبكالوريا.',
     },
     {
       icon: BookOpenCheck,
@@ -41,7 +77,7 @@ export default function HomeView({
     {
       icon: Trophy,
       title: 'اختبار وتتبع للتقدم',
-      desc: 'أنشئ اختباراً مخصصاً من بنك التمارين حسب شعبتك، وسجّل تقدمك تلقائياً: التمارين المنجزة، نتائج الاختبارات، ونسبة إتمام كل فصل.',
+      desc: 'أنشئ اختباراً مخصصاً من بنك التمارين حسب شعبتك ومستواك، وسجّل تقدمك تلقائياً: التمارين المنجزة، نتائج الاختبارات، ونسبة إتمام كل فصل.',
     },
   ];
 
@@ -57,17 +93,17 @@ export default function HomeView({
             <div>
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-sm font-semibold text-emerald-200">
                 <Target className="h-4 w-4" />
-                متوافقة مع التدرجات السنوية الرسمية 2022-2023
+                السنوات الأولى والثانية والثالثة ثانوي — تدرج 2022-2023
               </div>
               <h1 className="text-4xl font-black leading-[1.25] sm:text-5xl lg:text-[3.4rem]">
                 منصة <span className="text-amber-300">تدرّج</span> للرياضيات
                 <span className="mt-2 block text-2xl font-bold text-emerald-100 sm:text-3xl">
-                  السنة الثالثة ثانوي — بنك تمارين شامل بالحلول
+                  {HERO_SUB[year]} — بنك تمارين شامل بالحلول
                 </span>
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-emerald-100/90 sm:text-lg">
-                {CHAPTERS.length} فصلاً مرتبة وفق التدرج الرسمي، و{EXERCISES.length} تمريناً مصنفاً بالصعوبة والنوع مع حلول
-                نموذجية مفصلة، وملخصات وصيغ أساسية لكل فصل — لشعب علوم تجريبية ورياضيات وتقني رياضي وتسيير واقتصاد وآداب.
+                {chapters.length} فصلاً مرتباً وفق التدرج الرسمي، و{exercises.length} تمريناً مصنفاً بالصعوبة والنوع مع حلول
+                نموذجية مفصلة، وملخصات وصيغ أساسية لكل فصل — تغطية كاملة لشعب مستوى {level.name}.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <button
@@ -86,30 +122,33 @@ export default function HomeView({
                 </button>
               </div>
               <p className="mt-6 text-xs text-emerald-200/70">
-                المصدر: التدرجات السنوية — المادة: رياضيات، المستوى: السنة الثالثة ثانوي، سبتمبر 2022 — وزارة التربية الوطنية.
+                المصدر: التدرجات السنوية — المادة: رياضيات — {level.name} — سبتمبر 2022 — وزارة التربية الوطنية.
               </p>
             </div>
 
-            {/* Formula card */}
-            <div className="float-soft hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur lg:block">
-              <div className="mb-3 flex items-center gap-2 text-emerald-200">
-                <BookOpenCheck className="h-5 w-5" />
-                <span className="text-sm font-bold">من ملاحظات المنصة</span>
+            {/* Professor supervision card */}
+            <div className="float-soft overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+              <div className="relative h-56 sm:h-64 lg:h-56">
+                <Image
+                  src="/teacher-adli.jpg"
+                  alt="الأستاذ عدلي اسعد — أستاذ مادة الرياضيات"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 420px"
+                  className="object-cover object-top"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/20 to-transparent" />
               </div>
-              <div className="space-y-3 text-stone-100">
-                <RichText
-                  className="text-base"
-                  text={'النهاية المرجعية: $\\lim_{x\\to 0}\\dfrac{\\ln(1+x)}{x}=1$'}
-                />
-                <RichText className="text-base" text={'المكاملة بالتجزئة: $\\int_a^b u\'v\\,dx=[uv]_a^b-\\int_a^b uv\'\\,dx$'} />
-                <RichText
-                  className="text-base"
-                  text={'قانون ذا الحدين: $P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}$'}
-                />
-                <RichText
-                  className="text-base"
-                  text={'الدوران المركب: $z\'=e^{i\\theta}(z-\\omega)+\\omega$'}
-                />
+              <div className="p-5">
+                <div className="mb-1 flex items-center gap-2 text-amber-300">
+                  <UserCheck className="h-4.5 w-4.5" />
+                  <span className="text-xs font-bold">الإشراف البيداغوجي</span>
+                </div>
+                <h2 className="text-xl font-black text-white">الأستاذ عدلي اسعد</h2>
+                <p className="mt-1 text-xs leading-6 text-emerald-100/80">
+                  أستاذ مادة الرياضيات بالتعليم الثانوي — مؤلف منصة math-adli — يشرف بيداغوجياً على محتوى «تدرّج»:
+                  مواءمة الفصول مع التدرجات الرسمية، ومتابعة جودة الحلول النموذجية.
+                </p>
               </div>
             </div>
           </div>
@@ -130,13 +169,64 @@ export default function HomeView({
         </div>
       </section>
 
+      {/* ============ Level chooser ============ */}
+      <section className="bg-white py-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionTitle
+            eyebrow="السنوات الثلاث"
+            title="اختر مستواك الدراسي"
+            sub="المنصة تغطي السنوات الثلاث معاً: تدرج رسمي، فصول، ملخصات وبنك تمارين لكل سنة وشعبة — اختر مستواك للانتقال إلى محتواه."
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            {LEVELS.map((l) => {
+              const chCount = chaptersOfYear(l.id).length;
+              const exCount = exercisesOfYear(l.id).length;
+              const stCount = streamsOfYear(l.id).length;
+              const active = l.id === year;
+              return (
+                <button
+                  key={l.id}
+                  onClick={() => onSetLevel(l.id)}
+                  className={`group rounded-2xl border p-6 text-right shadow-sm transition hover:-translate-y-1 hover:shadow-lg ${
+                    active
+                      ? 'border-emerald-500 bg-emerald-50/70 ring-2 ring-emerald-200'
+                      : 'border-stone-200 bg-white hover:border-emerald-300 hover:shadow-emerald-100'
+                  }`}
+                >
+                  <div className="mb-3 flex items-center justify-between">
+                    <span
+                      className={`inline-flex rounded-xl px-3 py-1.5 text-sm font-black ${
+                        active ? 'bg-emerald-700 text-white' : 'bg-stone-100 text-stone-700 group-hover:bg-emerald-100 group-hover:text-emerald-800'
+                      }`}
+                    >
+                      {l.name}
+                    </span>
+                    {active && (
+                      <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-black text-amber-800 ring-1 ring-amber-200">
+                        المستوى الحالي
+                      </span>
+                    )}
+                  </div>
+                  <p className="min-h-10 text-sm font-bold leading-7 text-stone-600">{l.description}</p>
+                  <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-extrabold text-stone-500">
+                    <span className="rounded-lg bg-stone-100 px-2.5 py-1">{chCount} فصول</span>
+                    <span className="rounded-lg bg-stone-100 px-2.5 py-1">{exCount} تمارين</span>
+                    <span className="rounded-lg bg-stone-100 px-2.5 py-1">{stCount} شعب</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ============ Features ============ */}
       <section className="paper bg-stone-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
             eyebrow="لماذا منصة تدرّج؟"
-            title="أدوات مصممة لنجاح البكالوريا"
-            sub="بنيت المنصة حول ثلاثة مرتكزات: الوفاء بالتدرج الرسمي في الترتيب والحجم الساعي، تمارين متدرجة الصعوبة بحلول نموذجية، وتتبع شخصي لتقدمك في كل فصل."
+            title="أدوات مصممة للنجاح والتفوق"
+            sub="بنيت المنصة حول ثلاثة مرتكزات: الوفاء بالتدرج الرسمي في الترتيب والحجم الساعي لكل سنة وشعبة، تمارين متدرجة الصعوبة بحلول نموذجية، وتتبع شخصي لتقدمك في كل فصل."
           />
           <div className="grid gap-5 sm:grid-cols-2">
             {features.map((f) => (
@@ -159,14 +249,14 @@ export default function HomeView({
       <section className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
-            eyebrow="الفصول"
-            title={`${CHAPTERS.length} فصلاً وفق ترتيب التدرج`}
-            sub="من الاشتقاقية والاستمرارية إلى هندسة الفضاء والحساب — مرتبة كما وردت في جداول بناء التعلمات للوثيقة الرسمية."
+            eyebrow={`فصول ${level.name}`}
+            title={`${chapters.length} فصلاً وفق ترتيب التدرج`}
+            sub="مرتبة كما وردت في جداول بناء التعلمات للوثيقة الرسمية — اضغط أي فصل لملخصه وصيغه وتمارينه."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {CHAPTERS.map((c, i) => {
+            {chapters.map((c, i) => {
               const th = THEME_STYLES[c.theme];
-              const count = EXERCISES.filter((e) => e.chapterId === c.id).length;
+              const count = exercises.filter((e) => e.chapterId === c.id).length;
               return (
                 <button
                   key={c.id}
@@ -216,12 +306,12 @@ export default function HomeView({
       <section className="bg-stone-50 py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
-            eyebrow="الشعب"
+            eyebrow={`شعب ${level.name}`}
             title="مغطاة بالكامل وفق الوثيقة"
-            sub="لكل شعبة تدرجها الأسبوعي الخاص بأحجامه الساعية، مع معالجات بيداغوجية والفصول الموازية بين الشعب."
+            sub="لكل شعبة تدرجها الأسبوعي الخاص بأحجامها الساعية، مع معالجات بيداغوجية والفصول الموازية بين الشعب."
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {STREAMS.map((s) => (
+          <div className={`grid gap-4 ${streams.length <= 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-5'}`}>
+            {streams.map((s) => (
               <button
                 key={s.id}
                 onClick={() => onNavigate('curriculum')}
@@ -240,7 +330,11 @@ export default function HomeView({
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Trophy className="h-10 w-10 shrink-0 text-amber-500" />
               <div className="flex-1">
-                <h3 className="text-lg font-extrabold text-stone-900">جاهز للاختبار؟ {bacCount} تمارين من نمط البكالوريا بانتظارك</h3>
+                <h3 className="text-lg font-extrabold text-stone-900">
+                  {bacCount > 0
+                    ? `جاهز للاختبار؟ ${bacCount} تمارين من نمط البكالوريا بانتظارك`
+                    : 'جاهز للتمرن؟ اختبر نفسك الآن من بنك التمارين'}
+                </h3>
                 <p className="mt-1 text-sm leading-7 text-stone-600">
                   أنشئ اختباراً مخصصاً من بنك التمارين حسب شعبتك وعدد الأسئلة، وسجل نتيجتك في لوحة التقدم.
                 </p>

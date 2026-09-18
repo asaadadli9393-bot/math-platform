@@ -1,4 +1,4 @@
-import type { Exercise } from '../chapters';
+import type { Exercise } from './chapters';
 
 export const exercisesA: Exercise[] = [
   // ================= الدوال العددية: الاشتقاقية والاستمرارية =================

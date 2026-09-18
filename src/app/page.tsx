@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { BarChart3, BookOpenCheck, CalendarRange, GraduationCap, Home as HomeIcon, Layers, Sigma, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
@@ -9,8 +10,9 @@ import BankView from '@/components/views/BankView';
 import QuizView from '@/components/views/QuizView';
 import DashboardView from '@/components/views/DashboardView';
 import { useProgress } from '@/lib/progress';
+import { useLevel } from '@/lib/level';
+import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
-import type { StreamId } from '@/data/curriculum';
 
 type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard';
 
@@ -23,10 +25,43 @@ const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: st
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
 ];
 
+/** مبدّل المستوى الدراسي (أولى / ثانية / ثالثة) */
+function LevelSwitcher({
+  year,
+  onSelect,
+  compact = false,
+}: {
+  year: YearId;
+  onSelect: (l: YearId) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`inline-flex shrink-0 rounded-xl bg-stone-100 p-1 ring-1 ring-stone-200 ${compact ? 'gap-0.5' : 'gap-1'}`}>
+      {LEVELS.map((l) => (
+        <button
+          key={l.id}
+          onClick={() => onSelect(l.id)}
+          title={l.name}
+          className={`rounded-lg font-extrabold transition ${
+            compact ? 'px-2.5 py-1 text-[11px]' : 'px-3 py-1.5 text-xs sm:px-4'
+          } ${
+            year === l.id
+              ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/25'
+              : 'text-stone-500 hover:bg-white hover:text-emerald-800'
+          }`}
+        >
+          {l.shortName}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Page() {
   const [view, setView] = useState<View>('home');
   const [chapterFocus, setChapterFocus] = useState<string | undefined>(undefined);
   const { state, toggleSolved, markRevealed, addQuizResult, resetAll } = useProgress();
+  const { year, setLevel } = useLevel();
 
   const navigate = useCallback((v: View, chapterId?: string) => {
     setView(v);
@@ -34,34 +69,51 @@ export default function Page() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  const selectLevel = useCallback(
+    (l: YearId) => {
+      setLevel(l);
+      setChapterFocus(undefined);
+      setView('home');
+    },
+    [setLevel],
+  );
+
   // scroll to top on view change
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, [view]);
+  }, [view, year]);
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50">
       {/* ============ Navbar ============ */}
       <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-6">
           <button onClick={() => navigate('home')} className="flex shrink-0 items-center gap-2.5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-bl from-emerald-700 to-teal-800 text-white shadow-md">
-              <Sigma className="h-5 w-5" />
-            </span>
+            <Image
+              src="/teacher-adli.jpg"
+              alt="الأستاذ عدلي اسعد"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full border-2 border-emerald-600 object-cover shadow-sm"
+            />
             <span className="text-right leading-tight">
               <span className="block text-base font-black text-stone-900">
-                تدرّج <span className="text-emerald-700">3AS</span>
+                تدرّج <span className="text-amber-600">للرياضيات</span>
               </span>
-              <span className="block text-[10px] font-bold text-stone-400">الرياضيات • تدرج 2022-2023</span>
+              <span className="block text-[10px] font-bold text-emerald-700">تحت إشراف الأستاذ عدلي اسعد</span>
             </span>
           </button>
 
-          <nav className="mr-auto hidden items-center gap-1 lg:flex" aria-label="التنقل الرئيسي">
+          <div className="mr-auto hidden lg:block">
+            <LevelSwitcher year={year} onSelect={selectLevel} />
+          </div>
+
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="التنقل الرئيسي">
             {NAV.map((n) => (
               <button
                 key={n.id}
                 onClick={() => navigate(n.id)}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-extrabold transition ${
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-extrabold transition ${
                   view === n.id
                     ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200'
                     : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
@@ -73,9 +125,13 @@ export default function Page() {
             ))}
           </nav>
 
+          <div className="mr-auto lg:hidden">
+            <LevelSwitcher year={year} onSelect={selectLevel} compact />
+          </div>
+
           <button
             onClick={() => navigate('quiz')}
-            className="mr-auto inline-flex items-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98] lg:mr-3 lg:hidden"
+            className="hidden shrink-0 items-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98] sm:inline-flex lg:hidden"
           >
             <Sparkles className="h-4 w-4" />
             اختبار
@@ -106,18 +162,22 @@ export default function Page() {
 
       {/* ============ Main ============ */}
       <main className="flex-1">
-        {view === 'home' && <HomeView onNavigate={navigate} />}
-        {view === 'curriculum' && <CurriculumView onOpenChapter={(id) => navigate('chapters', id)} />}
+        {view === 'home' && <HomeView year={year} onNavigate={navigate} onSetLevel={setLevel} />}
+        {view === 'curriculum' && (
+          <CurriculumView key={year} year={year} onOpenChapter={(id) => navigate('chapters', id)} />
+        )}
         {view === 'chapters' && (
           <ChaptersView
-            key={chapterFocus ?? 'chapters-root'}
+            key={year + (chapterFocus ?? 'chapters-root')}
+            year={year}
             initialChapterId={chapterFocus}
             onOpenBank={(id) => navigate('bank', id)}
           />
         )}
         {view === 'bank' && (
           <BankView
-            key={chapterFocus ?? 'bank-root'}
+            key={year + (chapterFocus ?? 'bank-root')}
+            year={year}
             initialChapterId={chapterFocus}
             solved={state.solved}
             revealed={state.revealed}
@@ -127,13 +187,21 @@ export default function Page() {
         )}
         {view === 'quiz' && (
           <QuizView
+            key={year}
+            year={year}
             onRecord={(r: { score: number; total: number; stream: StreamId }) =>
               addQuizResult({ ...r, date: new Date().toISOString() })
             }
           />
         )}
         {view === 'dashboard' && (
-          <DashboardView state={state} onReset={resetAll} onOpenBank={(id) => navigate('bank', id)} />
+          <DashboardView
+            key={year}
+            year={year}
+            state={state}
+            onReset={resetAll}
+            onOpenBank={(id) => navigate('bank', id)}
+          />
         )}
       </main>
 
@@ -142,15 +210,22 @@ export default function Page() {
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-sm">
-              <div className="mb-3 flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-bl from-emerald-700 to-teal-800 text-white">
-                  <Sigma className="h-4.5 w-4.5" />
+              <div className="mb-3 flex items-center gap-3">
+                <Image
+                  src="/teacher-adli.jpg"
+                  alt="الأستاذ عدلي اسعد"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-xl border-2 border-emerald-600 object-cover"
+                />
+                <span>
+                  <span className="block text-base font-black text-stone-900">تدرّج للرياضيات</span>
+                  <span className="block text-[11px] font-bold text-emerald-700">تحت إشراف الأستاذ عدلي اسعد</span>
                 </span>
-                <span className="text-base font-black text-stone-900">تدرّج 3AS</span>
               </div>
               <p className="text-xs leading-6 text-stone-500">
-                منصة تعليمية للرياضيات — السنة الثالثة ثانوي. بنك تمارين بحلول نموذجية ({EXERCISE_COUNT} تمريناً)
-                متوافق مع التدرجات السنوية الرسمية 2022-2023 الصادرة عن وزارة التربية الوطنية.
+                منصة تعليمية شاملة للرياضيات — السنوات الأولى والثانية والثالثة ثانوي. بنك تمارين بحلول نموذجية
+                ({EXERCISE_COUNT} تمريناً) متوافق مع التدرجات السنوية الرسمية 2022-2023 الصادرة عن وزارة التربية الوطنية.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-8 text-xs sm:grid-cols-3">
@@ -170,11 +245,11 @@ export default function Page() {
                 </ul>
               </div>
               <div>
-                <h4 className="mb-2 font-black text-stone-700">الشعب</h4>
+                <h4 className="mb-2 font-black text-stone-700">السنوات</h4>
                 <ul className="space-y-1.5 font-bold text-stone-500">
-                  <li>علوم تجريبية • رياضيات</li>
-                  <li>تقني رياضي • تسيير</li>
-                  <li>آداب ولغات</li>
+                  <li>أولى ثانوي (جذعان)</li>
+                  <li>ثانية ثانوي (5 شعب)</li>
+                  <li>ثالثة ثانوي (5 شعب)</li>
                 </ul>
               </div>
             </div>
@@ -182,7 +257,7 @@ export default function Page() {
           <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-stone-100 pt-5 text-[11px] font-semibold text-stone-400 sm:flex-row">
             <span className="inline-flex items-center gap-1.5">
               <GraduationCap className="h-3.5 w-3.5" />
-              مع تمنياتنا بالنجاح والتفوق في البكالوريا
+              تحت إشراف الأستاذ عدلي اسعد — مع تمنياتنا بالنجاح والتفوق
             </span>
             <span>المحتوى التعليمي وفق المناهج الرسمية الجزائرية — 2022/2023</span>
           </div>

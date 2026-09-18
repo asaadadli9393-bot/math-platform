@@ -1,4 +1,4 @@
-import type { Exercise } from '../chapters';
+import type { Exercise } from './chapters';
 
 export const exercisesC: Exercise[] = [
   // ================= الأعداد المركبة =================

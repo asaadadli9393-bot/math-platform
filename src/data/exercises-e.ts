@@ -1,4 +1,4 @@
-import type { Exercise } from '../chapters';
+import type { Exercise } from './chapters';
 
 const SCI = ['2sciences', '2math', '2techmath'] as const;
 const ALL2 = ['2sciences', '2math', '2techmath', '2economy', '2literature'] as const;

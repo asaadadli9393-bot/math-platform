@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { ArrowRight, BookOpenCheck, ChevronDown, Lightbulb, Sigma } from 'lucide-react';
-import { CHAPTERS, type Chapter } from '@/data/chapters';
+import { chaptersOfYear, type Chapter } from '@/data/chapters';
 import { EXERCISES } from '@/data/exercises';
-import { chapterTotalHours, chapterWeekRange, STREAMS, type StreamId } from '@/data/curriculum';
+import { chapterTotalHours, chapterWeekRange, getStream, type StreamId, type YearId } from '@/data/curriculum';
 import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 
@@ -37,7 +37,7 @@ function ChapterCard({
       <p className="line-clamp-3 flex-1 text-xs leading-6 text-stone-500">{chapter.intro}</p>
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         {chapter.streams.map((sid) => {
-          const s = STREAMS.find((x) => x.id === sid)!;
+          const s = getStream(sid);
           return (
             <span key={sid} className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${s.color}`}>
               {s.shortName}
@@ -95,7 +95,7 @@ function ChapterDetail({
         <p className="mt-4 text-sm leading-8 text-stone-600">{chapter.intro}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           {chapter.streams.map((sid) => {
-            const s = STREAMS.find((x) => x.id === sid)!;
+            const s = getStream(sid);
             const range = chapterWeekRange(sid, chapter.id);
             const hours = chapterTotalHours(sid, chapter.id);
             return (
@@ -198,23 +198,26 @@ function ChapterDetail({
 }
 
 export default function ChaptersView({
+  year,
   initialChapterId,
   onOpenBank,
 }: {
+  year: YearId;
   initialChapterId?: string;
   onOpenBank: (chapterId: string) => void;
 }) {
   const [openId, setOpenId] = useState<string | null>(initialChapterId ?? null);
+  const chapters = chaptersOfYear(year);
 
   const idx = useMemo(() => {
     if (!openId) return 0;
-    return CHAPTERS.findIndex((c) => c.id === openId);
-  }, [openId]);
+    return chapters.findIndex((c) => c.id === openId);
+  }, [openId, chapters]);
 
   if (openId && idx >= 0) {
     return (
       <ChapterDetail
-        chapter={CHAPTERS[idx]}
+        chapter={chapters[idx]}
         index={idx}
         onBack={() => setOpenId(null)}
         onOpenBank={onOpenBank}
@@ -230,7 +233,7 @@ export default function ChaptersView({
         sub="اضغط أي فصل لعرض موقعه في التدرج السنوي لكل شعبة، أهم الأفكار، الصيغ الجوهرية، والملخص الكامل."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {CHAPTERS.map((c, i) => (
+        {chapters.map((c, i) => (
           <ChapterCard key={c.id} chapter={c} index={i} onOpen={() => setOpenId(c.id)} />
         ))}
       </div>

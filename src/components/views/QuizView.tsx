@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react';
 import { CheckCircle2, ChevronLeft, RefreshCcw, Sparkles, XCircle } from 'lucide-react';
 import { CHAPTERS, type Exercise } from '@/data/chapters';
-import { EXERCISES } from '@/data/exercises';
-import { STREAMS, type StreamId } from '@/data/curriculum';
+import { exercisesOfYear } from '@/data/exercises';
+import { streamsOfYear, type StreamId, type YearId } from '@/data/curriculum';
 import { SectionTitle } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 
@@ -20,12 +20,16 @@ function pickRandom(pool: Exercise[], n: number): Exercise[] {
 }
 
 export default function QuizView({
+  year,
   onRecord,
 }: {
+  year: YearId;
   onRecord: (r: { score: number; total: number; stream: StreamId }) => void;
 }) {
+  const yearExercises = exercisesOfYear(year);
+  const yearStreams = streamsOfYear(year);
   const [phase, setPhase] = useState<Phase>('config');
-  const [stream, setStream] = useState<StreamId>('sciences');
+  const [stream, setStream] = useState<StreamId>(yearStreams[0]?.id ?? 'sciences');
   const [count, setCount] = useState(5);
   const [onlyBac, setOnlyBac] = useState(false);
   const [quiz, setQuiz] = useState<Exercise[]>([]);
@@ -36,12 +40,12 @@ export default function QuizView({
 
   const poolSize = useMemo(
     () =>
-      EXERCISES.filter((e) => e.streams.includes(stream) && (!onlyBac || e.difficulty === 'بكالوريا')).length,
-    [stream, onlyBac],
+      yearExercises.filter((e) => e.streams.includes(stream) && (!onlyBac || e.difficulty === 'بكالوريا')).length,
+    [yearExercises, stream, onlyBac],
   );
 
   const start = () => {
-    const pool = EXERCISES.filter(
+    const pool = yearExercises.filter(
       (e) => e.streams.includes(stream) && (!onlyBac || e.difficulty === 'بكالوريا'),
     );
     setQuiz(pickRandom(pool, count));
@@ -82,7 +86,7 @@ export default function QuizView({
         <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
           <label className="mb-2 block text-sm font-extrabold text-stone-700">الشعبة</label>
           <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {STREAMS.map((s) => (
+            {yearStreams.map((s) => (
               <button
                 key={s.id}
                 onClick={() => setStream(s.id)}
@@ -110,15 +114,17 @@ export default function QuizView({
             متاح في هذا الاختيار: {poolSize} تمريناً
           </p>
 
-          <label className="mb-4 flex cursor-pointer items-center gap-2 rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-700">
-            <input
-              type="checkbox"
-              checked={onlyBac}
-              onChange={(e) => setOnlyBac(e.target.checked)}
-              className="h-4 w-4 accent-emerald-700"
-            />
-            تمارين نمط البكالوريا فقط
-          </label>
+          {year === '3as' && (
+            <label className="mb-4 flex cursor-pointer items-center gap-2 rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-stone-700">
+              <input
+                type="checkbox"
+                checked={onlyBac}
+                onChange={(e) => setOnlyBac(e.target.checked)}
+                className="h-4 w-4 accent-emerald-700"
+              />
+              تمارين نمط البكالوريا فقط
+            </label>
+          )}
 
           <button
             onClick={start}
@@ -151,7 +157,7 @@ export default function QuizView({
           </h2>
           <p className="mt-2 text-sm font-bold text-stone-500">{msg}</p>
           <p className="mt-1 text-xs font-semibold text-stone-400">
-            تم تسجيل النتيجة في لوحة التقدم ({STREAMS.find((s) => s.id === stream)?.shortName})
+            تم تسجيل النتيجة في لوحة التقدم ({yearStreams.find((s) => s.id === stream)?.shortName})
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <button

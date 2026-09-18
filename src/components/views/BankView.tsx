@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { CheckCircle2, ChevronDown, Eye, Filter, Lightbulb, RotateCcw, Search, X } from 'lucide-react';
-import { CHAPTERS, type Difficulty, type Exercise } from '@/data/chapters';
-import { EXERCISES, EXERCISE_COUNT } from '@/data/exercises';
-import { STREAMS, type StreamId } from '@/data/curriculum';
+import { CHAPTERS, chaptersOfYear, type Difficulty, type Exercise } from '@/data/chapters';
+import { exercisesOfYear } from '@/data/exercises';
+import { streamsOfYear, type StreamId, type YearId } from '@/data/curriculum';
 import { DIFF_STYLES, SectionTitle, StreamChip } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 
@@ -156,18 +156,24 @@ function ExerciseCard({
 }
 
 export default function BankView({
+  year,
   initialChapterId,
   solved,
   revealed,
   onToggleSolved,
   onReveal,
 }: {
+  year: YearId;
   initialChapterId?: string;
   solved: string[];
   revealed: string[];
   onToggleSolved: (id: string) => void;
   onReveal: (id: string) => void;
 }) {
+  const yearChapters = chaptersOfYear(year);
+  const yearExercises = exercisesOfYear(year);
+  const yearCount = yearExercises.length;
+
   const [chapter, setChapter] = useState<string>(initialChapterId ?? 'all');
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
   const [kind, setKind] = useState<(typeof KINDS)[number] | 'all'>('all');
@@ -177,7 +183,7 @@ export default function BankView({
 
   const filtered = useMemo(() => {
     const q = query.trim();
-    return EXERCISES.filter((e) => {
+    return yearExercises.filter((e) => {
       if (chapter !== 'all' && e.chapterId !== chapter) return false;
       if (difficulty !== 'all' && e.difficulty !== difficulty) return false;
       if (kind !== 'all' && e.kind !== kind) return false;
@@ -186,7 +192,7 @@ export default function BankView({
       if (q && !(e.title.includes(q) || e.statement.includes(q) || (e.source ?? '').includes(q))) return false;
       return true;
     });
-  }, [chapter, difficulty, kind, stream, query, onlyUnsolved, solved]);
+  }, [yearExercises, chapter, difficulty, kind, stream, query, onlyUnsolved, solved]);
 
   const reset = () => {
     setChapter('all');
@@ -203,7 +209,7 @@ export default function BankView({
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <SectionTitle
         eyebrow="بنك التمارين الشامل"
-        title={`${EXERCISE_COUNT} تمريناً بحلول نموذجية مفصلة`}
+        title={`${yearCount} تمريناً بحلول نموذجية مفصلة`}
         sub="فلتر حسب الفصل والصعوبة والنوع والشعبة. كل تمرين يعرض بيان القضية وأسئلته، مع تلميح اختياري وحل نموذجي خطوة بخطوة، ووسم المنجز يتتبع تقدمك تلقائياً."
       />
 
@@ -254,7 +260,7 @@ export default function BankView({
               className="w-full appearance-none rounded-xl border border-stone-200 bg-stone-50 py-2.5 pr-4 pl-9 text-sm font-bold text-stone-800 outline-none transition focus:border-emerald-500 focus:bg-white"
             >
               <option value="all">كل الفصول</option>
-              {CHAPTERS.map((c, i) => (
+              {yearChapters.map((c, i) => (
                 <option key={c.id} value={c.id}>
                   الفصل {i + 1}: {c.title}
                 </option>
@@ -315,7 +321,7 @@ export default function BankView({
               className="w-full appearance-none rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm font-bold text-stone-800 outline-none focus:border-emerald-500"
             >
               <option value="all">كل الشعب</option>
-              {STREAMS.map((s) => (
+              {streamsOfYear(year).map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
                 </option>
@@ -342,7 +348,7 @@ export default function BankView({
           النتائج: <span className="text-emerald-800">{filtered.length}</span> تمريناً
         </span>
         <span className="hidden text-xs font-semibold text-stone-400 sm:inline">
-          المنجز: {solved.length} من {EXERCISE_COUNT}
+          المنجز: {solved.filter((id) => yearExercises.some((e) => e.id === id)).length} من {yearCount}
         </span>
       </div>
 
@@ -361,7 +367,7 @@ export default function BankView({
           <ExerciseCard
             key={ex.id}
             ex={ex}
-            number={EXERCISES.findIndex((e) => e.id === ex.id) + 1}
+            number={yearExercises.findIndex((e) => e.id === ex.id) + 1}
             solved={solved.includes(ex.id)}
             onToggleSolved={() => onToggleSolved(ex.id)}
             revealed={revealed.includes(ex.id)}
