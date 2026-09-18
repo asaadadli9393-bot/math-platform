@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp, Zap, ArrowUpRight, ListOrdered, Pi, Calculator, Dices, Orbit, Shuffle, Boxes, Sigma } from 'lucide-react';
+import { TrendingUp, Zap, ArrowUpRight, ListOrdered, Pi, Calculator, Dices, Orbit, Shuffle, Boxes, Sigma, Move3d, Percent, Table } from 'lucide-react';
 import type { Difficulty } from '@/data/chapters';
 import type { StreamId } from '@/data/curriculum';
 import { getStream } from '@/data/curriculum';
@@ -17,6 +17,9 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Shuffle,
   Boxes,
   Sigma,
+  Move3d,
+  Percent,
+  Table,
 };
 
 export function ChapterIcon({ name, className }: { name: string; className?: string }) {
@@ -47,9 +50,11 @@ export const DIFF_STYLES: Record<Difficulty, string> = {
 
 export function StreamChip({ id, className = '' }: { id: StreamId; className?: string }) {
   const s = getStream(id);
+  const yearSuffix = s.year === '1as' ? ' • أولى' : s.year === '2as' ? ' • ثانية' : '';
   return (
     <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold ${s.color} ${className}`}>
       {s.shortName}
+      {yearSuffix && <span className="mr-1 font-bold opacity-70">{yearSuffix}</span>}
     </span>
   );
 }

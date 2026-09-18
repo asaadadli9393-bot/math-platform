@@ -1,4 +1,7 @@
-import type { StreamId } from './curriculum';
+import type { StreamId, YearId } from './curriculum';
+import { streamYear } from './curriculum';
+import { CHAPTERS_1AS } from './chapters-1as';
+import { CHAPTERS_2AS } from './chapters-2as';
 
 export type Difficulty = 'سهل' | 'متوسط' | 'صعب' | 'بكالوريا';
 export type ExKind = 'تطبيقي' | 'استدلالي' | 'مركب';
@@ -30,7 +33,7 @@ export interface Chapter {
   summary: { heading: string; body: string }[];
 }
 
-export const CHAPTERS: Chapter[] = [
+export const CHAPTERS_3AS: Chapter[] = [
   {
     id: 'func-deriv',
     title: 'الدوال العددية: الاشتقاقية والاستمرارية',
@@ -432,3 +435,11 @@ export const CHAPTERS: Chapter[] = [
     ],
   },
 ];
+
+/** كل الفصول مرتبة: السنة الأولى ثم الثانية ثم الثالثة */
+export const CHAPTERS: Chapter[] = [...CHAPTERS_1AS, ...CHAPTERS_2AS, ...CHAPTERS_3AS];
+
+/** فصول سنة دراسية معينة (يُستنتج العام من أول شعبة في الفصل) */
+export function chaptersOfYear(year: YearId): Chapter[] {
+  return CHAPTERS.filter((c) => c.streams.length > 0 && streamYear(c.streams[0]) === year);
+}
