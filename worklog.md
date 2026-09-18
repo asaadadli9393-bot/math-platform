@@ -76,3 +76,23 @@ Work Log:
 Stage Summary:
 - Platform is now «تدرّج للرياضيات — تحت إشراف الأستاذ عدلي اسعد» covering 1AS (جذعان: 8 فصول/35 تمريناً), 2AS (5 شعب: 12 فصلاً/15 تمريناً), 3AS (5 شعب: 10 فصول/69 تمريناً) = 30 فصلاً و119 تمريناً بحلول نموذجية, كل ذلك وفق جداول التدرج الرسمية 2022-2023 لكل شعبة.
 - Level switcher persisted in localStorage; progress tracking remains per-exercise and correct within each level's scope.
+
+---
+Task ID: 5
+Agent: Super Z (main agent)
+Task: User: "اريد توسيع بنوك التمارين كثيرا مع نشر على منصة فرسال" → expand exercise banks greatly + publish on Vercel. User then asked "هل المنصة منشورة على فرسال".
+
+Work Log:
+- Confirmed full data model: Exercise interface, 30 chapter ids (8×1AS + 12×2AS + 10×3AS), stream ids per level, existing 119 exercise ids (a–e banks).
+- Prepared parallel authoring of 3 new banks (exercises-f/g/h → +43 2AS, +30 1AS, +31 3AS = +104) with full specs (apostrophe rule, double-backslash LaTeX, per-chapter id numbering); tasks were stopped by user → expansion ON HOLD pending user confirmation.
+- Pivoted to Vercel publishing prep: stopped dev server, ran `bun run build` → SUCCESS (Next 16.1.3 Turbopack, compiled 9.9s, 4/4 static pages, no type/runtime errors).
+- Created vercel.json (framework nextjs, region fra1, security headers + immutable cache for _next/static).
+- Created README.md (Arabic: features, stack, local dev, deploy pointer) + DEPLOY_VERCEL.md (Arabic step-by-step: 3 methods — Vercel CLI with token (incl. token-based deploy from this sandbox), GitHub import (auto-deploy), drag-free flow; env-var-free note, fra1 region rationale).
+- Committed to git (repo existed): "تجهيز النشر على Vercel" (03f27ed); added tool-results/ to .gitignore.
+- Built clean deploy package download/tadaruj-platform.zip (104 files, 536K: src, public incl. teacher-adli.jpg, prisma, configs, README, DEPLOY guide, vercel.json; excludes node_modules/.next/.git/.env/sandbox artifacts).
+- Restarted dev server → HTTP 200.
+
+Stage Summary:
+- Platform is production-ready and deployable in one step: user either supplies a Vercel token (deploy from here via `vercel --prod --token=...`) or follows DEPLOY_VERCEL.md (GitHub import recommended; free *.vercel.app URL; no env vars/DB needed — progress is localStorage).
+- Deliverables: download/tadaruj-platform.zip, DEPLOY_VERCEL.md, README.md, vercel.json; git commit 03f27ed.
+- Exercise bank expansion (+104 exercises target: 119→223) fully specified but PAUSED (user stopped the authoring tasks) — resume on user confirmation.
