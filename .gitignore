@@ -62,3 +62,7 @@ math_site.*
 /tests/
 /examples/
 /.zscripts/
+/upload/
+/db/
+/mini-services/
+Caddyfile
