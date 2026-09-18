@@ -1,0 +1,17 @@
+skills/
+scripts/
+download/
+db/
+examples/
+mini-services/
+tool-results/
+upload/
+tests/
+worklog.md
+math_site.*
+Caddyfile
+.env*
+.vercel
+*.log
+.claude
+.z-ai-config
