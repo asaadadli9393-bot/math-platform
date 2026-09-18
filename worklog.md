@@ -8,21 +8,37 @@ Task: User sent "math-adli.vercel.app" with no instructions → proceeded with r
 Work Log:
 - Fetched site content via web-reader skill (page_reader) — identified an Arabic RTL Next.js educational math platform for Algerian 3AS students by teacher Adli Asad.
 - Asked user intent via AskUserQuestion (no reply given) → proceeded with recommended options: full review report in Arabic.
-- Loaded pdf skill (SKILL.md + fonts.md + creative-flow.md + all referenced typesetting files: overflow, palette, pagination, typography, cover, cover-backgrounds, charts, geometry) and agent-browser skill.
-- Live site exploration with agent-browser: homepage (desktop + mobile iPhone 16 emulation), onboarding modal, chapters, unit detail + lesson content, mock exam (started + submitted), login modal, dashboard, pricing (500 DZD BaridiMob), Zoom page, function plotter (tested Math.sin(x)), AI assistant (tested → failed), supervisor panel.
-- Technical checks via curl: robots.txt OK; sitemap.xml → 404; security headers (CSP, HSTS, XFO, XCTO, Referrer-Policy, Permissions-Policy); asset weights (HTML 97KB, 12 JS chunks ~686KB, CSS ~183KB); x-vercel-cache HIT; Next.js prerender.
-- Network tracing: /api/mock-exam → 200 OK; /api/ai-assistant → HTTP 500 (assistant broken).
-- Screenshots captured to /home/z/my-project/download/site-review/ (7 shots incl. mobile, exam, plotter, supervisor).
-- Outline tool called (9 sections, pdf document type, nature cascade palette design).
-- Generated palette via palette.cascade (nature intent — green family matching site brand).
-- Wrote RTL Arabic HTML report (creative-flow pipeline, 794x1123px, Tajawal + Noto Naskh Arabic, cover Template 01 HUD RTL-mirrored, 8 content sections, 3 embedded screenshots, 7 tables).
-- Validation: poster_validate check-html → fixed score-bar false positives (converted divs to SVG) + screen bg mismatch; remaining cover_validate flags were body section-divider false positives (cover clean).
-- Render issue: Paged.js broke on RTL document (2 pages only) → re-rendered with --nopaged (Chromium native pagination) → correct 10 pages. Installed pagedjs via symlink from /home/z/node_modules.
-- Reflow fixes: forced page break before section 6 (was starting at 79% page height); added methodology callout to raise last-page fill to ~55%.
-- QA: pdf_qa.py PASS (author metadata fixed via pypdf; remaining margin warnings = intentional cover asymmetry + figure page artifact).
-- Finalized: stamped page numbers (skip cover, body starts at 1), set Arabic metadata.
+- Loaded pdf skill (SKILL.md + fonts.md + creative-flow.md + all referenced typesetting files) and agent-browser skill.
+- Live site exploration with agent-browser: homepage (desktop + mobile), onboarding, chapters, unit detail, mock exam, login, dashboard, pricing, Zoom, plotter, AI assistant, supervisor panel.
+- Technical checks via curl: robots/sitemap/security headers/asset weights/cache; /api/ai-assistant → HTTP 500 (assistant broken).
+- Screenshots to /home/z/my-project/download/site-review/ (7 shots).
+- Wrote RTL Arabic HTML report (creative-flow pipeline) → rendered PDF via Chromium --nopaged (Paged.js broke on RTL) → pdf_qa.py PASS.
+- Finalized: page numbers + Arabic metadata.
 
 Stage Summary:
-- Deliverables: /home/z/my-project/download/math-adli-review-report.pdf (10 pages, 2.4MB, vector) + math-adli-review-report.html (editable source) + report_assets/ (3 figures).
-- Key findings: AI assistant API 500 (critical), raw Markdown/LaTeX leaking (critical), no deep links for 13 views (high), no sitemap/canonical/og:image (high/medium), duplicate unit numbering, exercise gaps (integration 10, differential equations 5), placeholder phone in footer. Overall score 7.9/10 with 3-phase roadmap.
-- Site facts gathered: 9 units / 22 chapters / 61 lessons / 1015+ exercises; contact contact@adli-math.dz; admin gate hints /admin/ path.
+- Deliverables: /home/z/my-project/download/math-adli-review-report.pdf (10 pages) + html + report_assets/.
+- Key findings: AI assistant API 500, raw Markdown/LaTeX leaking, no deep links, no sitemap, exercise gaps. Score 7.9/10 + 3-phase roadmap.
+
+---
+Task ID: 2
+Agent: Super Z (main agent)
+Task: User requested (Arabic): "اريدها منصة احترافية مع بنوك من التمارين الشاملة متوافقة مع تدرج2022 المرفق" → build a professional Arabic math platform with comprehensive exercise banks aligned to the attached official تدرج 2022-2023 document.
+
+Work Log:
+- Located user's attachment: /home/z/my-project/upload/تدرجات-مادة-الرياضيات-طور-ثانوي-2022-2023.pdf (170 pages, official Ministry annual progressions).
+- Extracted full text (pdftotext + NFKC normalization); mapped document structure; identified all five 3AS stream sections: آداب+فلسفة+لغات (p99-106), تسيير واقتصاد (p107-116), تقني رياضي (p117-135), علوم تجريبية (p136-152), رياضيات (p153-170).
+- Extracted weekly plans (chapters/weeks/hours, incl. معالجة بيداغوجية rows) per stream: sciences 135h/27w, math 189h/27w, techmath 162h/27w, economy 108h/27w, literature 54h/27w; confirmed "الأعداد والحساب" chapter for math/techmath and standalone "التحولات النقطية" for sciences.
+- Loaded fullstack-dev skill; ran init script; installed katex + @types/katex.
+- Built data layer: src/data/curriculum.ts (5 streams, official plans, week-range helpers), src/data/chapters.ts (10 chapters: summaries, key ideas, formulas — all KaTeX), exercises-a/b/c.ts (69 exercises with multi-step model solutions, difficulty/streams/source tags, hints), src/data/exercises.ts index.
+- Built lib: src/lib/tex.tsx (KaTeX renderer, $..$ inline + $$..$$ display, LTR math inside RTL), src/lib/progress.ts (useSyncExternalStore + localStorage store: solved/revealed/quizResults/reset).
+- Built SPA views (single / route per sandbox constraint): HomeView (hero, stats, features, chapter grid, streams, CTA), CurriculumView (5 stream tabs + official weekly table with cumulative week ranges), ChaptersView (grid + detail with accordion summaries + formulas + per-stream week/hours chips), BankView (filters: chapter/difficulty/kind/stream/search/unsolved-only; exercise cards with hint + model solution + mark-solved), QuizView (config → run with self-grading → result + record), DashboardView (stats, per-chapter bars, quiz history, reset).
+- Shell: src/app/page.tsx (sticky header, desktop nav + mobile scrollable nav, footer mt-auto); layout.tsx RTL lang=ar, Cairo/Amiri via Google fonts link, katex css import; globals.css: emerald primary, custom scrollbars, hero grid, katex sizing.
+- Fixed 4 lint errors (setState-in-effect ×3 → removed/useSyncExternalStore; immutability in CurriculumView → for-loop build); remaining 1 font warning (App Router root layout, acceptable).
+- Fixed runtime import bug: EXERCISE_COUNT was imported from chapters instead of exercises (BankView + DashboardView).
+- Agent-browser verification (desktop + iPhone 14 emulation): home renders with KaTeX; curriculum switches streams (sciences 135h / math 189h verified + "الأعداد والحساب" visible; totals switched to official 27 weeks); chapter detail formulas/accordion render; bank: solution reveal + mark-solved works (dashboard shows 1/69); quiz: config → 5 questions → grading → result "4 من 5 (80%)" → recorded in dashboard history; footer sticky/natural on mobile; no page errors after fixes.
+- During verification fixed quiz/bank exercise titles rendering raw LaTeX (now RichText).
+
+Stage Summary:
+- Deliverable: professional Arabic RTL math platform "تدرّج 3AS" (Next.js 16 + TS + Tailwind 4 + KaTeX), fully aligned to the attached تدرج 2022-2023 (5 streams, 10 chapters, 69 solved exercises, quiz + progress tracking via localStorage).
+- All views browser-verified; lint clean (0 errors); dev.log clean (GET / 200, no runtime errors).
+- Note: quiz loop self-grading verified end-to-end; test-harness clicking artifacts were script-side, not app bugs.
