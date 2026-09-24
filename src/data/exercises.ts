@@ -10,6 +10,7 @@ import { exercisesF } from './exercises-f';
 import { exercisesG } from './exercises-g';
 import { exercisesH } from './exercises-h';
 import { exercisesOld } from './exercises-old';
+import { exercisesX } from './exercises-x';
 
 /** كل تمارين المنصة: السنة الأولى ثم الثانية ثم الثالثة */
 export const EXERCISES: Exercise[] = [
@@ -22,6 +23,7 @@ export const EXERCISES: Exercise[] = [
   ...exercisesC,
   ...exercisesH,
   ...exercisesOld,
+  ...exercisesX,
 ];
 
 export const EXERCISE_COUNT = EXERCISES.length;

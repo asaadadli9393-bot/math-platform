@@ -138,9 +138,12 @@
 
 .katex {
   font-size: 1.05em;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 .katex-display {
   margin: 0.35em 0;
+  direction: ltr;
 }
 
 .hero-grid {

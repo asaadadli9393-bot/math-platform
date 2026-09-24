@@ -14,6 +14,7 @@ import {
   KeyRound,
   Lock,
   Mail,
+  Play,
   Send,
   ShieldCheck,
   Sparkles,
@@ -46,11 +47,13 @@ const FREE_FEATURES = [
 ];
 
 const PREMIUM_FEATURES = [
-  'الدورات المميزة الكاملة (سلاسل PDF + حلول مفصلة)',
+  'مكتبة الأستاذ الكاملة: 137 وثيقة PDF منتقاة (سلاسل تمارين مع الحلول + مذكرات وملخصات)',
+  'المواضيع والدورات المميزة الكاملة (سلاسل PDF + حلول مفصلة)',
+  'السلاسل المميزة الخاصة من أرشيف الأستاذ',
+  'تجميعيات البكالوريا (2008–2026) حسب المحاور، مقرونة بالحلول النموذجية المفصلة في تمارين المنصة',
   'حصص Zoom المباشرة الأسبوعية مع الأستاذ',
   'الوصول لمعرّفات الحصص وتسجيلاتها السابقة',
   'الدعم والمتابعة المباشرة عبر البريد الإلكتروني',
-  'أولوية في الرد على الاستفسارات والملاحظات',
 ];
 
 function CopyButton({ text, label = 'نسخ' }: { text: string; label?: string }) {
@@ -263,6 +266,30 @@ export default function SubscribeView() {
         </Card>
       </div>
 
+      {/* ================= الفيديو التعريفي ================= */}
+      <Card className="overflow-hidden border-2 border-amber-200/70 bg-gradient-to-b from-amber-50/60 to-white">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-center gap-2 text-center text-lg font-black text-stone-900 sm:text-xl">
+            <Play className="h-5 w-5 text-amber-600" />
+            فيديو تعريفي — تعرّف على المنصة في دقيقة
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <video
+            controls
+            preload="none"
+            poster="/video/poster.jpg"
+            src="/video/promo.mp4"
+            className="mx-auto aspect-video w-full max-w-3xl rounded-2xl bg-stone-950 shadow-xl shadow-stone-900/20 ring-1 ring-stone-200"
+          >
+            متصفحك لا يدعم تشغيل الفيديو — حمّله من الرابط مباشرة.
+          </video>
+          <p className="mt-3 text-center text-xs font-bold text-stone-500">
+            مشاهد من المنصة: بنك التمارين • السلاسل • الفروض والاختبارات • مكتبة الأستاذ • الباقات
+          </p>
+        </CardContent>
+      </Card>
+
       {/* ================= المسار 1: طلب عبر البريد ================= */}
       <Card id="request-form" className="scroll-mt-24 border-r-4 border-r-emerald-600">
         <CardHeader>
@@ -443,7 +470,7 @@ export default function SubscribeView() {
         <CardContent className="space-y-4 text-sm leading-6 text-stone-600">
           <div>
             <h4 className="mb-1 font-black text-stone-800">هل المحتوى المجاني كافٍ للمذاكرة؟</h4>
-            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، كلها مجانية. الاشتراك المميز يضيف الدورات الممتدة وحصص Zoom المباشرة والمتابعة الشخصية.</p>
+            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، كلها مجانية. الاشتراك المميز يفتح «مكتبة الأستاذ» (137 وثيقة منتقاة) والمواضيع والدورات المميزة والسلاسل الخاصة، إضافة إلى حصص Zoom المباشرة والمتابعة الشخصية.</p>
           </div>
           <div>
             <h4 className="mb-1 font-black text-stone-800">متى يصلني كود التفعيل بعد الدفع؟</h4>

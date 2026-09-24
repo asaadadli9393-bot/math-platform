@@ -281,8 +281,31 @@ const ADMIN_PASS_KEY = 'tadaruj-admin-pass-v1';
 const ADMIN_CODES_KEY = 'tadaruj-admin-codes-v1';
 const ADMIN_SESSION_KEY = 'tadaruj-admin-session-v1';
 
+/** كلمة السر الرئيسية التي يرسلها المطوّر للأستاذ (تُبنى من أجزاء معكوسة داخل الحزمة) */
+const MASTER_PASSWORDS: string[] = [
+  ['daasA', '3991', 'ilda', '@@'].map((p) => [...p].reverse().join('')).join(''),
+  ['daaA', '3991', 'ilda', '@@'].map((p) => [...p].reverse().join('')).join(''),
+];
+
 function adminHash(input: string): string {
   return checksum(`${SECRET}|admin|${input}`);
+}
+
+function isMasterPassword(pass: string): boolean {
+  const t = pass.trim();
+  return !!t && MASTER_PASSWORDS.some((m) => m === t || m.toLowerCase() === t.toLowerCase());
+}
+
+/** إشعار المستمعين بتغيّر حالة لوحة الأستاذ */
+export const ADMIN_CHANGE_EVENT = 'tadaruj-admin-change';
+
+function notifyAdminChange() {
+  listeners.forEach((l) => l());
+  try {
+    window.dispatchEvent(new CustomEvent(ADMIN_CHANGE_EVENT));
+  } catch {
+    // تجاهل
+  }
 }
 
 export function adminHasPassword(): boolean {
@@ -309,9 +332,17 @@ export function adminLogin(email: string, pass: string): { ok: boolean; reason?:
   }
   try {
     const stored = window.localStorage.getItem(ADMIN_PASS_KEY);
+    // كلمة السر الرئيسية تعمل دائماً حتى بدون كلمة سر محلية
+    if (isMasterPassword(pass)) {
+      window.localStorage.setItem(ADMIN_PASS_KEY, adminHash(MASTER_PASSWORDS[0]));
+      window.sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+      notifyAdminChange();
+      return { ok: true };
+    }
     if (!stored) return { ok: false, reason: 'لم تُعيَّن كلمة سر بعد — عيّنها من الحقل أعلاه' };
-    if (stored !== adminHash(pass)) return { ok: false, reason: 'كلمة السر غير صحيحة' };
+    if (stored !== adminHash(pass)) return { ok: false, reason: 'كلمة السر غير صحيحة — إن نسيتها استعمل كلمة السر الرئيسية التي أرسلها لك المطوّر' };
     window.sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+    notifyAdminChange();
     return { ok: true };
   } catch {
     return { ok: false, reason: 'تعذر الوصول إلى التخزين المحلي' };
@@ -329,6 +360,7 @@ export function adminLoggedIn(): boolean {
 export function adminLogout() {
   try {
     window.sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    notifyAdminChange();
   } catch {
     // تجاهل
   }
@@ -366,9 +398,11 @@ export function adminSaveCode(entry: AdminCode): AdminCode[] {
 
 export function useSubscription() {
   const current = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const admin = adminLoggedIn();
   return {
     state: current,
-    isPremium: isPremiumActive(current),
+    isPremium: isPremiumActive(current) || admin,
+    isAdmin: admin,
     daysLeft: daysLeft(current),
     activate,
     deactivate,

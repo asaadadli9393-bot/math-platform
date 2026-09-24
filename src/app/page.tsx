@@ -2,15 +2,16 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookOpen, BookOpenCheck, CalendarRange, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Sparkles, Video } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
 import BankView from '@/components/views/BankView';
+import ChainsView from '@/components/views/ChainsView';
+import ExamsView from '@/components/views/ExamsView';
 import QuizView from '@/components/views/QuizView';
 import DashboardView from '@/components/views/DashboardView';
 import CoursesView from '@/components/views/CoursesView';
-import LiveClassesView from '@/components/views/LiveClassesView';
 import SubscribeView from '@/components/views/SubscribeView';
 import AdminView from '@/components/views/AdminView';
 import { useProgress } from '@/lib/progress';
@@ -19,16 +20,17 @@ import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'courses' | 'live' | 'subscribe' | 'admin';
+type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'subscribe' | 'admin';
 
 const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
   { id: 'curriculum', label: 'التدرج السنوي', icon: CalendarRange },
   { id: 'chapters', label: 'الفصول', icon: Layers },
   { id: 'bank', label: 'بنك التمارين', icon: BookOpenCheck },
+  { id: 'exams', label: 'الفروض والاختبارات', icon: ClipboardList },
+  { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
-  { id: 'live', label: 'حصص Zoom', icon: Video },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
 ];
 
@@ -243,7 +245,18 @@ export default function Page() {
             onSubscribe={() => navigate('subscribe')}
           />
         )}
-        {view === 'live' && <LiveClassesView isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />}
+        {view === 'exams' && (
+          <ExamsView key={year} year={year} isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />
+        )}
+        {view === 'chains' && (
+          <ChainsView
+            key={year}
+            year={year}
+            isPremium={isPremium}
+            onSubscribe={() => navigate('subscribe')}
+            onOpenCourses={() => navigate('courses')}
+          />
+        )}
         {view === 'subscribe' && <SubscribeView />}
         {view === 'admin' && <AdminView />}
       </main>
@@ -278,14 +291,14 @@ export default function Page() {
                   <li><button onClick={() => navigate('curriculum')} className="hover:text-emerald-700">التدرج السنوي</button></li>
                   <li><button onClick={() => navigate('chapters')} className="hover:text-emerald-700">الفصول والملخصات</button></li>
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
-                  <li><button onClick={() => navigate('courses')} className="hover:text-emerald-700">الدورات الشاملة</button></li>
-                  <li><button onClick={() => navigate('live')} className="hover:text-emerald-700">حصص Zoom</button></li>
+                  <li><button onClick={() => navigate('chains')} className="hover:text-emerald-700">سلاسل الأستاذ</button></li>
                   <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
                 </ul>
               </div>
               <div>
                 <h4 className="mb-2 font-black text-stone-700">التمرن</h4>
                 <ul className="space-y-1.5 font-bold text-stone-500">
+                  <li><button onClick={() => navigate('exams')} className="hover:text-emerald-700">الفروض والاختبارات</button></li>
                   <li><button onClick={() => navigate('quiz')} className="hover:text-emerald-700">اختبار مخصص</button></li>
                   <li><button onClick={() => navigate('dashboard')} className="hover:text-emerald-700">لوحة التقدم</button></li>
                 </ul>

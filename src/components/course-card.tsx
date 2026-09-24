@@ -64,7 +64,7 @@ export function CourseCard({ course, onOpen, isSubscribed = true, onSubscribe }:
 
   return (
     <Card
-      className={`overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group ${isLocked ? "opacity-80" : ""}`}
+      className={`overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1 group ${isLocked ? "ring-2 ring-amber-300 bg-amber-50/30" : ""}`}
       onClick={handleClick}
     >
       <div
