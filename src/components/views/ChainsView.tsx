@@ -34,6 +34,7 @@ import {
   BAC_SOLUTION_STATS,
   bacSolutionChainOf,
 } from '@/data/bac-solutions';
+import { BAC_OFFICIAL_CHAINS, BAC_OFFICIAL_STATS } from '@/data/bac-official';
 
 const YEAR_NAMES: Record<YearId, string> = {
   '1as': 'السنة الأولى ثانوي',
@@ -309,7 +310,7 @@ function ChainPdfsSection({
             tone="amber"
             icon={<Lock className="h-6 w-6 text-white" />}
             title="تجميعيات البكالوريا (2008–2026) + الحلول النموذجية المفصلة"
-            subtitle={`${bac.length} تجميعيات حسب المحاور: أسئلة البكالوريا الحقيقية مرتبة حسب الدورات، مقرونة مباشرة بالحلول النموذجية المفصلة أدناه — ${BAC_SOLUTION_STATS.totalExercises} حلاً نموذجياً خطوة بخطوة بنفس منهجية التصحيح الرسمي، تُفتح فور تفعيل الاشتراك`}
+            subtitle={`${bac.length} تجميعيات حسب المحاور: أسئلة البكالوريا الحقيقية مرتبة حسب الدورات، مقرونة مباشرة بالحلول النموذجية المفصلة أدناه — ${BAC_SOLUTION_STATS.totalExercises} حلاً نموذجياً حسب المحاور + التصحيح الرسمي الشامل للموضوعين الرسميين لدورة 2024 وفق منهجية شبكات التصحيح، تُفتح فور تفعيل الاشتراك`}
             badge="للمشتركين فقط"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -331,7 +332,11 @@ function ChainPdfsSection({
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-extrabold text-emerald-800 ring-1 ring-emerald-200">
                 <FileText className="h-3.5 w-3.5" />
-                {BAC_SOLUTION_STATS.totalExercises} حلاً نموذجياً في {BAC_SOLUTION_STATS.total} محاور
+                {BAC_SOLUTION_STATS.totalExercises + BAC_OFFICIAL_STATS.totalExercises} حلاً نموذجياً مفصلاً
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-extrabold text-amber-900 ring-1 ring-amber-300">
+                <Sparkles className="h-3.5 w-3.5" />
+                التصحيح الرسمي الشامل — بكالوريا 2024 (الموضوعان)
               </span>
             </div>
             {BAC_SOLUTION_CHAINS.map((chain) => (
@@ -344,6 +349,16 @@ function ChainPdfsSection({
                 highlight={openBacSolutionId === chain.id}
                 domId={`bacsol-${chain.id}`}
                 accentBadge="حلول تجميعية بكالوريا"
+              />
+            ))}
+            {BAC_OFFICIAL_CHAINS.map((chain) => (
+              <InteractiveChainCard
+                key={chain.id}
+                chain={chain}
+                isPremium={isPremium}
+                onSubscribe={onSubscribe}
+                domId={`bacsol-${chain.id}`}
+                accentBadge="تصحيح رسمي — دورة 2024"
               />
             ))}
           </div>
@@ -718,10 +733,10 @@ export default function ChainsView({
           <CardContent className="pt-4 text-center">
             <FileText className="mx-auto mb-1 h-5 w-5 text-emerald-700" />
             <div className="text-2xl font-bold">
-              {CHAINS_STATS.totalExercises + BAC_SOLUTION_STATS.totalExercises}
+              {CHAINS_STATS.totalExercises + BAC_SOLUTION_STATS.totalExercises + BAC_OFFICIAL_STATS.totalExercises}
             </div>
             <div className="text-xs text-muted-foreground">
-              تمريناً في {CHAINS_STATS.total + BAC_SOLUTION_STATS.total} سلاسل
+              تمريناً في {CHAINS_STATS.total + BAC_SOLUTION_STATS.total + BAC_OFFICIAL_STATS.total} سلاسل
             </div>
           </CardContent>
         </Card>
