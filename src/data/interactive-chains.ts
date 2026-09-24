@@ -19,6 +19,8 @@ export interface InteractiveChain {
   chapterId: string;
   level: string;
   premium: boolean;
+  /** إن كانت السلسلة حلولاً نموذجية لتجميعية بكالوريا: معرّف التجميعية في chain-pdfs.ts */
+  bacSolutionFor?: string;
   exercises: ChainExercise[];
 }
 

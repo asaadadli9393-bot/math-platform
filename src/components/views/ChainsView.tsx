@@ -29,6 +29,11 @@ import {
   interactiveChainsOfYear,
   type InteractiveChain,
 } from '@/data/interactive-chains';
+import {
+  BAC_SOLUTION_CHAINS,
+  BAC_SOLUTION_STATS,
+  bacSolutionChainOf,
+} from '@/data/bac-solutions';
 
 const YEAR_NAMES: Record<YearId, string> = {
   '1as': 'السنة الأولى ثانوي',
@@ -94,10 +99,12 @@ function ChainPdfCard({
   pdf,
   isPremium,
   onSubscribe,
+  onOpenSolutions,
 }: {
   pdf: ChainPdf;
   isPremium: boolean;
   onSubscribe: () => void;
+  onOpenSolutions?: () => void;
 }) {
   // المكتبة (مكتبة الأستاذ) مقفولة بالكامل — تُفتح بالاشتراك فقط
   const locked = (pdf.premium || pdf.group === 'library') && !isPremium;
@@ -176,7 +183,7 @@ function ChainPdfCard({
                 : isDz
                   ? 'سلسلة من منصة DzExams • تفتح في صفحة المصدر مباشرة'
                   : isBac
-                    ? `تجميعية بكالوريا • ${pdf.pages} صفحات • أسئلة حسب الدورات + الحلول النموذجية على المنصة`
+                    ? `تجميعية بكالوريا • ${pdf.pages} صفحات • أسئلة حسب الدورات + حلولها النموذجية المفصلة على المنصة`
                     : isLib
                       ? `من مكتبة الأستاذ • ${pdf.pages} صفحات • ملف أصلي جاهز للفتح والتحميل`
                       : `PDF من أرشيف الأستاذ • ${pdf.pages} صفحات • الحلول النموذجية والتمثيلات البيانية داخل الملف`}
@@ -212,6 +219,15 @@ function ChainPdfCard({
                 </a>
               </Button>
             </div>
+            {isBac && onOpenSolutions && (
+              <Button
+                onClick={onOpenSolutions}
+                className="w-full gap-2 bg-gradient-to-l from-emerald-700 to-teal-800 font-black text-white hover:from-emerald-800 hover:to-teal-900"
+              >
+                <Lightbulb className="h-4 w-4" />
+                الحلول النموذجية المفصلة على المنصة
+              </Button>
+            )}
             {pdf.externalUrl && (
               <a
                 href={pdf.externalUrl}
@@ -246,10 +262,14 @@ function ChainPdfsSection({
   year,
   isPremium,
   onSubscribe,
+  openBacSolutionId,
+  onJumpToBacSolutions,
 }: {
   year: YearId;
   isPremium: boolean;
   onSubscribe: () => void;
+  openBacSolutionId: string | null;
+  onJumpToBacSolutions: (compilationId: string) => void;
 }) {
   const all = chainPdfsOfYear(year);
   if (all.length === 0) return null;
@@ -288,13 +308,43 @@ function ChainPdfsSection({
           <ChainSectionHeader
             tone="amber"
             icon={<Lock className="h-6 w-6 text-white" />}
-            title="تجميعيات البكالوريا (2008–2026) + الحلول النموذجية"
-            subtitle={`${bac.length} تجميعيات حسب المحاور: أسئلة البكالوريا الحقيقية مرتبة حسب الدورات، مقرونة بالحلول النموذجية المفصلة في تمارين المنصة التفاعلية — تدريب مكثف على أنماط البكالوريا، تُفتح فور تفعيل الاشتراك`}
+            title="تجميعيات البكالوريا (2008–2026) + الحلول النموذجية المفصلة"
+            subtitle={`${bac.length} تجميعيات حسب المحاور: أسئلة البكالوريا الحقيقية مرتبة حسب الدورات، مقرونة مباشرة بالحلول النموذجية المفصلة أدناه — ${BAC_SOLUTION_STATS.totalExercises} حلاً نموذجياً خطوة بخطوة بنفس منهجية التصحيح الرسمي، تُفتح فور تفعيل الاشتراك`}
             badge="للمشتركين فقط"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {bac.map((pdf) => (
-              <ChainPdfCard key={pdf.id} pdf={pdf} isPremium={isPremium} onSubscribe={onSubscribe} />
+              <ChainPdfCard
+                key={pdf.id}
+                pdf={pdf}
+                isPremium={isPremium}
+                onSubscribe={onSubscribe}
+                onOpenSolutions={() => onJumpToBacSolutions(pdf.id)}
+              />
+            ))}
+          </div>
+          <div className="space-y-3" id="bac-solutions">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-l from-emerald-700 to-teal-800 px-3.5 py-1.5 text-xs font-black text-white shadow-md shadow-emerald-700/25">
+                <Lightbulb className="h-3.5 w-3.5" />
+                الحلول النموذجية المفصلة — مقرونة بالتجميعيات
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-extrabold text-emerald-800 ring-1 ring-emerald-200">
+                <FileText className="h-3.5 w-3.5" />
+                {BAC_SOLUTION_STATS.totalExercises} حلاً نموذجياً في {BAC_SOLUTION_STATS.total} محاور
+              </span>
+            </div>
+            {BAC_SOLUTION_CHAINS.map((chain) => (
+              <InteractiveChainCard
+                key={chain.id}
+                chain={chain}
+                isPremium={isPremium}
+                onSubscribe={onSubscribe}
+                forceOpen={openBacSolutionId === chain.id}
+                highlight={openBacSolutionId === chain.id}
+                domId={`bacsol-${chain.id}`}
+                accentBadge="حلول تجميعية بكالوريا"
+              />
             ))}
           </div>
         </>
@@ -341,21 +391,33 @@ function InteractiveChainCard({
   chain,
   isPremium,
   onSubscribe,
+  forceOpen = false,
+  highlight = false,
+  domId,
+  accentBadge,
 }: {
   chain: InteractiveChain;
   isPremium: boolean;
   onSubscribe: () => void;
+  forceOpen?: boolean;
+  highlight?: boolean;
+  domId?: string;
+  accentBadge?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [revealed, setRevealed] = useState<number[]>([]);
   const locked = chain.premium && !isPremium;
+  const isOpen = open || forceOpen;
   const chapter = useMemo(
     () => chaptersOfYear(chain.year).find((c) => c.id === chain.chapterId),
     [chain.year, chain.chapterId],
   );
   return (
     <article
-      className={`overflow-hidden rounded-2xl border bg-white shadow-sm transition ${locked ? 'border-amber-200' : 'border-stone-200'}`}
+      id={domId}
+      className={`overflow-hidden rounded-2xl border bg-white shadow-sm transition ${
+        locked ? 'border-amber-200' : 'border-stone-200'
+      } ${highlight ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}
     >
       <button
         onClick={() => setOpen((o) => !o)}
@@ -378,8 +440,13 @@ function InteractiveChainCard({
                 {chapter.shortTitle}
               </span>
             )}
+            {accentBadge && (
+              <span className="rounded-full bg-gradient-to-l from-emerald-700 to-teal-800 px-2.5 py-0.5 text-[10px] font-black text-white shadow-sm">
+                {accentBadge}
+              </span>
+            )}
             <span className="rounded-full border border-stone-200 bg-white px-2.5 py-0.5 text-[11px] font-bold text-stone-500">
-              {chain.exercises.length} تمارين
+              {chain.exercises.length} تمارين محلولة
             </span>
             <span className="rounded-full border border-stone-200 bg-white px-2.5 py-0.5 text-[11px] font-bold text-stone-500">
               {chain.level}
@@ -392,9 +459,9 @@ function InteractiveChainCard({
             )}
           </div>
         </div>
-        <ChevronDown className={`h-5 w-5 shrink-0 text-stone-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-5 w-5 shrink-0 text-stone-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
+      {isOpen && (
         <div className="border-t border-stone-100 px-4 py-4 sm:px-5">
           <p className="mb-4 text-xs leading-6 text-stone-500">{chain.description}</p>
           <div className="space-y-3">
@@ -606,6 +673,19 @@ export default function ChainsView({
   const interactive = interactiveChainsOfYear(year);
   const pdfChains = chainPdfsOfYear(year);
   const is3as = year === '3as';
+  const [openBacSolutionId, setOpenBacSolutionId] = useState<string | null>(null);
+
+  /** الانتقال من بطاقة تجميعية إلى حلولها النموذجية المفصلة */
+  const handleJumpToBacSolutions = (compilationId: string) => {
+    const chain = bacSolutionChainOf(compilationId);
+    setOpenBacSolutionId(chain ? chain.id : null);
+    setTimeout(() => {
+      document
+        .getElementById('bac-solutions')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
   const totalPremium =
     interactive.filter((c) => c.premium).length + pdfChains.filter((c) => c.premium).length;
   return (
@@ -637,9 +717,11 @@ export default function ChainsView({
         <Card>
           <CardContent className="pt-4 text-center">
             <FileText className="mx-auto mb-1 h-5 w-5 text-emerald-700" />
-            <div className="text-2xl font-bold">{CHAINS_STATS.totalExercises}</div>
+            <div className="text-2xl font-bold">
+              {CHAINS_STATS.totalExercises + BAC_SOLUTION_STATS.totalExercises}
+            </div>
             <div className="text-xs text-muted-foreground">
-              تمريناً في {CHAINS_STATS.total} سلاسل
+              تمريناً في {CHAINS_STATS.total + BAC_SOLUTION_STATS.total} سلاسل
             </div>
           </CardContent>
         </Card>
@@ -652,7 +734,13 @@ export default function ChainsView({
         </Card>
       </div>
 
-      <ChainPdfsSection year={year} isPremium={isPremium} onSubscribe={onSubscribe} />
+      <ChainPdfsSection
+        year={year}
+        isPremium={isPremium}
+        onSubscribe={onSubscribe}
+        openBacSolutionId={openBacSolutionId}
+        onJumpToBacSolutions={handleJumpToBacSolutions}
+      />
       <InteractiveChainsSection year={year} isPremium={isPremium} onSubscribe={onSubscribe} />
 
       <Card className="border-r-4 border-r-emerald-700">

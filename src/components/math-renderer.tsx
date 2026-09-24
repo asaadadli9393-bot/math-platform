@@ -51,13 +51,20 @@ export function MathText({ content, className = "" }: MathTextProps) {
   const parts = React.useMemo(() => parseMathContent(content), [content]);
 
   return (
-    <span className={className} dir="rtl">
+    <span className={`${className} whitespace-pre-line`} dir="rtl">
       {parts.map((part, idx) => {
         if (part.type === "display") {
           return <Math key={idx} tex={part.content} display />;
         }
         if (part.type === "inline") {
           return <Math key={idx} tex={part.content} />;
+        }
+        if (part.type === "bold") {
+          return (
+            <strong key={idx} className="font-extrabold text-stone-900">
+              {part.content}
+            </strong>
+          );
         }
         return <React.Fragment key={idx}>{part.content}</React.Fragment>;
       })}
@@ -68,6 +75,7 @@ export function MathText({ content, className = "" }: MathTextProps) {
 type MathPart =
   | { type: "text"; content: string }
   | { type: "inline"; content: string }
+  | { type: "bold"; content: string }
   | { type: "display"; content: string };
 
 function parseMathContent(content: string): MathPart[] {
@@ -106,9 +114,26 @@ function pushInlineParts(parts: MathPart[], text: string) {
   let m: RegExpExecArray | null;
   while ((m = inlineRegex.exec(text)) !== null) {
     if (m.index > lastIdx) {
-      parts.push({ type: "text", content: text.slice(lastIdx, m.index) });
+      pushTextParts(parts, text.slice(lastIdx, m.index));
     }
     parts.push({ type: "inline", content: m[1].trim() });
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) {
+    pushTextParts(parts, text.slice(lastIdx));
+  }
+}
+
+/** تقسيم النص العادي مع دعم **الخط العريض** */
+function pushTextParts(parts: MathPart[], text: string) {
+  const boldRegex = /\*\*([^*]+?)\*\*/g;
+  let lastIdx = 0;
+  let m: RegExpExecArray | null;
+  while ((m = boldRegex.exec(text)) !== null) {
+    if (m.index > lastIdx) {
+      parts.push({ type: "text", content: text.slice(lastIdx, m.index) });
+    }
+    parts.push({ type: "bold", content: m[1] });
     lastIdx = m.index + m[0].length;
   }
   if (lastIdx < text.length) {
