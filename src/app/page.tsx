@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookMarked, BookOpen, BookOpenCheck, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -15,16 +15,18 @@ import CoursesView from '@/components/views/CoursesView';
 import SubscribeView from '@/components/views/SubscribeView';
 import AdminView from '@/components/views/AdminView';
 import GraphingView from '@/components/views/GraphingView';
+import AITutorView from '@/components/views/AITutorView';
 import { useProgress } from '@/lib/progress';
 import { useLevel } from '@/lib/level';
 import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'graphing' | 'subscribe' | 'admin';
+type View = 'home' | 'aitutor' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'graphing' | 'subscribe' | 'admin';
 
 const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
+  { id: 'aitutor', label: 'المدرس الذكي', short: 'الذكي', icon: Bot },
   { id: 'curriculum', label: 'التدرج السنوي', short: 'التدرج', icon: CalendarRange },
   { id: 'chapters', label: 'الفصول', icon: Layers },
   { id: 'bank', label: 'بنك التمارين', short: 'التمارين', icon: BookOpenCheck },
@@ -259,6 +261,9 @@ export default function Page() {
             onOpenCourses={() => navigate('courses')}
           />
         )}
+        {view === 'aitutor' && (
+          <AITutorView year={year} isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />
+        )}
         {view === 'graphing' && <GraphingView onOpenBank={() => navigate('bank')} />}
         {view === 'subscribe' && <SubscribeView />}
         {view === 'admin' && <AdminView />}
@@ -301,6 +306,7 @@ export default function Page() {
               <div>
                 <h4 className="mb-2 font-black text-stone-700">التمرن</h4>
                 <ul className="space-y-1.5 font-bold text-stone-500">
+                  <li><button onClick={() => navigate('aitutor')} className="font-black text-emerald-700 hover:text-emerald-800">المدرس الذكي — تدرّج AI</button></li>
                   <li><button onClick={() => navigate('exams')} className="hover:text-emerald-700">الفروض والاختبارات</button></li>
                   <li><button onClick={() => navigate('graphing')} className="hover:text-emerald-700">لوحة الرسم — GeoGebra</button></li>
                   <li><button onClick={() => navigate('quiz')} className="hover:text-emerald-700">اختبار مخصص</button></li>

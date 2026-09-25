@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { BookOpenCheck, CalendarRange, Database, GraduationCap, Layers, Target, Trophy, UserCheck } from 'lucide-react';
+import { BookOpenCheck, Bot, CalendarRange, Database, GraduationCap, Layers, Target, Trophy, UserCheck } from 'lucide-react';
 import { chaptersOfYear } from '@/data/chapters';
 import { exercisesOfYear } from '@/data/exercises';
 import { LEVELS, streamsOfYear, type YearId } from '@/data/curriculum';
@@ -41,7 +41,10 @@ export default function HomeView({
   onSetLevel,
 }: {
   year: YearId;
-  onNavigate: (view: 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard', chapterId?: string) => void;
+  onNavigate: (
+    view: 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'aitutor' | 'graphing',
+    chapterId?: string,
+  ) => void;
   onSetLevel: (l: YearId) => void;
 }) {
   const chapters = chaptersOfYear(year);
@@ -59,6 +62,13 @@ export default function HomeView({
   ];
 
   const features = [
+    {
+      icon: Bot,
+      title: 'المدرّس الذكي — تدرّج AI',
+      desc: 'مساعد ذكاء اصطناعي خاص بالمنصة: يشرح الدروس ويرشدك خطوة بخطوة لحل التمارين بمنهجية البكالوريا، بصيغ رياضية دقيقة ويعرف مستواك الدراسي. مجاني بحد يومي، وغير محدود للمشتركين.',
+      view: 'aitutor' as const,
+      highlight: true,
+    },
     {
       icon: CalendarRange,
       title: 'متوافقة مع تدرج 2022-2023',
@@ -232,7 +242,23 @@ export default function HomeView({
             {features.map((f) => (
               <div
                 key={f.title}
-                className="group rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100"
+                onClick={f.view ? () => onNavigate(f.view) : undefined}
+                role={f.view ? 'button' : undefined}
+                tabIndex={f.view ? 0 : undefined}
+                onKeyDown={
+                  f.view
+                    ? (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') onNavigate(f.view);
+                      }
+                    : undefined
+                }
+                className={`group rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100 ${
+                  f.view ? 'cursor-pointer' : ''
+                } ${
+                  'highlight' in f && f.highlight
+                    ? 'ring-2 ring-emerald-500/30 hover:ring-emerald-500/60'
+                    : ''
+                }`}
               >
                 <div className="mb-4 inline-flex rounded-xl bg-emerald-100 p-3 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
                   <f.icon className="h-6 w-6" />
