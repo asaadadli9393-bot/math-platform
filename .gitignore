@@ -55,15 +55,18 @@ server.log
 
 # sandbox artifacts (keep out of the repo)
 /download/
-/scripts/
 /tool-results/
-/worklog.md
 math_site.*
 /tests/
 /examples/
-/.zscripts/
 /upload/
+.zscripts/*
+!.zscripts/dev.sh
 /db/
 /mini-services/
 /skills/
 Caddyfile
+
+# secrets — لا تُرفع أبداً
+backup/*.txt
+backup/vercel-env*

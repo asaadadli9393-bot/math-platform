@@ -1,0 +1,46 @@
+{
+  "name": "تدرّج | منصة الرياضيات للثانوي — الأستاذ عدلي اسعد",
+  "short_name": "تدرّج",
+  "description": "منصة شاملة للرياضيات: بنك تمارين بحلول نموذجية، سلاسل الأستاذ عدلي اسعد، الفروض والاختبارات — للسنتين الأولى والثانية والثالثة ثانوي.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#065f46",
+  "background_color": "#ffffff",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "بنك التمارين",
+      "url": "/?view=bank",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "سلاسل الأستاذ",
+      "url": "/?view=chains",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

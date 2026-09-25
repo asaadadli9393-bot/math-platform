@@ -1,0 +1,36 @@
+name: Production Smoke Test
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: انتظار نشر Vercel التلقائي ثم فحص الإنتاج
+        run: |
+          echo "انتظار اكتمال نشر Vercel التلقائي (~3 دقائق)..."
+          sleep 180
+          ok=0
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://math-adli.vercel.app/)
+            echo "محاولة $i: HTTP $code"
+            if [ "$code" = "200" ]; then ok=1; break; fi
+            sleep 60
+          done
+          if [ "$ok" != "1" ]; then echo "❌ الصفحة الرئيسية لا تستجيب 200"; exit 1; fi
+
+          echo "--- فحوصات المحتوى ---"
+          curl -s --max-time 30 https://math-adli.vercel.app/ | grep -q "تدرّج" \
+            || { echo "❌ عنوان المنصة مفقود"; exit 1; }
+          curl -s --max-time 30 https://math-adli.vercel.app/ | grep -q "og-treasure-2026.jpg" \
+            || { echo "❌ وسم معاينة صندوق الكنز مفقود"; exit 1; }
+          for asset in og-treasure-2026.jpg teacher-adli-avatar.jpg teacher-adli.jpg \
+                       chains/dz/c2-func.pdf video/poster.jpg; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://math-adli.vercel.app/$asset")
+            echo "$asset → $code"
+            [ "$code" = "200" ] || { echo "❌ أصل مفقود: $asset"; exit 1; }
+          done
+          echo "✅ فحص الإنتاج ناجح بالكامل"
