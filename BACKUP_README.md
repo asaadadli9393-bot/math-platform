@@ -1,8 +1,9 @@
 # النسخة الاحتياطية — منصة تدرّج | تدرّج | منصة الرياضيات للثانوي
 
-تاريخ الإنشاء: 2026-09-25 11:06
+تاريخ الإنشاء: 2026-09-25 13:00
 الإنتاج: https://math-adli.vercel.app (و adli-math.vercel.app)
 مشروع Vercel: math-platform (org: team_JZvbO8QvFAimHHtQkjDVUJx1 / prj_fmumwoENNgTzguMu4xAKkyqJAC3t)
+GitHub: https://github.com/asaadadli9393-bot/math-platform (فرع main + فرع احتياطي backup-sep16)
 
 ## محتويات هذه النسخة
 - src/            كل الكود المصدري (الواجهات + API + المكتبات + بيانات التمارين)
@@ -14,6 +15,7 @@
 - prisma/         مخطط قاعدة البيانات
 - .env + .env.local  متغيرات البيئة المحلية (⚠️ تحتوي مفاتيح سرية — احفظ الملف بخصوصية)
 - .vercel/        ربط مشروع Vercel (يحفظ إعادة الربط)
+- .zscripts/dev.sh  سكريبت إقلاع المعاينة الإنتاجي
 - كل ملفات الإعداد: package.json, bun.lock, next.config.ts, tsconfig.json, tailwind.config.ts,
   postcss.config.mjs, eslint.config.mjs, components.json, vercel.json, .gitignore, .vercelignore
 - worklog.md      سجل العمل الكامل للمشروع
@@ -33,13 +35,14 @@
      bun install
      bun run build
 4. التشغيل المحلي:
-     PORT=3000 node .next/standalone/server.js
+     PORT=3000 NODE_ENV=production node .next/standalone/server.js
 5. النشر على Vercel:
      npx vercel link --project math-platform
      npx vercel --prod --yes
+   أو تلقائياً: ارفع إلى GitHub (main) وVercel ينشر وحده
 6. متغيرات البيئة: إن لم تُنقل تلقائياً، اضبطها في Vercel بالأسماء الموجودة في
-     backup/vercel-env-production.txt (القيم السرية الـ5 معلّمة [SENSITIVE] — نسختها
-     الفعلية في .env.local وبلوحة Vercel).
+     backup/vercel-env-production.txt (القيم السرية الـ5 معلّمة [SENSITIVE] — موجودة
+     في لوحة Vercel).
 
 ## استعادة تاريخ git (اختياري)
     git clone tadaruj-git-history-<DATE>.bundle tadaruj-with-history

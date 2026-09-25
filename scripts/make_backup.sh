@@ -90,7 +90,9 @@ tar -czf "$ARCHIVE" \
   --exclude='./.claude' \
   --exclude='./.z-ai-config' \
   --exclude='.z-ai-config*' \
-  --exclude='.zscripts' \
+  --exclude='.zscripts/*.log' \
+  --exclude='.zscripts/dev.pid' \
+  --exclude='.zscripts/mini-service-*' \
   --exclude='*.log' \
   --exclude='./prompt' \
   -C /home/z/my-project .
