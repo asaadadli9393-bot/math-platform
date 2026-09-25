@@ -139,7 +139,7 @@ function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCo
         <CardContent className="pt-4">
           <div className="flex items-start gap-3">
             <img
-              src="/teacher-adli.jpg"
+              src="/teacher-adli-avatar.jpg"
               alt="الأستاذ عدلي أسعد"
               className="w-12 h-12 rounded-full object-cover border-2 border-primary flex-shrink-0"
             />

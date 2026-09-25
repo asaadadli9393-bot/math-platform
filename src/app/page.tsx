@@ -22,12 +22,12 @@ import { EXERCISE_COUNT } from '@/data/exercises';
 
 type View = 'home' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'subscribe' | 'admin';
 
-const NAV: { id: View; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
-  { id: 'curriculum', label: 'التدرج السنوي', icon: CalendarRange },
+  { id: 'curriculum', label: 'التدرج السنوي', short: 'التدرج', icon: CalendarRange },
   { id: 'chapters', label: 'الفصول', icon: Layers },
-  { id: 'bank', label: 'بنك التمارين', icon: BookOpenCheck },
-  { id: 'exams', label: 'الفروض والاختبارات', icon: ClipboardList },
+  { id: 'bank', label: 'بنك التمارين', short: 'التمارين', icon: BookOpenCheck },
+  { id: 'exams', label: 'الفروض والاختبارات', short: 'الاختبارات', icon: ClipboardList },
   { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
@@ -55,7 +55,7 @@ function LevelSwitcher({
           onClick={() => onSelect(l.id)}
           title={l.name}
           className={`rounded-lg font-extrabold transition ${
-            compact ? 'px-2.5 py-1 text-[11px]' : 'px-3 py-1.5 text-xs sm:px-4'
+            compact ? 'px-2.5 py-1 text-[11px]' : 'px-3 py-1.5 text-xs'
           } ${
             year === l.id
               ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/25'
@@ -100,10 +100,10 @@ export default function Page() {
     <div className="flex min-h-screen flex-col bg-stone-50">
       {/* ============ Navbar ============ */}
       <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-6">
+        <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center gap-2 px-3 py-2 sm:gap-3 sm:px-6">
           <button onClick={() => navigate('home')} className="flex shrink-0 items-center gap-2.5">
             <Image
-              src="/teacher-adli.jpg"
+              src="/teacher-adli-avatar.jpg"
               alt="الأستاذ عدلي اسعد"
               width={40}
               height={40}
@@ -122,7 +122,7 @@ export default function Page() {
           </div>
 
           {/* حالة الاشتراك / زر الاشتراك (سطح المكتب) */}
-          <div className="hidden shrink-0 lg:block">
+          <div className="hidden shrink-0 xl:block">
             {isPremium ? (
               <button
                 onClick={() => navigate('subscribe')}
@@ -143,19 +143,19 @@ export default function Page() {
             )}
           </div>
 
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="التنقل الرئيسي">
+          <nav className="hidden min-w-0 items-center gap-0.5 xl:flex" aria-label="التنقل الرئيسي">
             {NAV.map((n) => (
               <button
                 key={n.id}
                 onClick={() => navigate(n.id)}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-extrabold transition ${
+                title={n.short ? n.label : undefined}
+                className={`inline-flex items-center whitespace-nowrap rounded-xl px-2.5 py-2 text-[13px] font-extrabold transition ${
                   view === n.id
                     ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200'
                     : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
                 }`}
               >
-                <n.icon className="h-4 w-4" />
-                {n.label}
+                {n.short ?? n.label}
               </button>
             ))}
           </nav>
@@ -166,7 +166,7 @@ export default function Page() {
 
           <button
             onClick={() => navigate('quiz')}
-            className="hidden shrink-0 items-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98] sm:inline-flex lg:hidden"
+            className="hidden shrink-0 items-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98] sm:inline-flex xl:hidden"
           >
             <Sparkles className="h-4 w-4" />
             اختبار
@@ -175,10 +175,10 @@ export default function Page() {
 
         {/* mobile nav */}
         <nav
-          className="border-t border-stone-100 bg-white/95 lg:hidden"
+          className="border-t border-stone-100 bg-white/95 xl:hidden"
           aria-label="التنقل للهاتف"
         >
-          <div className="custom-scroll mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3 py-2">
+          <div className="custom-scroll mx-auto flex max-w-7xl gap-1 overflow-x-auto px-3 py-2">
             {NAV_MOBILE.map((n) => (
               <button
                 key={n.id}
@@ -268,7 +268,7 @@ export default function Page() {
             <div className="max-w-sm">
               <div className="mb-3 flex items-center gap-3">
                 <Image
-                  src="/teacher-adli.jpg"
+                  src="/teacher-adli-avatar.jpg"
                   alt="الأستاذ عدلي اسعد"
                   width={44}
                   height={44}

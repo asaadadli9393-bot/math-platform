@@ -656,7 +656,7 @@ function InteractiveChainsSection({
       <div className="mt-5 flex items-start gap-3 rounded-2xl bg-gradient-to-l from-emerald-50 to-teal-50/50 p-4 ring-1 ring-emerald-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/teacher-adli.jpg"
+          src="/teacher-adli-avatar.jpg"
           alt="الأستاذ عدلي اسعد"
           className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-600 object-cover"
         />
