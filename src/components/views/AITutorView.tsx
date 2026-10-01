@@ -5,11 +5,13 @@ import {
   Bot,
   Crown,
   Eraser,
+  ImagePlus,
   MessageSquare,
   Send,
   ShieldAlert,
   Sparkles,
   Square,
+  X,
 } from 'lucide-react';
 import { SectionTitle } from '@/components/shared';
 import { RichText } from '@/lib/tex';
@@ -25,11 +27,56 @@ import type { YearId } from '@/data/curriculum';
 interface Msg {
   role: 'user' | 'assistant';
   content: string;
+  images?: string[];
 }
 
 const FREE_DAILY_LIMIT = 15;
 const CHAT_KEY = 'tadaruj-ai-chat-v1';
 const QUOTA_KEY = 'tadaruj-ai-v1';
+const MAX_IMAGES = 3;
+
+/** نصوص أخطاء الرؤية بلغة التلميذ */
+function visionErrorText(code: string): string {
+  switch (code) {
+    case 'vision-unsupported':
+      return 'قراءة الصور غير متاحة على الخادم حالياً — اكتب التمرين نصّاً وسأحلّه لك فوراً.';
+    case 'vision-timeout':
+      return 'الصورة معقّدة ولم يكتمل تحليلها في الوقت المحدد — جرّب صورة أوضح أو صوّر التمرين من قريب.';
+    default:
+      return 'تعذّر تحليل الصورة الآن — أعد المحاولة، أو اكتب التمرين نصّاً.';
+  }
+}
+
+/** تصغير الصورة لدى العميل قبل الإرسال (سرعة أعلى واستهلاك أقل) */
+async function downscaleImage(file: File): Promise<string> {
+  const readAsDataUrl = () =>
+    new Promise<string>((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(String(fr.result));
+      fr.onerror = () => reject(new Error('read-failed'));
+      fr.readAsDataURL(file);
+    });
+  try {
+    const bitmap = await createImageBitmap(file);
+    const maxDim = 1600;
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('no-canvas');
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+    return canvas.toDataURL('image/jpeg', 0.85);
+  } catch {
+    // فشل الترميز (صيغة غير مدعومة من المتصفح) — نرسل الأصل إن كان معقولاً
+    const raw = await readAsDataUrl();
+    if (raw.length > 2_200_000) throw new Error('image-too-large');
+    return raw;
+  }
+}
 
 const STARTERS = [
   'اشرح لي الدرس: كيف نحسب مشتقة دالة؟',
@@ -118,9 +165,12 @@ export default function AITutorView({
   const [streaming, setStreaming] = React.useState(false);
   const [used, setUsed] = React.useState(0);
   const [netError, setNetError] = React.useState<string | null>(null);
+  const [pendingImages, setPendingImages] = React.useState<string[]>([]);
+  const [imgBusy, setImgBusy] = React.useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const abortRef = React.useRef<AbortController | null>(null);
   const taRef = React.useRef<HTMLTextAreaElement>(null);
+  const fileRef = React.useRef<HTMLInputElement>(null);
 
   // استرجاع المحادثة والحصة المحفوظتين
   React.useEffect(() => {
@@ -147,13 +197,17 @@ export default function AITutorView({
 
   const send = async (text?: string) => {
     const content = (text ?? input).trim();
-    if (!content || streaming || blocked) return;
+    const imgs = pendingImages;
+    if ((!content && imgs.length === 0) || streaming || blocked) return;
     if (!isPremium && remaining <= 0) return;
+    if (!content && imgs.length > 0 && text) return; // الاقتراحات الجاهزة نصية دائماً
+    const label = content || 'حلّل الصورة المرفقة واقرأ التمرين ثم حلّه خطوة بخطوة';
     setInput('');
     if (taRef.current) taRef.current.style.height = 'auto';
+    setPendingImages([]);
     setNetError(null);
 
-    const history = [...msgs, { role: 'user' as const, content }];
+    const history = [...msgs, { role: 'user' as const, content: label, images: imgs.length ? imgs : undefined }];
     const next: Msg[] = [...history, { role: 'assistant', content: '' }];
     setMsgs(next);
     setStreaming(true);
@@ -175,6 +229,7 @@ export default function AITutorView({
         body: JSON.stringify({
           year,
           history: history.slice(-12).map((m) => ({ role: m.role, content: m.content })),
+          images: imgs.length ? imgs : undefined,
         }),
       });
 
@@ -247,10 +302,15 @@ export default function AITutorView({
           return cur;
         });
       } else {
+        const code = e instanceof Error ? e.message : '';
         setNetError(
-          e instanceof Error && e.message !== 'network' && e.message !== 'empty'
-            ? 'تعذّر وصول الإجابة — راجع اتصالك ثم أعد المحاولة.'
-            : 'تعذّر وصول الإجابة الآن — أعد المحاولة بعد لحظات.',
+          code.startsWith('vision-')
+            ? visionErrorText(code)
+            : code === 'image-too-large'
+              ? 'الصورة كبيرة جداً — صوّر من قريب أو قلّل جودة الصورة.'
+              : e instanceof Error && e.message !== 'network' && e.message !== 'empty'
+                ? 'تعذّر وصول الإجابة — راجع اتصالك ثم أعد المحاولة.'
+                : 'تعذّر وصول الإجابة الآن — أعد المحاولة بعد لحظات.',
         );
         setMsgs((cur) => {
           const last = cur[cur.length - 1];
@@ -274,6 +334,33 @@ export default function AITutorView({
   };
 
   const stop = () => abortRef.current?.abort();
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || streaming || blocked) return;
+    setNetError(null);
+    setImgBusy(true);
+    try {
+      const room = MAX_IMAGES - pendingImages.length;
+      if (room <= 0) {
+        setNetError('الحد الأقصى 3 صور لكل سؤال.');
+        return;
+      }
+      const picked = Array.from(files).slice(0, room);
+      const scaled: string[] = [];
+      for (const f of picked) {
+        if (!f.type.startsWith('image/')) continue;
+        try {
+          scaled.push(await downscaleImage(f));
+        } catch {
+          setNetError('تعذّر إرفاق إحدى الصور — جرّب صورة بصيغة JPG أو PNG وبحجم أصغر.');
+        }
+      }
+      if (scaled.length) setPendingImages((cur) => [...cur, ...scaled].slice(0, MAX_IMAGES));
+    } finally {
+      setImgBusy(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  };
 
   const clearChat = () => {
     if (streaming) stop();
@@ -364,6 +451,19 @@ export default function AITutorView({
                 m.role === 'user' ? (
                   <div key={i} className="flex justify-end">
                     <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-emerald-800 px-4 py-2.5 text-sm leading-7 text-white shadow-sm">
+                      {m.images && m.images.length > 0 && (
+                        <div className="mb-2 flex flex-wrap justify-end gap-1.5">
+                          {m.images.map((src, k) => (
+                             
+                            <img
+                              key={k}
+                              src={src}
+                              alt={`صورة مرفقة ${k + 1}`}
+                              className="max-h-28 rounded-lg border border-emerald-600/60 object-cover"
+                            />
+                          ))}
+                        </div>
+                      )}
                       {m.content}
                     </div>
                   </div>
@@ -421,7 +521,44 @@ export default function AITutorView({
 
         {/* حقل الإدخال */}
         <div className="border-t border-stone-100 bg-white px-3 py-3 sm:px-5">
+          {/* شريط معاينة الصور المرفقة */}
+          {pendingImages.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2 rounded-xl border border-stone-200 bg-stone-50 p-2">
+              {pendingImages.map((src, k) => (
+                <div key={k} className="relative">
+                  { }
+                  <img src={src} alt={`مرفق ${k + 1}`} className="h-16 w-16 rounded-lg border border-stone-200 object-cover" />
+                  <button
+                    onClick={() => setPendingImages((cur) => cur.filter((_, i) => i !== k))}
+                    title="إزالة الصورة"
+                    className="absolute -left-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-stone-800 text-white shadow transition hover:bg-red-600"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+              <span className="self-center text-[11px] font-bold text-stone-400">
+                {pendingImages.length}/3 — اكتب سؤالك أو أرسل مباشرة
+              </span>
+            </div>
+          )}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => handleFiles(e.target.files)}
+          />
           <div className="flex items-end gap-2">
+            <button
+              onClick={() => fileRef.current?.click()}
+              disabled={blocked || streaming || imgBusy || pendingImages.length >= MAX_IMAGES}
+              title="إرفاق صورة تمرين (كاميرا أو معرض)"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-stone-600 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-40"
+            >
+              <ImagePlus className={"h-5 w-5" + (imgBusy ? " animate-pulse" : "")} />
+            </button>
             <textarea
               ref={taRef}
               value={input}
@@ -437,7 +574,7 @@ export default function AITutorView({
                 }
               }}
               rows={1}
-              placeholder={blocked ? 'اشترك لتتابع الأسئلة…' : 'اكتب سؤالك في الرياضيات…'}
+              placeholder={blocked ? 'اشترك لتتابع الأسئلة…' : pendingImages.length > 0 ? 'اكتب سؤالك عن الصورة أو أرسل مباشرة…' : 'اكتب سؤالك أو صوّر التمرين…'}
               disabled={blocked || streaming}
               className="custom-scroll max-h-30 min-h-11 flex-1 resize-none rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-semibold text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-emerald-400 focus:bg-white disabled:opacity-50"
             />
@@ -452,7 +589,7 @@ export default function AITutorView({
             ) : (
               <button
                 onClick={() => send()}
-                disabled={!input.trim() || blocked}
+                disabled={(!input.trim() && pendingImages.length === 0) || blocked}
                 title="إرسال"
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-white shadow-md shadow-emerald-700/25 transition hover:bg-emerald-600 disabled:opacity-40"
               >
@@ -462,8 +599,7 @@ export default function AITutorView({
           </div>
           <p className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-stone-400">
             <Sparkles className="h-3 w-3 shrink-0 text-emerald-600" />
-            الإجابات بثّ مباشر وصيغ رياضية دقيقة — قد يخطئ الذكاء الاصطناعي أحياناً، تحقّق من
-            الحلول مع أستاذك.
+            صوّر تمرينك أو فرضك وأرسله ليقرأه ويحلّه خطوة بخطوة — الإجابات بصيغ رياضية دقيقة وقد يخطئ الذكاء الاصطناعي أحياناً.
           </p>
         </div>
       </div>

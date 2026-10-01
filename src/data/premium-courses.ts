@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { Course, CourseModule } from "@/data/courses";
+import { RICH_LESSONS } from "./course-lessons-rich";
 
 // ============================================================
 //  الدورة 1: المتتاليات العددية — 6 وحدات + 18 تمرين
@@ -649,15 +650,23 @@ const courseProba: Course = {
 
 // ============================================================
 //  تصدير كل الدورات المميزة
+//  ✅ إثراء المحتوى المعرفي: كل وحدة لها درس كامل من RICH_LESSONS
 // ============================================================
 
-export const premiumCourses: Course[] = [
+const basePremiumCourses: Course[] = [
   courseSuites,
   courseExp,
   courseLn,
   courseComplex,
   courseProba,
 ];
+
+export const premiumCourses: Course[] = basePremiumCourses.map((course) => ({
+  ...course,
+  modules: course.modules.map((m) =>
+    RICH_LESSONS[m.id] ? { ...m, content: RICH_LESSONS[m.id] } : m,
+  ),
+}));
 
 export function getPremiumCoursesStats() {
   return {

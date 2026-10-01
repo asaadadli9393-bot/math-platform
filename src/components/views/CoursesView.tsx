@@ -4,13 +4,23 @@ import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BookOpen, CheckCircle2, Clock, Crown, Layers, Lock, Sparkles } from 'lucide-react';
-import { CourseCard } from '@/components/course-card';
+import { CourseCard, CourseDetail } from '@/components/course-card';
 import { courses, getCoursesStats, type Course } from '@/data/courses';
 import { premiumCourses, getPremiumCoursesStats } from '@/data/premium-courses';
 
 function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCourse: (c: Course) => void; onSubscribe?: () => void; isSubscribed?: boolean }) {
   const [filterStream, setFilterStream] = React.useState<"ALL" | Course["stream"]>("ALL");
   const [filterLevel, setFilterLevel] = React.useState<"ALL" | Course["level"]>("ALL");
+  const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(null);
+
+  const handleSelectCourse = (c: Course) => {
+    onSelectCourse(c);
+    setSelectedCourse(c);
+  };
+
+  const handleBackToList = () => {
+    setSelectedCourse(null);
+  };
 
   // ✅ فصل المواضيع المميزة (المقفولة بالاشتراك) عن الدورات المجانية
   const allCourses = [...premiumCourses, ...courses];
@@ -27,6 +37,15 @@ function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCo
     if (filterLevel !== "ALL" && c.level !== filterLevel) return false;
     return true;
   });
+
+  // ✅ عند اختيار دورة: نعرض صفحة الدورة الكاملة (الدرس + النقاط + التمارين)
+  if (selectedCourse) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+        <CourseDetail course={selectedCourse} onBack={handleBackToList} />
+      </div>
+    );
+  }
 
   const premiumList = filteredCourses.filter((c) => c.isPremium);
   const freeList = filteredCourses.filter((c) => !c.isPremium);
@@ -175,7 +194,7 @@ function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCo
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {premiumList.map((course) => (
-              <CourseCard key={course.id} course={course} onOpen={onSelectCourse} isSubscribed={isSubscribed} onSubscribe={onSubscribe} />
+              <CourseCard key={course.id} course={course} onOpen={handleSelectCourse} isSubscribed={isSubscribed} onSubscribe={onSubscribe} />
             ))}
           </div>
         </section>
@@ -201,7 +220,7 @@ function CoursesView({ onSelectCourse, onSubscribe, isSubscribed }: { onSelectCo
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {freeList.map((course) => (
-              <CourseCard key={course.id} course={course} onOpen={onSelectCourse} isSubscribed={isSubscribed} onSubscribe={onSubscribe} />
+              <CourseCard key={course.id} course={course} onOpen={handleSelectCourse} isSubscribed={isSubscribed} onSubscribe={onSubscribe} />
             ))}
           </div>
         </section>

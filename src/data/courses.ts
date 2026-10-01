@@ -7,6 +7,8 @@
 //  - يحتوي كل Module على: title, durationMin, content, exercises
 // ============================================================
 
+import { RICH_LESSONS_FREE } from "./course-lessons-rich-f";
+
 export type CourseStream = "ALL" | "EXPERIMENTAL_SCIENCES" | "MATHEMATICS" | "TECHNICAL_MATH";
 
 export type CourseLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "BAC_EXAM";
@@ -2022,12 +2024,20 @@ $$d(O, P) = \\frac{|1 \\cdot 0 + 1 \\cdot 0 + 1 \\cdot 0 - 1|}{\\sqrt{1 + 1 + 1}
 //  تصدير كل الدورات
 // ============================================================
 
-export const courses: Course[] = [
+const baseCourses: Course[] = [
   courseFoundations,
   courseAnalysis,
   courseBacRevision,
   courseComplexGeometry,
 ];
+
+// ✅ إثراء المحتوى المعرفي: كل وحدة لها درس كامل من RICH_LESSONS_FREE
+export const courses: Course[] = baseCourses.map((course) => ({
+  ...course,
+  modules: course.modules.map((m) =>
+    RICH_LESSONS_FREE[m.id] ? { ...m, content: RICH_LESSONS_FREE[m.id] } : m,
+  ),
+}));
 
 // عناوين عربية للشعب والدرجات
 export const courseStreamLabels: Record<CourseStream, string> = {
