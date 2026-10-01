@@ -27,32 +27,43 @@ import {
   PROFESSOR_EMAIL,
   PLANS,
   activate,
+  buildGmailComposeUrl,
   buildRequestMailto,
   daysLeft,
   deactivate,
   formatArDate,
   isPremiumActive,
+  whatsappAvailable,
+  whatsappLink,
   type PlanId,
   useSubscription,
 } from '@/lib/subscription';
+import { EXERCISE_COUNT } from '@/data/exercises';
+import { DEVOIR_PAPERS } from '@/data/devoir-pdfs';
+import { LIBRARY_CHAINS } from '@/data/library-chains';
+import { BAC_SOLUTION_STATS } from '@/data/bac-solutions';
+import { BAC_OFFICIAL_STATS } from '@/data/bac-official';
 
 const YEARS = ['السنة الأولى ثانوي', 'السنة الثانية ثانوي', 'السنة الثالثة ثانوي (بكالوريا)'];
 const PAYMENTS = ['بريدي موب BaridiMob', 'حساب بريدي CCP', 'البطاقة الذهبية CIB', 'سأتفق مع الأستاذ'];
 
+const BAC_SOL_TOTAL = BAC_SOLUTION_STATS.totalExercises + BAC_OFFICIAL_STATS.totalExercises;
+
 const FREE_FEATURES = [
-  'بنك التمارين الكامل بأحلوله النموذجية (1168 تمريناً)',
-  'الفصول والملخصات وصيغ التدرج الرسمية',
-  'الدورات المجانية والاختبارات التفاعلية',
+  `بنك التمارين الكامل بأحلوله النموذجية (${EXERCISE_COUNT} تمريناً)`,
+  'الفصول والملخصات وصيغ التدرج الرسمية — لكل مستوى وشعبة',
+  'الفروض والاختبارات التفاعلية + اختبارات محاكاة للبكالوريا',
+  'المدرّس الذكي تدرّج AI (بحد يومي) + لوحة الرسم GeoGebra',
   'لوحة تتبع التقدم الشخصية',
 ];
 
 const PREMIUM_FEATURES = [
-  'مكتبة الأستاذ الكاملة: 137 وثيقة PDF منتقاة (سلاسل تمارين مع الحلول + مذكرات وملخصات)',
-  'المواضيع والدورات المميزة الكاملة (سلاسل PDF + حلول مفصلة)',
-  'السلاسل المميزة الخاصة من أرشيف الأستاذ',
-  'تجميعيات البكالوريا (2008–2026) حسب المحاور + 46 حل نموذجياً مفصلاً، ومنها التصحيح الرسمي الشامل للموضوعين الرسميين لدورة 2024 بباريم شبكات التصحيح',
-  'حصص Zoom المباشرة الأسبوعية مع الأستاذ',
-  'الوصول لمعرّفات الحصص وتسجيلاتها السابقة',
+  `مكتبة الأستاذ الكاملة: ${LIBRARY_CHAINS.length} وثيقة PDF منتقاة (سلاسل تمارين مع الحلول + مذكرات وملخصات)`,
+  `تجميعات البكالوريا 2008–2026 حسب المحاور + ${BAC_SOL_TOTAL} حل نموذجياً مفصلاً بنفس منهجية شبكات التصحيح`,
+  'التصحيح الرسمي الشامل للموضوعين الرسميين لدورة 2024 وفق شبكات التصحيح',
+  'السلاسل الحصرية الخاصة من أرشيف الأستاذ عدلي اسعد',
+  'الوصول غير المحدود للمدرّس الذكي تدرّج AI',
+  'حصص Zoom المباشرة الأسبوعية مع الأستاذ + تسجيلاتها السابقة',
   'الدعم والمتابعة المباشرة عبر البريد الإلكتروني',
 ];
 
@@ -98,6 +109,34 @@ export default function SubscribeView() {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const requestValid = name.trim().length >= 3 && emailValid;
   const mailto = buildRequestMailto({ name: name.trim(), email: email.trim(), year, plan, payment });
+  const gmailUrl = buildGmailComposeUrl({
+    to: PROFESSOR_EMAIL,
+    subject: `طلب اشتراك — ${PLANS[plan].label} (${PLANS[plan].priceDzd} دج)`,
+    body: [
+      'السلام عليكم أستاذ عدلي،',
+      '',
+      'أرغب في الاشتراك في منصة تدرّج للرياضيات، وهذه بياناتي:',
+      '',
+      `• الاسم الكامل: ${name.trim()}`,
+      `• البريد الإلكتروني: ${email.trim()}`,
+      `• المستوى الدراسي: ${year}`,
+      `• الباقة المطلوبة: ${PLANS[plan].label} — ${PLANS[plan].priceDzd} دج`,
+      `• طريقة الدفع المفضلة: ${payment}`,
+      '',
+      'بانتظار تفاصيل الدفع وكود التفعيل. وشكراً.',
+      '',
+      '— أُرسل هذا الطلب من صفحة الاشتراك في منصة تدرّج',
+    ].join('\n'),
+  });
+  const orderSummary = [
+    `طلب اشتراك — منصة تدرّج للرياضيات`,
+    `الاسم: ${name.trim()}`,
+    `البريد: ${email.trim()}`,
+    `المستوى: ${year}`,
+    `الباقة: ${PLANS[plan].label} — ${PLANS[plan].priceDzd} دج`,
+    `الدفع: ${payment}`,
+    `المرسل إليه: ${PROFESSOR_EMAIL}`,
+  ].join('\n');
 
   const doActivate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,6 +235,12 @@ export default function SubscribeView() {
                   <span className="font-bold text-stone-500">دج / {p.months === null ? 'مرة واحدة' : p.months === 1 ? 'شهر' : 'سنة'}</span>
                 </div>
                 <p className="mt-1 text-xs font-bold text-stone-400">{p.note}</p>
+                {p.id === 'M1' && (
+                  <p className="text-[11px] font-black text-amber-600">≈ 17 دج يومياً — أرخص من قطعة حلوى</p>
+                )}
+                {p.id === 'Y1' && (
+                  <p className="text-[11px] font-black text-amber-600">≈ 8 دج يومياً — أرخص من قطعة حلوى</p>
+                )}
               </CardHeader>
               <CardContent className="space-y-3 pt-2">
                 <ul className="space-y-2">
@@ -214,7 +259,7 @@ export default function SubscribeView() {
                   className={`w-full gap-2 ${popular ? 'bg-amber-400 text-emerald-950 shadow-md shadow-amber-400/25 hover:bg-amber-300' : 'bg-emerald-700 hover:bg-emerald-800'}`}
                 >
                   <Mail className="h-4 w-4" />
-                  طلب هذه الباقة عبر البريد
+                  اطلب هذه الباقة
                 </Button>
               </CardContent>
             </Card>
@@ -368,33 +413,82 @@ export default function SubscribeView() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a
-              href={requestValid ? mailto : undefined}
-              onClick={(e) => {
-                if (!requestValid) e.preventDefault();
-              }}
-              aria-disabled={!requestValid}
-              className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-md transition ${
-                requestValid
-                  ? 'bg-emerald-700 text-white shadow-emerald-700/25 hover:bg-emerald-800 active:scale-[0.99]'
-                  : 'cursor-not-allowed bg-stone-200 text-stone-400'
-              }`}
-            >
-              <Send className="h-4 w-4" />
-              إرسال الطلب عبر البريد الإلكتروني
-            </a>
-            <CopyButton text={PROFESSOR_EMAIL} label="نسخ بريد الأستاذ" />
+          <div className="space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href={requestValid ? mailto : undefined}
+                onClick={(e) => {
+                  if (!requestValid) e.preventDefault();
+                }}
+                aria-disabled={!requestValid}
+                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-md transition ${
+                  requestValid
+                    ? 'bg-emerald-700 text-white shadow-emerald-700/25 hover:bg-emerald-800 active:scale-[0.99]'
+                    : 'cursor-not-allowed bg-stone-200 text-stone-400'
+                }`}
+              >
+                <Send className="h-4 w-4" />
+                إرسال الطلب عبر تطبيق البريد
+              </a>
+              <a
+                href={requestValid ? gmailUrl : undefined}
+                onClick={(e) => {
+                  if (!requestValid) e.preventDefault();
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-disabled={!requestValid}
+                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-md transition ${
+                  requestValid
+                    ? 'bg-white text-red-700 ring-2 ring-red-200 hover:bg-red-50 active:scale-[0.99]'
+                    : 'cursor-not-allowed bg-stone-200 text-stone-400'
+                }`}
+              >
+                <Mail className="h-4 w-4" />
+                إرسال عبر Gmail (الهاتف)
+              </a>
+            </div>
+            {whatsappAvailable() && (
+              <a
+                href={requestValid ? whatsappLink(orderSummary) : undefined}
+                onClick={(e) => {
+                  if (!requestValid) e.preventDefault();
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-disabled={!requestValid}
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-black shadow-md transition ${
+                  requestValid
+                    ? 'bg-[#25D366] text-white shadow-md shadow-[#25D366]/30 hover:bg-[#1fbe5a] active:scale-[0.99]'
+                    : 'cursor-not-allowed bg-stone-200 text-stone-400'
+                }`}
+              >
+                <Send className="h-4 w-4" />
+                إرسال الطلب عبر واتساب — الأسرع
+              </a>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <CopyButton text={PROFESSOR_EMAIL} label="نسخ بريد الأستاذ" />
+              <CopyButton text={orderSummary} label="نسخ بيانات الطلب" />
+            </div>
           </div>
           {!requestValid && (
-            <p className="text-xs font-bold text-stone-400">* أدخل الاسم الكامل وبريداً صحيحاً لتفعيل زر الإرسال.</p>
+            <p className="text-xs font-bold text-stone-400">* أدخل الاسم الكامل وبريداً صحيحاً لتفعيل أزرار الإرسال.</p>
           )}
-          <div className="flex items-start gap-2 rounded-xl bg-emerald-50/70 p-3 text-sm text-emerald-900">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
-            <p className="leading-6">
-              يُرسل الطلب إلى بريد الأستاذ المشرف:{' '}
-              <span dir="ltr" className="font-black">{PROFESSOR_EMAIL}</span> — إن لم يفتح تطبيق البريد تلقائياً، انسخ العنوان وأرسل بياناتك يدوياً.
-            </p>
+          <div className="grid gap-2 text-sm sm:grid-cols-2">
+            <div className="flex items-start gap-2 rounded-xl bg-emerald-50/70 p-3 text-emerald-900">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
+              <p className="leading-6">
+                زر Gmail يعمل مباشرة على الهاتف حتى لو لم يكن تطبيق بريد مُهيّأً — وإن فشل الجميع انسخ بيانات الطلب وأرسلها يدوياً إلى{' '}
+                <span dir="ltr" className="font-black">{PROFESSOR_EMAIL}</span>.
+              </p>
+            </div>
+            <div className="flex items-start gap-2 rounded-xl bg-amber-50/80 p-3 text-amber-900">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
+              <p className="leading-6">
+                يرد الأستاذ على طلبك بتفاصيل الدفع خلال 24 ساعة كأقصى حد (عادة أسرع بكثير)، وبعد تأكيد الدفع يصلك كود التفعيل في بريدك وتُفتح كل المزايا فوراً.
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -480,14 +574,23 @@ export default function SubscribeView() {
             <h4 className="mb-1 font-black text-stone-800">هل يعمل الاشتراك على كل أجهزتي؟</h4>
             <p>يُنشَّط الاشتراك على الجهاز الذي أدخلت فيه الكود (بدون حساب أو كلمة سر). إن غيّرت جهازاً، راسل الأستاذ على البريد وسيعيد إرسال الكود لك.</p>
           </div>
-          <div className="flex items-center gap-2 rounded-xl bg-stone-50 p-3 text-stone-700">
+          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-stone-50 p-3 text-stone-700">
             <Lock className="h-4 w-4 shrink-0 text-stone-400" />
-            <span>
-              للاستفسار التجاري أو التقني:{' '}
-              <a href={`mailto:${PROFESSOR_EMAIL}`} dir="ltr" className="font-black text-emerald-700 hover:underline">
-                {PROFESSOR_EMAIL}
+            <span>للاستفسار التجاري أو التقني:</span>
+            <a href={`mailto:${PROFESSOR_EMAIL}`} dir="ltr" className="font-black text-emerald-700 hover:underline">
+              {PROFESSOR_EMAIL}
+            </a>
+            {whatsappAvailable() && (
+              <a
+                href={whatsappLink('السلام عليكم أستاذ، عندي استفسار حول اشتراك منصة تدرّج للرياضيات.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-black text-white shadow-sm transition hover:bg-[#1fbe5a]"
+              >
+                <Send className="h-3 w-3" />
+                واتساب
               </a>
-            </span>
+            )}
           </div>
         </CardContent>
       </Card>

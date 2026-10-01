@@ -16,6 +16,37 @@ import { useSyncExternalStore } from 'react';
 
 export const PROFESSOR_EMAIL = 'asaadadli9393@gmail.com';
 
+/**
+ * رقم واتساب الأستاذ بالصيغة الدولية بدون + وبدون أصفار بادئة
+ * مثال: '213555123456' — اتركه فارغاً لإخفاء أزرار واتساب من الواجهة.
+ * لتفعيله: اكتب الرقم هنا ثم أعد النشر.
+ */
+export const PROFESSOR_WHATSAPP = '';
+
+/** هل أزرار واتساب مفعّلة؟ */
+export function whatsappAvailable(): boolean {
+  return PROFESSOR_WHATSAPP.trim().replace(/\D/g, '').length >= 8;
+}
+
+/** رابط واتساب برسالة جاهزة */
+export function whatsappLink(text: string): string {
+  const num = PROFESSOR_WHATSAPP.trim().replace(/\D/g, '');
+  return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+}
+
+/**
+ * رابط إنشاء رسالة Gmail مباشرة — يعمل حتى لو لم يُهيأ تطبيق البريد
+ * على هاتف التلميذ (أغلب التلاميذ يستعملون Gmail على الهاتف).
+ */
+export function buildGmailComposeUrl(opts: { to: string; subject: string; body: string }): string {
+  return (
+    'https://mail.google.com/mail/?view=cm&fs=1' +
+    `&to=${encodeURIComponent(opts.to)}` +
+    `&su=${encodeURIComponent(opts.subject)}` +
+    `&body=${encodeURIComponent(opts.body)}`
+  );
+}
+
 /* ---------------- الباقات ---------------- */
 
 export type PlanId = 'M1' | 'M3' | 'Y1' | 'LT';

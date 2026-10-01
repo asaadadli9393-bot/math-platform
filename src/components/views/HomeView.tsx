@@ -1,32 +1,57 @@
 'use client';
 
 import Image from 'next/image';
-import { BookOpenCheck, Bot, CalendarRange, Database, GraduationCap, Layers, Target, Trophy, UserCheck } from 'lucide-react';
+import { useState, useSyncExternalStore } from 'react';
+import {
+  ArrowDown,
+  BookOpen,
+  BookOpenCheck,
+  Bot,
+  CalendarRange,
+  CheckCircle2,
+  ClipboardList,
+  Crown,
+  Database,
+  GraduationCap,
+  Layers,
+  Lightbulb,
+  Lock,
+  Sparkles,
+  Spline,
+  Target,
+  Trophy,
+  UserCheck,
+} from 'lucide-react';
 import { chaptersOfYear } from '@/data/chapters';
-import { exercisesOfYear } from '@/data/exercises';
-import { LEVELS, streamsOfYear, type YearId } from '@/data/curriculum';
+import { exercisesOfYear, EXERCISE_COUNT } from '@/data/exercises';
+import { LEVELS, type YearId } from '@/data/curriculum';
+import { DEVOIR_PAPERS } from '@/data/devoir-pdfs';
+import { CHAIN_PDFS, BAC_COMPILATIONS } from '@/data/chain-pdfs';
+import { LIBRARY_CHAINS } from '@/data/library-chains';
+import { BAC_SOLUTION_CHAINS, BAC_SOLUTION_STATS } from '@/data/bac-solutions';
+import { BAC_OFFICIAL_STATS } from '@/data/bac-official';
 import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
-import { RichText } from '@/lib/tex';
+import { MathText } from '@/components/math-renderer';
 
-const HERO_FORMULAS: Record<YearId, string[]> = {
-  '1as': [
-    'القسمة الإقليدية: $a=bq+r,\\; 0\\leq r<b$',
-    'المتطابقات: $(a-b)(a+b)=a^2-b^2$',
-    'دائرة مركزها $(a,b)$: $(x-a)^2+(y-b)^2=r^2$',
-    'الوسط المرجح: $\\bar{x}=\\dfrac{1}{N}\\sum n_i x_i$',
-  ],
-  '2as': [
-    'اشتقاق جداء: $(uv)\'=u\'v+uv\'$',
-    'مستقيم مقارب أفقي: $\\lim_{x\\to\\pm\\infty}f(x)=\\ell$',
-    'الجداء السلمي: $\\vec{u}\\cdot\\vec{v}=\\|\\vec{u}\\|\\,\\|\\vec{v}\\|\\cos\\theta$',
-    'متتالية حسابية: $u_n=u_0+nr$',
-  ],
-  '3as': [
-    'النهاية المرجعية: $\\lim_{x\\to 0}\\dfrac{\\ln(1+x)}{x}=1$',
-    'المكاملة بالتجزئة: $\\int_a^b u\'v\\,dx=[uv]_a^b-\\int_a^b uv\'\\,dx$',
-    'قانون ذا الحدين: $P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}$',
-    'الدوران المركب: $z\'=e^{i\\theta}(z-\\omega)+\\omega$',
-  ],
+/* موعد بكالوريا 2027 (تقريبي — أول أسبوع يونيو) لحساب العدّ التنازلي */
+const BAC_2027_ISO = '2027-06-06T08:00:00+01:00';
+
+const emptySubscribe = () => () => {};
+function getDaysSnapshot(): number {
+  return Math.max(0, Math.ceil((new Date(BAC_2027_ISO).getTime() - Date.now()) / 86400000));
+}
+function getDaysServerSnapshot(): number | null {
+  return null;
+}
+/** عدّ تنازلي لبكالوريا 2027 — يُحسب على العميل فقط لتفادي اختلاف الخادم */
+function useDaysToBac(): number | null {
+  return useSyncExternalStore(emptySubscribe, getDaysSnapshot, getDaysServerSnapshot);
+}
+
+const HERO_HEADLINE: Record<YearId, string> = {
+  '1as': 'ابدأ الرياضيات بأساس متين — التفوق في البكالوريا يُبنى من السنة الأولى',
+  '2as': 'سنتك الحاسمة: رسّخ الأساسات الآن وارفع معدلك في الرياضيات',
+  '3as': 'طريقك إلى بكالوريا رياضيات ممتازة يبدأ من هنا',
 };
 
 const HERO_SUB: Record<YearId, string> = {
@@ -35,59 +60,122 @@ const HERO_SUB: Record<YearId, string> = {
   '3as': 'السنة الثالثة ثانوي — التحضير للبكالوريا',
 };
 
+/** التمرين المعروض في «عارض الجودة» — أول حل من سلاسل حلول البكالوريا */
+const SHOWCASE_CHAIN = BAC_SOLUTION_CHAINS[0];
+const SHOWCASE_EX = SHOWCASE_CHAIN.exercises[0];
+
+export type HomeViewTarget =
+  | 'curriculum'
+  | 'chapters'
+  | 'bank'
+  | 'quiz'
+  | 'dashboard'
+  | 'aitutor'
+  | 'graphing'
+  | 'chains'
+  | 'exams'
+  | 'subscribe';
+
 export default function HomeView({
   year,
   onNavigate,
   onSetLevel,
 }: {
   year: YearId;
-  onNavigate: (
-    view: 'curriculum' | 'chapters' | 'bank' | 'quiz' | 'dashboard' | 'aitutor' | 'graphing',
-    chapterId?: string,
-  ) => void;
+  onNavigate: (view: HomeViewTarget, chapterId?: string) => void;
   onSetLevel: (l: YearId) => void;
 }) {
   const chapters = chaptersOfYear(year);
   const exercises = exercisesOfYear(year);
-  const streams = streamsOfYear(year);
-  const totalHours = streams.reduce((s, st) => s + st.totalHours, 0);
-  const bacCount = exercises.filter((e) => e.difficulty === 'بكالوريا').length;
   const level = LEVELS.find((l) => l.id === year)!;
+  const daysToBac = useDaysToBac();
+  const [showSolution, setShowSolution] = useState(false);
+
+  const docsCount = LIBRARY_CHAINS.length + CHAIN_PDFS.length + BAC_COMPILATIONS.length;
+  const bacSolCount = BAC_SOLUTION_STATS.totalExercises + BAC_OFFICIAL_STATS.totalExercises;
 
   const stats = [
-    { icon: Layers, value: `${chapters.length}`, label: 'فصلاً دراسياً' },
-    { icon: Database, value: `${exercises.length}`, label: 'تمريناً بحل نموذجي' },
-    { icon: GraduationCap, value: `${streams.length}`, label: 'شعب مغطاة' },
-    { icon: CalendarRange, value: `${totalHours}`, label: 'ساعة في التدرج الرسمي' },
+    { icon: Database, value: `${EXERCISE_COUNT}`, label: 'تمرين بحل نموذجي مفصّل' },
+    { icon: ClipboardList, value: `${DEVOIR_PAPERS.length}`, label: 'ورقة فرض واختبار حقيقية' },
+    { icon: Layers, value: `${docsCount}`, label: 'وثيقة وسلسلة PDF منتقاة' },
+    { icon: Trophy, value: `${bacSolCount}`, label: 'حلاً نموذجياً لمواضيع البكالوريا' },
   ];
 
   const features = [
     {
+      icon: Trophy,
+      title: 'مواضيع البكالوريا 2008–2026 مع الحلول',
+      desc: 'تجميعات أسئلة البكالوريا الحقيقية مرتبة حسب المحاور، مقرونة بحلول نموذجية مفصلة بنفس منهجية شبكات التصحيح الرسمية — من الدورة الأولى إلى الأحدث.',
+      view: 'chains' as const,
+      highlight: true,
+    },
+    {
+      icon: BookOpenCheck,
+      title: 'سلاسل دروس الدعم',
+      desc: 'سلاسل PDF لكل فصل: من التمارين الأساسية إلى أنماط الامتحانات، مع الحلول النموذجية والتمثيلات البيانية — تُدرَّس بها القاعدة ثم تُحلّ بها.',
+      view: 'chains' as const,
+    },
+    {
+      icon: ClipboardList,
+      title: 'أرشيف الفروض والاختبارات الحقيقية',
+      desc: `${DEVOIR_PAPERS.length} ورقة عبر مواسم دراسية كاملة من أرشيف الأستاذ: فروض مراقبة مستمرة، اختبارات فصلية، واختبارات محاكاة للبكالوريا — للسنتين الأولى والثانية والثالثة.`,
+      view: 'exams' as const,
+    },
+    {
+      icon: BookOpen,
+      title: 'دورات مبسّطة من الصفر',
+      desc: 'دروس مكتوبة بأسلوب سهل مع أمثلة محلولة وتمارين تطبيقية تتفاعل معها داخل المنصة — للفهم قبل الحفظ، ومن التمرين إلى الامتحان.',
+      view: 'courses' as const,
+    },
+    {
       icon: Bot,
       title: 'المدرّس الذكي — تدرّج AI',
-      desc: 'مساعد ذكاء اصطناعي خاص بالمنصة: يشرح الدروس ويرشدك خطوة بخطوة لحل التمارين بمنهجية البكالوريا، بصيغ رياضية دقيقة ويعرف مستواك الدراسي. مجاني بحد يومي، وغير محدود للمشتركين.',
+      desc: 'اسأله أي سؤال في الرياضيات وسيشرحه لك خطوة بخطوة بمنهجية البكالوريا ويعرف مستواك الدراسي. جرّبه مجاناً الآن — وغير محدود للمشتركين.',
       view: 'aitutor' as const,
       highlight: true,
     },
     {
-      icon: CalendarRange,
-      title: 'متوافقة مع تدرج 2022-2023',
-      desc: 'بنية الفصول وترتيبها وأحجامها الساعية مستخرجة مباشرة من وثيقة التدرجات السنوية الرسمية الصادرة عن المفتشية العامة للتربية الوطنية، لكل شعبة وعلى كل مستوى من السنوات الثلاث.',
+      icon: Spline,
+      title: 'لوحة الرسم — GeoGebra',
+      desc: 'ارسم الدوال والتمثيلات البيانية مباشرة من المتصفح لتفهم سلوك الدالة: المقاربات، التقعر، نقاط التقاطع — أداة الأستاذ بين يديك.',
+      view: 'graphing' as const,
+    },
+  ];
+
+  const steps = [
+    {
+      n: '1',
+      title: 'اختر مستواك وشعبتك',
+      desc: 'أولى، ثانية، أو ثالثة ثانوي — المنصة تضبط نفسها على فصولك وترتيب التدرج الرسمي لشعبتك تلقائياً.',
     },
     {
-      icon: Database,
-      title: 'بنك تمارين شامل ومصنّف',
-      desc: 'كل تمرين موسوم بالفصل والصعوبة والنوع والشعب المستهدفة، مع حل نموذجي مفصل خطوة بخطوة وتلميح قبل الحل، وتمارين مختارة بأنماط الفروض والاختبارات والبكالوريا.',
+      n: '2',
+      title: 'تمرّن بالحلول النموذجية',
+      desc: 'حل التمرين أولاً، ثم اكشف الحل النموذجي خطوة بخطوة وقارن منهجيتك بالمنهجية الرسمية — هذا سرّ رفع المعدل.',
     },
     {
-      icon: BookOpenCheck,
-      title: 'ملخصات وصيغ أساسية',
-      desc: 'لكل فصل ملخص منظّم للتعريفات والمبرهنات والصيغ الجوهرية بعرض رياضي دقيق (KaTeX)، ليكون مرجعك السريع قبل الحل.',
+      n: '3',
+      title: 'تتبّع تقدمك حتى البكالوريا',
+      desc: 'سجّل نتائجك، راقب نسبة إنجاز كل فصل، وأنشئ اختبارات محاكاة — تدخل قاعة الامتحان وأنت تعرف مستواك بالأرقام.',
+    },
+  ];
+
+  const faq = [
+    {
+      q: 'هل المحتوى المجاني كافٍ للمذاكرة؟',
+      a: 'نعم — بنك التمارين كاملاً بحلوله النموذجية، والفصول والملخصات، والفروض والاختبارات التفاعلية، والمدرس الذكي (بحد يومي): كلها مجانية بدون تسجيل. المميز يفتح مكتبة الأستاذ الكاملة (137 وثيقة)، وحلول البكالوريا الكاملة، والسلاسل الحصرية، وحصص Zoom المباشرة.',
     },
     {
-      icon: Trophy,
-      title: 'اختبار وتتبع للتقدم',
-      desc: 'أنشئ اختباراً مخصصاً من بنك التمارين حسب شعبتك ومستواك، وسجّل تقدمك تلقائياً: التمارين المنجزة، نتائج الاختبارات، ونسبة إتمام كل فصل.',
+      q: 'كيف أدفع ثمن الاشتراك؟',
+      a: 'بريدي موب BaridiMob أو حساب بريدي CCP أو البطاقة الذهبية — ترسل طلبك من صفحة الاشتراك، يرد عليك الأستاذ بتفاصيل الدفع خلال 24 ساعة كأقصى حد، وبعد الدفع يصلك كود التفعيل في بريدك وتُفتح كل المزايا فوراً.',
+    },
+    {
+      q: 'هل الحلول مفصّلة فعلاً؟',
+      a: 'انزل إلى قسم «شاهد الجودة بعينك» في هذه الصفحة واكشف حلاً نموذجياً كاملاً مجاناً — هو نفسه مستوى التفصيل في كل حلول المنصة: كل خطوة مبررة كما يصححها أستاذ البكالوريا.',
+    },
+    {
+      q: 'هل تعمل المنصة على الهاتف؟',
+      a: 'نعم، صُمّمت المنصة أولاً للهاتف: المعادلات الرياضية تُعرض بجودة عالية، الحلول قابلة للقراءة بوضوح، وتقدمك محفوظ تلقائياً على جهازك.',
     },
   ];
 
@@ -98,41 +186,48 @@ export default function HomeView({
         <div className="hero-grid absolute inset-0" />
         <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-16 h-80 w-80 rounded-full bg-teal-400/10 blur-3xl" />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
           <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
             <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-sm font-semibold text-emerald-200">
-                <Target className="h-4 w-4" />
-                السنوات الأولى والثانية والثالثة ثانوي — تدرج 2022-2023
-              </div>
-              <h1 className="text-4xl font-black leading-[1.25] sm:text-5xl lg:text-[3.4rem]">
-                منصة <span className="text-amber-300">تدرّج</span> للرياضيات
-                <span className="mt-2 block text-2xl font-bold text-emerald-100 sm:text-3xl">
-                  {HERO_SUB[year]} — بنك تمارين شامل بالحلول
+              <div className="mb-5 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-400/15 px-4 py-1.5 text-sm font-bold text-amber-200">
+                  <Trophy className="h-4 w-4" />
+                  {daysToBac === null ? 'بكالوريا 2027' : `بكالوريا 2027 — متبقّى ${daysToBac} يوماً`}
                 </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 text-sm font-semibold text-emerald-200">
+                  <Target className="h-4 w-4" />
+                  {HERO_SUB[year]}
+                </span>
+              </div>
+              <h1 className="text-3xl font-black leading-[1.35] sm:text-4xl lg:text-[2.9rem] lg:leading-[1.3]">
+                {HERO_HEADLINE[year]}
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-emerald-100/90 sm:text-lg">
-                {chapters.length} فصلاً مرتباً وفق التدرج الرسمي، و{exercises.length} تمريناً مصنفاً بالصعوبة والنوع مع حلول
-                نموذجية مفصلة، وملخصات وصيغ أساسية لكل فصل — تغطية كاملة لشعب مستوى {level.name}.
+                {EXERCISE_COUNT} تمرين مصنّف بالفصل والصعوبة مع حلول نموذجية مفصلة خطوة بخطوة، و{DEVOIR_PAPERS.length} ورقة فرض
+                واختبار حقيقية عبر المواسم، و{docsCount} وثيقة وسلسلة PDF منتقاة، و{bacSolCount} حلاً نموذجياً لمواضيع البكالوريا
+                2008–2026 — كل ذلك تحت إشراف الأستاذ عدلي اسعد.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <button
                   onClick={() => onNavigate('bank')}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-base font-extrabold text-emerald-950 shadow-lg shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3.5 text-base font-extrabold text-emerald-950 shadow-lg shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
                 >
                   <BookOpenCheck className="h-5 w-5 transition group-hover:-translate-x-0.5" />
-                  ابدأ من بنك التمارين
+                  ابدأ التمرن مجاناً الآن
                 </button>
-                <button
-                  onClick={() => onNavigate('curriculum')}
-                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/30 bg-white/5 px-6 py-3 text-base font-bold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.98]"
+                <a
+                  href="#quality-showcase"
+                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/30 bg-white/5 px-6 py-3.5 text-base font-bold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.98]"
                 >
-                  <CalendarRange className="h-5 w-5" />
-                  استعرض التدرج السنوي
-                </button>
+                  <Lightbulb className="h-5 w-5 text-amber-300" />
+                  شاهد حلاً نموذجياً للبكالوريا
+                  <ArrowDown className="h-4 w-4" />
+                </a>
               </div>
-              <p className="mt-6 text-xs text-emerald-200/70">
-                المصدر: التدرجات السنوية — المادة: رياضيات — {level.name} — سبتمبر 2022 — وزارة التربية الوطنية.
+              <p className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-emerald-200/80">
+                <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> بدون تسجيل — افتح وتمرّن فوراً</span>
+                <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> المحتوى الأساسي مجاني 100%</span>
+                <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> مصمّمة للهاتف أولاً</span>
               </p>
             </div>
 
@@ -156,15 +251,15 @@ export default function HomeView({
                 </div>
                 <h2 className="text-xl font-black text-white">الأستاذ عدلي اسعد</h2>
                 <p className="mt-1 text-xs leading-6 text-emerald-100/80">
-                  أستاذ مادة الرياضيات بالتعليم الثانوي — مؤلف منصة math-adli — يشرف بيداغوجياً على محتوى «تدرّج»:
-                  مواءمة الفصول مع التدرجات الرسمية، ومتابعة جودة الحلول النموذجية.
+                  أستاذ مادة الرياضيات بالتعليم الثانوي — يشرف بيداغوجياً على كل محتوى «تدرّج»: اختيار التمارين، جودة الحلول
+                  النموذجية، ومواءمة الفصول مع التدرجات الرسمية لكل شعبة.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {stats.map((s) => (
               <div
                 key={s.label}
@@ -179,19 +274,146 @@ export default function HomeView({
         </div>
       </section>
 
+      {/* ============ عارض الجودة — حل نموذجي مجاني ============ */}
+      <section id="quality-showcase" className="scroll-mt-20 bg-white py-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <SectionTitle
+            eyebrow="شاهد الجودة بعينك — قبل أن تدفع دجّاً واحداً"
+            title="هكذا تبدو حلولنا النموذجية"
+            sub="هذا حل كامل لتمرين من نمط بكالوريا المتتاليات — اكشف الحل بنفسك وقيّم مستوى التفصيل. نفس المستوى بالضبط في كل حلول المنصة."
+          />
+          <div className="overflow-hidden rounded-2xl border-2 border-emerald-200 bg-white shadow-lg shadow-emerald-100/60">
+            <div className="flex flex-wrap items-center gap-2 border-b border-emerald-100 bg-gradient-to-l from-emerald-50 to-teal-50/60 px-4 py-3 sm:px-5">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-l from-emerald-700 to-teal-800 px-3 py-1.5 text-xs font-black text-white shadow-sm">
+                <Trophy className="h-3.5 w-3.5" />
+                نمط بكالوريا — المتتاليات العددية
+              </span>
+              <span className="rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-extrabold text-emerald-800 ring-1 ring-emerald-200">
+                معاينة مجانية كاملة
+              </span>
+              <span className="mr-auto hidden text-[11px] font-bold text-stone-400 sm:block">{SHOWCASE_CHAIN.title}</span>
+            </div>
+            <div className="px-4 py-5 text-[15px] leading-9 text-stone-800 sm:px-6">
+              <MathText content={SHOWCASE_EX.statement} />
+            </div>
+            <div className="border-t border-amber-100 bg-amber-50/60 px-4 py-2.5 text-xs leading-7 text-amber-900 sm:px-6">
+              <span className="font-black">تلميح: </span>
+              <MathText content={SHOWCASE_EX.hint ?? ''} />
+            </div>
+            <div className="px-4 py-4 sm:px-6">
+              {!showSolution ? (
+                <button
+                  onClick={() => setShowSolution(true)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-md shadow-emerald-700/25 transition hover:bg-emerald-800 active:scale-[0.98]"
+                >
+                  <Lightbulb className="h-4 w-4" />
+                  اكشف الحل النموذجي كاملاً — مجاناً
+                </button>
+              ) : (
+                <div className="border-t border-emerald-100 bg-emerald-50/50 px-4 py-4 sm:-mx-4 sm:-mb-4 sm:px-6">
+                  <h5 className="mb-2 flex items-center gap-2 text-xs font-black text-emerald-900">
+                    <span className="inline-flex h-5 items-center rounded-md bg-emerald-700 px-2 text-[10px] text-white">
+                      الحل النموذجي
+                    </span>
+                    مفصّل خطوة بخطوة
+                  </h5>
+                  <div className="math-scroll min-w-0 text-[15px] leading-9 text-stone-800">
+                    <MathText content={SHOWCASE_EX.solution} />
+                  </div>
+                  <div className="mt-5 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center">
+                    <Lock className="h-5 w-5 shrink-0 text-amber-600" />
+                    <p className="flex-1 text-sm font-bold leading-6 text-amber-900">
+                      هذا التمرين مجاني للمعاينة — باقي الـ {BAC_SOLUTION_STATS.totalExercises} حلاً النموذجياً لمواضيع البكالوريا
+                      2008–2026 بانتظارك مع الاشتراك المميز.
+                    </p>
+                    <button
+                      onClick={() => onNavigate('subscribe')}
+                      className="shrink-0 rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                    >
+                      اشترك وافتح كل الحلول
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ Features ============ */}
+      <section className="paper bg-stone-50 py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionTitle
+            eyebrow="كل ما تحتاجه لرفع معدلك"
+            title="منصة واحدة تغنيك عن ملاح الورق والمواقع المتفرقة"
+            sub="مواضيع البكالوريا، سلاسل الدعم، أرشيف الفروض، الدورات المبسّطة، مدرس ذكي، ولوحة رسم — كل أدوات النجاح في مكان واحد ومنظّمة حسب فصولك."
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((f) => (
+              <button
+                key={f.title}
+                onClick={() => onNavigate(f.view)}
+                className={`group rounded-2xl border border-stone-200 bg-white p-6 text-right shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100 ${
+                  'highlight' in f && f.highlight ? 'ring-2 ring-emerald-500/30 hover:ring-emerald-500/60' : ''
+                }`}
+              >
+                <div className="mb-4 inline-flex rounded-xl bg-emerald-100 p-3 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
+                  <f.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-lg font-extrabold text-stone-900">{f.title}</h3>
+                <p className="text-sm leading-7 text-stone-600">{f.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ 3 خطوات ============ */}
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionTitle
+            eyebrow="خطتك للنجاح"
+            title="3 خطوات فقط تفصلك عن مستوى جديد"
+            sub="منهجية بسيطة يعتمدها الأوائل: فهم من الملخص، ترسّخ بالتمرين، ثم قياس مستمر حتى يوم الامتحان."
+          />
+          <div className="grid gap-5 md:grid-cols-3">
+            {steps.map((s, i) => (
+              <div key={s.n} className="relative rounded-2xl border border-stone-200 bg-stone-50/60 p-6">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-xl font-black text-white shadow-md shadow-emerald-600/25">
+                  {s.n}
+                </div>
+                <h3 className="mb-2 text-lg font-extrabold text-stone-900">{s.title}</h3>
+                <p className="text-sm leading-7 text-stone-600">{s.desc}</p>
+                {i < steps.length - 1 && (
+                  <ArrowDown className="absolute -bottom-7 right-1/2 hidden h-6 w-6 translate-x-1/2 text-stone-300 md:block" />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => onNavigate('quiz')}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-md transition hover:bg-emerald-800 active:scale-[0.98]"
+            >
+              <Sparkles className="h-4 w-4" />
+              جرّب الآن: أنشئ اختباراً مجانياً من بنك التمارين
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* ============ Level chooser ============ */}
-      <section className="bg-white py-14">
+      <section className="bg-stone-50 py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
             eyebrow="السنوات الثلاث"
-            title="اختر مستواك الدراسي"
-            sub="المنصة تغطي السنوات الثلاث معاً: تدرج رسمي، فصول، ملخصات وبنك تمارين لكل سنة وشعبة — اختر مستواك للانتقال إلى محتواه."
+            title="ابدأ من مستواك الدراسي"
+            sub="تدرج رسمي، فصول، ملخصات، سلاسل وبنك تمارين لكل سنة وشعبة — اضغط مستواك للانتقال إليه مباشرة."
           />
           <div className="grid gap-4 md:grid-cols-3">
             {LEVELS.map((l) => {
               const chCount = chaptersOfYear(l.id).length;
               const exCount = exercisesOfYear(l.id).length;
-              const stCount = streamsOfYear(l.id).length;
               const active = l.id === year;
               return (
                 <button
@@ -213,7 +435,7 @@ export default function HomeView({
                     </span>
                     {active && (
                       <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-black text-amber-800 ring-1 ring-amber-200">
-                        المستوى الحالي
+                        مستواك الحالي
                       </span>
                     )}
                   </div>
@@ -221,52 +443,11 @@ export default function HomeView({
                   <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-extrabold text-stone-500">
                     <span className="rounded-lg bg-stone-100 px-2.5 py-1">{chCount} فصول</span>
                     <span className="rounded-lg bg-stone-100 px-2.5 py-1">{exCount} تمارين</span>
-                    <span className="rounded-lg bg-stone-100 px-2.5 py-1">{stCount} شعب</span>
+                    <span className="rounded-lg bg-stone-100 px-2.5 py-1">ملخصات وصيغ</span>
                   </div>
                 </button>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ Features ============ */}
-      <section className="paper bg-stone-50 py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionTitle
-            eyebrow="لماذا منصة تدرّج؟"
-            title="أدوات مصممة للنجاح والتفوق"
-            sub="بنيت المنصة حول ثلاثة مرتكزات: الوفاء بالتدرج الرسمي في الترتيب والحجم الساعي لكل سنة وشعبة، تمارين متدرجة الصعوبة بحلول نموذجية، وتتبع شخصي لتقدمك في كل فصل."
-          />
-          <div className="grid gap-5 sm:grid-cols-2">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                onClick={f.view ? () => onNavigate(f.view) : undefined}
-                role={f.view ? 'button' : undefined}
-                tabIndex={f.view ? 0 : undefined}
-                onKeyDown={
-                  f.view
-                    ? (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') onNavigate(f.view);
-                      }
-                    : undefined
-                }
-                className={`group rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100 ${
-                  f.view ? 'cursor-pointer' : ''
-                } ${
-                  'highlight' in f && f.highlight
-                    ? 'ring-2 ring-emerald-500/30 hover:ring-emerald-500/60'
-                    : ''
-                }`}
-              >
-                <div className="mb-4 inline-flex rounded-xl bg-emerald-100 p-3 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
-                  <f.icon className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 text-lg font-extrabold text-stone-900">{f.title}</h3>
-                <p className="text-sm leading-7 text-stone-600">{f.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -276,8 +457,8 @@ export default function HomeView({
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
             eyebrow={`فصول ${level.name}`}
-            title={`${chapters.length} فصلاً وفق ترتيب التدرج`}
-            sub="مرتبة كما وردت في جداول بناء التعلمات للوثيقة الرسمية — اضغط أي فصل لملخصه وصيغه وتمارينه."
+            title={`${chapters.length} فصلاً — ملخّص وصيغ وتمارين لكل فصل`}
+            sub="مرتبة وفق التدرج الرسمي: اضغط أي فصل لتقرأ ملخصه وصيغه الجوهرية ثم تمرّن على تمارينه بالحلول."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {chapters.map((c, i) => {
@@ -328,51 +509,133 @@ export default function HomeView({
         </div>
       </section>
 
-      {/* ============ Streams ============ */}
-      <section className="bg-stone-50 py-16">
+      {/* ============ سلّم القيمة: مجاني أم مميز ============ */}
+      <section className="bg-gradient-to-b from-stone-50 to-white py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionTitle
-            eyebrow={`شعب ${level.name}`}
-            title="مغطاة بالكامل وفق الوثيقة"
-            sub="لكل شعبة تدرجها الأسبوعي الخاص بأحجامها الساعية، مع معالجات بيداغوجية والفصول الموازية بين الشعب."
+            eyebrow="مجاني أم مميز؟ أنت تقرر"
+            title="ابدأ مجاناً — وارقِ فقط عندما تحتاج المكتبة الكاملة"
+            sub="لا فخ ولا رسوم خفية: المحتوى الأساسي مجاني للأبد بدون تسجيل، والاشتراك يفتح أرشيف الأستاذ الكامل وحلول البكالوريا التفصيلية."
           />
-          <div className={`grid gap-4 ${streams.length <= 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-5'}`}>
-            {streams.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => onNavigate('curriculum')}
-                className="rounded-2xl border border-stone-200 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg"
-              >
-                <div className={`mx-auto mb-3 inline-flex rounded-full border px-3 py-1 text-xs font-bold ${s.color}`}>
-                  {s.shortName}
-                </div>
-                <div className="text-2xl font-black text-stone-900">{s.weeklyHours}س</div>
-                <div className="text-xs font-bold text-stone-500">أسبوعياً × {s.totalWeeks} أسبوعاً</div>
-                <div className="mt-2 text-sm font-extrabold text-emerald-700">{s.totalHours} ساعة إجمالاً</div>
-              </button>
-            ))}
-          </div>
-          <div className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 sm:p-8">
-            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-              <Trophy className="h-10 w-10 shrink-0 text-amber-500" />
-              <div className="flex-1">
-                <h3 className="text-lg font-extrabold text-stone-900">
-                  {bacCount > 0
-                    ? `جاهز للاختبار؟ ${bacCount} تمارين من نمط البكالوريا بانتظارك`
-                    : 'جاهز للتمرن؟ اختبر نفسك الآن من بنك التمارين'}
-                </h3>
-                <p className="mt-1 text-sm leading-7 text-stone-600">
-                  أنشئ اختباراً مخصصاً من بنك التمارين حسب شعبتك وعدد الأسئلة، وسجل نتيجتك في لوحة التقدم.
-                </p>
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="rounded-2xl border-2 border-stone-200 bg-white p-6 sm:p-8">
+              <div className="mb-1 flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                <h3 className="text-xl font-black text-stone-900">الباقة المجانية</h3>
               </div>
+              <div className="mb-5 text-3xl font-black text-emerald-700">
+                0 دج <span className="text-sm font-bold text-stone-400">للأبد — بدون تسجيل</span>
+              </div>
+              <ul className="space-y-2.5 text-sm leading-7 text-stone-600">
+                {[
+                  `بنك ${EXERCISE_COUNT} تمرين بالحلول النموذجية المفصلة`,
+                  'كل الفصول والملخصات والصيغ الجوهرية',
+                  'الفروض والاختبارات التفاعلية + محاكاة البكالوريا',
+                  'المدرّس الذكي تدرّج AI (بحد يومي) + لوحة الرسم',
+                  'تتبّع تقدمك الشخصي على جهازك',
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-1.5 h-4 w-4 shrink-0 text-emerald-600" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
               <button
-                onClick={() => onNavigate('quiz')}
-                className="shrink-0 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-md transition hover:bg-emerald-800 active:scale-[0.98]"
+                onClick={() => onNavigate('bank')}
+                className="mt-6 w-full rounded-xl border-2 border-emerald-700 px-6 py-3 text-sm font-extrabold text-emerald-800 transition hover:bg-emerald-50 active:scale-[0.98]"
               >
-                أنشئ اختباراً
+                ابدأ التمرن مجاناً
+              </button>
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400 bg-gradient-to-b from-amber-50/80 to-white p-6 shadow-lg shadow-amber-400/10 sm:p-8">
+              <div className="absolute left-0 top-0 rounded-br-xl bg-amber-400 px-3 py-1 text-xs font-black text-emerald-950">
+                للمتفوقين الجديين
+              </div>
+              <div className="mb-1 flex items-center gap-2">
+                <Crown className="h-5 w-5 text-amber-500" />
+                <h3 className="text-xl font-black text-stone-900">الاشتراك المميز</h3>
+              </div>
+              <div className="mb-1 text-3xl font-black text-emerald-700">
+                3000 دج <span className="text-sm font-bold text-stone-400">/ سنة — أو 500 دج شهرياً</span>
+              </div>
+              <p className="mb-5 text-xs font-bold text-amber-700">
+                السنوي = أقل من 9 دج في اليوم — ثمن قطعة حلوى تفتح لك عاماً كاملاً من أرشيف الأستاذ.
+              </p>
+              <ul className="space-y-2.5 text-sm leading-7 text-stone-600">
+                {[
+                  `مكتبة الأستاذ الكاملة: ${LIBRARY_CHAINS.length} وثيقة PDF منتقاة`,
+                  `تجميعات البكالوريا 2008–2026 + ${bacSolCount} حلاً نموذجياً مفصلاً`,
+                  'التصحيح الرسمي الشامل لموضوعي بكالوريا 2024 بشبكات التصحيح',
+                  'السلاسل الحصرية من أرشيف الأستاذ مع الحلول',
+                  'المدرّس الذكي بدون حدود + حصص Zoom المباشرة',
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-1.5 h-4 w-4 shrink-0 text-amber-500" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => onNavigate('subscribe')}
+                className="mt-6 w-full rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+              >
+                اشترك الآن — تفعيل فوري بالكود
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ============ أسئلة سريعة ============ */}
+      <section className="bg-white py-14">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <SectionTitle
+            eyebrow="أسئلة يدور في ذهن كل تلميذ"
+            title="أسئلة سريعة — إجابات صريحة"
+          />
+          <div className="space-y-3">
+            {faq.map((f) => (
+              <details key={f.q} className="group rounded-2xl border border-stone-200 bg-stone-50/60 p-4 open:bg-white open:shadow-md">
+                <summary className="cursor-pointer list-none text-sm font-black text-stone-800 marker:hidden sm:text-base">
+                  <span className="ml-2 inline-block text-emerald-600 transition group-open:rotate-90">◂</span>
+                  {f.q}
+                </summary>
+                <p className="mt-3 border-t border-stone-100 pt-3 text-sm leading-7 text-stone-600">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ CTA الأخير ============ */}
+      <section className="bg-gradient-to-bl from-emerald-950 via-emerald-900 to-teal-900 py-16 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <h2 className="text-2xl font-black sm:text-3xl">
+            كل يوم بلا تمرين هو فرصة ينتزعها منك منافسك
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-emerald-100/85 sm:text-base">
+            {EXERCISE_COUNT} تمرين و{DEVOIR_PAPERS.length} ورقة امتحان تنتظرك الآن — ابدأ بأول تمرين في فصلك الأول، والباقي يأتي تلقائياً.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => onNavigate('bank')}
+              className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-7 py-3.5 text-base font-extrabold text-emerald-950 shadow-lg shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+            >
+              <BookOpenCheck className="h-5 w-5" />
+              ابدأ التمرن مجاناً
+            </button>
+            <button
+              onClick={() => onNavigate('subscribe')}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/30 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.98]"
+            >
+              <Crown className="h-5 w-5 text-amber-300" />
+              افتح المحتوى المميز
+            </button>
+          </div>
+          <p className="mt-6 text-[11px] text-emerald-200/60">
+            محتوى المنصة موائم مع التدرجات السنوية الرسمية لمادة الرياضيات (2022-2023) الصادرة عن المفتشية العامة — وزارة التربية الوطنية.
+          </p>
         </div>
       </section>
     </div>

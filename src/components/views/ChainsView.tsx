@@ -349,6 +349,7 @@ function ChainPdfsSection({
                 highlight={openBacSolutionId === chain.id}
                 domId={`bacsol-${chain.id}`}
                 accentBadge="حلول تجميعية بكالوريا"
+                freePreview={1}
               />
             ))}
             {BAC_OFFICIAL_CHAINS.map((chain) => (
@@ -410,6 +411,7 @@ function InteractiveChainCard({
   highlight = false,
   domId,
   accentBadge,
+  freePreview = 0,
 }: {
   chain: InteractiveChain;
   isPremium: boolean;
@@ -418,10 +420,14 @@ function InteractiveChainCard({
   highlight?: boolean;
   domId?: string;
   accentBadge?: string;
+  /** عدد التمارين المجانية للمعاينة حتى مع القفل — يُظهر جودة الحلول قبل الشراء */
+  freePreview?: number;
 }) {
   const [open, setOpen] = useState(false);
   const [revealed, setRevealed] = useState<number[]>([]);
   const locked = chain.premium && !isPremium;
+  /** التمرين i مقفل إذا كانت السلسلة مقفلة ولم يكن ضمن معاينة الترحيب */
+  const exLocked = (i: number) => locked && i >= freePreview;
   const isOpen = open || forceOpen;
   const chapter = useMemo(
     () => chaptersOfYear(chain.year).find((c) => c.id === chain.chapterId),
@@ -472,6 +478,11 @@ function InteractiveChainCard({
                 مميزة
               </span>
             )}
+            {locked && freePreview > 0 && (
+              <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-800 ring-1 ring-emerald-300">
+                معاينة مجانية: التمرين الأول
+              </span>
+            )}
           </div>
         </div>
         <ChevronDown className={`h-5 w-5 shrink-0 text-stone-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -486,8 +497,13 @@ function InteractiveChainCard({
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-xs font-black text-white">
                     {i + 1}
                   </span>
-                  <div className="mr-auto">
-                    {locked ? (
+                  <div className="mr-auto flex items-center gap-2">
+                    {locked && i < freePreview && (
+                      <span className="rounded-lg bg-emerald-100 px-2.5 py-1.5 text-xs font-extrabold text-emerald-800 ring-1 ring-emerald-300">
+                        معاينة مجانية
+                      </span>
+                    )}
+                    {exLocked(i) ? (
                       <span className="inline-flex items-center gap-1.5 rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-extrabold text-amber-800 ring-1 ring-amber-300">
                         <Lock className="h-3.5 w-3.5" />
                         الحل للمشتركين
@@ -537,9 +553,13 @@ function InteractiveChainCard({
             <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
               <Lock className="h-6 w-6 shrink-0 text-amber-500" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-extrabold text-amber-900">حلول هذه السلسلة للمشتركين المميزين</p>
+                <p className="text-sm font-extrabold text-amber-900">
+                  {freePreview > 0
+                    ? 'التمرين أعلاه معاينة مجانية — باقي حلول السلسلة للمشتركين المميزين'
+                    : 'حلول هذه السلسلة للمشتركين المميزين'}
+                </p>
                 <p className="text-xs leading-6 text-amber-700">
-                  اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وبنك الفروض.
+                  اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وحلول البكالوريا وبنك الفروض.
                 </p>
               </div>
               <button
