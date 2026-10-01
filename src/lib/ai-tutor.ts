@@ -220,6 +220,7 @@ export async function visionChat(
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
+      console.error('[tutor-vision] upstream', res.status, detail.slice(0, 400));
       throw Object.assign(
         new Error(`vision-upstream-${res.status}`),
         { expose: true, status: res.status, detail: detail.slice(0, 300) },

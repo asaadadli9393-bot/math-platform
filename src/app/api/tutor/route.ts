@@ -145,14 +145,18 @@ export async function POST(req: NextRequest) {
           done();
         } catch (e) {
           const code = e instanceof Error ? e.message : 'vision-failed';
+          const detail = (e as { detail?: string }).detail;
+          console.error('[tutor-vision] failed:', code, detail ?? '');
           controller.enqueue(
             sse(
               JSON.stringify({
                 e: code.startsWith('vision-unsupported')
                   ? 'vision-unsupported'
-                  : code.includes('-504') || code.includes('timeout')
+                  : code.includes('timeout')
                     ? 'vision-timeout'
-                    : 'vision-failed',
+                    : /-\d{3}$/.test(code)
+                      ? `vision-${code.split('-').pop()}`
+                      : 'vision-failed',
               }),
             ),
           );
