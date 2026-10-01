@@ -2,9 +2,12 @@
 
 import * as React from 'react';
 import {
-  ArrowLeft, BookOpen, BookOpenCheck, Calculator, Check, ChevronDown, ExternalLink,
-  FileCheck, Globe, Library, Lightbulb, MonitorPlay, Search, ShieldCheck, Youtube,
+  AlertTriangle, ArrowLeft, BookOpen, BookOpenCheck, Calculator, Check, ChevronDown, ExternalLink,
+  FileCheck, Globe, GraduationCap, KeyRound, Library, Lightbulb, MonitorPlay, Search, ShieldCheck,
+  X, Youtube,
 } from 'lucide-react';
+import { MarkdownMath, MathText } from '@/components/math-renderer';
+import { getEncyclopedia } from '@/data/encyclopedia';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { WORLD_RESOURCES, RES_TYPE_LABELS, RES_LANG_LABELS, GLOSSARY, STUDY_METHOD, type ResLang, type ResType } from '@/data/world-library';
@@ -202,8 +205,10 @@ export default function LibraryView({
         </h1>
         <p className="mx-auto mt-3 max-w-3xl leading-7 text-stone-600">
           اخترنا لك يدوياً <b className="text-emerald-700">{WORLD_RESOURCES.length} مصدراً عالمياً موثوقاً</b> — من خان أكاديمي
-          إلى جامعة MIT مروراً بأفضل أساتذة فرنسا — وقدّمناه بلغة مبسطة مع تحديد دقيق للمحاور الجزائرية التي يخدمها كل مصدر.
-          المنهج الجزائري مشتق من المنهج الفرنسي، لذا ستجد في هذه المصادر نفس مفاهيمك يشرحها العالم، مجاناً وبأعلى جودة.
+          إلى جامعة MIT مروراً بأفضل أساتذة فرنسا — ثم <b className="text-teal-700">استخلصنا المحتوى المعرفي نفسه</b> من هذه المكتبات وأعدنا صياغته بالعربية
+          بأسلوب منصتنا: موسوعة كاملة لكل محور من محاورك {CHAPTERS.length} — مفاهيم وقوانين وأمثلة محلولة وأخطاء شائعة —
+          دون مغادرة المنصة، مع روابط للتعمق عند الحاجة. المنهج الجزائري مشتق من المنهج الفرنسي، لذا ستجد هنا نفس مفاهيمك
+          يشرحها العالم، مجاناً وبأعلى جودة.
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <Chip className="bg-emerald-50 text-emerald-800 ring-emerald-200">
@@ -212,7 +217,7 @@ export default function LibraryView({
           </Chip>
           <Chip className="bg-teal-50 text-teal-800 ring-teal-200">
             <BookOpen className="h-3 w-3" />
-            {CHAPTERS.length} محوراً دراسياً مربوطاً بالمصادر
+            {CHAPTERS.length} محوراً بموسوعة كاملة مستخلصة
           </Chip>
           <Chip className="bg-amber-50 text-amber-800 ring-amber-200">
             {GLOSSARY.length} مصطلحاً في القاموس الثلاثي
@@ -248,12 +253,15 @@ export default function LibraryView({
         </div>
       </section>
 
-      {/* ================= دليل المحاور ================= */}
-      <section aria-label="دليل المحاور">
+      {/* ================= الموسوعة المعرفية ================= */}
+      <section aria-label="الموسوعة المعرفية">
         <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-xl font-black text-stone-900">دليل المحاور: كل فصل… وأفضل المصادر العالمية له</h2>
-            <p className="mt-1 text-sm text-stone-500">اختر سنتك، افتح الفصل، وستجد مرتبة أمامه أفضل الموارد العالمية لشرحه والتمرن عليه.</p>
+            <h2 className="text-xl font-black text-stone-900">الموسوعة المعرفية: المحتوى المستخلص من المكتبات العالمية لكل محور</h2>
+            <p className="mt-1 max-w-3xl text-sm text-stone-500">
+              لكل فصل من فصولك: استخلصنا المفاهيم والقوانين والأمثلة المحلولة من أفضل المصادر العالمية وأعدنا صياغتها بالعربية
+              بأسلوب منصتنا — لتقرأ الموسوعة كاملة هنا، ثم تتعمق بالروابط الأصلية إن شئت.
+            </p>
           </div>
           <div className="inline-flex shrink-0 rounded-xl bg-stone-100 p-1 ring-1 ring-stone-200">
             {YEAR_TABS.map((t) => (
@@ -273,6 +281,7 @@ export default function LibraryView({
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {tabChapters.map((ch) => {
             const picks = UNIT_PICKS[ch.id] ?? [];
+            const ency = getEncyclopedia(ch.id);
             const open = expanded === ch.id;
             return (
               <Card key={ch.id} className={open ? 'col-span-1 border-emerald-300 ring-2 ring-emerald-200 md:col-span-2 xl:col-span-3' : ''}>
@@ -287,16 +296,132 @@ export default function LibraryView({
                     </span>
                     <span>
                       <span className="block font-black text-stone-900">{ch.shortTitle}</span>
-                      <span className="block text-[11px] font-bold text-stone-400">{picks.length} مصادر عالمية مقترحة</span>
+                      <span className="block text-[11px] font-bold text-stone-400">{ency ? 'موسوعة كاملة' : 'مصادر مقترحة'} • {picks.length} روابط عالمية</span>
                     </span>
                   </span>
                   <ChevronDown className={`h-5 w-5 shrink-0 text-stone-400 transition-transform ${open ? 'rotate-180' : ''}`} />
                 </button>
 
                 {open && (
-                  <CardContent className="space-y-3 border-t border-stone-100 pt-4">
-                    <p className="text-[13px] leading-6 text-stone-600">{ch.intro}</p>
-                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                  <CardContent className="space-y-5 border-t border-stone-100 pt-4">
+                    {ency ? (
+                      <>
+                        {/* سطر الاستخلاص */}
+                        <div className="flex flex-wrap items-center gap-2 rounded-xl bg-violet-50 p-3 ring-1 ring-violet-100">
+                          <ShieldCheck className="h-4 w-4 shrink-0 text-violet-600" />
+                          <span className="text-[12px] font-black text-violet-900">مستخلص من مصادر عالمية موثوقة وأُعيدت صياغته بأسلوب المنصة:</span>
+                          {ency.sources.map((s) => {
+                            const res = WORLD_RESOURCES.find((r) => r.id === s.rid);
+                            if (!res) return null;
+                            return (
+                              <a
+                                key={s.rid}
+                                href={res.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={s.note}
+                                className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-violet-800 ring-1 ring-violet-200 transition hover:bg-violet-100"
+                              >
+                                {res.name}
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
+                            );
+                          })}
+                        </div>
+
+                        {/* الجوهر */}
+                        <div className="rounded-xl bg-emerald-50 p-4 ring-1 ring-emerald-100">
+                          <p className="text-[13.5px] font-extrabold leading-7 text-emerald-900">
+                            <span className="ml-1.5 inline-block rounded-lg bg-emerald-700 px-2 py-0.5 text-[11px] font-black text-white">الجوهر</span>
+                            {' '}
+                            <MathText content={ency.headline} />
+                          </p>
+                        </div>
+
+                        {/* المفاهيم الأساسية */}
+                        <section>
+                          <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-emerald-800">
+                            <BookOpen className="h-4 w-4" />
+                            المفاهيم الأساسية
+                          </h4>
+                          <div className="space-y-2.5">
+                            {ency.concepts.map((b) => (
+                              <div key={b.title} className="rounded-xl bg-white p-4 ring-1 ring-emerald-100">
+                                <h5 className="mb-1.5 flex items-center gap-2 text-[13px] font-black text-stone-900">
+                                  <span className="h-4 w-1 shrink-0 rounded-full bg-emerald-500" />
+                                  <MathText content={b.title} />
+                                </h5>
+                                <MarkdownMath content={b.body} className="text-[13.5px]" />
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        {/* القوانين والخاصيات */}
+                        <section>
+                          <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-teal-800">
+                            <KeyRound className="h-4 w-4" />
+                            القوانين والخاصيات
+                          </h4>
+                          <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
+                            {ency.laws.map((b) => (
+                              <div key={b.title} className="rounded-xl bg-teal-50/50 p-4 ring-1 ring-teal-100">
+                                <h5 className="mb-1.5 flex items-center gap-2 text-[13px] font-black text-teal-900">
+                                  <span className="h-4 w-1 shrink-0 rounded-full bg-teal-500" />
+                                  <MathText content={b.title} />
+                                </h5>
+                                <MarkdownMath content={b.body} className="text-[13px]" />
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        {/* أمثلة محلولة */}
+                        <section>
+                          <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-amber-800">
+                            <GraduationCap className="h-4 w-4" />
+                            أمثلة محلولة بأسلوب التصحيح
+                          </h4>
+                          <div className="space-y-2.5">
+                            {ency.examples.map((b) => (
+                              <div key={b.title} className="rounded-xl bg-amber-50/60 p-4 ring-1 ring-amber-100">
+                                <h5 className="mb-1.5 flex items-center gap-2 text-[13px] font-black text-amber-900">
+                                  <span className="h-4 w-1 shrink-0 rounded-full bg-amber-500" />
+                                  <MathText content={b.title} />
+                                </h5>
+                                <MarkdownMath content={b.body} className="text-[13.5px]" />
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        {/* الأخطاء الشائعة */}
+                        <div className="rounded-xl bg-rose-50 p-4 ring-1 ring-rose-100">
+                          <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-rose-800">
+                            <AlertTriangle className="h-4 w-4" />
+                            أخطاء شائعة تُفقد الدرجات
+                          </h4>
+                          <ul className="space-y-1.5">
+                            {ency.pitfalls.map((p) => (
+                              <li key={p} className="flex items-start gap-2 text-[13px] font-bold leading-6 text-rose-900">
+                                <X className="mt-1 h-3.5 w-3.5 shrink-0 text-rose-500" />
+                                <MathText content={p} />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-[13px] leading-6 text-stone-600">{ch.intro}</p>
+                    )}
+
+                    {/* روابط التعمق */}
+                    <section>
+                      <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-stone-800">
+                        <ExternalLink className="h-4 w-4 text-emerald-600" />
+                        روابط عالمية مقترحة للتعمق في هذا المحور
+                      </h4>
+                      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
                       {picks.map((p) => {
                         const res = WORLD_RESOURCES.find((r) => r.id === p.rid);
                         if (!res) return null;
@@ -331,7 +456,8 @@ export default function LibraryView({
                           </div>
                         );
                       })}
-                    </div>
+                      </div>
+                    </section>
                     <div className="flex flex-wrap gap-2 pt-1">
                       <Button
                         onClick={() => onOpenChapter(ch.id)}
