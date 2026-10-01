@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, useSyncExternalStore } from 'react';
 import {
   ArrowDown,
+  BookMarked,
   BookOpen,
   BookOpenCheck,
   Bot,
@@ -74,6 +75,7 @@ export type HomeViewTarget =
   | 'graphing'
   | 'chains'
   | 'exams'
+  | 'library'
   | 'subscribe';
 
 export default function HomeView({
@@ -335,6 +337,76 @@ export default function HomeView({
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ الموسوعة المعرفية — إبراز ============ */}
+      <section className="relative overflow-hidden bg-gradient-to-bl from-teal-900 via-emerald-900 to-emerald-950 py-16 text-white">
+        <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-teal-400/10 blur-3xl" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-4 py-1.5 text-xs font-black text-emerald-200 ring-1 ring-emerald-300/30">
+                <BookMarked className="h-3.5 w-3.5" />
+                ميزة مجانية بالكامل — لا تحتاج حتى اشتراكاً
+              </div>
+              <h2 className="text-2xl font-black leading-snug md:text-3xl">
+                الموسوعة المعرفية: كل محاورك الـ {chapters.length} مشروحة هنا بالكامل
+              </h2>
+              <p className="mt-4 max-w-xl text-sm font-semibold leading-8 text-emerald-100/90">
+                استخلصنا المفاهيم والقوانين والأمثلة المحلولة من أشهر مراجع الرياضيات العالمية وأعدنا صياغتها بالعربية
+                بأسلوب مبسّط يطابق منهجك تماماً: شرح «الجوهر» لكل فصل، قوانين جاهزة للمراجعة، أمثلة بأسلوب التصحيح الرسمي،
+                وأخطاء شائعة تُفقد الدرجات — ثم تمارين تفاعلية مباشرة تحت كل درس لتجرب فهمك فوراً.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2.5 text-[12px] font-extrabold">
+                <span className="rounded-full bg-white/10 px-3.5 py-1.5 ring-1 ring-white/15">شرح مبسّط لكل فصل</span>
+                <span className="rounded-full bg-white/10 px-3.5 py-1.5 ring-1 ring-white/15">قوانين جاهزة للمراجعة</span>
+                <span className="rounded-full bg-white/10 px-3.5 py-1.5 ring-1 ring-white/15">أمثلة محلولة</span>
+                <span className="rounded-full bg-white/10 px-3.5 py-1.5 ring-1 ring-white/15">أخطاء تُفقد الدرجات</span>
+                <span className="rounded-full bg-amber-400/20 px-3.5 py-1.5 text-amber-200 ring-1 ring-amber-300/30">تمارين تفاعلية فورية</span>
+              </div>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <button
+                  onClick={() => onNavigate('library')}
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold text-emerald-900 shadow-lg shadow-emerald-950/30 transition hover:bg-emerald-50 active:scale-[0.98]"
+                >
+                  <BookMarked className="h-4 w-4" />
+                  اقرأ موسوعتك الآن — مجاناً
+                </button>
+                <button
+                  onClick={() => onNavigate('chapters')}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-white/10 active:scale-[0.98]"
+                >
+                  <Layers className="h-4 w-4" />
+                  أو ابدأ من فصولك وملخصاتها
+                </button>
+              </div>
+            </div>
+            <div className="grid gap-3 rounded-2xl bg-white/5 p-5 ring-1 ring-white/10 backdrop-blur-sm">
+              {chapters.slice(0, 4).map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => onNavigate('library')}
+                  className="group flex items-center justify-between gap-3 rounded-xl bg-white/10 px-4 py-3 text-right transition hover:bg-white/20"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400/20 text-emerald-200 ring-1 ring-emerald-300/30">
+                      <BookOpen className="h-4 w-4" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-black text-white">{c.shortTitle}</span>
+                      <span className="block text-[11px] font-bold text-emerald-200/80">موسوعة كاملة + تمارين تفاعلية</span>
+                    </span>
+                  </span>
+                  <ArrowDown className="h-4 w-4 shrink-0 rotate-90 text-emerald-300 transition group-hover:-translate-x-1" />
+                </button>
+              ))}
+              <p className="pt-1 text-center text-[11px] font-bold text-emerald-200/70">
+                + {Math.max(chapters.length - 4, 0)} محوراً آخر بنفس الجودة داخل الموسوعة
+              </p>
             </div>
           </div>
         </div>

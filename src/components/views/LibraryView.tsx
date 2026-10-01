@@ -2,16 +2,19 @@
 
 import * as React from 'react';
 import {
-  AlertTriangle, ArrowLeft, BookOpen, BookOpenCheck, ChevronDown,
-  Globe, GraduationCap, KeyRound, MonitorPlay, ShieldCheck,
+  AlertTriangle, ArrowLeft, BookOpen, BookOpenCheck, CheckCircle2, ChevronDown, Eye,
+  Globe, GraduationCap, KeyRound, Lightbulb, MonitorPlay, ShieldCheck,
   X,
 } from 'lucide-react';
 import { MarkdownMath, MathText } from '@/components/math-renderer';
+import { RichText } from '@/lib/tex';
 import { getEncyclopedia } from '@/data/encyclopedia';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { WORLD_RESOURCES, GLOSSARY, STUDY_METHOD } from '@/data/world-library';
-import { CHAPTERS, CHAPTERS_3AS, type Chapter } from '@/data/chapters';
+import { CHAPTERS, CHAPTERS_3AS, type Chapter, type Exercise } from '@/data/chapters';
+import { exercisesByChapter } from '@/data/exercises';
+import { useProgress } from '@/lib/progress';
 import { CHAPTERS_1AS } from '@/data/chapters-1as';
 import { CHAPTERS_2AS } from '@/data/chapters-2as';
 
@@ -38,6 +41,103 @@ function Chip({ children, className = '' }: { children: React.ReactNode; classNa
   );
 }
 
+const DIFF_CHIP: Record<string, string> = {
+  'سهل': 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  'متوسط': 'border-amber-200 bg-amber-50 text-amber-700',
+  'صعب': 'border-orange-200 bg-orange-50 text-orange-700',
+  'بكالوريا': 'border-rose-200 bg-rose-50 text-rose-700',
+};
+
+/** تمرين تفاعلي مضغوط داخل بطاقة الموسوعة — متزامن مع تقدم بنك التمارين ولوحة التقدم */
+function EncyExercise({
+  ex,
+  number,
+  solved,
+  revealed,
+  onToggleSolved,
+  onReveal,
+}: {
+  ex: Exercise;
+  number: number;
+  solved: boolean;
+  revealed: boolean;
+  onToggleSolved: () => void;
+  onReveal: () => void;
+}) {
+  const [showHint, setShowHint] = React.useState(false);
+  return (
+    <div className={`overflow-hidden rounded-xl bg-white ring-1 transition ${solved ? 'ring-2 ring-emerald-300' : 'ring-stone-200'}`}>
+      <div className="flex flex-wrap items-center gap-2 px-3.5 pt-3">
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-emerald-700 text-[11px] font-black text-white">{number}</span>
+        <span className={`rounded-full border px-2 py-0.5 text-[10.5px] font-extrabold ${DIFF_CHIP[ex.difficulty] ?? 'border-stone-200 bg-stone-50 text-stone-600'}`}>{ex.difficulty}</span>
+        <span className="rounded-full border border-stone-200 bg-white px-2 py-0.5 text-[10.5px] font-bold text-stone-500">{ex.kind}</span>
+        {solved && (
+          <span className="mr-auto inline-flex items-center gap-1 text-[11px] font-black text-emerald-700">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            أتممته
+          </span>
+        )}
+      </div>
+      <div className="px-3.5 py-2.5 text-[13px] leading-7 text-stone-800">
+        <RichText text={ex.statement} />
+        {ex.parts && (
+          <ol className="mt-2 space-y-1.5 border-r-2 border-emerald-200 pr-3">
+            {ex.parts.map((p, i) => (
+              <li key={i} className="text-[12.5px] leading-7 text-stone-700">
+                <span className="ml-1 inline-flex h-4.5 w-4.5 items-center justify-center rounded bg-emerald-100 px-1 text-[10px] font-black text-emerald-800">{i + 1}</span>
+                <RichText text={p} className="align-middle" />
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+      {ex.hint && (
+        <div className="px-3.5 pb-2">
+          <button
+            onClick={() => setShowHint((s) => !s)}
+            className="inline-flex items-center gap-1 rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] font-extrabold text-amber-800 ring-1 ring-amber-200 transition hover:bg-amber-100"
+          >
+            <Lightbulb className="h-3 w-3" />
+            {showHint ? 'إخفاء التلميح' : 'تلميح'}
+          </button>
+          {showHint && (
+            <div className="mt-1.5 rounded-lg border border-amber-200 bg-amber-50/70 px-3 py-2 text-[12px] leading-6 text-amber-900">
+              <RichText text={ex.hint} />
+            </div>
+          )}
+        </div>
+      )}
+      <div className="flex flex-wrap items-center gap-2 border-t border-stone-100 bg-stone-50/60 px-3.5 py-2.5">
+        <button
+          onClick={revealed ? undefined : onReveal}
+          disabled={revealed}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11.5px] font-extrabold transition ${
+            revealed ? 'cursor-default bg-stone-200 text-stone-500' : 'bg-emerald-700 text-white shadow-sm hover:bg-emerald-800 active:scale-[0.98]'
+          }`}
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {revealed ? 'الحل ظاهر' : 'الحل النموذجي'}
+        </button>
+        <button
+          onClick={onToggleSolved}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11.5px] font-extrabold transition active:scale-[0.98] ${
+            solved ? 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300' : 'border border-stone-300 bg-white text-stone-600 hover:border-emerald-400 hover:text-emerald-700'
+          }`}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          {solved ? 'أتممته' : 'وسم كمنجز'}
+        </button>
+      </div>
+      {revealed && (
+        <div className="border-t border-emerald-100 bg-emerald-50/50 px-3.5 py-3">
+          <div className="mb-1.5 text-[11px] font-black text-emerald-800">الحل النموذجي</div>
+          <MarkdownMath content={ex.solution.map((s, i) => `**${i + 1}.** ${s}`).join('\n\n')} className="text-[12.5px]" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LibraryView({
   year,
   onOpenChapter,
@@ -51,6 +151,7 @@ export default function LibraryView({
 }) {
   const [yearTab, setYearTab] = React.useState<YearId>(year);
   const [expanded, setExpanded] = React.useState<string | null>(null);
+  const { state: progress, toggleSolved, markRevealed } = useProgress();
 
   const tabChapters = YEAR_CHAPTERS[yearTab];
 
@@ -266,6 +367,37 @@ export default function LibraryView({
                             ))}
                           </ul>
                         </div>
+
+                        {/* تمارين تفاعلية على هذا المحور */}
+                        {(() => {
+                          const chExs = exercisesByChapter(ch.id);
+                          if (chExs.length === 0) return null;
+                          const shown = chExs.slice(0, 4);
+                          return (
+                            <section>
+                              <h4 className="mb-2.5 flex items-center gap-1.5 text-[14px] font-black text-emerald-800">
+                                <BookOpenCheck className="h-4 w-4" />
+                                جرّب فوراً: تمارين تفاعلية على هذا المحور
+                              </h4>
+                              <p className="mb-3 text-[12px] font-bold leading-5 text-stone-500">
+                                طبّق ما قرأته الآن — تلميح عند التعثر، حل نموذجي، وتتبّع تقدمك يُسجّل في لوحة التقدم ({chExs.length} تمريناً في بنك هذا الفصل).
+                              </p>
+                              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                                {shown.map((ex, i) => (
+                                  <EncyExercise
+                                    key={ex.id}
+                                    ex={ex}
+                                    number={i + 1}
+                                    solved={progress.solved.includes(ex.id)}
+                                    revealed={progress.revealed.includes(ex.id)}
+                                    onToggleSolved={() => toggleSolved(ex.id)}
+                                    onReveal={() => markRevealed(ex.id)}
+                                  />
+                                ))}
+                              </div>
+                            </section>
+                          );
+                        })()}
                       </>
                     ) : (
                       <p className="text-[13px] leading-6 text-stone-600">{ch.intro}</p>
