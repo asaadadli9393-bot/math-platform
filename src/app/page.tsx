@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, Globe, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -34,7 +34,7 @@ const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<
   { id: 'exams', label: 'الفروض والاختبارات', short: 'الاختبارات', icon: ClipboardList },
   { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
-  { id: 'library', label: 'المكتبة العالمية', short: 'المكتبة', icon: Globe },
+  { id: 'library', label: 'الموسوعة المعرفية', short: 'الموسوعة', icon: BookMarked },
   { id: 'graphing', label: 'لوحة الرسم', short: 'الرسم', icon: Spline },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
@@ -310,7 +310,7 @@ export default function Page() {
                   <li><button onClick={() => navigate('chapters')} className="hover:text-emerald-700">الفصول والملخصات</button></li>
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
                   <li><button onClick={() => navigate('chains')} className="hover:text-emerald-700">سلاسل الأستاذ</button></li>
-                  <li><button onClick={() => navigate('library')} className="font-black text-emerald-700 hover:text-emerald-800">المكتبة العالمية — مصادر موثوقة</button></li>
+                  <li><button onClick={() => navigate('library')} className="font-black text-emerald-700 hover:text-emerald-800">الموسوعة المعرفية — كل محاورك مشروحة داخل المنصة</button></li>
                   <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
                 </ul>
               </div>
