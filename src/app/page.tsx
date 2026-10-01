@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, Globe, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -12,6 +12,7 @@ import ExamsView from '@/components/views/ExamsView';
 import QuizView from '@/components/views/QuizView';
 import DashboardView from '@/components/views/DashboardView';
 import CoursesView from '@/components/views/CoursesView';
+import LibraryView from '@/components/views/LibraryView';
 import SubscribeView from '@/components/views/SubscribeView';
 import AdminView from '@/components/views/AdminView';
 import GraphingView from '@/components/views/GraphingView';
@@ -22,7 +23,7 @@ import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'aitutor' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'graphing' | 'subscribe' | 'admin';
+type View = 'home' | 'aitutor' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'library' | 'graphing' | 'subscribe' | 'admin';
 
 const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
@@ -33,6 +34,7 @@ const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<
   { id: 'exams', label: 'الفروض والاختبارات', short: 'الاختبارات', icon: ClipboardList },
   { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
+  { id: 'library', label: 'المكتبة العالمية', short: 'المكتبة', icon: Globe },
   { id: 'graphing', label: 'لوحة الرسم', short: 'الرسم', icon: Spline },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
@@ -264,6 +266,14 @@ export default function Page() {
         {view === 'aitutor' && (
           <AITutorView year={year} isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />
         )}
+        {view === 'library' && (
+          <LibraryView
+            year={year}
+            onOpenChapter={(id) => navigate('chapters', id)}
+            onOpenTutor={() => navigate('aitutor')}
+            onOpenBank={(chapterId) => navigate('bank', chapterId)}
+          />
+        )}
         {view === 'graphing' && <GraphingView onOpenBank={() => navigate('bank')} />}
         {view === 'subscribe' && <SubscribeView />}
         {view === 'admin' && <AdminView />}
@@ -300,6 +310,7 @@ export default function Page() {
                   <li><button onClick={() => navigate('chapters')} className="hover:text-emerald-700">الفصول والملخصات</button></li>
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
                   <li><button onClick={() => navigate('chains')} className="hover:text-emerald-700">سلاسل الأستاذ</button></li>
+                  <li><button onClick={() => navigate('library')} className="font-black text-emerald-700 hover:text-emerald-800">المكتبة العالمية — مصادر موثوقة</button></li>
                   <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
                 </ul>
               </div>
