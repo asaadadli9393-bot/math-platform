@@ -254,3 +254,17 @@ Work Log:
 
 Stage Summary:
 - تبويب «الموسوعة المعرفية» صار مغلقاً على المنصة: كل المحتوى داخل تدرّج، الإسناد للمصادر نص مرجعي بلا روابط، صفر إشهار خارجي — المنصة وجهة لا بوابة
+
+---
+Task ID: token-rotate-1
+Agent: main (Super Z)
+Task: توفير توكن Vercel جديد من المستخدم بعد تعرض القديم في المحادثة
+
+Work Log:
+- تحقق من التوكن الجديد: صالح، حساب asaadadli9393-bot، وصلاحية كاملة على prj_fmumwoENNgTzguMu4xAKkyqJAC3t (math-platform)
+- vercel whoami نجح بالتوكن الجديد
+- التخزين الآمن: .vercel-token (مضاف إلى .gitignore — لم يُرفع لـ git أبداً)
+- فحص scripts/ و.zscripts/: صفر آثار للتوكن القديم vcp_5cIrUr9ys (لا حاجة لتنظيف)
+
+Stage Summary:
+- التوكن الجديد هو المرجع لأي نشر قادم؛ يُنصح المستخدم بإلغاء القديم من لوحة Vercel إن لم يفعل

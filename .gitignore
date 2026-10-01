@@ -70,3 +70,4 @@ Caddyfile
 # secrets — لا تُرفع أبداً
 backup/*.txt
 backup/vercel-env*
+.vercel-token
