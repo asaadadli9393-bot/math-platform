@@ -47,6 +47,38 @@ function visionErrorText(code: string): string {
   }
 }
 
+ 
+let ocrLoader: Promise<any> | null = null;
+
+/** تحميل محرك OCR محلياً من CDN — يُحمّل فقط عند الحاجة (صورة مرفقة وفشل الرؤية) */
+function loadTesseract(): Promise<any> {
+  if ((window as any).Tesseract) return Promise.resolve((window as any).Tesseract);
+  if (ocrLoader) return ocrLoader;
+  ocrLoader = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+    s.onload = () => resolve((window as any).Tesseract);
+    s.onerror = () => reject(new Error('ocr-cdn-failed'));
+    document.head.appendChild(s);
+  });
+  return ocrLoader;
+}
+
+/** استخراج نص التمرين من الصور على جهاز التلميذ */
+async function ocrImages(imgs: string[]): Promise<string> {
+  const Tesseract = await loadTesseract();
+  const parts: string[] = [];
+  for (const src of imgs.slice(0, MAX_IMAGES)) {
+    const r = await Tesseract.recognize(src, 'ara+eng', {
+      logger: () => {},
+    });
+    const txt = String(r?.data?.text ?? '').trim();
+    if (txt) parts.push(txt);
+  }
+  return parts.join('\n\n').trim();
+}
+ 
+
 /** تصغير الصورة لدى العميل قبل الإرسال (سرعة أعلى واستهلاك أقل) */
 async function downscaleImage(file: File): Promise<string> {
   const readAsDataUrl = () =>
@@ -277,6 +309,79 @@ export default function AITutorView({
       }
 
       if (srvError && !acc) {
+        // ✳️ بديل ذكي: فشلت قراءة الصورة على الخادم — نستخرج النص محلياً على جهاز التلميذ ونرسله نصاً
+        if (imgs.length > 0 && (srvError.startsWith('vision-') || srvError === 'empty')) {
+          setMsgs((cur) => {
+            const c = [...cur];
+            c[c.length - 1] = { role: 'assistant', content: 'جارٍ استخراج النص من الصورة على جهازك — لحظة من فضلك…' };
+            return c;
+          });
+          try {
+            const ocrText = await ocrImages(imgs);
+            if (!ocrText) throw new Error('ocr-empty');
+            const ocrQuestion =
+              (content ? content + '\n\n' : '') +
+              'المرفق صورة تمرين رياضيات، وهذا نصّها المستخرج آلياً (قد يحتوي أخطاء قراءة، صحّحها من السياق):\n\n' +
+              ocrText +
+              '\n\nحلّ التمرين خطوة بخطوة بمنهجية التصحيح الرسمي.';
+
+            // نستبدل فقاعة المستخدم بالنص المستخرج (نحفظ الصور في العرض فقط)
+            const ocrHistory = [
+              ...history.slice(0, -1),
+              { role: 'user' as const, content: ocrQuestion },
+            ];
+            const res2 = await fetch('/api/tutor', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: ctrl.signal,
+              body: JSON.stringify({
+                year,
+                history: ocrHistory.slice(-12).map((m) => ({ role: m.role, content: m.content })),
+              }),
+            });
+            if (!res2.ok || !res2.body) throw new Error('network');
+
+            const reader2 = res2.body.getReader();
+            const decoder2 = new TextDecoder();
+            let buf2 = '';
+            let acc2 = '';
+            let done2 = false;
+            while (!done2) {
+              const { done, value } = await reader2.read();
+              if (done) break;
+              buf2 += decoder2.decode(value, { stream: true });
+              const parts2 = buf2.split('\n\n');
+              buf2 = parts2.pop() ?? '';
+              for (const part of parts2) {
+                const line = part.trim();
+                if (!line.startsWith('data:')) continue;
+                const payload = line.slice(5).trim();
+                if (payload === '[DONE]') { done2 = true; break; }
+                try {
+                  const j = JSON.parse(payload) as { t?: string; e?: string };
+                  if (j.t) {
+                    acc2 += j.t;
+                    setMsgs((cur) => {
+                      const c = [...cur];
+                      c[c.length - 1] = { role: 'assistant', content: acc2 };
+                      return c;
+                    });
+                  }
+                  if (j.e) throw new Error(j.e);
+                } catch (pe) {
+                  if (pe instanceof Error && pe.message !== 'Unexpected end of JSON input' && !pe.message.startsWith('Unexpected')) throw pe;
+                }
+              }
+            }
+            if (!acc2) throw new Error('empty');
+            persist([...ocrHistory, { role: 'assistant', content: normalizeMath(acc2) }]);
+            return; // نجح البديل — نخرج من send
+          } catch (ocrErr) {
+            throw ocrErr instanceof Error && ocrErr.message === 'network'
+              ? new Error('network')
+              : new Error('ocr-failed');
+          }
+        }
         throw new Error(srvError);
       }
       if (!acc) {
@@ -306,11 +411,13 @@ export default function AITutorView({
         setNetError(
           code.startsWith('vision-')
             ? visionErrorText(code)
-            : code === 'image-too-large'
-              ? 'الصورة كبيرة جداً — صوّر من قريب أو قلّل جودة الصورة.'
-              : e instanceof Error && e.message !== 'network' && e.message !== 'empty'
-                ? 'تعذّر وصول الإجابة — راجع اتصالك ثم أعد المحاولة.'
-                : 'تعذّر وصول الإجابة الآن — أعد المحاولة بعد لحظات.',
+            : code === 'ocr-failed' || code === 'ocr-empty' || code === 'ocr-cdn-failed'
+              ? 'تعذّرت قراءة النص من الصورة على جهازك — صوّر التمرين من قريب بإضاءة جيدة، أو اكتبه نصّاً.'
+              : code === 'image-too-large'
+                ? 'الصورة كبيرة جداً — صوّر من قريب أو قلّل جودة الصورة.'
+                : e instanceof Error && e.message !== 'network' && e.message !== 'empty'
+                  ? 'تعذّر وصول الإجابة — راجع اتصالك ثم أعد المحاولة.'
+                  : 'تعذّر وصول الإجابة الآن — أعد المحاولة بعد لحظات.',
         );
         setMsgs((cur) => {
           const last = cur[cur.length - 1];
