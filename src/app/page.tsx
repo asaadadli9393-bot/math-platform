@@ -264,13 +264,19 @@ export default function Page() {
           />
         )}
         {view === 'aitutor' && (
-          <AITutorView year={year} isPremium={isPremium} onSubscribe={() => navigate('subscribe')} />
+          <AITutorView
+            key={year + (chapterFocus ?? '')}
+            year={year}
+            isPremium={isPremium}
+            focusChapterId={chapterFocus}
+            onSubscribe={() => navigate('subscribe')}
+          />
         )}
         {view === 'library' && (
           <LibraryView
             year={year}
             onOpenChapter={(id) => navigate('chapters', id)}
-            onOpenTutor={() => navigate('aitutor')}
+            onOpenTutor={(chapterId) => navigate('aitutor', chapterId)}
             onOpenBank={(chapterId) => navigate('bank', chapterId)}
           />
         )}

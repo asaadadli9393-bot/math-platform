@@ -18,10 +18,11 @@ import {
 } from 'lucide-react';
 import { MathText } from '@/components/math-renderer';
 import { SectionTitle, StreamChip } from '@/components/shared';
-import type { YearId } from '@/data/curriculum';
+import type { YearId, StreamId } from '@/data/curriculum';
 import { streamsOfYear } from '@/data/curriculum';
 import { chaptersOfYear } from '@/data/chapters';
-import { EXAMS, type ExamExercise, type ExamKind, type ExamPaper } from '@/data/exams';
+import { type ExamExercise, type ExamKind, type ExamPaper } from '@/data/exams';
+import { examPapersOfYear } from '@/data/exams-docs';
 import { DEVOIR_PAPERS, DEVOIR_SEASONS, type DevoirPaper } from '@/data/devoir-pdfs';
 
 const KIND_BADGE: Record<ExamKind, string> = {
@@ -127,6 +128,7 @@ function ExamCard({
   const chapters = exam.chapterIds
     .map((id) => chaptersOfYear(exam.year).find((c) => c.id === id)?.shortTitle)
     .filter(Boolean);
+  const examStreams = exam.streams ?? [exam.stream];
   return (
     <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
       <button
@@ -160,7 +162,9 @@ function ExamCard({
             <span className="rounded-full border border-stone-200 bg-white px-2.5 py-0.5 text-[11px] font-bold text-stone-500">
               {totalPoints}/20
             </span>
-            <StreamChip id={exam.stream} />
+            {examStreams.map((sid) => (
+              <StreamChip key={sid} id={sid} />
+            ))}
             {locked && (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-800 ring-1 ring-amber-300">
                 <Lock className="h-3 w-3" />
@@ -173,13 +177,24 @@ function ExamCard({
       </button>
       {open && (
         <div className="border-t border-stone-100 px-4 py-4 sm:px-5">
-          {chapters.length > 0 && (
+          {exam.note && (
+            <div className="mb-3 flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2.5 text-xs leading-6 text-emerald-900">
+              <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-700" />
+              <span className="font-bold">{exam.note}</span>
+            </div>
+          )}
+          {(chapters.length > 0 || (exam.topics && exam.topics.length > 0)) && (
             <div className="mb-3 flex flex-wrap items-center gap-1.5 text-[11px] font-bold text-stone-500">
               <ListChecks className="h-3.5 w-3.5 text-emerald-700" />
               المحاور:
               {chapters.map((c) => (
                 <span key={c} className="rounded-md bg-stone-100 px-2 py-0.5 font-extrabold text-stone-600">
                   {c}
+                </span>
+              ))}
+              {exam.topics?.map((t) => (
+                <span key={t} className="rounded-md bg-emerald-50 px-2 py-0.5 font-extrabold text-emerald-800 ring-1 ring-emerald-100">
+                  {t}
                 </span>
               ))}
             </div>
@@ -489,7 +504,7 @@ export default function ExamsView({
   isPremium: boolean;
   onSubscribe: () => void;
 }) {
-  const papers = useMemo(() => EXAMS.filter((e) => e.year === year).sort((a, b) => a.term - b.term), [year]);
+  const papers = useMemo(() => examPapersOfYear(year), [year]);
   const archiveCount = useMemo(() => DEVOIR_PAPERS.filter((d) => d.year === year).length, [year]);
   const [tab, setTab] = useState<Tab>('interactive');
 
@@ -501,7 +516,7 @@ export default function ExamsView({
     () =>
       papers.filter(
         (p) =>
-          (streamFilter === 'all' || p.stream === streamFilter) &&
+          (streamFilter === 'all' || (p.streams ?? [p.stream]).includes(streamFilter as StreamId)) &&
           (termFilter === 'all' || p.term === termFilter) &&
           (kindFilter === 'all' || p.kind === kindFilter),
       ),

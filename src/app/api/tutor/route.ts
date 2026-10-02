@@ -49,11 +49,13 @@ export async function POST(req: NextRequest) {
   }
 
   let year = 'y1';
+  let chapter: string | undefined;
   let history: ChatTurn[] = [];
   let images: string[] = [];
   try {
-    const body = (await req.json()) as { year?: string; history?: ChatTurn[]; images?: unknown };
+    const body = (await req.json()) as { year?: string; chapter?: string; history?: ChatTurn[]; images?: unknown };
     year = typeof body.year === 'string' ? body.year : 'y1';
+    chapter = typeof body.chapter === 'string' && body.chapter.trim() ? body.chapter.trim().slice(0, 40) : undefined;
     history = Array.isArray(body.history) ? body.history : [];
     if (Array.isArray(body.images)) {
       images = body.images
@@ -111,7 +113,7 @@ export async function POST(req: NextRequest) {
           }
 
           // رسائل الرؤية: تعليمات النظام + السياق النصي + السؤال الحالي مع الصور
-          const sys = buildTutorSystemPrompt(year);
+          const sys = buildTutorSystemPrompt(year, chapter);
           const contextTurns: VisionTurn[] = history.slice(0, -1).map((m) => ({
             role: m.role,
             content: m.content,
@@ -178,7 +180,7 @@ export async function POST(req: NextRequest) {
   try {
     const { primary, fallback } = await resolveAIConfigsWithFallback();
     const messages: ChatTurn[] = [
-      { role: 'system', content: buildTutorSystemPrompt(year) },
+      { role: 'system', content: buildTutorSystemPrompt(year, chapter) },
       ...history,
     ];
     // إعادة محاولة حتى 3 مرات عند فشل الشبكة أو 429/5xx قبل بدء البث

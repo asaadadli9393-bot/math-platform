@@ -98,7 +98,7 @@ function SolutionCard({
             <Crown className="h-4 w-4" />
             اشترك لفتح الحلول + السلسلة
           </Button>
-        ) : (
+        ) : pdf.ppt ? (
           <div className="grid grid-cols-2 gap-2">
             <Button
               asChild
@@ -116,6 +116,13 @@ function SolutionCard({
               </a>
             </Button>
           </div>
+        ) : (
+          <Button asChild variant="outline" className="w-full gap-1.5 font-black">
+            <a href={pdf.file} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-4 w-4" />
+              فتح السلسلة PDF
+            </a>
+          </Button>
         )}
       </CardContent>
     </Card>

@@ -146,7 +146,7 @@ export default function LibraryView({
 }: {
   year: YearId;
   onOpenChapter: (id: string) => void;
-  onOpenTutor: () => void;
+  onOpenTutor: (chapterId?: string) => void;
   onOpenBank: (chapterId?: string) => void;
 }) {
   const [yearTab, setYearTab] = React.useState<YearId>(year);
@@ -204,7 +204,7 @@ export default function LibraryView({
           ))}
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Button onClick={onOpenTutor} className="gap-1.5 rounded-xl bg-emerald-700 font-extrabold text-white shadow-md shadow-emerald-700/20 hover:bg-emerald-800">
+          <Button onClick={() => onOpenTutor()} className="gap-1.5 rounded-xl bg-emerald-700 font-extrabold text-white shadow-md shadow-emerald-700/20 hover:bg-emerald-800">
             <MonitorPlay className="h-4 w-4" />
             اسأل المدرس الذكي عن أي مفهوم
           </Button>
@@ -420,7 +420,7 @@ export default function LibraryView({
                         تمارين هذا الفصل
                       </Button>
                       <Button
-                        onClick={onOpenTutor}
+                        onClick={() => onOpenTutor(ch.id)}
                         variant="outline"
                         className="gap-1.5 rounded-xl border-emerald-200 font-extrabold text-emerald-800 hover:bg-emerald-50"
                       >

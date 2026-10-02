@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
+import { CHAPTERS } from '@/data/chapters';
+import { getEncyclopedia } from '@/data/encyclopedia';
 
 // ============================================================
 //  طبقة الذكاء الاصطناعي — المدرّس الذكي (تدرّج AI)
@@ -101,9 +103,9 @@ const YEAR_NAMES: Record<string, string> = {
 };
 
 /** رسالة النظام: شخصية المدرّس الذكي ومنهجيته */
-export function buildTutorSystemPrompt(year: string): string {
+export function buildTutorSystemPrompt(year: string, chapterId?: string): string {
   const level = YEAR_NAMES[year] ?? YEAR_NAMES.y1;
-  return [
+  const lines = [
     'أنت «المدرّس الذكي» في منصة تدرّج للرياضيات، وتعمل تحت إشراف الأستاذ عدلي اسعد.',
     `تلميذك في التعليم الثانوي الجزائري — ${level}.`,
     '',
@@ -119,7 +121,47 @@ export function buildTutorSystemPrompt(year: string): string {
     '9) أبقِ الأجوبة مقتضبة ومنظمة (3 إلى 8 أسطر غالباً) ما لم يُطلب تفصيل أكثر.',
     '10) ابقَ حصراً في نطاق الرياضيات والدراسة والحياة المدرسية لهذا المستوى؛ اعتذر بلطف عن أي طلب آخر.',
     '11) لا تدّعِ أبداً أنك الأستاذ عدلي اسعد نفسه — أنت مساعد ذكي يعمل تحت إشرافه، وإذا سُئلت عن الاشتراك أو المنصة فوجّه التلميذ إلى صفحة الاشتراك.',
-  ].join('\n');
+  ];
+
+  // ============ وضع التركيز على فصل محدد: حقن موسوعة الفصل ============
+  const focus = chapterId ? buildChapterFocus(chapterId) : null;
+  if (focus) {
+    lines.push('', focus);
+  }
+  return lines.join('\n');
+}
+
+/** حقن سياق فصل موسوعي في رسالة النظام (وضع التركيز) — خادميّ فقط */
+function buildChapterFocus(chapterId: string): string | null {
+  const chapter = CHAPTERS.find((c) => c.id === chapterId);
+  if (!chapter) return null;
+  const ency = getEncyclopedia(chapterId);
+
+  const parts = [
+    '═══════ وضع التركيز على فصل محدد ═══════',
+    `التلميذ فتح المحادثة و هو يدرس فصل: «${chapter.title}».`,
+  ];
+  if (ency) {
+    parts.push(`جوهر الفصل: ${ency.headline}`);
+    if (ency.laws.length) {
+      parts.push('أهم القوانين والخاصيات المعتمدة في المنصة لهذا الفصل:');
+      for (const l of ency.laws.slice(0, 8)) {
+        const body = l.body.length > 420 ? l.body.slice(0, 420) + '…' : l.body;
+        parts.push(`• ${l.title}: ${body}`);
+      }
+    }
+    if (ency.pitfalls.length) {
+      parts.push('الأخطاء الشائعة التي تُفقد التلاميذ الدرجات في هذا الفصل (نبّه إليها عند الحاجة):');
+      for (const p of ency.pitfalls.slice(0, 5)) {
+        parts.push(`• ${p.length > 200 ? p.slice(0, 200) + '…' : p}`);
+      }
+    }
+  }
+  parts.push(
+    'خلال هذه المحادثة: اجعل هذا الفصل محور شروحك وأمثلتك وتمارينك المقترحة افتراضياً، إلا إذا طلب التلميذ صراحة فصلاً آخر أو موضوعاً عاماً.',
+    '═══════ نهاية وضع التركيز ═══════',
+  );
+  return parts.join('\n');
 }
 
 export interface ChatTurn {

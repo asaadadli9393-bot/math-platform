@@ -16,6 +16,7 @@ import {
 import { SectionTitle } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 import type { YearId } from '@/data/curriculum';
+import { CHAPTERS } from '@/data/chapters';
 
 // ============================================================
 //  المدرّس الذكي — تدرّج AI
@@ -110,13 +111,40 @@ async function downscaleImage(file: File): Promise<string> {
   }
 }
 
-const STARTERS = [
-  'اشرح لي الدرس: كيف نحسب مشتقة دالة؟',
-  'لخّص لي درس المتتاليات العددية بأهم القوانين',
-  'ساعدني خطوة بخطوة في حل هذا التمرين: احسب $\u005Cint_0^1 (2x+1)\u005C,dx$',
-  'أعطني تمريناً على الأعداد المركبة مع حله',
-  'ما الفرق بين المتتالية الحسابية والهندسية؟',
-  'كيف أرسم دالة بدرجة ثانية وحدد اتجاه التغير؟',
+const STARTERS: Record<YearId, string[]> = {
+  '1as': [
+    'اشرح لي درس الأعداد الحقيقية: ما الفرق بين نسبي وغير نسبي؟',
+    'لخّص لي قوانين الدوال المرجعية ($x^2$، الجذر، القيمة المطلقة)',
+    'ساعدني خطوة بخطوة: بسّط $\dfrac{1}{\sqrt{3}-1}$',
+    'أعطني تمريناً على معادلة المستقيم مع الحل',
+    'ما الأخطاء الشائعة في الحساب على $\mathbb{R}$؟',
+    'كيف أرسم منحنى $x\mapsto|x|-2$؟',
+  ],
+  '2as': [
+    'اشرح لي درس الاشتقاقية: كيف أحسب المشتقة؟',
+    'لخّص لي درس المتتاليات الحسابية والهندسية بأهم القوانين',
+    'ساعدني خطوة بخطوة: احسب $\lim_{x\to+\infty}\dfrac{2x^2+1}{x^2-3}$',
+    'أعطني تمريناً على الجداء السلمي مع الحل',
+    'ما الفرق بين معادلة بمميز موجب ومميز سالب؟',
+    'كيف أستعمل الكاشي لإيجاد زاوية مثلث؟',
+  ],
+  '3as': [
+    'اشرح لي الدرس: كيف نحسب مشتقة دالة؟',
+    'لخّص لي درس المتتاليات العددية بأهم القوانين',
+    'ساعدني خطوة بخطوة في حل هذا التمرين: احسب $\int_0^1 (2x+1)\,dx$',
+    'أعطني تمريناً على الأعداد المركبة مع حله',
+    'ما الفرق بين المتتالية الحسابية والهندسية؟',
+    'كيف أرسم دالة بدرجة ثانية وحدد اتجاه التغير؟',
+  ],
+};
+
+/** أزرار أوامر سريعة أعلى حقل الإدخال */
+const QUICK_ACTIONS = [
+  { label: 'لخّص لي الدرس', prompt: 'لخّص لي درس اليوم من فصولي بأسلوب المنصة: الأفكار ثم القوانين الأساسية ثم مثال سريع.' },
+  { label: 'أعطني تمريناً', prompt: 'أعطني تمريناً من مستواي الحالي على محور من محاور فصولي، ثم اطلب مني المحاولة قبل أن تعطيني الحل.' },
+  { label: 'اختبرني بأسئلة سريعة', prompt: 'اختبرني بثلاثة أسئلة قصيرة من فصول سنتي الحالية، سؤالاً واحداً في كل مرة، وصحح إجابتي بعد كل جواب.' },
+  { label: 'ما الأخطاء الشائعة؟', prompt: 'اذكر لي الأخطاء الشائعة التي تُفقد التلاميذ درجات في محاور فصولي، وكيف أتجنب كل خطأ.' },
+  { label: 'منهجية حل نمطية', prompt: 'أعطني منهجية الحل خطوة بخطوة لنمط سؤال يتكرر في الفروض عند مستواي الدراسي.' },
 ];
 
 function today(): string {
@@ -186,12 +214,19 @@ function loadChat(): Msg[] {
 export default function AITutorView({
   year,
   isPremium,
+  focusChapterId,
   onSubscribe,
 }: {
   year: YearId;
   isPremium: boolean;
+  /** فصل مركّز عليه المدرّس (من الموسوعة) — يُحقن في رسالة النظام */
+  focusChapterId?: string;
   onSubscribe: () => void;
 }) {
+  const focusTitle = React.useMemo(
+    () => (focusChapterId ? CHAPTERS.find((c) => c.id === focusChapterId)?.title ?? null : null),
+    [focusChapterId],
+  );
   const [msgs, setMsgs] = React.useState<Msg[]>([]);
   const [input, setInput] = React.useState('');
   const [streaming, setStreaming] = React.useState(false);
@@ -260,6 +295,7 @@ export default function AITutorView({
         signal: ctrl.signal,
         body: JSON.stringify({
           year,
+          chapter: focusChapterId,
           history: history.slice(-12).map((m) => ({ role: m.role, content: m.content })),
           images: imgs.length ? imgs : undefined,
         }),
@@ -336,6 +372,7 @@ export default function AITutorView({
               signal: ctrl.signal,
               body: JSON.stringify({
                 year,
+                chapter: focusChapterId,
                 history: ocrHistory.slice(-12).map((m) => ({ role: m.role, content: m.content })),
               }),
             });
@@ -498,6 +535,12 @@ export default function AITutorView({
             المدرّس الذكي — تدرّج AI
           </span>
           <span className="flex items-center gap-2">
+            {focusTitle && (
+              <span className="inline-flex max-w-[220px] items-center gap-1.5 truncate rounded-full bg-teal-50 px-2.5 py-1 text-[11px] font-extrabold text-teal-800 ring-1 ring-teal-200" title={`وضع التركيز: ${focusTitle}`}>
+                <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-teal-500" />
+                التركيز: {focusTitle}
+              </span>
+            )}
             {isPremium ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-extrabold text-emerald-800 ring-1 ring-emerald-200">
                 <Crown className="h-3 w-3 text-amber-500" />
@@ -533,14 +576,16 @@ export default function AITutorView({
               </span>
               <div>
                 <p className="text-base font-black text-stone-800">
-                  مرحباً! أنا مدرّسك الذكي 👋
+                  {focusTitle ? `مرحباً! أنا مدرّسك الذكي في «${focusTitle}» 👋` : 'مرحباً! أنا مدرّسك الذكي 👋'}
                 </p>
                 <p className="mt-1 text-sm font-bold text-stone-500">
-                  اسألني أي سؤال في الرياضيات — سأشرحه لك خطوة بخطوة
+                  {focusTitle
+                    ? 'سأجيبك وأمثلتك وتماريني من هذا الفصل بالذات — اسألني ما شئت'
+                    : 'اسألني أي سؤال في الرياضيات — سأشرحه لك خطوة بخطوة'}
                 </p>
               </div>
               <div className="grid w-full max-w-xl gap-2 sm:grid-cols-2">
-                {STARTERS.map((s) => (
+                {STARTERS[year].map((s) => (
                   <button
                     key={s}
                     onClick={() => send(s)}
@@ -628,6 +673,21 @@ export default function AITutorView({
 
         {/* حقل الإدخال */}
         <div className="border-t border-stone-100 bg-white px-3 py-3 sm:px-5">
+          {/* أوامر سريعة */}
+          <div className="custom-scroll mb-2 flex gap-1.5 overflow-x-auto pb-1">
+            {QUICK_ACTIONS.map((a) => (
+              <button
+                key={a.label}
+                onClick={() => send(a.prompt)}
+                disabled={blocked || streaming}
+                title={a.prompt}
+                className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50/60 px-3 py-1.5 text-[11px] font-extrabold text-emerald-800 transition hover:bg-emerald-100 hover:text-emerald-900 disabled:opacity-40"
+              >
+                <Sparkles className="h-3 w-3" />
+                {a.label}
+              </button>
+            ))}
+          </div>
           {/* شريط معاينة الصور المرفقة */}
           {pendingImages.length > 0 && (
             <div className="mb-2 flex flex-wrap gap-2 rounded-xl border border-stone-200 bg-stone-50 p-2">

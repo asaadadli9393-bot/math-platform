@@ -20,10 +20,16 @@ export interface ExamPaper {
   title: string;
   year: YearId;
   stream: StreamId;
+  /** كل الشعب المعنية بالورقة (للأوراق المشتركة بين شعب متعددة) */
+  streams?: StreamId[];
   term: 1 | 2 | 3;
   kind: ExamKind;
   durationMin: number;
   chapterIds: string[];
+  /** محاور الورقة كنصوص مباشرة (للأوراق المكتوبة بنظام الفصول السنوية) */
+  topics?: string[];
+  /** ملاحظة منهجية من الأستاذ */
+  note?: string;
   premium: boolean;
   exercises: ExamExercise[];
 }

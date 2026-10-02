@@ -26,6 +26,8 @@ export interface ChainPdf {
   source?: string;
   /** رابط خارجي (DzExams) — إن وُجد يُفتح في صفحة المصدر بدل تحميل ملف */
   externalUrl?: string;
+  /** ملف حلول PowerPoint مصاحب (إن وُجد) */
+  ppt?: string;
 }
 
 /** السلاسل الأصلية الموقّعة — من أرشيف الأستاذ عدلي اسعد (group: adli) */

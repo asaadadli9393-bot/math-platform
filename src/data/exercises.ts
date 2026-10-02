@@ -11,9 +11,19 @@ import { exercisesG } from './exercises-g';
 import { exercisesH } from './exercises-h';
 import { exercisesOld } from './exercises-old';
 import { exercisesX } from './exercises-x';
+import { exercisesNew1AsA } from './exercises-new-1as-a';
+import { exercisesNew1AsB } from './exercises-new-1as-b';
+import { exercisesNew2AsA } from './exercises-new-2as-a';
+import { exercisesNew2AsB } from './exercises-new-2as-b';
+import { exercisesNew2AsC } from './exercises-new-2as-c';
 
 /** كل تمارين المنصة: السنة الأولى ثم الثانية ثم الثالثة */
 export const EXERCISES: Exercise[] = [
+  ...exercisesNew1AsA,
+  ...exercisesNew1AsB,
+  ...exercisesNew2AsA,
+  ...exercisesNew2AsB,
+  ...exercisesNew2AsC,
   ...exercisesD,
   ...exercisesG,
   ...exercisesE,

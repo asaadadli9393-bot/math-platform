@@ -3,7 +3,7 @@
  * فروض واختبارات موافق لترتيب محاور التدرج السنوي الرسمي 2022-2023.
  */
 
-import type { ExamDoc } from './exams';
+import type { ExamDoc } from './exams-docs';
 
 export const EXAMS_3AS: ExamDoc[] = [
   // ==================== الفصل الأول ====================

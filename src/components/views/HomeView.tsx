@@ -27,6 +27,7 @@ import { chaptersOfYear } from '@/data/chapters';
 import { exercisesOfYear, EXERCISE_COUNT } from '@/data/exercises';
 import { LEVELS, type YearId } from '@/data/curriculum';
 import { DEVOIR_PAPERS } from '@/data/devoir-pdfs';
+import { ALL_EXAM_PAPERS } from '@/data/exams-docs';
 import { CHAIN_PDFS, BAC_COMPILATIONS } from '@/data/chain-pdfs';
 import { LIBRARY_CHAINS } from '@/data/library-chains';
 import { BAC_SOLUTION_CHAINS, BAC_SOLUTION_STATS } from '@/data/bac-solutions';
@@ -75,6 +76,7 @@ export type HomeViewTarget =
   | 'graphing'
   | 'chains'
   | 'exams'
+  | 'courses'
   | 'library'
   | 'subscribe';
 
@@ -98,7 +100,7 @@ export default function HomeView({
 
   const stats = [
     { icon: Database, value: `${EXERCISE_COUNT}`, label: 'تمرين بحل نموذجي مفصّل' },
-    { icon: ClipboardList, value: `${DEVOIR_PAPERS.length}`, label: 'ورقة فرض واختبار حقيقية' },
+    { icon: ClipboardList, value: `${DEVOIR_PAPERS.length + ALL_EXAM_PAPERS.length}`, label: 'ورقة فرض واختبار (تفاعلية + أرشيف)' },
     { icon: Layers, value: `${docsCount}`, label: 'وثيقة وسلسلة PDF منتقاة' },
     { icon: Trophy, value: `${bacSolCount}`, label: 'حلاً نموذجياً لمواضيع البكالوريا' },
   ];

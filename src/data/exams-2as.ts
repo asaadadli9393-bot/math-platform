@@ -4,7 +4,7 @@
  * (الشعب العلمية أساساً، مع تمارين مشتركة مع تسيير واقتصاد وآداب).
  */
 
-import type { ExamDoc } from './exams';
+import type { ExamDoc } from './exams-docs';
 
 export const EXAMS_2AS: ExamDoc[] = [
   // ==================== الفصل الأول ====================
