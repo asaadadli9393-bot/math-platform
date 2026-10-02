@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BookOpenText, Download, FileText, ListTree, Loader2, Sparkles, X } from 'lucide-react';
 import { MathText } from '@/components/math-renderer';
 import {
@@ -13,55 +13,108 @@ import {
 
 /* ============================================================
    القارئ الذكي — يعيد تقديم أي وثيقة PDF بأسلوب المنصة المميز:
-   بطاقات أكاديمية زمرديّة/حجرية، عناوين منظمة، رياضيات واضحة
-   واتجاه RTL متقن — مع بقاء الملف الأصلي متاحاً للتحميل.
+   وثيقة متدفقة أنيقة: أقسام وبطاقات تمارين بيضاء، عناوين زمردية،
+   معادلات رشيقة مدمجة في السياق — بلا صناديق ثقيلة أو ضجيج بصري.
    ============================================================ */
 
-const KIND_LABEL: Record<string, string> = {
-  h: 'عنوان',
-  p: 'فقرة',
-  m: 'معادلة',
-  li: 'بند',
-};
+type Block = FormattedDoc['blocks'][number];
 
-function Block({ b }: { b: FormattedDoc['blocks'][number] }) {
-  if (b.t === 'pg') {
-    return (
-      <div className="my-5 flex items-center gap-3" aria-hidden>
-        <span className="h-px flex-1 bg-stone-200" />
-        <span className="rounded-full bg-stone-100 px-3 py-1 text-[10.5px] font-black text-stone-500 ring-1 ring-stone-200">
-          الصفحة {b.x}
-        </span>
-        <span className="h-px flex-1 bg-stone-200" />
-      </div>
-    );
+interface Section {
+  title: string | null;
+  exercise: boolean;
+  items: Block[];
+}
+
+const EX_RE = /^(التمرين|تمرين|السؤال|سؤال|الجزء|أولا|أولاً|ثانيا|ثانياً|ثالثا|ثالثاً|رابعا|I\)|II\)|III\)|IV\)|V\))/;
+
+function groupSections(blocks: Block[]): Section[] {
+  const sections: Section[] = [];
+  let cur: Section | null = null;
+  for (const b of blocks) {
+    if (b.t === 'pg') continue;
+    if (b.t === 'h' || !cur) {
+      cur = {
+        title: b.t === 'h' ? b.x : null,
+        exercise: b.t === 'h' && EX_RE.test(b.x.trim()),
+        items: [],
+      };
+      sections.push(cur);
+      continue;
+    }
+    cur.items.push(b);
   }
-  if (b.t === 'h') {
-    return (
-      <h4 className="mt-6 rounded-xl border-r-4 border-emerald-600 bg-emerald-50/70 px-4 py-2.5 text-[15px] font-black leading-7 text-emerald-900">
-        {b.x}
-      </h4>
+  return sections.filter((s) => s.title || s.items.length);
+}
+
+/** يجمع البنود المتتالية في قائمة واحدة */
+function renderItems(items: Block[]) {
+  const out: React.ReactNode[] = [];
+  let list: Block[] = [];
+  const flush = (key: string) => {
+    if (!list.length) return;
+    out.push(
+      <ul key={key} className="space-y-2 py-0.5">
+        {list.map((b, i) => (
+          <li key={i} className="flex items-start gap-2.5">
+            <span className="mt-[13px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+            <MathText content={b.x} className="text-[15px] leading-8 text-stone-700" />
+          </li>
+        ))}
+      </ul>,
     );
-  }
-  if (b.t === 'm') {
-    return (
-      <div
-        dir="ltr"
-        className="my-2 overflow-x-auto rounded-xl bg-stone-900 px-4 py-3 font-mono text-[13px] leading-6 text-emerald-100"
-      >
-        {b.x}
-      </div>
-    );
-  }
-  if (b.t === 'li') {
-    return (
-      <div className="flex items-start gap-2.5 py-0.5">
-        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
-        <MathText content={b.x} className="text-[14px] leading-7 text-stone-700" />
-      </div>
-    );
-  }
-  return <MathText content={b.x} className="block py-0.5 text-[14.5px] leading-8 text-stone-700" />;
+    list = [];
+  };
+  items.forEach((b, i) => {
+    if (b.t === 'li') {
+      list.push(b);
+      return;
+    }
+    flush(`l${i}`);
+    if (b.t === 'm') {
+      const short = b.x.length <= 46;
+      out.push(
+        <div
+          key={i}
+          dir="ltr"
+          className={`overflow-x-auto rounded-xl border border-emerald-100 bg-emerald-50/70 px-4 py-2.5 text-[14.5px] font-semibold leading-7 text-emerald-950 ${
+            short ? 'mx-auto w-fit max-w-full text-center' : ''
+          }`}
+        >
+          {b.x}
+        </div>,
+      );
+    } else {
+      out.push(<MathText key={i} content={b.x} className="block text-[15px] leading-8 text-stone-700" />);
+    }
+  });
+  flush('l-end');
+  return out;
+}
+
+function SectionView({ s }: { s: Section }) {
+  return (
+    <section
+      className={
+        s.exercise
+          ? 'rounded-2xl border border-stone-200 bg-white p-5 shadow-sm'
+          : 'rounded-2xl px-1 py-1'
+      }
+    >
+      {s.title && (
+        <h4
+          className={
+            s.exercise
+              ? 'mb-3 flex items-center gap-2 border-b border-emerald-100 pb-2.5 text-[15.5px] font-black text-emerald-800'
+              : 'mb-2 mt-1 rounded-xl border-r-4 border-emerald-600 bg-emerald-50/80 px-4 py-2.5 text-[15px] font-black leading-7 text-emerald-900'
+          }
+        >
+          {s.exercise && <span className="h-2.5 w-2.5 rotate-45 rounded-[3px] bg-emerald-600" />}
+          {s.title}
+        </h4>
+      )}
+      <div className="space-y-2.5">{renderItems(s.items)}</div>
+    </section>
+  );
 }
 
 export function DocReaderModal({
@@ -103,27 +156,24 @@ export function DocReaderModal({
     };
   }, [onClose]);
 
-  const headings = (doc?.blocks ?? []).filter((b) => b.t === 'h').slice(0, 10);
+  const sections = useMemo(() => (doc ? groupSections(doc.blocks) : []), [doc]);
+  const headings = sections.filter((s) => s.title).slice(0, 10).map((s) => s.title as string);
 
   return (
     <div className="fixed inset-0 z-[80] flex flex-col bg-stone-950/60 backdrop-blur-sm" role="dialog" aria-modal>
       <div className="mx-auto flex h-full w-full max-w-4xl flex-col overflow-hidden sm:my-4 sm:rounded-3xl sm:shadow-2xl">
         {/* رأس القارئ */}
-        <div className="relative bg-gradient-to-l from-emerald-800 via-emerald-700 to-teal-700 px-5 pb-5 pt-4 text-white shadow-lg">
-          <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25">
-              <BookOpenText className="h-5.5 w-5.5" />
+        <div className="relative bg-gradient-to-l from-emerald-800 via-emerald-700 to-teal-700 px-5 pb-4 pt-3.5 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25">
+              <BookOpenText className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[10.5px] font-black ring-1 ring-white/20">
+              <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-black ring-1 ring-white/20">
                 <Sparkles className="h-3 w-3" />
-                القارئ الذكي — بأسلوب المنصة
+                قراءة ذكية بأسلوب المنصة
               </p>
-              <h3 className="mt-1 truncate text-lg font-black leading-snug">{title}</h3>
-              <p className="mt-0.5 text-[11px] font-bold text-emerald-100/85">
-                {subtitle ? `${subtitle} • ` : ''}
-                {doc ? `${doc.pages} صفحات • ${entry.words ?? 0} كلمة مستخرجة` : 'جارٍ استخراج المحتوى…'}
-              </p>
+              <h3 className="mt-0.5 truncate text-[16.5px] font-black leading-snug">{title}</h3>
             </div>
             <button
               onClick={onClose}
@@ -137,16 +187,16 @@ export function DocReaderModal({
             <>
               <button
                 onClick={() => setTocOpen((v) => !v)}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-black text-emerald-50 ring-1 ring-white/20 transition hover:bg-white/20"
+                className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-black text-emerald-50 ring-1 ring-white/20 transition hover:bg-white/20"
               >
                 <ListTree className="h-3.5 w-3.5" />
-                {tocOpen ? 'إخفاء المحتويات' : 'محتويات الوثيقة'}
+                {tocOpen ? 'إخفاء المحتويات' : `محتويات الوثيقة (${headings.length})`}
               </button>
               {tocOpen && (
                 <ul className="mt-2 grid gap-1 rounded-xl bg-white/10 p-3 text-[12px] font-bold text-emerald-50 ring-1 ring-white/15 sm:grid-cols-2">
                   {headings.map((h, i) => (
                     <li key={i} className="truncate">
-                      • {h.x}
+                      • {h}
                     </li>
                   ))}
                 </ul>
@@ -156,7 +206,7 @@ export function DocReaderModal({
         </div>
 
         {/* جسم الوثيقة */}
-        <div className="flex-1 overflow-y-auto bg-stone-50 px-4 py-5 sm:px-8">
+        <div className="flex-1 overflow-y-auto bg-stone-100/60 px-3 py-4 sm:px-6 sm:py-6">
           {failed ? (
             <div className="mx-auto mt-16 max-w-md rounded-2xl border border-stone-200 bg-white p-6 text-center">
               <FileText className="mx-auto h-8 w-8 text-stone-300" />
@@ -173,23 +223,25 @@ export function DocReaderModal({
               </a>
             </div>
           ) : !doc ? (
-            <div className="mt-20 flex flex-col items-center gap-3 text-stone-400">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <p className="text-xs font-black">جارٍ تحويل الوثيقة إلى أسلوب المنصة…</p>
+            <div className="mx-auto mt-8 max-w-2xl space-y-3">
+              <div className="flex items-center justify-center gap-2 text-stone-400">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <p className="text-xs font-black">جارٍ تحويل الوثيقة إلى أسلوب المنصة…</p>
+              </div>
+              {[90, 70, 80, 55, 75, 40].map((w, i) => (
+                <div key={i} className="h-9 animate-pulse rounded-xl bg-white/70" style={{ width: `${w}%` }} />
+              ))}
             </div>
           ) : (
-            <article className="mx-auto max-w-2xl pb-10">
-              {doc.blocks.map((b, i) => (
-                <Block key={i} b={b} />
+            <article className="mx-auto max-w-2xl space-y-3 pb-6">
+              {sections.map((s, i) => (
+                <SectionView key={i} s={s} />
               ))}
-              <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-center">
-                <p className="text-[12px] font-black text-emerald-900">
-                  انتهت الوثيقة — استُخرج المحتوى آلياً وأُعيد تنسيقه بأسلوب المنصة
-                </p>
-                <p className="mt-1 text-[11px] font-bold text-emerald-700">
-                  للاطلاع على التمثيلات البيانية والأشكال، افتح الملف الأصلي.
-                </p>
-              </div>
+              <p className="pt-4 text-center text-[11.5px] font-bold text-stone-400">
+                — استُخرج محتوى الوثيقة آلياً وأُعيد تنسيقه بأسلوب المنصة —
+                <br />
+                للاطلاع على الأشكال والتمثيلات البيانية، افتح الملف الأصلي.
+              </p>
             </article>
           )}
         </div>

@@ -101,6 +101,32 @@ def classify(line: str, ar: float, ltr_math: float) -> str:
     return 'p'
 
 
+def post_process(blocks):
+    """Merge line fragments into flowing blocks; drop junk."""
+    out = []
+    for b in blocks:
+        x = b['x'].strip()
+        if not x:
+            continue
+        # digit<->arabic spacing cleanup
+        x = re.sub(r'(\d)([\u0600-\u06FF])', r'\1 \2', x)
+        x = re.sub(r'([\u0600-\u06FF])(\d)', r'\1 \2', x)
+        # junk: no letters/digits at all, or tiny math fragments like "()", "p"
+        core = re.sub(r'[\s()\[\]{}:.,،؛\-–—|]+', '', x)
+        if len(core) < 2:
+            continue
+        if b['t'] == 'm' and not re.search(r'[A-Za-z0-9\u0600-\u06FF]{2,}', x):
+            continue
+        prev = out[-1] if out else None
+        if prev and prev['t'] == b['t'] and b['t'] in ('p', 'm'):
+            # merge continuation lines of same paragraph/formula
+            joiner = '' if x.startswith(('.', '،', ':')) else ' '
+            prev['x'] = prev['x'].rstrip() + joiner + x
+        else:
+            out.append({'t': b['t'], 'x': x})
+    return out
+
+
 def extract_pdf(rel: str):
     path = os.path.join(ROOT, rel)
     try:
@@ -161,6 +187,10 @@ def extract_pdf(rel: str):
     # quality gate: cipher-garbage fonts (no real Arabic content)
     if char_total < 120 or ar_total / max(char_total, 1) < 0.08:
         return None, {'verdict': 'garbage'}
+    blocks = post_process(blocks)
+    # page markers add noise in short docs
+    if n <= 3:
+        blocks = [b for b in blocks if b['t'] != 'pg']
     return {'id': safe_name(rel), 'src': rel, 'pages': n, 'blocks': blocks}, {
         'verdict': verdict, 'pages': n, 'words': words, 'headings': headings,
     }
