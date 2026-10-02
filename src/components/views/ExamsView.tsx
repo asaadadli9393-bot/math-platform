@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { MathText } from '@/components/math-renderer';
+import { SmartReadButton } from '@/components/doc-reader';
 import { SectionTitle, StreamChip } from '@/components/shared';
 import type { YearId, StreamId } from '@/data/curriculum';
 import { streamsOfYear } from '@/data/curriculum';
@@ -295,6 +296,7 @@ function DevoirRow({ d }: { d: DevoirPaper }) {
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
+        <SmartReadButton src={d.url} title={d.title} subtitle={d.kind} className="!px-2.5" />
         <a
           href={d.url}
           target="_blank"

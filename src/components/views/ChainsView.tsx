@@ -36,6 +36,7 @@ import {
   bacSolutionChainOf,
 } from '@/data/bac-solutions';
 import { BAC_OFFICIAL_CHAINS, BAC_OFFICIAL_STATS } from '@/data/bac-official';
+import { SmartReadButton } from '@/components/doc-reader';
 
 const YEAR_NAMES: Record<YearId, string> = {
   '1as': 'السنة الأولى ثانوي',
@@ -204,6 +205,7 @@ function ChainPdfCard({
           </Button>
         ) : isHosted ? (
           <div className="space-y-1.5">
+            <SmartReadButton src={pdf.file} title={pdf.title} subtitle={pdf.badge ?? undefined} className="w-full" />
             <div className="grid grid-cols-2 gap-2">
               <Button
                 asChild

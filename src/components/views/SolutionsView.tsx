@@ -22,6 +22,7 @@ import {
   GraduationCap,
 } from 'lucide-react';
 import { CHAIN_PDFS } from '@/data/chain-pdfs';
+import { SmartReadButton } from '@/components/doc-reader';
 import { CHAPTERS } from '@/data/chapters';
 
 function SolutionCard({
@@ -99,7 +100,9 @@ function SolutionCard({
             اشترك لفتح الحلول + السلسلة
           </Button>
         ) : pdf.ppt ? (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1.5">
+            <SmartReadButton src={pdf.file} title={pdf.title} className="w-full" />
+            <div className="grid grid-cols-2 gap-2">
             <Button
               asChild
               className="gap-1.5 bg-gradient-to-l from-red-600 to-rose-700 font-black text-white hover:from-red-700 hover:to-rose-800"
@@ -115,14 +118,18 @@ function SolutionCard({
                 فتح السلسلة PDF
               </a>
             </Button>
+            </div>
           </div>
         ) : (
-          <Button asChild variant="outline" className="w-full gap-1.5 font-black">
-            <a href={pdf.file} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4" />
-              فتح السلسلة PDF
-            </a>
-          </Button>
+          <div className="space-y-1.5">
+            <SmartReadButton src={pdf.file} title={pdf.title} className="w-full" />
+            <Button asChild variant="outline" className="w-full gap-1.5 font-black">
+              <a href={pdf.file} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-4 w-4" />
+                فتح السلسلة PDF
+              </a>
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>
