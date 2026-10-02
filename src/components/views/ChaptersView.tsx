@@ -34,7 +34,7 @@ function ChapterCard({
         </span>
       </div>
       <h3 className="mb-2 text-base font-extrabold leading-7 text-stone-900">{chapter.title}</h3>
-      <p className="line-clamp-3 flex-1 text-xs leading-6 text-stone-500">{chapter.intro}</p>
+      <p className="line-clamp-3 flex-1 text-xs leading-6 text-stone-500"><RichText text={chapter.intro} /></p>
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         {chapter.streams.map((sid) => {
           const s = getStream(sid);
@@ -92,7 +92,7 @@ function ChapterDetail({
             <h1 className="text-2xl font-black leading-9 text-stone-900 sm:text-3xl">{chapter.title}</h1>
           </div>
         </div>
-        <p className="mt-4 text-sm leading-8 text-stone-600">{chapter.intro}</p>
+        <p className="mt-4 text-sm leading-8 text-stone-600"><RichText text={chapter.intro} /></p>
         <div className="mt-5 flex flex-wrap gap-2">
           {chapter.streams.map((sid) => {
             const s = getStream(sid);
@@ -138,7 +138,7 @@ function ChapterDetail({
             >
               <RichText text={`$$${f.tex}$$`} />
               <div className="mt-1 text-center text-[11px] font-bold text-stone-500" dir="rtl">
-                {f.label}
+                <RichText text={f.label} />
               </div>
             </div>
           ))}

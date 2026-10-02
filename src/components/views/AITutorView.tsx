@@ -592,7 +592,7 @@ export default function AITutorView({
                     disabled={blocked}
                     className="rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-right text-xs font-bold text-stone-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-900 disabled:opacity-40"
                   >
-                    {s}
+                    <RichText text={s} />
                   </button>
                 ))}
               </div>
@@ -616,7 +616,7 @@ export default function AITutorView({
                           ))}
                         </div>
                       )}
-                      {m.content}
+                      <RichText text={m.content} />
                     </div>
                   </div>
                 ) : (
@@ -693,7 +693,6 @@ export default function AITutorView({
             <div className="mb-2 flex flex-wrap gap-2 rounded-xl border border-stone-200 bg-stone-50 p-2">
               {pendingImages.map((src, k) => (
                 <div key={k} className="relative">
-                  { }
                   <img src={src} alt={`مرفق ${k + 1}`} className="h-16 w-16 rounded-lg border border-stone-200 object-cover" />
                   <button
                     onClick={() => setPendingImages((cur) => cur.filter((_, i) => i !== k))}

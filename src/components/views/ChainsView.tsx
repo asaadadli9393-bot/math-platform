@@ -15,6 +15,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MathText } from '@/components/math-renderer';
+import { RichText } from '@/lib/tex';
 import { ChapterIcon } from '@/components/shared';
 import type { YearId } from '@/data/curriculum';
 import { chaptersOfYear } from '@/data/chapters';
@@ -489,7 +490,7 @@ function InteractiveChainCard({
       </button>
       {isOpen && (
         <div className="border-t border-stone-100 px-4 py-4 sm:px-5">
-          <p className="mb-4 text-xs leading-6 text-stone-500">{chain.description}</p>
+          <p className="mb-4 text-xs leading-6 text-stone-500"><RichText text={chain.description} /></p>
           <div className="space-y-3">
             {chain.exercises.map((ex, i) => (
               <div key={i} className="overflow-hidden rounded-xl border border-stone-200 bg-white">

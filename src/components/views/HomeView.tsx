@@ -554,7 +554,7 @@ export default function HomeView({
                         <span className={`text-xs font-black ${th.text}`}>الفصل {i + 1}</span>
                       </div>
                       <h3 className="text-base font-extrabold leading-7 text-stone-900">{c.title}</h3>
-                      <p className="mt-2 line-clamp-2 text-xs leading-6 text-stone-500">{c.intro}</p>
+                      <p className="mt-2 line-clamp-2 text-xs leading-6 text-stone-500"><MathText content={c.intro} /></p>
                       <div className="mt-3 flex items-center gap-3 text-xs font-bold text-stone-400">
                         <span className="inline-flex items-center gap-1">
                           <Database className="h-3.5 w-3.5" />

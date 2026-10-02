@@ -1,5 +1,5 @@
 /* تدرّج — Service Worker: تخزين مؤقت للعمل دون اتصال */
-const CACHE = 'tadaruj-v1';
+const CACHE = 'tadaruj-v2';
 const SHELL = ['/', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

@@ -400,7 +400,7 @@ export default function LibraryView({
                         })()}
                       </>
                     ) : (
-                      <p className="text-[13px] leading-6 text-stone-600">{ch.intro}</p>
+                      <p className="text-[13px] leading-6 text-stone-600"><MathText content={ch.intro} /></p>
                     )}
 
                     <div className="flex flex-wrap gap-2 pt-1">

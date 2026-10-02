@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MarkdownMath } from "@/components/math-renderer";
+import { MarkdownMath, MathText } from "@/components/math-renderer";
 import { FunctionPlot } from "@/components/function-plot";
 import {
   Clock,
@@ -99,7 +99,7 @@ export function CourseCard({ course, onOpen, isSubscribed = true, onSubscribe }:
         </div>
 
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-          {course.description}
+          <MathText content={course.description} />
         </p>
 
         <div className="flex flex-wrap gap-2 pt-2">
@@ -175,7 +175,7 @@ export function CourseDetail({ course, onBack }: CourseDetailProps) {
             <p className="text-muted-foreground italic text-lg">{course.subtitle}</p>
           </div>
 
-          <p className="leading-relaxed text-base">{course.description}</p>
+          <p className="leading-relaxed text-base"><MathText content={course.description} /></p>
 
           <div className="flex flex-wrap gap-3 pt-2">
             <Badge
@@ -334,7 +334,7 @@ function CourseModuleView({ module, course }: { module: CourseModule; course: Co
       <AccordionContent className="px-4 pb-4 space-y-4">
         {/* وصف الوحدة */}
         <div className="bg-muted/40 rounded-md p-3 text-sm italic border-r-2 border-primary/30">
-          {module.description}
+          <MathText content={module.description} />
         </div>
 
         {/* محتوى الدرس */}

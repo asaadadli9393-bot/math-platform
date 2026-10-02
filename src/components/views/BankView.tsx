@@ -135,7 +135,7 @@ function ExerciseCard({
             <span className="inline-flex h-6 items-center rounded-md bg-emerald-700 px-2 text-[11px] text-white">
               الحل النموذجي
             </span>
-            {ex.title}
+            <RichText text={ex.title} />
           </h4>
           <ol className="space-y-4">
             {ex.solution.map((step, i) => (

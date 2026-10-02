@@ -147,7 +147,7 @@ function ExamCard({
           )}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-extrabold text-stone-900 sm:text-base">{exam.title}</h3>
+          <h3 className="text-sm font-extrabold text-stone-900 sm:text-base"><MathText content={exam.title} /></h3>
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ring-1 ${KIND_BADGE[exam.kind]}`}>
               {exam.kind}
@@ -180,7 +180,7 @@ function ExamCard({
           {exam.note && (
             <div className="mb-3 flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2.5 text-xs leading-6 text-emerald-900">
               <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-700" />
-              <span className="font-bold">{exam.note}</span>
+              <span className="font-bold"><MathText content={exam.note} /></span>
             </div>
           )}
           {(chapters.length > 0 || (exam.topics && exam.topics.length > 0)) && (
@@ -236,6 +236,15 @@ function ExamCard({
 }
 
 /* ================= أرشيف الفروض والاختبارات الحقيقية (PDF) ================= */
+
+/** صياغة عربية سليمة لعدد أوراق الأرشيف في الترويسة — تُخفى تماماً عند الصفر */
+function archivePhrase(n: number): string {
+  if (n <= 0) return '';
+  if (n === 1) return ' + ورقة أرشيف حقيقية واحدة';
+  if (n === 2) return ' + ورقتا أرشيف حقيقيتان';
+  if (n <= 10) return ` + ${n} أوراق أرشيف حقيقية`;
+  return ` + ${n} ورقة أرشيف حقيقية`;
+}
 
 function DevoirRow({ d }: { d: DevoirPaper }) {
   return (
@@ -533,7 +542,7 @@ export default function ExamsView({
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <SectionTitle
         eyebrow="بنك الفروض والاختبارات"
-        title={`${papers.length} ورقة تفاعلية بحلول مفصلة + ${archiveCount} ورقة أرشيف حقيقية`}
+        title={`${papers.length} ورقة تفاعلية بحلول مفصلة${archivePhrase(archiveCount)}`}
         sub="أوراق فروض مراقبة مستمرة واختبارات فصلية ومحاكاة بكالوريا بإعداد الأستاذ عدلي اسعد بتوزيع نقاط حقيقي وحل نموذجي مفصل لكل تمرين، إضافة إلى أرشيف أوراق حقيقية منتقاة من خزانة الأستاذ عبر أكثر من 15 موسماً دراسياً (2008 → 2022)."
       />
 
