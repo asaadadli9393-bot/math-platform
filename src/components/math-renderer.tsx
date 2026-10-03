@@ -3,6 +3,7 @@
 import React from "react";
 import katex from "katex";
 import { extractVtBody, vtHtml } from "@/lib/vt";
+import { hasArabic, splitMixedLine, splitProseMath, toTex, wordyProse, displaySafe } from "@/lib/math-cleanup";
 
 interface MathProps {
   tex: string;
@@ -79,7 +80,11 @@ export function MathText({ content, className = "" }: MathTextProps) {
             </strong>
           );
         }
-        return <React.Fragment key={idx}>{part.content}</React.Fragment>;
+        return (
+          <span key={idx}>
+            <ProseText text={part.content} />
+          </span>
+        );
       })}
     </span>
   );
@@ -90,6 +95,122 @@ type MathPart =
   | { type: "inline"; content: string }
   | { type: "bold"; content: string }
   | { type: "display"; content: string };
+
+/* ============================================================
+   MathBlock — كتلة رياضية مستخرجة من PDF (نص يونيكود)
+   يحاول عرض كل سطر كرياضيات KaTeX حقيقية، ومع الفشل يسقط
+   بأمان إلى نص أنيق. الأسطر المختلطة (معادلة + ملاحظة عربية)
+   تُقسَّم إلى مقاطع.
+   ============================================================ */
+
+function tryKatex(tex: string, display: boolean): string | null {
+  try {
+    return katex.renderToString(tex, {
+      displayMode: display,
+      throwOnError: true,
+      strict: false,
+      trust: true,
+      output: "htmlAndMathml",
+    });
+  } catch {
+    return null;
+  }
+}
+
+function MathLine({ line }: { line: string }) {
+  const parts = React.useMemo(() => {
+    if (!hasArabic(line)) {
+      const tex = toTex(line);
+      // جملة نثرية فرنسية/إنجليزية لا معادلة — تُعرض نصاً لا مائلة
+      if (wordyProse(tex)) return [{ ok: false as const, html: "", text: tex }];
+      const html = tryKatex(tex, false);
+      return html ? [{ ok: true as const, html, text: tex }] : [{ ok: false as const, html: "", text: tex }];
+    }
+    // سطر مختلط: مقاطع رياضية + مقاطع عربية
+    return splitMixedLine(line).map((p) => {
+      if (p.kind === "ar") return { ok: false as const, html: "", text: p.text };
+      const html = p.tex.trim() && !wordyProse(p.tex) ? tryKatex(p.tex, false) : null;
+      return html ? { ok: true as const, html, text: p.tex } : { ok: false as const, html: "", text: p.tex };
+    });
+  }, [line]);
+
+  if (parts.length === 1 && !parts[0].ok) {
+    return (
+      <span dir="auto" className="block text-start font-semibold text-slate-700">
+        {displaySafe(parts[0].text)}
+      </span>
+    );
+  }
+
+  return (
+    <span dir="auto" className="block text-start leading-8">
+      {parts.map((p, i) =>
+        p.ok ? (
+          <span key={i} dir="ltr" className="inline-block text-slate-800" dangerouslySetInnerHTML={{ __html: p.html }} />
+        ) : (
+          <span key={i} className="inline-block font-semibold text-slate-700">
+            {displaySafe(p.text)}
+          </span>
+        ),
+      )}
+    </span>
+  );
+}
+
+export function MathBlock({ content, className = "" }: { content: string; className?: string }) {
+  const lines = React.useMemo(
+    () => content.split(/\n+/).map((s) => s.trim()).filter(Boolean),
+    [content],
+  );
+  if (!lines.length) return null;
+  return (
+    <span className={`block space-y-0.5 ${className}`}>
+      {lines.map((ln, i) => (
+        <MathLine key={i} line={ln} />
+      ))}
+    </span>
+  );
+}
+
+/**
+ * ProseText — نص نثري بلا محددات $: يكتشف المقاطع ذات علاقات رياضية
+ * (مثل ‹0.7<α<0.8›) ويعرضها بـ KaTeX معزولاً عن اتجاه النص،
+ * ومن يفشل يُعرض في ‹bdi› حمايةً من انعكاس bidi في السياق العربي.
+ */
+function ProseText({ text }: { text: string }) {
+  const segs = React.useMemo(
+    () =>
+      splitProseMath(text).map((seg) => ({
+        ...seg,
+        html: seg.kind === "math" ? tryKatex(toTex(seg.s), false) : null,
+      })),
+    [text],
+  );
+  return (
+    <>
+      {segs.map((seg, i) => {
+        if (seg.kind === "math" && seg.html) {
+          return (
+            <span
+              key={i}
+              dir="ltr"
+              className="inline-block"
+              dangerouslySetInnerHTML={{ __html: seg.html }}
+            />
+          );
+        }
+        if (seg.kind === "math" && !hasArabic(seg.s)) {
+          return (
+            <bdi key={i} dir="ltr" className="font-semibold">
+              {displaySafe(seg.s.trim())}
+            </bdi>
+          );
+        }
+        return <React.Fragment key={i}>{seg.s}</React.Fragment>;
+      })}
+    </>
+  );
+}
 
 function parseMathContent(content: string): MathPart[] {
   const parts: MathPart[] = [];

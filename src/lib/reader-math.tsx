@@ -3,6 +3,7 @@
 import React from 'react';
 import katex from 'katex';
 import { texPrep } from '@/lib/vt';
+import { toTex, wordyProse, displaySafe } from '@/lib/math-cleanup';
 
 /* ============================================================
    عرض الرياضيات داخل القارئ الذكي:
@@ -29,9 +30,9 @@ export function isMathish(s: string): boolean {
   const t = s.trim();
   if (!t || AR_RE.test(t)) return false;
   if (t.length > 120) return false;
-  if (/[=≈≠≤≥±×÷→↔∞√∈∉∩∪⊂∫∑π′°²³∥·−]/.test(t)) return true;
-  if (/\d/.test(t) && /[a-zA-Z]/.test(t)) return true; // e2، x2، f(a)
-  if (/[a-zA-Z]\s*[()]/.test(t)) return true; // f(x)
+  if (/[=<>≈≠≤≥±×÷→↔∞√∈∉∩∪⊂∫∑π′°²³∥·−]/.test(t)) return true;
+  if (/\d/.test(t) && /[a-zA-Z\u0370-\u03FF]/.test(t)) return true; // e2، x2، f(a)، 0.7<α
+  if (/[a-zA-Z\u0370-\u03FF]\s*[()]/.test(t)) return true; // f(x)
   if (/[+\-−*/^]/.test(t) && /\d/.test(t)) return true; // 2+3
   return false;
 }
@@ -66,10 +67,11 @@ export function segmentLine(s: string): { ar: boolean | null; s: string }[] {
   return runs;
 }
 
-/** HTML جاهز لسطر رياضي واحد عبر KaTeX */
+/** HTML جاهز لسطر رياضي واحد عبر KaTeX — يفشل بصمت للجُمَل النثرية والسطور غير القابلة للتصيير */
 function katexHtml(tex: string, display: boolean): string {
+  if (wordyProse(tex)) return '';
   try {
-    return katex.renderToString(texPrep(tex), {
+    return katex.renderToString(texPrep(toTex(tex)), {
       displayMode: display,
       throwOnError: false,
       strict: false,
@@ -80,9 +82,19 @@ function katexHtml(tex: string, display: boolean): string {
   }
 }
 
-/** سطر رياضي واحد (KaTeX display مُوسَّط) */
+/** سطر رياضي واحد — KaTeX عند النجاح، نص أنيق عند الفشل */
 export function MathLine({ tex }: { tex: string }) {
   const html = React.useMemo(() => katexHtml(tex, true), [tex]);
+  if (!html) {
+    return (
+      <div
+        className="my-1 text-center text-[15px] font-semibold leading-8 text-slate-700"
+        dir="auto"
+      >
+        {displaySafe(tex)}
+      </div>
+    );
+  }
   return (
     <div className="my-1 text-center leading-normal" dir="ltr">
       <span dangerouslySetInnerHTML={{ __html: html }} />
@@ -132,7 +144,7 @@ export function AutoText({ text, className = '' }: { text: string; className?: s
             );
           }
         }
-        return <React.Fragment key={i}>{r.s}</React.Fragment>;
+        return <React.Fragment key={i}>{displaySafe(r.s)}</React.Fragment>;
       })}
     </span>
   );

@@ -1,4 +1,5 @@
 import katex from 'katex';
+import { toTex } from '@/lib/math-cleanup';
 
 /* ============================================================
    جدول التغيرات الاحترافي — Tableau de variations
@@ -34,7 +35,7 @@ export function texPrep(s: string): string {
 
 function katexCell(tex: string): string {
   try {
-    return katex.renderToString(texPrep(tex), {
+    return katex.renderToString(texPrep(toTex(tex)), {
       throwOnError: false,
       strict: false,
       output: 'html',
