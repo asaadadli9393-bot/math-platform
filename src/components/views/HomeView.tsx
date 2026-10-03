@@ -66,6 +66,15 @@ const HERO_SUB: Record<YearId, string> = {
 const SHOWCASE_CHAIN = BAC_SOLUTION_CHAINS[0];
 const SHOWCASE_EX = SHOWCASE_CHAIN.exercises[0];
 
+/** تدرّج لوني مميز لكل ميزة في الرئيسية — هوية بصرية لكل قسم */
+const FEATURE_GRADIENTS: Record<string, string> = {
+  chains: 'from-amber-500 to-orange-600 shadow-amber-500/25',
+  exams: 'from-sky-500 to-blue-700 shadow-sky-500/25',
+  courses: 'from-rose-500 to-pink-700 shadow-rose-500/25',
+  aitutor: 'from-violet-500 to-purple-700 shadow-violet-500/25',
+  graphing: 'from-cyan-500 to-sky-700 shadow-cyan-500/25',
+};
+
 export type HomeViewTarget =
   | 'curriculum'
   | 'chapters'
@@ -188,6 +197,15 @@ export default function HomeView({
       {/* ============ Hero ============ */}
       <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-950 via-emerald-900 to-teal-900 text-white">
         <div className="hero-grid absolute inset-0" />
+        {/* رموز رياضية عائمة — لمسة هوية المنصة */}
+        <div className="pointer-events-none absolute inset-0 hidden select-none lg:block" aria-hidden="true">
+          <span className="absolute right-[5%] top-[16%] rotate-12 font-serif text-7xl font-black text-white/10">∑</span>
+          <span className="absolute right-[44%] top-[7%] -rotate-6 font-serif text-5xl font-black text-white/[0.07]">π</span>
+          <span className="absolute left-[7%] top-[30%] rotate-6 font-serif text-6xl font-black text-white/[0.08]">∫</span>
+          <span className="absolute bottom-[24%] right-[32%] -rotate-12 font-serif text-6xl font-black text-white/[0.07]">√</span>
+          <span className="absolute bottom-[10%] left-[36%] rotate-3 font-serif text-5xl font-black text-white/[0.06]">∞</span>
+          <span className="absolute left-[20%] top-[12%] -rotate-3 font-serif text-4xl font-black text-white/[0.06]">ƒ(x)</span>
+        </div>
         <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
         <div className="absolute -bottom-32 -right-16 h-80 w-80 rounded-full bg-teal-400/10 blur-3xl" />
         <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
@@ -264,12 +282,20 @@ export default function HomeView({
 
           {/* Stats */}
           <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {stats.map((s) => (
+            {stats.map((s, i) => (
               <div
                 key={s.label}
                 className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur transition hover:bg-white/10 sm:p-5"
               >
-                <s.icon className="mx-auto mb-2 h-6 w-6 text-amber-300" />
+                <span
+                  className={`mx-auto mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg ${
+                    i === 3
+                      ? 'from-amber-400 to-orange-600 shadow-amber-500/30'
+                      : 'from-emerald-400 to-teal-600 shadow-emerald-500/30'
+                  }`}
+                >
+                  <s.icon className="h-5 w-5 text-white" />
+                </span>
                 <div className="text-3xl font-black text-white">{s.value}</div>
                 <div className="mt-1 text-xs font-semibold text-emerald-100/80 sm:text-sm">{s.label}</div>
               </div>
@@ -431,7 +457,11 @@ export default function HomeView({
                   'highlight' in f && f.highlight ? 'ring-2 ring-emerald-500/30 hover:ring-emerald-500/60' : ''
                 }`}
               >
-                <div className="mb-4 inline-flex rounded-xl bg-emerald-100 p-3 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
+                <div
+                  className={`mb-4 inline-flex rounded-xl bg-gradient-to-br p-3 text-white shadow-md transition group-hover:scale-105 group-hover:shadow-lg ${
+                    FEATURE_GRADIENTS[f.view] ?? 'from-emerald-600 to-teal-700 shadow-emerald-600/25'
+                  }`}
+                >
                   <f.icon className="h-6 w-6" />
                 </div>
                 <h3 className="mb-2 text-lg font-extrabold text-stone-900">{f.title}</h3>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import katex from "katex";
+import { extractVtBody, vtHtml } from "@/lib/vt";
 
 interface MathProps {
   tex: string;
@@ -15,6 +16,9 @@ interface MathProps {
  * يتطلب أن يكون المحتوى النصي (statement) نصاً LaTeX خالصاً
  */
 export function Math({ tex, display = false, className = "" }: MathProps) {
+  // جدول التغيرات الاحترافي: \begin{vt}...\end{vt} يُعرض بمكوّن المنصة بدل KaTeX
+  const vtBody = display ? extractVtBody(tex) : null;
+
   const html = React.useMemo(() => {
     try {
       return katex.renderToString(tex, {
@@ -29,9 +33,18 @@ export function Math({ tex, display = false, className = "" }: MathProps) {
     }
   }, [tex, display]);
 
+  if (vtBody !== null) {
+    return (
+      <span
+        className={`${className} block`}
+        dangerouslySetInnerHTML={{ __html: vtHtml(vtBody) }}
+      />
+    );
+  }
+
   return (
     <span
-      className={`${className} ${display ? "block my-2" : "inline-block"}`}
+      className={`${className} ${display ? "math-scroll block my-2" : "inline-block"}`}
       dir="ltr"
       dangerouslySetInnerHTML={{ __html: html }}
     />

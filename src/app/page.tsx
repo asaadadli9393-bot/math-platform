@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookMarked, BookOpen, BookOpenCheck, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, BookOpenText, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -34,7 +34,7 @@ const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<
   { id: 'exams', label: 'الفروض والاختبارات', short: 'الاختبارات', icon: ClipboardList },
   { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
-  { id: 'library', label: 'الموسوعة المعرفية', short: 'الموسوعة', icon: BookMarked },
+  { id: 'library', label: 'الموسوعة المعرفية', short: 'الموسوعة', icon: BookOpenText },
   { id: 'graphing', label: 'لوحة الرسم', short: 'الرسم', icon: Spline },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
@@ -155,12 +155,13 @@ export default function Page() {
                 key={n.id}
                 onClick={() => navigate(n.id)}
                 title={n.short ? n.label : undefined}
-                className={`inline-flex items-center whitespace-nowrap rounded-xl px-2.5 py-2 text-[13px] font-extrabold transition ${
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl px-2.5 py-2 text-[13px] font-extrabold transition ${
                   view === n.id
-                    ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200'
+                    ? 'bg-gradient-to-l from-emerald-700 to-teal-800 text-white shadow-md shadow-emerald-700/25'
                     : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
                 }`}
               >
+                <n.icon className={`h-3.5 w-3.5 ${view === n.id ? 'text-amber-300' : 'text-emerald-700/70'}`} />
                 {n.short ?? n.label}
               </button>
             ))}
@@ -190,10 +191,12 @@ export default function Page() {
                 key={n.id}
                 onClick={() => navigate(n.id)}
                 className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-extrabold transition ${
-                  view === n.id ? 'bg-emerald-700 text-white shadow-sm' : 'text-stone-500 hover:bg-stone-100'
+                  view === n.id
+                    ? 'bg-gradient-to-l from-emerald-700 to-teal-800 text-white shadow-md shadow-emerald-700/25'
+                    : 'text-stone-500 hover:bg-stone-100'
                 }`}
               >
-                <n.icon className="h-3.5 w-3.5" />
+                <n.icon className={`h-3.5 w-3.5 ${view === n.id ? 'text-amber-300' : ''}`} />
                 {n.label}
               </button>
             ))}

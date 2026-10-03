@@ -2,6 +2,7 @@
 
 import katex from 'katex';
 import { useMemo } from 'react';
+import { extractVtBody, vtHtml } from '@/lib/vt';
 
 /** Render a single LaTeX string with KaTeX */
 export function texHtml(tex: string, displayMode = false): string {
@@ -42,6 +43,9 @@ export function RichText({ text, className = '' }: { text: string; className?: s
   const html = useMemo(() => {
     return segment(text).map((seg, i) => {
       if (seg.type === 'display') {
+        // جدول التغيرات الاحترافي: \begin{vt}...\end{vt} يُعرض بمكوّن المنصة
+        const vtBody = extractVtBody(seg.value);
+        if (vtBody !== null) return vtHtml(vtBody);
         return `<span class="block my-2 text-center overflow-x-auto" dir="ltr">${texHtml(seg.value, true)}</span>`;
       }
       if (seg.type === 'inline') {

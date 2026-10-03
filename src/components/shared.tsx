@@ -68,7 +68,9 @@ export function SectionTitle({ eyebrow, title, sub }: { eyebrow?: string; title:
         </span>
       )}
       <h2 className="text-2xl font-extrabold text-stone-900 sm:text-3xl">{title}</h2>
-      {sub && <p className="mt-2 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base">{sub}</p>}
+      {/* شريط هوية المنصة: تدرج زمردية ← فيروز ← عنبري */}
+      <div className="mt-3 h-1.5 w-24 rounded-full bg-gradient-to-l from-emerald-600 via-teal-500 to-amber-400" />
+      {sub && <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base">{sub}</p>}
     </div>
   );
 }
