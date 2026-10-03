@@ -230,6 +230,20 @@
   padding-left: 3px !important;
   padding-right: 3px !important;
 }
+/* خلية قيمتين متراكبتين (−∞/+∞ عند نقطة مستثناة) */
+.vt-stackcell .vt-stackval {
+  display: block;
+  line-height: 1.25;
+}
+.vt-stackcell .vt-stackval + .vt-stackval {
+  margin-top: 2px;
+  padding-top: 2px;
+  border-top: 1.2px dashed #a8a29e;
+}
+/* صفوف الإشارات الوسيطة المتعددة */
+.vt-sign td {
+  border-top: 1px dashed #d6d3d1;
+}
 
 .hero-grid {
   background-image:

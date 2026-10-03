@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpenText, Download, FileText, ListTree, Loader2, Sparkles, X } from 'lucide-react';
-import { MathText } from '@/components/math-renderer';
+import { findVtGroups, vtBodyFromRows, vtHtml } from '@/lib/vt';
+import { AutoText, MathLineGroup, cleanDocText, isMathLine } from '@/lib/reader-math';
 import {
   fetchFormattedDoc,
   formattedEntry,
@@ -46,48 +47,92 @@ function groupSections(blocks: Block[]): Section[] {
   return sections.filter((s) => s.title || s.items.length);
 }
 
-/** يجمع البنود المتتالية في قائمة واحدة */
+/** جدول تغيرات مُعاد بناؤه بأسلوب المنصة الاحترافي */
+function VariationTableBox({ body }: { body: string }) {
+  const html = useMemo(() => vtHtml(body), [body]);
+  return <div className="my-2" dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+/**
+ * يعرض بنود القسم كتدفّق أسطر ذكي:
+ * - جداول التغيرات المكتشفة ← جدول المنصة الاحترافي
+ * - الأسطر الرياضية المتتالية ← مجموعة KaTeX في صندوق رشيق
+ * - الأسطر المختلطة ← تقسيم تلقائي عربي/رياضيات
+ * - البنود ← قائمة بنقاط زمردية
+ */
 function renderItems(items: Block[]) {
+  // تدفّق الأسطر بعد التنظيف
+  const lines: { t: Block['t']; text: string; block: number }[] = [];
+  items.forEach((b, bi) => {
+    cleanDocText(b.x)
+      .split('\n')
+      .forEach((raw) => {
+        const text = raw.trim();
+        if (text) lines.push({ t: b.t, text, block: bi });
+      });
+  });
+
+  // كشف جداول التغيرات ضمن تدفّق الأسطر
+  const vtGroups = findVtGroups(lines.map((l) => l.text));
+  const vtAtStart = new Map<number, (typeof vtGroups)[number]>();
+  const vtLines = new Set<number>();
+  for (const g of vtGroups) {
+    vtAtStart.set(g.start, g);
+    for (let i = g.start; i <= g.end; i++) vtLines.add(i);
+  }
+
   const out: React.ReactNode[] = [];
-  let list: Block[] = [];
-  const flush = (key: string) => {
+  let list: string[] = [];
+  let mathRun: string[] = [];
+
+  const flushList = (key: string) => {
     if (!list.length) return;
     out.push(
       <ul key={key} className="space-y-2 py-0.5">
-        {list.map((b, i) => (
+        {list.map((t, i) => (
           <li key={i} className="flex items-start gap-2.5">
             <span className="mt-[13px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
-            <MathText content={b.x} className="text-[15px] leading-8 text-stone-700" />
+            <AutoText text={t} className="text-[15px] leading-8 text-stone-700" />
           </li>
         ))}
       </ul>,
     );
     list = [];
   };
-  items.forEach((b, i) => {
-    if (b.t === 'li') {
-      list.push(b);
+  const flushMath = (key: string) => {
+    if (!mathRun.length) return;
+    out.push(<MathLineGroup key={key} lines={mathRun} />);
+    mathRun = [];
+  };
+
+  lines.forEach((ln, i) => {
+    // سطر ضمن جدول تغيرات مكتشف
+    if (vtLines.has(i)) {
+      flushMath(`m${i}`);
+      flushList(`l${i}`);
+      const g = vtAtStart.get(i);
+      if (g) out.push(<VariationTableBox key={`vt${i}`} body={vtBodyFromRows(g.rows)} />);
       return;
     }
-    flush(`l${i}`);
-    if (b.t === 'm') {
-      const short = b.x.length <= 46;
-      out.push(
-        <div
-          key={i}
-          dir="ltr"
-          className={`overflow-x-auto rounded-xl border border-emerald-100 bg-emerald-50/70 px-4 py-2.5 text-[14.5px] font-semibold leading-7 text-emerald-950 ${
-            short ? 'mx-auto w-fit max-w-full text-center' : ''
-          }`}
-        >
-          {b.x}
-        </div>,
-      );
-    } else {
-      out.push(<MathText key={i} content={b.x} className="block text-[15px] leading-8 text-stone-700" />);
+    if (ln.t === 'li') {
+      flushMath(`m${i}`);
+      list.push(ln.text);
+      return;
     }
+    // سطر رياضي (كتلة رياضيات أو سطر نصي ذو طابع رياضي)
+    if (ln.t === 'm' || isMathLine(ln.text)) {
+      flushList(`l${i}`);
+      mathRun.push(ln.text);
+      return;
+    }
+    flushMath(`m${i}`);
+    flushList(`l${i}`);
+    out.push(
+      <AutoText key={i} text={ln.text} className="block text-[15px] leading-8 text-stone-700" />,
+    );
   });
-  flush('l-end');
+  flushMath('m-end');
+  flushList('l-end');
   return out;
 }
 
