@@ -32,7 +32,8 @@ import { CHAIN_PDFS, BAC_COMPILATIONS } from '@/data/chain-pdfs';
 import { LIBRARY_CHAINS } from '@/data/library-chains';
 import { BAC_SOLUTION_CHAINS, BAC_SOLUTION_STATS } from '@/data/bac-solutions';
 import { BAC_OFFICIAL_STATS } from '@/data/bac-official';
-import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
+import { ChapterIconTile, SectionTitle, THEME_STYLES } from '@/components/shared';
+import { IconTile } from '@/components/icon-tile';
 import { MathText } from '@/components/math-renderer';
 
 /* موعد بكالوريا 2027 (تقريبي — أول أسبوع يونيو) لحساب العدّ التنازلي */
@@ -66,13 +67,13 @@ const HERO_SUB: Record<YearId, string> = {
 const SHOWCASE_CHAIN = BAC_SOLUTION_CHAINS[0];
 const SHOWCASE_EX = SHOWCASE_CHAIN.exercises[0];
 
-/** تدرّج لوني مميز لكل ميزة في الرئيسية — هوية بصرية لكل قسم */
-const FEATURE_GRADIENTS: Record<string, string> = {
-  chains: 'from-amber-500 to-orange-600 shadow-amber-500/25',
-  exams: 'from-sky-500 to-blue-700 shadow-sky-500/25',
-  courses: 'from-rose-500 to-pink-700 shadow-rose-500/25',
-  aitutor: 'from-violet-500 to-purple-700 shadow-violet-500/25',
-  graphing: 'from-cyan-500 to-sky-700 shadow-cyan-500/25',
+/** لون بلاطة كل ميزة في الرئيسية — هوية بصرية لكل قسم */
+const FEATURE_TILES: Record<string, string> = {
+  chains: 'amber',
+  exams: 'sky',
+  courses: 'rose',
+  aitutor: 'violet',
+  graphing: 'cyan',
 };
 
 export type HomeViewTarget =
@@ -285,17 +286,14 @@ export default function HomeView({
             {stats.map((s, i) => (
               <div
                 key={s.label}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur transition hover:bg-white/10 sm:p-5"
+                className="group rounded-2xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur transition hover:border-white/20 hover:bg-white/10 sm:p-5"
               >
-                <span
-                  className={`mx-auto mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg ${
-                    i === 3
-                      ? 'from-amber-400 to-orange-600 shadow-amber-500/30'
-                      : 'from-emerald-400 to-teal-600 shadow-emerald-500/30'
-                  }`}
-                >
-                  <s.icon className="h-5 w-5 text-white" />
-                </span>
+                <IconTile
+                  icon={s.icon}
+                  color={i === 3 ? 'amber' : 'emerald'}
+                  spark={i === 3}
+                  className="mx-auto mb-3 group-hover:scale-105"
+                />
                 <div className="text-3xl font-black text-white">{s.value}</div>
                 <div className="mt-1 text-xs font-semibold text-emerald-100/80 sm:text-sm">{s.label}</div>
               </div>
@@ -421,8 +419,8 @@ export default function HomeView({
                   className="group flex items-center justify-between gap-3 rounded-xl bg-white/10 px-4 py-3 text-right transition hover:bg-white/20"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400/20 text-emerald-200 ring-1 ring-emerald-300/30">
-                      <BookOpen className="h-4 w-4" />
+                    <span className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400/30 to-teal-500/30 shadow-sm ring-1 ring-inset ring-emerald-200/40 transition group-hover:scale-105 group-hover:ring-emerald-200/70">
+                      <BookOpen className="h-4.5 w-4.5 text-emerald-100" />
                     </span>
                     <span>
                       <span className="block text-sm font-black text-white">{c.shortTitle}</span>
@@ -453,17 +451,23 @@ export default function HomeView({
               <button
                 key={f.title}
                 onClick={() => onNavigate(f.view)}
-                className={`group rounded-2xl border border-stone-200 bg-white p-6 text-right shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100 ${
+                className={`group relative overflow-hidden rounded-2xl border border-stone-200 bg-white p-6 text-right shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100 ${
                   'highlight' in f && f.highlight ? 'ring-2 ring-emerald-500/30 hover:ring-emerald-500/60' : ''
                 }`}
               >
-                <div
-                  className={`mb-4 inline-flex rounded-xl bg-gradient-to-br p-3 text-white shadow-md transition group-hover:scale-105 group-hover:shadow-lg ${
-                    FEATURE_GRADIENTS[f.view] ?? 'from-emerald-600 to-teal-700 shadow-emerald-600/25'
+                {/* هالة لونية خلف البطاقة عند التحويم */}
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute -left-10 -top-10 h-28 w-28 rounded-full bg-gradient-to-br opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-15 ${
+                    f.view === 'chains' ? 'from-amber-400 to-orange-500' : f.view === 'exams' ? 'from-sky-400 to-blue-600' : f.view === 'courses' ? 'from-rose-400 to-pink-600' : f.view === 'aitutor' ? 'from-violet-400 to-purple-600' : f.view === 'graphing' ? 'from-cyan-400 to-sky-600' : 'from-emerald-400 to-teal-600'
                   }`}
-                >
-                  <f.icon className="h-6 w-6" />
-                </div>
+                />
+                <IconTile
+                  icon={f.icon}
+                  color={FEATURE_TILES[f.view] ?? 'emerald'}
+                  spark={'highlight' in f && f.highlight}
+                  className="mb-4 group-hover:-rotate-3 group-hover:scale-105"
+                />
                 <h3 className="mb-2 text-lg font-extrabold text-stone-900">{f.title}</h3>
                 <p className="text-sm leading-7 text-stone-600">{f.desc}</p>
               </button>
@@ -483,7 +487,9 @@ export default function HomeView({
           <div className="grid gap-5 md:grid-cols-3">
             {steps.map((s, i) => (
               <div key={s.n} className="relative rounded-2xl border border-stone-200 bg-stone-50/60 p-6">
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-xl font-black text-white shadow-md shadow-emerald-600/25">
+                <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 text-xl font-black text-white shadow-lg shadow-emerald-600/30">
+                  <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/30" />
+                  <span className="pointer-events-none absolute inset-x-[15%] top-[6%] h-[38%] rounded-[inherit] bg-gradient-to-b from-white/25 to-transparent blur-[1px]" />
                   {s.n}
                 </div>
                 <h3 className="mb-2 text-lg font-extrabold text-stone-900">{s.title}</h3>
@@ -576,9 +582,7 @@ export default function HomeView({
                 >
                   <div className={`absolute -left-6 -top-6 h-16 w-16 rounded-full ${th.soft}`} />
                   <div className="relative flex items-start gap-4">
-                    <div className={`rounded-xl ${th.bg} p-3 text-white shadow-md`}>
-                      <ChapterIcon name={c.icon} className="h-6 w-6" />
-                    </div>
+                    <ChapterIconTile name={c.icon} theme={c.theme} className="group-hover:-rotate-3 group-hover:scale-105" />
                     <div className="flex-1">
                       <div className="mb-1 flex items-center gap-2">
                         <span className={`text-xs font-black ${th.text}`}>الفصل {i + 1}</span>

@@ -17,6 +17,7 @@ import SubscribeView from '@/components/views/SubscribeView';
 import AdminView from '@/components/views/AdminView';
 import GraphingView from '@/components/views/GraphingView';
 import AITutorView from '@/components/views/AITutorView';
+import { NavTile } from '@/components/icon-tile';
 import { useProgress } from '@/lib/progress';
 import { useLevel } from '@/lib/level';
 import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
@@ -107,17 +108,21 @@ export default function Page() {
       {/* ============ Navbar ============ */}
       <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center gap-2 px-3 py-2 sm:gap-3 sm:px-6">
-          <button onClick={() => navigate('home')} className="flex shrink-0 items-center gap-2.5">
-            <Image
-              src="/teacher-adli-avatar.jpg"
-              alt="الأستاذ عدلي اسعد"
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-full border-2 border-emerald-600 object-cover shadow-sm"
-            />
+          <button onClick={() => navigate('home')} className="group flex shrink-0 items-center gap-2.5">
+            <span className="relative">
+              <Image
+                src="/teacher-adli-avatar.jpg"
+                alt="الأستاذ عدلي اسعد"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full border-2 border-emerald-600 object-cover shadow-md shadow-emerald-600/20 transition group-hover:shadow-emerald-600/40"
+              />
+              <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-inset ring-white/20" />
+              <span className="absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-full border-2 border-white bg-gradient-to-br from-amber-300 to-amber-500" />
+            </span>
             <span className="text-right leading-tight">
-              <span className="block text-base font-black text-stone-900">
-                تدرّج <span className="text-amber-600">للرياضيات</span>
+              <span className="block bg-gradient-to-l from-emerald-800 via-emerald-700 to-teal-700 bg-clip-text text-base font-black text-transparent">
+                تدرّج <span className="bg-gradient-to-l from-amber-500 to-orange-600 bg-clip-text text-transparent">للرياضيات</span>
               </span>
               <span className="block text-[10px] font-bold text-emerald-700">تحت إشراف الأستاذ عدلي اسعد</span>
             </span>
@@ -149,20 +154,21 @@ export default function Page() {
             )}
           </div>
 
-          <nav className="hidden min-w-0 items-center gap-0.5 xl:flex" aria-label="التنقل الرئيسي">
+          <nav className="hidden min-w-0 items-center gap-1 xl:flex" aria-label="التنقل الرئيسي">
             {NAV.map((n) => (
               <button
                 key={n.id}
                 onClick={() => navigate(n.id)}
                 title={n.short ? n.label : undefined}
-                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl px-2.5 py-2 text-[13px] font-extrabold transition ${
+                className={`group inline-flex items-center gap-2 whitespace-nowrap rounded-xl py-1.5 pe-3 ps-1.5 text-[13px] font-extrabold transition ${
                   view === n.id
-                    ? 'bg-gradient-to-l from-emerald-700 to-teal-800 text-white shadow-md shadow-emerald-700/25'
+                    ? 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200'
                     : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
                 }`}
               >
-                <n.icon className={`h-3.5 w-3.5 ${view === n.id ? 'text-amber-300' : 'text-emerald-700/70'}`} />
+                <NavTile icon={n.icon} active={view === n.id} size="xs" />
                 {n.short ?? n.label}
+                {view === n.id && <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.8)]" />}
               </button>
             ))}
           </nav>
@@ -185,19 +191,20 @@ export default function Page() {
           className="border-t border-stone-100 bg-white/95 xl:hidden"
           aria-label="التنقل للهاتف"
         >
-          <div className="custom-scroll mx-auto flex max-w-7xl gap-1 overflow-x-auto px-3 py-2">
+          <div className="custom-scroll mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-3 py-2">
             {NAV_MOBILE.map((n) => (
               <button
                 key={n.id}
                 onClick={() => navigate(n.id)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-extrabold transition ${
+                className={`group inline-flex shrink-0 items-center gap-2 rounded-xl py-1.5 pe-3.5 ps-1.5 text-xs font-extrabold transition ${
                   view === n.id
-                    ? 'bg-gradient-to-l from-emerald-700 to-teal-800 text-white shadow-md shadow-emerald-700/25'
+                    ? 'bg-emerald-50 text-emerald-900 ring-1 ring-emerald-200'
                     : 'text-stone-500 hover:bg-stone-100'
                 }`}
               >
-                <n.icon className={`h-3.5 w-3.5 ${view === n.id ? 'text-amber-300' : ''}`} />
+                <NavTile icon={n.icon} active={view === n.id} size="xs" />
                 {n.label}
+                {view === n.id && <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.8)]" />}
               </button>
             ))}
           </div>
@@ -294,15 +301,18 @@ export default function Page() {
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-sm">
               <div className="mb-3 flex items-center gap-3">
-                <Image
-                  src="/teacher-adli-avatar.jpg"
-                  alt="الأستاذ عدلي اسعد"
-                  width={44}
-                  height={44}
-                  className="h-11 w-11 rounded-xl border-2 border-emerald-600 object-cover"
-                />
+                <span className="relative">
+                  <Image
+                    src="/teacher-adli-avatar.jpg"
+                    alt="الأستاذ عدلي اسعد"
+                    width={44}
+                    height={44}
+                    className="h-11 w-11 rounded-xl border-2 border-emerald-600 object-cover shadow-md shadow-emerald-600/20"
+                  />
+                  <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-2 ring-inset ring-white/20" />
+                </span>
                 <span>
-                  <span className="block text-base font-black text-stone-900">تدرّج للرياضيات</span>
+                  <span className="block bg-gradient-to-l from-emerald-800 to-teal-700 bg-clip-text text-base font-black text-transparent">تدرّج للرياضيات</span>
                   <span className="block text-[11px] font-bold text-emerald-700">تحت إشراف الأستاذ عدلي اسعد</span>
                 </span>
               </div>

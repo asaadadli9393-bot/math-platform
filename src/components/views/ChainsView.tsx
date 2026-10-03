@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { MathText } from '@/components/math-renderer';
 import { RichText } from '@/lib/tex';
 import { ChapterIcon } from '@/components/shared';
+import { IconTile } from '@/components/icon-tile';
 import type { YearId } from '@/data/curriculum';
 import { chaptersOfYear } from '@/data/chapters';
 import {
@@ -134,31 +135,19 @@ function ChainPdfCard({
     >
       <CardContent className="flex h-full flex-col gap-3 pt-5">
         <div className="flex items-start gap-3">
-          <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl shadow-md ${
-              locked
-                ? 'bg-gradient-to-br from-amber-500 to-amber-600 shadow-amber-500/25'
-                : isBac
-                  ? 'bg-gradient-to-br from-indigo-600 to-violet-700 shadow-indigo-600/25'
-                  : isDz
-                    ? 'bg-gradient-to-br from-sky-600 to-teal-700 shadow-sky-600/25'
-                    : isLib
-                      ? 'bg-gradient-to-br from-amber-600 to-orange-700 shadow-amber-600/25'
-                      : 'bg-gradient-to-br from-red-600 to-rose-700 shadow-red-600/25'
-            }`}
-          >
-            {locked ? (
-              <Lock className="h-5 w-5 text-white" />
-            ) : isDz ? (
-              <Sparkles className="h-5 w-5 text-white" />
-            ) : isBac ? (
-              <GraduationCap className="h-5 w-5 text-white" />
-            ) : isLib ? (
-              <BookMarked className="h-5 w-5 text-white" />
-            ) : (
-              <FileText className="h-5 w-5 text-white" />
-            )}
-          </div>
+          {(() => {
+            const CardIcon = locked ? Lock : isDz ? Sparkles : isBac ? GraduationCap : isLib ? BookMarked : FileText;
+            const tileColor = locked ? 'amber' : isBac ? 'royal' : isDz ? 'sky' : isLib ? 'orange' : 'rose';
+            return (
+              <IconTile
+                icon={CardIcon}
+                color={tileColor}
+                spark={!locked}
+                size="md"
+                className="shadow-md transition-transform duration-300 group-hover:scale-105"
+              />
+            );
+          })()}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-1.5">
               <h4 className="font-black leading-snug text-stone-900">{pdf.title}</h4>

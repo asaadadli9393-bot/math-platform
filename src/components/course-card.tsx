@@ -71,7 +71,15 @@ export function CourseCard({ course, onOpen, isSubscribed = true, onSubscribe }:
         className="h-32 flex items-center justify-center relative"
         style={{ background: `linear-gradient(135deg, ${course.coverColor}, ${course.coverColor}dd)` }}
       >
-        <Icon className="w-16 h-16 text-white opacity-90" />
+        {/* علامات مائية رياضية على الغلاف */}
+        <span aria-hidden="true" className="pointer-events-none absolute right-5 top-3 select-none font-serif text-3xl font-black text-white/15">∑</span>
+        <span aria-hidden="true" className="pointer-events-none absolute left-7 bottom-2 select-none font-serif text-2xl font-black text-white/10">√x</span>
+        <span aria-hidden="true" className="pointer-events-none absolute left-1/4 top-2 select-none font-serif text-xl font-black text-white/10">π</span>
+        <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/20" />
+        <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent" />
+        <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 shadow-lg ring-1 ring-inset ring-white/30 backdrop-blur-sm">
+          <Icon className="w-9 h-9 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]" />
+        </span>
         <Badge className="absolute top-3 right-3 bg-white/90 text-foreground">
           <Calendar className="w-3 h-3 ml-1" />
           {course.createdAt}
@@ -165,7 +173,13 @@ export function CourseDetail({ course, onBack }: CourseDetailProps) {
           className="h-32 flex items-center justify-center relative"
           style={{ background: `linear-gradient(135deg, ${course.coverColor}, ${course.coverColor}cc)` }}
         >
-          <Icon className="w-20 h-20 text-white" />
+          <span aria-hidden="true" className="pointer-events-none absolute right-8 top-4 select-none font-serif text-4xl font-black text-white/15">∑</span>
+          <span aria-hidden="true" className="pointer-events-none absolute left-10 bottom-3 select-none font-serif text-3xl font-black text-white/10">∫</span>
+          <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/20" />
+          <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent" />
+          <span className="relative inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 shadow-lg ring-1 ring-inset ring-white/30 backdrop-blur-sm">
+            <Icon className="w-11 h-11 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]" />
+          </span>
         </div>
         <CardContent className="pt-6 space-y-4">
           <div>

@@ -4,6 +4,7 @@ import { TrendingUp, Zap, ArrowUpRight, ListOrdered, Pi, Calculator, Dices, Orbi
 import type { Difficulty } from '@/data/chapters';
 import type { StreamId } from '@/data/curriculum';
 import { getStream } from '@/data/curriculum';
+import { IconTile, TILE_GRADIENTS } from '@/components/icon-tile';
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   TrendingUp,
@@ -61,16 +62,49 @@ export function StreamChip({ id, className = '' }: { id: StreamId; className?: s
 
 export function SectionTitle({ eyebrow, title, sub }: { eyebrow?: string; title: string; sub?: string }) {
   return (
-    <div className="mb-8">
+    <div className="relative mb-8">
+      {/* علامة مائية رياضية — لمسة هوية خلف العنوان */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-8 left-0 hidden select-none font-serif text-7xl font-black text-emerald-900/[0.05] sm:block"
+      >
+        ∑
+      </span>
       {eyebrow && (
-        <span className="mb-2 inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+        <span className="mb-2.5 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3.5 py-1.5 text-xs font-black text-emerald-800 ring-1 ring-emerald-200/70">
+          <span className="h-1.5 w-1.5 rotate-45 rounded-[2px] bg-amber-500" />
           {eyebrow}
         </span>
       )}
-      <h2 className="text-2xl font-extrabold text-stone-900 sm:text-3xl">{title}</h2>
-      {/* شريط هوية المنصة: تدرج زمردية ← فيروز ← عنبري */}
-      <div className="mt-3 h-1.5 w-24 rounded-full bg-gradient-to-l from-emerald-600 via-teal-500 to-amber-400" />
+      <h2 className="relative text-2xl font-black text-stone-900 sm:text-3xl">{title}</h2>
+      {/* شريط هوية المنصة: تدرج زمردية ← فيروز ← عنبري + فاصل نقاطي */}
+      <div className="mt-3 flex items-center gap-1.5" aria-hidden="true">
+        <span className="h-1.5 w-24 rounded-full bg-gradient-to-l from-emerald-600 via-teal-500 to-amber-400" />
+        <span className="h-1.5 w-3 rounded-full bg-amber-400/70" />
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+      </div>
       {sub && <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base">{sub}</p>}
     </div>
   );
+}
+
+/** تدرّج IconTile الموافق لثيم الفصل (THEME_STYLES) */
+export function themeTileColor(theme: string): string {
+  return theme in TILE_GRADIENTS ? theme : 'emerald';
+}
+
+/** أيقونة فصل داخل بلاطة مميزة — بديل الحاوية اليدوية القديمة */
+export function ChapterIconTile({
+  name,
+  theme,
+  size = 'md',
+  className = '',
+}: {
+  name: string;
+  theme: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}) {
+  const Cmp = ICONS[name] ?? Sigma;
+  return <IconTile icon={Cmp} color={themeTileColor(theme)} size={size} className={className} />;
 }

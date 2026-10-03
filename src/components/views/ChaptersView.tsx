@@ -5,7 +5,7 @@ import { ArrowRight, BookOpenCheck, ChevronDown, Lightbulb, Sigma } from 'lucide
 import { chaptersOfYear, type Chapter } from '@/data/chapters';
 import { EXERCISES } from '@/data/exercises';
 import { chapterTotalHours, chapterWeekRange, getStream, type StreamId, type YearId } from '@/data/curriculum';
-import { ChapterIcon, SectionTitle, THEME_STYLES } from '@/components/shared';
+import { ChapterIconTile, SectionTitle, THEME_STYLES } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 
 function ChapterCard({
@@ -25,9 +25,7 @@ function ChapterCard({
       className="group flex h-full flex-col rounded-2xl border border-stone-200 bg-white p-5 text-right shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-100"
     >
       <div className="mb-4 flex items-center gap-3">
-        <div className={`rounded-xl ${th.bg} p-2.5 text-white shadow-md`}>
-          <ChapterIcon name={chapter.icon} className="h-5 w-5" />
-        </div>
+        <ChapterIconTile name={chapter.icon} theme={chapter.theme} size="sm" className="group-hover:-rotate-3 group-hover:scale-105" />
         <span className={`text-xs font-black ${th.text}`}>الفصل {index + 1}</span>
         <span className="mr-auto rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-bold text-stone-500">
           {count} تمارين
@@ -84,9 +82,7 @@ function ChapterDetail({
       {/* Header */}
       <div className={`mb-8 overflow-hidden rounded-3xl border border-stone-200 bg-gradient-to-bl ${th.soft} to-white p-6 sm:p-8`}>
         <div className="flex items-start gap-4">
-          <div className={`rounded-2xl ${th.bg} p-4 text-white shadow-lg`}>
-            <ChapterIcon name={chapter.icon} className="h-8 w-8" />
-          </div>
+          <ChapterIconTile name={chapter.icon} theme={chapter.theme} size="xl" />
           <div>
             <span className={`text-sm font-black ${th.text}`}>الفصل {index + 1}</span>
             <h1 className="text-2xl font-black leading-9 text-stone-900 sm:text-3xl">{chapter.title}</h1>
