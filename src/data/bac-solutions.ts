@@ -1,10 +1,14 @@
 import type { InteractiveChain } from './interactive-chains';
+import { SEQ_MORE, FUNC_MORE } from './bac-more-seq-func';
+import { EXP_MORE, LOG_MORE } from './bac-more-exp-log';
+import { INT_MORE, PROBA_MORE } from './bac-more-int-proba';
+import { COMPLEX_MORE, SPACE_MORE } from './bac-more-complex-space';
 
 /* ============================================================
    الحلول النموذجية المميزة لتجميعيات البكالوريا 2008–2026
-   8 سلاسل حلول — واحدة لكل تجميعية حسب المحور — تضم 40 تمريناً
-   بنماذج الأسئلة المدروسة في دورات البكالوريا، مع الحل النموذجي
-   المفصل خطوة بخطوة بنفس منهجية التصحيح الرسمي.
+   8 سلاسل حلول — واحدة لكل تجميعية حسب المحور — تضم 104 تمارين
+   بنماذج الأسئلة المدروسة في دورات البكالوريا (2008–2026)، مع الحل
+   النموذجي المفصل خطوة بخطوة بنفس منهجية التصحيح الرسمي.
    مقترنة بالتجميعيات في chain-pdfs.ts عبر bacSolutionFor.
    ============================================================ */
 
@@ -20,6 +24,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-mutataliyat',
     exercises: [
+      ...SEQ_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — نعتبر المتتالية $(u_n)$ المعرفة بـ $u_0 = 2$ و $u_{n+1} = \\frac{1}{2}u_n + 3$ لكل $n \\in \\mathbb{N}$. نضع $v_n = u_n - 6$.\n1. برهن أن $(v_n)$ متتالية هندسية حدد أساسها وحدّها الأول.\n2. اكتب $v_n$ ثم $u_n$ بدلالة $n$.\n3. احسب $\\lim_{n \\to +\\infty} u_n$ ثم برهن أن $(u_n)$ متزايدة.\n4. نضع $S_n = u_0 + u_1 + \\cdots + u_n$. احسب $S_n$ بدلالة $n$.',
@@ -68,6 +73,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-dawal-adadiya',
     exercises: [
+      ...FUNC_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — لتكن $f$ الدالة المعرفة على $\\mathbb{R} \\setminus \\left\\{1\\right\\}$ بـ $f(x) = x + \\frac{1}{x - 1}$ ومنحناها $(\\mathcal{C})$.\n1. احسب $\\lim_{x \\to 1^+} f(x)$ و $\\lim_{x \\to 1^-} f(x)$ و $\\lim_{x \\to +\\infty} f(x)$ و $\\lim_{x \\to -\\infty} f(x)$.\n2. احسب $f\'(x)$ لكل $x \\ne 1$ ودرس إشارتها ثم ضع جدول تغيرات $f$.\n3. برهن أن المستقيم $(D): y = x$ مقارب مائل لـ $(\\mathcal{C})$ عند $+\\infty$ و $-\\infty$، ثم أعط معادلة المماس لـ $(\\mathcal{C})$ عند النقطة ذات الفاصلة $0$.',
@@ -116,6 +122,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-dawal-asiya',
     exercises: [
+      ...EXP_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — لتكن $f$ الدالة المعرفة على $\\mathbb{R}$ بـ $f(x) = (x - 1)e^x$ ومنحناها $(\\mathcal{C})$.\n1. احسب $\\lim_{x \\to -\\infty} f(x)$ و $\\lim_{x \\to +\\infty} f(x)$.\n2. احسب $f\'(x)$ لكل $x \\in \\mathbb{R}$ وضعه في جدول تغيرات $f$.\n3. أوجد معادلة المماس لـ $(\\mathcal{C})$ عند النقطة ذات الفاصلة $0$.\n4. احسب $f\'\'(x)$ ودرس تقعر المنحنى ثم حدد نقطة الانعطاف.',
@@ -164,6 +171,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-dawal-log',
     exercises: [
+      ...LOG_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — لتكن $f$ الدالة المعرفة على $\\left]0, +\\infty\\right[$ بـ $f(x) = \\frac{\\ln x}{x}$ ومنحناها $(\\mathcal{C})$.\n1. احسب $\\lim_{x \\to 0^+} f(x)$ و $\\lim_{x \\to +\\infty} f(x)$.\n2. احسب $f\'(x)$ لكل $x > 0$ ودرس إشارتها ثم ضع جدول تغيرات $f$.\n3. استنتج المقارب الأفقي لـ $(\\mathcal{C})$ عند $+\\infty$، ثم أوجد معادلة المماس لـ $(\\mathcal{C})$ عند النقطة ذات الفاصلة $1$.',
@@ -212,6 +220,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-primitives',
     exercises: [
+      ...INT_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — نعتبر الدالة $f$ المعرفة على $\\mathbb{R}$ بـ $f(x) = 6x^2 - 2x + 1$.\n1. برهن أن الدالة $F$ المعرفة بـ $F(x) = 2x^3 - x^2 + x + 2$ أصل لـ $f$ على $\\mathbb{R}$.\n2. احسب $\\int_0^1 f(x)\\,dx$.\n3. استنتج القيمة المتوسطة $m$ للدالة $f$ على المجال $\\left[0, 1\\right]$.',
@@ -260,6 +269,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-ihtimalat',
     exercises: [
+      ...PROBA_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — صندوق يحتوي $10$ كرات لا يمكن التمييز بينها باللمس: $4$ حمراء و $3$ زرقاء و $3$ خضراء. نسحب في الوقت نفسه كرتين من الصندوق. نرمز بـ $X$ للعدد المتغير العشوائي المرافق لعدد الكرات الزرقاء المسحوبة.\n1. حدد القيم الممكنة لـ $X$.\n2. أعط قانون الاحتمال المرافق لـ $X$ (احسب كل الاحتمالات واختصر الكسور).\n3. احسب التوقع الرياضي $E(X)$.',
@@ -308,6 +318,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-complexes',
     exercises: [
+      ...COMPLEX_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — نعتبر العدد المركب: $z = \\frac{(1 + i)\\left(1 + i\\sqrt{3}\\right)}{1 - i}$.\n1. برهن أن $\\frac{1 + i}{1 - i} = i$.\n2. استنتج الشكل الجبري لـ $z$.\n3. أعط الشكلين المثلثي والأُسي لـ $z$.',
@@ -356,6 +367,7 @@ export const BAC_SOLUTION_CHAINS: InteractiveChain[] = [
     premium: true,
     bacSolutionFor: 'bac-geometrie',
     exercises: [
+      ...SPACE_MORE,
       {
         statement:
           '**التمرين 1 (نمط دورة 2024)** — في الفضاء المنسوب إلى معلم متعامد ممنظم $\\left(O, \\vec{i}, \\vec{j}, \\vec{k}\\right)$ نعتبر النقاط: $A(1, 0, 2)$ و $B(2, -1, 0)$ و $C(3, 1, 1)$.\n1. احسب إحداثيات المتجهتين $\\overrightarrow{AB}$ و $\\overrightarrow{AC}$ ثم الحاصل السلمي $\\overrightarrow{AB} \\cdot \\overrightarrow{AC}$.\n2. برهن أن المتجه $\\vec{n}\\left(1, -1, 1\\right)$ عمودي على المستوى $(ABC)$.\n3. أوجد المعادلة الكارتيانية للمستوى $(ABC)$.',

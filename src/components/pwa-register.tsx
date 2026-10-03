@@ -34,14 +34,16 @@ export default function PWARegister() {
         // تجاهل
       }
       const purgeThenReload = () => {
-        if ('caches' in window) {
-          caches
+        const w = window as Window & { caches?: CacheStorage };
+        const reload = () => w.location.reload();
+        if (w.caches) {
+          w.caches
             .keys()
-            .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
-            .then(() => window.location.reload())
-            .catch(() => window.location.reload());
+            .then((keys) => Promise.all(keys.map((k) => w.caches!.delete(k))))
+            .then(reload)
+            .catch(reload);
         } else {
-          window.location.reload();
+          reload();
         }
       };
       if ('serviceWorker' in navigator) {
