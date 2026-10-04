@@ -34,9 +34,12 @@ function groupSections(blocks: Block[]): Section[] {
   for (const b of blocks) {
     if (b.t === 'pg') continue;
     if (b.t === 'h' || !cur) {
+      // عنوان نظيف بلا شوائب، والعناوين المشفّرة تُهمل (المحتوى يبقى)
+      const title = b.t === 'h' ? cleanDocText(b.x).trim() : null;
+      const usable = !!title && title.length >= 2 && !isCipherLine(title);
       cur = {
-        title: b.t === 'h' ? b.x : null,
-        exercise: b.t === 'h' && EX_RE.test(b.x.trim()),
+        title: b.t === 'h' && usable ? title : null,
+        exercise: b.t === 'h' && usable && EX_RE.test(title as string),
         items: [],
       };
       sections.push(cur);
