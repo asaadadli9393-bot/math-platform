@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { BarChart3, BookMarked, BookOpen, BookOpenCheck, BookOpenText, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, Sigma, Spline, Sparkles } from 'lucide-react';
+import { BarChart3, BookMarked, BookOpen, BookOpenCheck, BookOpenText, Bot, CalendarRange, ClipboardList, Crown, GraduationCap, Home as HomeIcon, Layers, Mail, MonitorPlay, Sigma, Spline, Sparkles } from 'lucide-react';
+import VideosView from '@/components/views/VideosView';
 import HomeView from '@/components/views/HomeView';
 import CurriculumView from '@/components/views/CurriculumView';
 import ChaptersView from '@/components/views/ChaptersView';
@@ -24,7 +25,7 @@ import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
-type View = 'home' | 'aitutor' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'library' | 'graphing' | 'subscribe' | 'admin';
+type View = 'home' | 'aitutor' | 'curriculum' | 'chapters' | 'bank' | 'exams' | 'chains' | 'quiz' | 'dashboard' | 'courses' | 'videos' | 'library' | 'graphing' | 'subscribe' | 'admin';
 
 const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'home', label: 'الرئيسية', icon: HomeIcon },
@@ -35,6 +36,7 @@ const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<
   { id: 'exams', label: 'الفروض والاختبارات', short: 'الاختبارات', icon: ClipboardList },
   { id: 'chains', label: 'السلاسل', icon: BookMarked },
   { id: 'courses', label: 'الدورات', icon: BookOpen },
+  { id: 'videos', label: 'الشرح بالفيديو', short: 'الفيديو', icon: MonitorPlay },
   { id: 'library', label: 'الموسوعة المعرفية', short: 'الموسوعة', icon: BookOpenText },
   { id: 'graphing', label: 'لوحة الرسم', short: 'الرسم', icon: Spline },
   { id: 'quiz', label: 'اختبار', icon: Sparkles },
@@ -282,6 +284,7 @@ export default function Page() {
             onSubscribe={() => navigate('subscribe')}
           />
         )}
+        {view === 'videos' && <VideosView year={year} onOpenBank={() => navigate('bank')} />}
         {view === 'library' && (
           <LibraryView
             year={year}
