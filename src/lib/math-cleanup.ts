@@ -32,6 +32,25 @@ const SYMBOL_MAP: Record<string, string> = {
   '%': '\\%', '&': '\\&', '#': '\\#',
 };
 
+/* رموز خطوط PDF الخاصة (Symbol/PUA) المتبقية بعد مصفوفة fix_math_blocks:
+   U+F049 = ∩ في خطوط الاحتمالات، U+E020/U+F0A1 = سهم استنتاج ⟹،
+   U+F8E0–F8FF = شظايا أقواس وأقواس أنظمة قابلة للامتداد — تُحذف */
+const PUA_MAP: Record<string, string> = {
+  '\uF049': ' \\cap ',
+  '\uE020': ' \\implies ',
+  '\uF0A1': ' \\implies ',
+  '\uF07E': ' ',
+  '\uF034': ' ',
+  '\uF0BE': '',
+};
+const PUA_STRIP_RE = /[\uF8E0-\uF8FF]/g;
+
+/** إصلاح رأس السهم المتبقي من أسطر النهايات: x>>→0 → x → 0 */
+const ARROW_HEAD_RE = /(<|>)\s*(→|↦|⟶)/g;
+
+/** كلمات الربط الفرنسية داخل الأسطر الرياضية تُعرض قائمة (نصاً) لا مائلة */
+const CONNECTIVE_RE = /\b(et|ou|donc|car|alors|si|puis|soit|où)\b/gi;
+
 /** الرموز الزخرفية/الشوائب التي لا معنى لها في سطر رياضي (حروفاً كانت أم رموزاً) */
 const STRIP_RE = /[«»"†‡]/g;
 
@@ -48,6 +67,13 @@ const AR_RE = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
 export function toTex(s: string): string {
   let out = s.replace(STRIP_RE, ' ');
 
+  // رموز خطوط PDF الخاصة وشظايا الأقواس
+  for (const ch of out) {
+    if (PUA_MAP[ch] !== undefined) out = out.split(ch).join(PUA_MAP[ch]);
+  }
+  out = out.replace(PUA_STRIP_RE, ' ');
+  out = out.replace(ARROW_HEAD_RE, '$2');
+
   // √ يحتاج معالجة خاصة قبل الجدول العام
   out = out.replace(/√\s*\(([^()]+)\)/g, '\\sqrt{$1}');
   out = out.replace(/√\s*\[([^\[\]]+)\]/g, '\\sqrt{$1}');
@@ -57,6 +83,9 @@ export function toTex(s: string): string {
   // فصل أسماء الدوال الملتصقة
   out = out.replace(FN_SPLIT_A, '$1 $2');
   out = out.replace(FN_SPLIT_B, '$1 ');
+
+  // كلمات الربط الفرنسية نصاً قائماً لا مائلاً: x>0 et x<1
+  out = out.replace(CONNECTIVE_RE, ' \\text{$1} ');
 
   // الدرجة بعد رقم مباشرة
   out = out.replace(/(\d)\s*°/g, '$1^{\\circ}');
@@ -70,6 +99,14 @@ export function toTex(s: string): string {
     else if (SYMBOL_MAP[ch] !== undefined) res += SYMBOL_MAP[ch];
     else res += ch;
   }
+  // أقواس مُجمّعة غير متوازنة (أنظمة مُفلطحة عبر الأسطر) تُهرّب KaTeX ← تهريب حرفي
+  let open = 0, close = 0;
+  for (const c of res) {
+    if (c === '{') open++;
+    else if (c === '}') close++;
+  }
+  if (open !== close) res = res.replace(/\{/g, '\\{ ').replace(/\}/g, '\\} ');
+
   return res.replace(/ {2,}/g, ' ').trim();
 }
 
@@ -117,8 +154,20 @@ const SUB: Record<string, string> = {
   o: 'ₒ', p: 'ₚ', r: 'ᵣ', s: 'ₛ', t: 'ₜ', u: 'ᵤ', v: 'ᵥ', x: 'ₓ',
 };
 
-export function displaySafe(s: string): string {
+/** تنظيف لطيف للنص الاحتياطي: شظايا أسهم وأقواس وضجيج رموز الخطوط (يحافظ على الحروف) */
+export function softClean(s: string): string {
   return s
+    .replace(/[\uF000-\uF8FF]/g, ' ')
+    .replace(/(<|>)\s*(→|↦|⟶)/g, '$2')
+    .replace(/[<>]{3,}/g, ' ')
+    .replace(/J{2,}/g, ' ')
+    .replace(/@@+/g, ' ')
+    .replace(/ {2,}/g, ' ')
+    .trim();
+}
+
+export function displaySafe(s: string): string {
+  return softClean(s)
     .replace(/\^\{([^{}]+)\}/g, (m, g: string) => {
       const chars = [...g];
       return chars.every((c) => SUP[c] !== undefined) ? chars.map((c) => SUP[c]).join('') : m;
@@ -140,11 +189,16 @@ export const MATH_OP_RE = /[=<>\u2264\u2265\u2260\u00b1\u00d7\u00f7\u2192\u2190\
 const MATHY_CHAR_RE = /[0-9A-Za-z\u0370-\u03FF."'\u2032\u2019\-\u2212+*=<>\u2264\u2265\u2260\u00d7\u00f7\u00b1\u2192\u2190\u2191\u2193\u2208\u2209\u221e\u221a\u00b0(){}\[\]\/:;%^\u2026\s]/;
 
 /** كلمات ربط نثرية (فرنسية/إنجليزية) تدل أن المقطع جملة لا معادلة */
-const PROSE_WORD_RE = /\b(un|une|le|la|les|de|des|du|et|est|dans|pour|que|qui|avec|donc|sur|par|soit|calculer|montrer|d[ée]terminer|r[ée]soudre|v[ée]rifier|exprimer|[ée]tablir|the|and|where|then)\b/i;
+const PROSE_WORD_RE = /\b(un|une|le|la|les|de|des|du|et|est|dans|pour|que|qui|avec|donc|sur|par|soit|calculer|montrer|d[ée]terminer|r[ée]soudre|v[ée]rifier|exprimer|[ée]tablir|the|and|where|then)\b/gi;
 
-/** هل المقطع جملة نثرية فرنسية/إنجليزية لا معادلة؟ */
+/** هل المقطع جملة نثرية فرنسية/إنجليزية لا معادلة؟
+ *  جملة فقط إذا تكرّرت كلمات الربط، أو وجدت واحدة بلا أي علاقة رياضية —
+ *  حتى لا تُسقط أسطراً رياضية حقيقية فيها «et» أو «Donc :» عابرَين */
 export function wordyProse(s: string): boolean {
-  return PROSE_WORD_RE.test(s);
+  const matches = s.match(PROSE_WORD_RE);
+  if (!matches || matches.length === 0) return false;
+  if (matches.length >= 2) return true;
+  return !MATH_OP_RE.test(s);
 }
 
 export type ProsePart = { kind: 'math' | 'text'; s: string };

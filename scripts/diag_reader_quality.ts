@@ -8,7 +8,7 @@
 import katex from 'katex';
 import * as fs from 'fs';
 import * as path from 'path';
-import { cleanDocText, isMathLine, isMathish, segmentLine, AR_RE } from '../src/lib/reader-math';
+import { cleanDocText, isMathLine, isMathish, segmentLine, AR_RE, isCipherLine } from '../src/lib/reader-math';
 import { toTex, wordyProse, displaySafe } from '../src/lib/math-cleanup';
 import { texPrep } from '../src/lib/vt';
 
@@ -53,7 +53,7 @@ const prefixes = process.argv.slice(2).length
 
 const files = fs.readdirSync(FORMATTED).filter((f) => f.endsWith('.json') && f !== 'index.json' && prefixes.some((p) => f.startsWith(p.replace(/\//g, '_'))));
 
-let totMath = 0, okMath = 0, totProse = 0, garbledProse = 0, failedMath = 0, noiseLines = 0;
+let totMath = 0, okMath = 0, totProse = 0, garbledProse = 0, failedMath = 0, noiseLines = 0, cipherMath = 0;
 const failSamples: { doc: string; line: string; err: string }[] = [];
 const garbledSamples: { doc: string; line: string }[] = [];
 const oddTexSamples: { doc: string; line: string; tex: string }[] = [];
@@ -73,6 +73,7 @@ for (const f of files.sort()) {
   for (const ln of lines) {
     const n = noiseOf(ln.x);
     if (n) { noiseLines++; if (garbledSamples.length < 25) garbledSamples.push({ doc: f, line: ln.x.slice(0, 110) }); }
+    if (isCipherLine(ln.x)) { cipherMath++; continue; } // في القارئ: شارة أنيقة بدل الرموز
     if (ln.t === 'm' || isMathLine(ln.x)) {
       totMath++;
       const r = render(ln.x, true);
@@ -102,7 +103,7 @@ for (const f of files.sort()) {
 console.log('═══ ملخص التشخيص ═══');
 console.warn = origWarn; console.error = origError;
 console.log(`وثائق: ${files.length}`);
-console.log(`أسطر رياضية: ${totMath} — تُصيَّر بنجاح: ${okMath} (${((okMath / Math.max(1, totMath)) * 100).toFixed(1)}%) — فاشلة: ${failedMath}`);
+console.log(`أسطر رياضية: ${totMath} — تُصيَّر بنجاح: ${okMath} (${((okMath / Math.max(1, totMath)) * 100).toFixed(1)}%) — فاشلة: ${failedMath} — مشفّرة (شارة): ${cipherMath}`);
 console.log(`أسطر نثرية: ${totProse} — فيها مقاطع رياضية فاشلة: ${garbledProse}`);
 console.log(`أسطر فيها شوائب ()()/PUA/beamer: ${noiseLines}`);
 console.log('\n═══ عينات أسطر رياضية فاشلة (تعرض حمراء أو نص خام) ═══');

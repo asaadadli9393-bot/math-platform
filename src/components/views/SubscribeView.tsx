@@ -24,6 +24,7 @@ import {
 import {
   ALL_PLANS,
   DUAL_PLANS,
+  PAYMENT_DETAILS,
   PROFESSOR_EMAIL,
   PLANS,
   activate,
@@ -33,6 +34,7 @@ import {
   deactivate,
   formatArDate,
   isPremiumActive,
+  paymentDetailsAvailable,
   whatsappAvailable,
   whatsappLink,
   type PlanId,
@@ -348,7 +350,7 @@ export default function SubscribeView() {
           <ol className="grid gap-3 text-sm sm:grid-cols-4">
             {[
               'املأ النموذج واضغط «إرسال الطلب» ليفتح بريدك بإجابات جاهزة',
-              'أرسل مبلغ الاشتراك بالطريقة المتفق عليها (بريدي موب / CCP / CIB)',
+              'أرسل مبلغ الاشتراك (بريدي موب / CCP / CIB) وأرفق صورة الوصل مع طلبك',
               'يؤكد لك الأستاذ الدفع ويرسل كود التفعيل إلى بريدك',
               'أدخل الكود في «المسار الثاني» بالأسفل ليُفتح المحتوى المميز',
             ].map((s, i) => (
@@ -360,6 +362,34 @@ export default function SubscribeView() {
               </li>
             ))}
           </ol>
+
+          {/* تفاصيل الدفع المباشرة — تظهر بعد تهيئتها من subscription.ts */}
+          {paymentDetailsAvailable() && (
+            <div className="rounded-xl border border-emerald-200 bg-gradient-to-l from-emerald-50 to-teal-50/50 p-4">
+              <div className="mb-2 flex items-center gap-2 text-sm font-black text-emerald-900">
+                <ShieldCheck className="h-4 w-4" />
+                تفاصيل التحويل — يمكنك الدفع مباشرة دون انتظار
+              </div>
+              <div className="grid gap-2 text-sm sm:grid-cols-2">
+                {PAYMENT_DETAILS.ccpHolder && (
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-emerald-100">
+                    <span className="text-stone-500">اسم صاحب الحساب</span>
+                    <span className="font-black text-stone-800">{PAYMENT_DETAILS.ccpHolder}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-emerald-100">
+                  <span className="text-stone-500">رقم الحساب البريدي RIP</span>
+                  <span className="flex items-center gap-2">
+                    <span dir="ltr" className="font-mono font-black text-emerald-800">{PAYMENT_DETAILS.ccpRip}</span>
+                    <CopyButton text={PAYMENT_DETAILS.ccpRip} />
+                  </span>
+                </div>
+              </div>
+              <p className="mt-2 text-xs font-bold leading-5 text-emerald-800">
+                بعد الدفع أرفق صورة الوصل مع طلبك (أو أرسلها للمراسل أدناه) ليصلك كود التفعيل في أسرع وقت.
+              </p>
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
@@ -564,7 +594,7 @@ export default function SubscribeView() {
         <CardContent className="space-y-4 text-sm leading-6 text-stone-600">
           <div>
             <h4 className="mb-1 font-black text-stone-800">هل المحتوى المجاني كافٍ للمذاكرة؟</h4>
-            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، كلها مجانية. الاشتراك المميز يفتح «مكتبة الأستاذ» (137 وثيقة منتقاة) والمواضيع والدورات المميزة والسلاسل الخاصة، إضافة إلى حصص Zoom المباشرة والمتابعة الشخصية.</p>
+            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، كلها مجانية. الاشتراك المميز يفتح «مكتبة الأستاذ» ({LIBRARY_CHAINS.length} وثيقة منتقاة) والمواضيع والدورات المميزة والسلاسل الخاصة، إضافة إلى حصص Zoom المباشرة والمتابعة الشخصية.</p>
           </div>
           <div>
             <h4 className="mb-1 font-black text-stone-800">متى يصلني كود التفعيل بعد الدفع؟</h4>

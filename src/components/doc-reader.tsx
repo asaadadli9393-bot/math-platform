@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpenText, Download, FileText, ListTree, Loader2, Sparkles, X } from 'lucide-react';
 import { findVtGroups, vtBodyFromRows, vtHtml } from '@/lib/vt';
-import { AutoText, MathLineGroup, cleanDocText, isMathLine } from '@/lib/reader-math';
+import { AutoText, MathLineGroup, cleanDocText, isMathLine, isCipherLine, docCipherRatio } from '@/lib/reader-math';
 import {
   fetchFormattedDoc,
   formattedEntry,
@@ -51,6 +51,16 @@ function groupSections(blocks: Block[]): Section[] {
 function VariationTableBox({ body }: { body: string }) {
   const html = useMemo(() => vtHtml(body), [body]);
   return <div className="my-2" dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+/** شارة بديلة للأسطر المشفّرة (خطوط PDF غير قابلة لفك الترميز) */
+function CipherChip() {
+  return (
+    <div className="my-1 flex items-center justify-center gap-1.5 rounded-lg bg-stone-100/80 px-3 py-1.5 text-[11.5px] font-bold text-stone-400">
+      <FileText className="h-3 w-3" />
+      صيغة من الوثيقة الأصلية غير قابلة للتحويل — راجع ملف PDF
+    </div>
+  );
 }
 
 /**
@@ -112,6 +122,13 @@ function renderItems(items: Block[]) {
       flushList(`l${i}`);
       const g = vtAtStart.get(i);
       if (g) out.push(<VariationTableBox key={`vt${i}`} body={vtBodyFromRows(g.rows)} />);
+      return;
+    }
+    // سطر مشفّر (خط PDF غير قابل للفك) ← شارة أنيقة بدل الرموز الغريبة
+    if (isCipherLine(ln.text)) {
+      flushMath(`m${i}`);
+      flushList(`l${i}`);
+      out.push(<CipherChip key={`c${i}`} />);
       return;
     }
     if (ln.t === 'li') {
@@ -177,14 +194,18 @@ export function DocReaderModal({
 }) {
   const [doc, setDoc] = useState<FormattedDoc | null>(null);
   const [failed, setFailed] = useState(false);
+  const [scanned, setScanned] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
 
   useEffect(() => {
     let alive = true;
     fetchFormattedDoc(entry).then((d) => {
       if (!alive) return;
-      if (d) setDoc(d);
-      else setFailed(true);
+      if (d) {
+        setDoc(d);
+        // وثيقة مسوحة بخط مشفّر غالباً ← بطاقة «افتح الملف الأصلي» بدل الرموز الغريبة
+        setScanned(docCipherRatio(d.blocks) > 0.45);
+      } else setFailed(true);
     });
     return () => {
       alive = false;
@@ -252,11 +273,15 @@ export function DocReaderModal({
 
         {/* جسم الوثيقة */}
         <div className="flex-1 overflow-y-auto bg-stone-100/60 px-3 py-4 sm:px-6 sm:py-6">
-          {failed ? (
+          {(failed || scanned) ? (
             <div className="mx-auto mt-16 max-w-md rounded-2xl border border-stone-200 bg-white p-6 text-center">
               <FileText className="mx-auto h-8 w-8 text-stone-300" />
-              <p className="mt-3 text-sm font-black text-stone-700">تعذّر استخراج محتوى هذه الوثيقة آلياً.</p>
-              <p className="mt-1 text-xs font-bold text-stone-500">يمكنك فتح الملف الأصلي PDF مباشرة.</p>
+              <p className="mt-3 text-sm font-black text-stone-700">
+                {scanned
+                  ? 'هذه الوثيقة ممسوحة بخط غير قابل للتحويل الآلي — القراءة الذكية غير متاحة لها.'
+                  : 'تعذّر استخراج محتوى هذه الوثيقة آلياً.'}
+              </p>
+              <p className="mt-1 text-xs font-bold text-stone-500">يمكنك فتح الملف الأصلي PDF مباشرة وقراءته بجودة كاملة.</p>
               <a
                 href={src}
                 target="_blank"

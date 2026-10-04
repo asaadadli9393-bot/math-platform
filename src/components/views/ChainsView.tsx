@@ -378,8 +378,8 @@ function ChainPdfsSection({
           <ChainSectionHeader
             tone="amber"
             icon={<Lock className="h-6 w-6 text-white" />}
-            title="مكتبة الأستاذ — سلاسل ومذكرات حقيقية منتقاة من أرشيفه"
-            subtitle={`${lib.length} وثيقة PDF (${libChains} سلسلة تمارين + ${libLessons} مذكرة وملخص) مصنفة حسب المحاور — محتوى حصري للمشتركين: تُفتح كل الوثائق فور تفعيل الاشتراك`}
+            title={libLessons > 0 ? 'مكتبة الأستاذ — سلاسل ومذكرات حقيقية منتقاة من أرشيفه' : 'مكتبة الأستاذ — سلاسل حقيقية منتقاة من أرشيفه'}
+            subtitle={`${lib.length} وثيقة PDF (${libChains} سلسلة تمارين${libLessons > 0 ? ` + ${libLessons} مذكرة وملخص` : ''}) مصنفة حسب المحاور — محتوى حصري للمشتركين: تُفتح كل الوثائق فور تفعيل الاشتراك`}
             badge="للمشتركين فقط"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

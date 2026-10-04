@@ -3,7 +3,7 @@
 import React from 'react';
 import katex from 'katex';
 import { texPrep } from '@/lib/vt';
-import { toTex, wordyProse, displaySafe } from '@/lib/math-cleanup';
+import { toTex, wordyProse, displaySafe, softClean } from '@/lib/math-cleanup';
 
 /* ============================================================
    عرض الرياضيات داخل القارئ الذكي:
@@ -18,11 +18,55 @@ export const AR_RE = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
 export function cleanDocText(s: string): string {
   return s
     .replace(/[A-Za-z]+!\d+/g, ' ') // ألوان Beamer المتسربة: mainDark!15، x!0…
+    .replace(/[\uF8E0-\uF8FF]/g, ' ') // شظايا أقواس قابلة للامتداد
+    .replace(/\uF0BE/g, '') // ذيول أسهم ممتدة
+    .replace(/(<|>)\s*(→|↦|⟶)/g, '$2') // رؤوس أسهم متبقية: x>>→0
+    .replace(/[\u0100-\u024F\u02C6]/g, '') // حروف لاتينية موجهة لا تصلح للفرنسية/العربية (ɟ Ă…)
+    .replace(/@{2,}/g, ' ') // علامات @@ من خطوط مشفرة
+    .replace(/([^\s.\-=<>+…])\1{2,}/g, '$1') // تضاعف الحروف ثلاثاً فأكثر: اااا → ا
     .replace(/[\u0338]=/g, '≠') // ̸= مشوّهة
     .replace(/=[\u0338]/g, '≠')
     .replace(/[\u0338]/g, '')
+    .replace(/\(\s*\)\s*\(\s*\)/g, ' ') // أقواس فارغة متضاعفة ()()
     .replace(/[ \t]{2,}/g, ' ')
     .replace(/ ?\n ?/g, '\n');
+}
+
+/* ---------------- كشف الأسطر المشفّرة ----------------
+   بعض ملفات PDF مضمّنة بخطوط Type1 ذات ترميز مخصص، فيخرج
+   النص رموزاً غريبة (íÖ]‚Ö] @@âb…) لا يمكن فكّها — نكشفها
+   لنعرض بدلها شارة أنيقة تحيل الطالب إلى الملف الأصلي.
+   -------------------------------------------------- */
+
+const CIPHER_CHAR_RE = /[\u0080-\u009F\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u024F\u02C6\u2018\u201A\u2020\u2021\u2030\u2039\u203A\u2022\u02DC\uF000-\uF8FF@#¤¦­ßþ]/;
+
+/** هل السطر مشفّر (غير قابل للاستخراج)؟ — بلا عربية + نسبة محارف شاذة عالية */
+export function isCipherLine(s: string): boolean {
+  const t = s.trim();
+  if (!t || AR_RE.test(t)) return false;
+  const stripped = t.replace(/\s/g, '');
+  if (!stripped) return false;
+  let suspect = 0;
+  for (const ch of stripped) if (CIPHER_CHAR_RE.test(ch)) suspect++;
+  if (/@\s*@/.test(t) && suspect >= 3) return true;
+  if (/[<>]{4,}/.test(t)) return true; // فيضانات رؤوس أسهم مشفّرة
+  if (/[Jj]{3,}/.test(t) && /[<>]/.test(t)) return true;
+  return suspect >= 4 && suspect / stripped.length > 0.25;
+}
+
+/** نسبة الأسطر المشفّرة في وثيقة كاملة (لعرض بطاقة «افتح PDF» عند الحاجة) */
+export function docCipherRatio(blocks: { t: string; x: string }[]): number {
+  let total = 0, cipher = 0;
+  for (const b of blocks) {
+    if (b.t === 'pg') continue;
+    for (const raw of cleanDocText(b.x).split('\n')) {
+      const t = raw.trim();
+      if (!t) continue;
+      total++;
+      if (isCipherLine(t)) cipher++;
+    }
+  }
+  return total ? cipher / total : 0;
 }
 
 /** هل النص ذو طابع رياضي (بلا عربية) ويستحق تصييراً بـ KaTeX؟ */
@@ -71,12 +115,15 @@ export function segmentLine(s: string): { ar: boolean | null; s: string }[] {
 function katexHtml(tex: string, display: boolean): string {
   if (wordyProse(tex)) return '';
   try {
-    return katex.renderToString(texPrep(toTex(tex)), {
+    const html = katex.renderToString(texPrep(toTex(tex)), {
       displayMode: display,
       throwOnError: false,
       strict: false,
       output: 'htmlAndMathml',
     });
+    // بقاء كتلة خطأ حمراء داخل المخرجات ← نفضّل السقوط النصي الأنيق
+    if (html.includes('katex-error')) return '';
+    return html;
   } catch {
     return '';
   }
@@ -132,6 +179,8 @@ export function AutoText({ text, className = '' }: { text: string; className?: s
     <span className={className} dir="rtl">
       {runs.map((r, i) => {
         if (r.ar === false && isMathish(r.s)) {
+          // مقطع مشفّر (رموز خط PDF) — يُتخطى بدل عرضه رموزاً غريبة
+          if (isCipherLine(r.s)) return null;
           const html = katexHtml(r.s.trim(), false);
           if (html) {
             return (

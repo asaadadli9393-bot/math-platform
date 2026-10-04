@@ -23,6 +23,25 @@ export const PROFESSOR_EMAIL = 'asaadadli9393@gmail.com';
  */
 export const PROFESSOR_WHATSAPP = '';
 
+/* ---------------- تفاصيل الدفع ----------------
+   تُعرض مباشرة في صفحة الاشتراك كي يدفع الطالب فوراً دون
+   انتظار ردّ بريدي — ثم يرفق صورة الوصل مع طلبه.
+   املأ البيانات الحقيقية ثم أعد النشر؛ الحقول الفارغة تخفي البطاقة.
+   ------------------------------------------------ */
+export const PAYMENT_DETAILS = {
+  /** اسم صاحب الحساب البريدي كما في البريد */
+  ccpHolder: '',
+  /** رقم الحساب البريدي RIP — يظهر لبريدي موب وCCP معاً */
+  ccpRip: '',
+  /** مفتاح الحساب (اختياري) */
+  ccpKey: '',
+};
+
+/** هل تفاصيل الدفع مُهيّأة للعرض؟ */
+export function paymentDetailsAvailable(): boolean {
+  return PAYMENT_DETAILS.ccpRip.trim().replace(/\D/g, '').length >= 10;
+}
+
 /** هل أزرار واتساب مفعّلة؟ */
 export function whatsappAvailable(): boolean {
   return PROFESSOR_WHATSAPP.trim().replace(/\D/g, '').length >= 8;
