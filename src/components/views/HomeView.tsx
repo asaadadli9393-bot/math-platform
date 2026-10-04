@@ -22,6 +22,7 @@ import {
   Target,
   Trophy,
   UserCheck,
+  Wand2,
 } from 'lucide-react';
 import { chaptersOfYear } from '@/data/chapters';
 import { exercisesOfYear, EXERCISE_COUNT } from '@/data/exercises';
@@ -87,6 +88,8 @@ export type HomeViewTarget =
   | 'chains'
   | 'exams'
   | 'courses'
+  | 'videos'
+  | 'anime'
   | 'library'
   | 'subscribe';
 
@@ -140,6 +143,13 @@ export default function HomeView({
       title: 'دورات مبسّطة من الصفر',
       desc: 'دروس مكتوبة بأسلوب سهل مع أمثلة محلولة وتمارين تطبيقية تتفاعل معها داخل المنصة — للفهم قبل الحفظ، ومن التمرين إلى الامتحان.',
       view: 'courses' as const,
+    },
+    {
+      icon: Wand2,
+      title: 'أنمي الرياضيات — عوالم متخيلة',
+      desc: 'أول قسم من نوعه في المنصات الجزائرية: قصص أنمي تفاعلية قصيرة تحوّل أصعب الفصول إلى مغامرة مشوّقة — جرّب قصة «الأعداد المركبة: العالم الموازي» مجاناً الآن.',
+      view: 'anime' as const,
+      highlight: true,
     },
     {
       icon: Bot,
