@@ -576,3 +576,16 @@ Work Log:
 Stage Summary:
 - كل تحديثات الطلب الأخير (1000 دج/سنة، قفل السلاسل، شرح الفيديو، الأنمي) منشورة حية على math-adli.vercel.app ومؤكدة بالفحص الحي
 - GitHub origin/main = 78c2269 متزامن بالكامل
+
+---
+Task ID: token-rotate-1
+Agent: main
+Task: تحديث توكن Vercel المقدم من المستخدم والتحقق من صحته
+
+Work Log:
+- استلام توكن جديد vcp_7R0D... من المستخدم وتحديث .vercel-token (gitignored سطر 73، chmod 600)
+- تحقق API: التوكن صالح — المستخدم asaadadli9393-bot (asaadadli9393@gmail.com)
+- تحقق وصول math-platform: 3 نشرات إنتاجية أخيرة كلها READY (آخرها 14:24 docs: سجل التحقق)
+
+Stage Summary:
+- التوكن الجديد فعّال وصالح للنشر والاستقصاء؛ النشر الأخير على Vercel READY ومتزامن مع GitHub
