@@ -111,13 +111,14 @@ export async function POST(req: NextRequest) {
     instances[0].negativePrompt = body.negativePrompt.slice(0, 500);
   }
 
-  const model = (body.model || 'veo-3.0-generate-001').replace(/[^a-z0-9.\-]/gi, '');
+  const model = (body.model || 'veo-3.1-generate-preview').replace(/[^a-z0-9.\-]/gi, '');
+  // نماذج Veo 3.1 preview لا تدعم generateAudio — نرسل فقط المعاملات المدعومة صراحة
   const parameters: Record<string, unknown> = {
     aspectRatio: body.aspectRatio === '16:9' ? '16:9' : '9:16',
-    durationSeconds: 8,
-    generateAudio: body.generateAudio === true,
-    personGeneration: 'allow_adult',
   };
+  if (body.durationSeconds === 4 || body.durationSeconds === 6 || body.durationSeconds === 8) {
+    parameters.durationSeconds = body.durationSeconds;
+  }
 
   try {
     const r = await googleFetch(`${BASE}/models/${model}:predictLongRunning`, {
