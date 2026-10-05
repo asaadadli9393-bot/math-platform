@@ -33,6 +33,10 @@ function secretOk(req: NextRequest): boolean {
   return given.length === s.length && given === s;
 }
 
+function forbid() {
+  return Response.json({ error: 'forbidden' }, { status: 403 });
+}
+
 async function googleFetch(url: string, init?: RequestInit) {
   return fetch(url, {
     ...init,
