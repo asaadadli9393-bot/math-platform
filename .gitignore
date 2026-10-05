@@ -71,3 +71,5 @@ Caddyfile
 backup/*.txt
 backup/vercel-env*
 .vercel-token
+.veo-secret
+.gemini-key
