@@ -1,0 +1,33 @@
+{
+ "bad": [
+  "/devoirs/3as/d-3as-032.pdf",
+  "/devoirs/3as/d-3as-033.pdf",
+  "/devoirs/3as/d-3as-036.pdf",
+  "/devoirs/3as/d-3as-037.pdf",
+  "/devoirs/3as/d-3as-038.pdf",
+  "/devoirs/3as/d-3as-073.pdf",
+  "/devoirs/3as/d-3as-114.pdf",
+  "/devoirs/3as/d-3as-031.pdf",
+  "/devoirs/3as/d-3as-048.pdf",
+  "/devoirs/3as/d-3as-105.pdf",
+  "/chains/library/lib-2as-c2-prob-4.pdf",
+  "/chains/library/lib2-2as-c2-prob-2.pdf",
+  "/devoirs/3as/d-3as-065.pdf",
+  "/devoirs/3as/d-3as-115.pdf",
+  "/devoirs/3as/d-3as-118.pdf"
+ ],
+ "mid": [
+  "/devoirs/3as/d-3as-094.pdf",
+  "/devoirs/3as/d-3as-149.pdf",
+  "/devoirs/3as/d-3as-093.pdf"
+ ],
+ "gray": [
+  "/devoirs/3as/d-3as-048.pdf",
+  "/devoirs/3as/d-3as-105.pdf",
+  "/chains/library/lib-2as-c2-prob-4.pdf",
+  "/chains/library/lib2-2as-c2-prob-2.pdf",
+  "/devoirs/3as/d-3as-065.pdf",
+  "/devoirs/3as/d-3as-115.pdf",
+  "/devoirs/3as/d-3as-118.pdf"
+ ]
+}
