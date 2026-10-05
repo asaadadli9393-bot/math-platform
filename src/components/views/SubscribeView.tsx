@@ -385,9 +385,15 @@ export default function SubscribeView() {
                     <CopyButton text={PAYMENT_DETAILS.ccpRip} />
                   </span>
                 </div>
+                {PAYMENT_DETAILS.ccpKey && (
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-white/80 px-3 py-2 ring-1 ring-emerald-100">
+                    <span className="text-stone-500">مفتاح الحساب (clé)</span>
+                    <span dir="ltr" className="font-mono font-black text-emerald-800">{PAYMENT_DETAILS.ccpKey}</span>
+                  </div>
+                )}
               </div>
               <p className="mt-2 text-xs font-bold leading-5 text-emerald-800">
-                بعد الدفع أرفق صورة الوصل مع طلبك (أو أرسلها للمراسل أدناه) ليصلك كود التفعيل في أسرع وقت.
+                في «بريدي موب» اختر تحويلاً نحو CCP وأدخل رقم RIP الكامل أعلاه ثم المفتاح. بعد الدفع أرفق صورة الوصل مع طلبك (أو أرسلها للمراسل أدناه) ليصلك كود التفعيل في أسرع وقت.
               </p>
             </div>
           )}
