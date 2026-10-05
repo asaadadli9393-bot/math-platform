@@ -96,6 +96,31 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  /* ---------- توليد صورة أنمي (gemini-2.5-flash-image — حصة مجانية متاحة) ---------- */
+  if (body.action === 'image') {
+    const prompt = (body.prompt || '').trim().slice(0, 2000);
+    if (!prompt) return Response.json({ error: 'prompt-required' }, { status: 400 });
+    const imgModel = (body.model || 'gemini-2.5-flash-image').replace(/[^a-z0-9.\-]/gi, '');
+    try {
+      const r = await googleFetch(`${BASE}/models/${imgModel}:generateContent`, {
+        method: 'POST',
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok) {
+        const cands = (j as { candidates?: { content?: { parts?: { inlineData?: { mimeType?: string; data?: string } }[] } }[] }).candidates;
+        const part = cands?.[0]?.content?.parts?.find((p) => p.inlineData?.data);
+        if (part?.inlineData?.data) {
+          return Response.json({ ok: true, mimeType: part.inlineData.mimeType || 'image/png', data: part.inlineData.data });
+        }
+        return Response.json({ ok: false, stage: 'no-image-in-response', raw: String(JSON.stringify(j)).slice(0, 300) }, { status: 502 });
+      }
+      return Response.json(j, { status: r.status });
+    } catch (e) {
+      return Response.json({ error: 'image-failed', detail: e instanceof Error ? e.message : '?' }, { status: 502 });
+    }
+  }
+
   /* ---------- إطلاق مهمة توليد ---------- */
   const prompt = (body.prompt || '').trim().slice(0, 2000);
   if (!prompt) return Response.json({ error: 'prompt-required' }, { status: 400 });
