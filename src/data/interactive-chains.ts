@@ -249,7 +249,7 @@ export const INTERACTIVE_CHAINS: InteractiveChain[] = [
     year: '2as',
     chapterId: 'c2-deriv',
     level: 'تأسيسي',
-    premium: false,
+    premium: true,
     exercises: [
       {
         statement: '**التمرين 1** — احسب الدالة المشتقة لكل من:\n1. $f(x) = (2x + 1)(x - 3)$\n2. $g(x) = 3x^2 - 5x + 2$',
@@ -280,7 +280,7 @@ export const INTERACTIVE_CHAINS: InteractiveChain[] = [
     year: '1as',
     chapterId: 'c1-func',
     level: 'تأسيسي',
-    premium: false,
+    premium: true,
     exercises: [
       {
         statement: '**التمرين 1** — حدد مجموعة تعريف الدالة $f$ المعرفة بـ: $f(x) = \\sqrt{2x - 6}$.',

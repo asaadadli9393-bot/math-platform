@@ -8,14 +8,37 @@ import { BookOpenCheck, ExternalLink, Info, MonitorPlay, Play, ShieldCheck, User
 import { VIDEO_AXES, VIDEO_TOTAL, type VideoLevel } from '@/data/video-lessons';
 
 /** الشرح بالفيديو — دروس منتقاة من قنوات يوتيوب الجزائرية تُضمَّن عبر المشغل الرسمي */
+const LEVEL_LABELS: Record<string, string> = {
+  '1as': 'الأولى ثانوي',
+  '2as': 'الثانية ثانوي',
+  '3as': 'الثالثة ثانوي',
+};
+
 export default function VideosView({ year, onOpenBank }: { year: string; onOpenBank?: () => void }) {
   const [axisId, setAxisId] = React.useState<string>('all');
+  const [level, setLevel] = React.useState<string>(year);
   const [playing, setPlaying] = React.useState<string | null>(null);
 
+  // مزامنة المستوى مع سنة المستخدم عند تغييرها من الترويسة
+  React.useEffect(() => {
+    setLevel(year);
+  }, [year]);
+
   const axes = React.useMemo(
-    () => VIDEO_AXES.filter((a) => axisId === 'all' || a.id === axisId),
-    [axisId]
+    () =>
+      VIDEO_AXES.filter(
+        (a) =>
+          (axisId === 'all' || a.id === axisId) &&
+          (level === 'all' || a.lessons.some((l) => l.level === level))
+      ),
+    [axisId, level]
   );
+
+  const levelCount = React.useMemo(() => {
+    const acc: Record<string, number> = {};
+    VIDEO_AXES.forEach((a) => a.lessons.forEach((l) => { acc[l.level] = (acc[l.level] ?? 0) + 1; }));
+    return acc;
+  }, []);
 
   return (
     <div className="space-y-5 max-w-5xl mx-auto">
@@ -32,16 +55,24 @@ export default function VideosView({ year, onOpenBank }: { year: string; onOpenB
         </p>
       </div>
 
-      {/* ملاحظة المستوى */}
-      {year === '1as' || year === '2as' ? (
-        <Card className="border-amber-200 bg-amber-50/60">
-          <CardContent className="flex items-start gap-2 py-3 text-sm text-amber-900">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" />
-            أغلب الدروس الحالية مخصصة للسنة الثالثة ثانوي — دروس مستواك قيد الإضافة، ويمكنك
-            الاستفادة من دروس «الاشتقاقية» و«الدوال» المشتركة في المنهاج.
-          </CardContent>
-        </Card>
-      ) : null}
+      {/* مرشح المستوى */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <FilterChip active={level === year} onClick={() => setLevel(year)}>
+          مستواي ({LEVEL_LABELS[year] ?? year})
+        </FilterChip>
+        {(['1as', '2as', '3as'] as const)
+          .filter((lv) => levelCount[lv])
+          .map((lv) => (
+            <FilterChip key={lv} active={level === lv} onClick={() => setLevel(lv)}>
+              {LEVEL_LABELS[lv]}
+              <span className="mr-1 opacity-60">{levelCount[lv]}</span>
+            </FilterChip>
+          ))}
+        <FilterChip active={level === 'all'} onClick={() => setLevel('all')}>
+          الكل
+          <span className="mr-1 opacity-60">{VIDEO_TOTAL}</span>
+        </FilterChip>
+      </div>
 
       {/* ملاحظة الحقوق */}
       <Card className="border-emerald-200 bg-emerald-50/50">
@@ -58,15 +89,25 @@ export default function VideosView({ year, onOpenBank }: { year: string; onOpenB
         <FilterChip active={axisId === 'all'} onClick={() => setAxisId('all')}>
           كل المحاور
         </FilterChip>
-        {VIDEO_AXES.map((a) => (
+        {VIDEO_AXES.filter((a) => level === 'all' || a.lessons.some((l) => l.level === level)).map((a) => (
           <FilterChip key={a.id} active={axisId === a.id} onClick={() => setAxisId(a.id)}>
             {a.label}
-            <span className="mr-1 opacity-60">{a.lessons.length}</span>
+            <span className="mr-1 opacity-60">
+              {a.lessons.filter((l) => level === 'all' || l.level === level).length}
+            </span>
           </FilterChip>
         ))}
       </div>
 
       {/* الدروس حسب المحور */}
+      {axes.length === 0 ? (
+        <Card>
+          <CardContent className="flex items-center justify-center gap-2 py-10 text-sm font-bold text-stone-400">
+            <Info className="h-4 w-4" />
+            لا دروس لهذا المستوى بعد — تُضاف دروس جديدة باستمرار.
+          </CardContent>
+        </Card>
+      ) : null}
       {axes.map((axis) => (
         <section key={axis.id} className="space-y-3">
           <h2 className="flex items-center gap-2 text-lg font-black text-stone-800">
@@ -74,7 +115,9 @@ export default function VideosView({ year, onOpenBank }: { year: string; onOpenB
             {axis.label}
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {axis.lessons.map((v) => {
+            {axis.lessons
+              .filter((v) => level === 'all' || v.level === level)
+              .map((v) => {
               const isPlaying = playing === v.ytId;
               return (
                 <Card key={v.ytId} className="overflow-hidden transition-shadow hover:shadow-md">

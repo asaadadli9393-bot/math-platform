@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import {
   ALL_PLANS,
-  DUAL_PLANS,
+  OFFERED_PLANS,
   PAYMENT_DETAILS,
   PROFESSOR_EMAIL,
   PLANS,
@@ -42,6 +42,7 @@ import {
 } from '@/lib/subscription';
 import { EXERCISE_COUNT } from '@/data/exercises';
 import { DEVOIR_PAPERS } from '@/data/devoir-pdfs';
+import { DZEXAMS_CHAINS } from '@/data/chain-pdfs';
 import { LIBRARY_CHAINS } from '@/data/library-chains';
 import { BAC_SOLUTION_STATS } from '@/data/bac-solutions';
 import { BAC_OFFICIAL_STATS } from '@/data/bac-official';
@@ -61,11 +62,12 @@ const FREE_FEATURES = [
 
 const PREMIUM_FEATURES = [
   `مكتبة الأستاذ الكاملة: ${LIBRARY_CHAINS.length} وثيقة PDF منتقاة (سلاسل تمارين مع الحلول + مذكرات وملخصات)`,
+  `سلاسل الحلول المفصلة للسنة الأولى والثانية ثانوي (${DZEXAMS_CHAINS.length} سلسلة كاملة محلولة خطوة بخطوة)`,
   `تجميعات البكالوريا 2008–2026 حسب المحاور + ${BAC_SOL_TOTAL} حل نموذجياً مفصلاً بنفس منهجية شبكات التصحيح`,
   'التصحيح الرسمي الشامل للموضوعين الرسميين لدورة 2024 وفق شبكات التصحيح',
   'السلاسل الحصرية الخاصة من أرشيف الأستاذ عدلي اسعد',
   'الوصول غير المحدود للمدرّس الذكي تدرّج AI',
-  'قصص «أنمي الرياضيات» الجديدة فور صدورها (القصة الأولى مجانية للجميع)',
+  'قصص «أنمي الرياضيات» الجديدة فور صدورها (قصص المستويات مجانية للجميع)',
   'الحصص المباشرة عبر Zoom عند إطلاقها (قريباً) — إعلان مبكر للمشتركين',
   'الدعم والمتابعة المباشرة عبر البريد الإلكتروني',
 ];
@@ -170,11 +172,11 @@ export default function SubscribeView() {
         <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/25">
           <Crown className="h-8 w-8 text-white" />
         </div>
-        <h1 className="mb-2 text-3xl font-black text-stone-900 md:text-4xl">نظام الاشتراك المزدوج</h1>
+        <h1 className="mb-2 text-3xl font-black text-stone-900 md:text-4xl">اشتراك واحد — كل المزايا لسنة كاملة</h1>
         <p className="mx-auto max-w-2xl leading-relaxed text-stone-500">
-          باقتان للاختيار بينهما، ومسارَا تفعيل عبر البريد الإلكتروني: أرسل طلبك إلى الأستاذ
-          عدلي اسعد واستلم كود التفعيل في بريدك، أو فعّل فوراً بكود وصلك. المحتوى الأساسي
-          يبقى مجانياً للجميع.
+          اشتراك واحد بثمن رمزي: 1000 دج تفتح لك كل المزايا المميزة لسنة كاملة. حوّل مباشرة
+          ببريدي موب أو CCP (التفاصيل أدناه)، أرسل الوصل مع طلبك، واستلم كود التفعيل في بريدك.
+          المحتوى الأساسي يبقى مجانياً للجميع.
         </p>
       </div>
 
@@ -218,9 +220,9 @@ export default function SubscribeView() {
       )}
 
       {/* ================= الباقتان (مزدوج) ================= */}
-      <div className="grid gap-5 md:grid-cols-2">
-        {DUAL_PLANS.map((p, idx) => {
-          const popular = idx === 1;
+      <div className="mx-auto grid max-w-xl gap-5">
+        {OFFERED_PLANS.map((p) => {
+          const popular = true;
           return (
             <Card
               key={p.id}
@@ -242,7 +244,7 @@ export default function SubscribeView() {
                   <p className="text-[11px] font-black text-amber-600">≈ 17 دج يومياً — أرخص من قطعة حلوى</p>
                 )}
                 {p.id === 'Y1' && (
-                  <p className="text-[11px] font-black text-amber-600">≈ 8 دج يومياً — أرخص من قطعة حلوى</p>
+                  <p className="text-[11px] font-black text-amber-600">≈ 2.7 دج يومياً — أرخص من قطعة حلوى</p>
                 )}
               </CardHeader>
               <CardContent className="space-y-3 pt-2">
@@ -601,7 +603,7 @@ export default function SubscribeView() {
         <CardContent className="space-y-4 text-sm leading-6 text-stone-600">
           <div>
             <h4 className="mb-1 font-black text-stone-800">هل المحتوى المجاني كافٍ للمذاكرة؟</h4>
-            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، كلها مجانية. الاشتراك المميز يفتح «مكتبة الأستاذ» ({LIBRARY_CHAINS.length} وثيقة منتقاة) والمواضيع والدورات المميزة والسلاسل الخاصة، إضافة إلى الحصص المباشرة عند إطلاقها (قريباً) والمتابعة الشخصية.</p>
+            <p>نعم — بنك التمارين كاملاً بأحلوله النموذجية، والفصول والملخصات والاختبارات، وقصة أنمي لكل مستوى، كلها مجانية. اشتراكك الواحد (1000 دج/سنة) يفتح «مكتبة الأستاذ» ({LIBRARY_CHAINS.length} وثيقة منتقاة) + سلاسل الحلول المفصلة لكل المستويات ({DZEXAMS_CHAINS.length} سلسلة) + مواضيع وحلول البكالوريا + الدورات والسلاسل الخاصة + الذكاء الاصطناعي بلا حدود + الحصص المباشرة عند إطلاقها.</p>
           </div>
           <div>
             <h4 className="mb-1 font-black text-stone-800">متى يصلني كود التفعيل بعد الدفع؟</h4>

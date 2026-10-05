@@ -23,6 +23,13 @@ import {
 } from 'lucide-react';
 import { RichText } from '@/lib/tex';
 import { ANIME_STORIES, ANIME_TEASERS, type AnimeStory } from '@/data/anime-stories';
+
+const LEVEL_BADGE: Record<string, string> = {
+  '1as': 'السنة الأولى ثانوي',
+  '2as': 'السنة الثانية ثانوي',
+  '3as': 'السنة الثالثة ثانوي',
+  all: 'كل المستويات',
+};
 import { PROFESSOR_EMAIL } from '@/lib/subscription';
 
 /** زمن المشهد في التشغيل التلقائي (ثانية) */
@@ -70,25 +77,27 @@ export default function AnimeView({
         <p className="mx-auto max-w-2xl text-sm leading-relaxed text-stone-500">
           قصص تفاعلية قصيرة بأسلوب الأنمي تحوّل أصعب فصول المنهاج إلى مغامرة: مشاهد مرسومة، سرد
           مشوّق، والرياضيات الحقيقية تظهر داخل الحكاية كما ستستعملها في الامتحان. قسم حصري على
-          المنصة — القصة الأولى مجانية للجميع.
+          المنصة — قصة لكل مستوى، مجانية للجميع.
         </p>
       </div>
 
-      {/* تنبيه المستوى */}
-      {year !== '3as' ? (
+      {/* تنبيه المستوى — فقط إن لم توجد قصة لمستواه بعد */}
+      {!ANIME_STORIES.some((st) => st.level === year) ? (
         <Card className="border-amber-200 bg-amber-50/60">
           <CardContent className="flex items-start gap-2 py-3 text-sm text-amber-900">
             <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
-            القصة الحالية من منهج السنة الثالثة ثانوي — قصص مستواك قيد الإعداد، ويمكنك مشاهدتها
-            لتفهم الفكرة قبل أن يأتي درسها.
+            قصص مستواك قيد الإعداد حالياً — ويمكنك مشاهدة قصص المستويات الأخرى لتفهم الفكرة قبل
+            أن يأتي درسها.
           </CardContent>
         </Card>
       ) : null}
 
-      {/* القصص المتاحة */}
-      {ANIME_STORIES.map((story) => (
-        <StoryCard key={story.id} story={story} onPlay={() => setPlayingStory(story)} />
-      ))}
+      {/* القصص المتاحة — قصة مستواك أولاً */}
+      {[...ANIME_STORIES]
+        .sort((a, b) => (a.level === year ? -1 : 0) - (b.level === year ? -1 : 0))
+        .map((story) => (
+          <StoryCard key={story.id} story={story} onPlay={() => setPlayingStory(story)} />
+        ))}
 
       {/* قيد الإنتاج — تشويق صادق */}
       <section className="space-y-3">
@@ -177,7 +186,7 @@ function StoryCard({ story, onPlay }: { story: AnimeStory; onPlay: () => void })
         <p className="text-sm leading-relaxed text-stone-500">{story.tagline}</p>
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
           <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800">
-            السنة الثالثة ثانوي
+            {LEVEL_BADGE[story.level] ?? story.level}
           </Badge>
           <Button
             onClick={onPlay}

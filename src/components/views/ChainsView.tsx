@@ -110,8 +110,8 @@ function ChainPdfCard({
   onSubscribe: () => void;
   onOpenSolutions?: () => void;
 }) {
-  // المكتبة (مكتبة الأستاذ) مقفولة بالكامل — تُفتح بالاشتراك فقط
-  const locked = (pdf.premium || pdf.group === 'library') && !isPremium;
+  // المكتبة وسلاسل الحلول المفصلة مقفولة بالكامل — تُفتح بالاشتراك فقط
+  const locked = (pdf.premium || pdf.group === 'library' || pdf.group === 'dzexams') && !isPremium;
   const isHosted = !!pdf.file;
   const isBac = pdf.group === 'bac';
   const isDz = pdf.group === 'dzexams';

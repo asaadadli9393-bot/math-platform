@@ -83,12 +83,12 @@ export interface PlanInfo {
 export const PLANS: Record<PlanId, PlanInfo> = {
   M1: { id: 'M1', months: 1, label: 'الاشتراك الشهري', shortLabel: 'شهري', priceDzd: 500, note: 'شهر كامل من الوصول للمحتوى المميز' },
   M3: { id: 'M3', months: 3, label: 'اشتراك 3 أشهر', shortLabel: '3 أشهر', priceDzd: 1200, note: 'توفير 300 دج مقارنة بالشهري' },
-  Y1: { id: 'Y1', months: 12, label: 'الاشتراك السنوي', shortLabel: 'سنوي', priceDzd: 3000, note: 'أفضل قيمة — توفر 3000 دج' },
+  Y1: { id: 'Y1', months: 12, label: 'الاشتراك السنوي', shortLabel: 'سنوي', priceDzd: 1000, note: 'سنة كاملة من كل المزايا — دفع مرة واحدة' },
   LT: { id: 'LT', months: null, label: 'الاشتراك الدائم', shortLabel: 'دائم', priceDzd: 5000, note: 'وصول دائم بدون تجديد' },
 };
 
-/** الباقتان المعروضان في صفحة الاشتراك (النظام المزدوج) */
-export const DUAL_PLANS: PlanInfo[] = [PLANS.M1, PLANS.Y1];
+/** الباقة المعروضة في صفحة الاشتراك — اشتراك واحد للجميع */
+export const OFFERED_PLANS: PlanInfo[] = [PLANS.Y1];
 export const ALL_PLANS: PlanInfo[] = [PLANS.M1, PLANS.M3, PLANS.Y1, PLANS.LT];
 
 /* ---------------- حالة الاشتراك ---------------- */
