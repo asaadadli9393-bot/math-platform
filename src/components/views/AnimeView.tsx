@@ -170,6 +170,12 @@ function StoryCard({ story, onPlay }: { story: AnimeStory; onPlay: () => void })
           </span>
           <span className="absolute bottom-3 right-3 flex flex-wrap items-center gap-1.5">
             <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">مجاني</Badge>
+            {story.video && (
+              <Badge className="bg-amber-500 text-stone-900 hover:bg-amber-500">
+                <Play className="mr-1 h-3 w-3 fill-stone-900" />
+                حلقة متحركة
+              </Badge>
+            )}
             <Badge className="bg-black/60 text-white backdrop-blur hover:bg-black/60">
               <Film className="mr-1 h-3 w-3" />
               {story.scenes.length} مشاهد
@@ -344,6 +350,32 @@ function StoryPlayer({
           </Button>
         </div>
       </div>
+
+      {/* الحلقة المتحركة — فيديو كامل بالتعليق الصوتي */}
+      {story.video && (
+        <div className="overflow-hidden rounded-2xl bg-stone-900 shadow-xl shadow-stone-900/10 ring-1 ring-amber-300/30">
+          <div className="flex items-center justify-between gap-2 px-4 py-2.5">
+            <div className="flex items-center gap-2 text-sm font-black text-amber-300">
+              <Film className="h-4 w-4" />
+              الحلقة المتحركة — بالصوت العربي
+            </div>
+            <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold text-stone-300">
+              {story.videoDuration ?? 'فيديو'}
+            </span>
+          </div>
+          <video
+            src={story.video}
+            poster={story.cover}
+            controls
+            playsInline
+            preload="metadata"
+            className="aspect-video w-full bg-black"
+          />
+          <div className="px-4 py-2 text-[11px] leading-relaxed text-stone-400">
+            تعليق صوتي جزائري • ويمكنك أيضاً تابع المشاهد التفاعلية بالأسفل لتتعمّق بكل معادلة
+          </div>
+        </div>
+      )}
 
       {/* المشهد */}
       <div className="overflow-hidden rounded-2xl bg-stone-900 shadow-xl shadow-stone-900/10 ring-1 ring-stone-900/10">

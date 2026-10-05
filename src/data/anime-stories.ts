@@ -34,6 +34,10 @@ export interface AnimeStory {
   takeaways: string[];
   /** معرف الفصل الحقيقي المرتبط في المنصة */
   chapterId?: string;
+  /** الحلقة المتحركة (فيديو كامل بالتعليق الصوتي) إن وُجدت */
+  video?: string;
+  /** مدة الفيديو نصاً — تُعرض في بطاقة المشغل */
+  videoDuration?: string;
   isFree: boolean;
 }
 
@@ -122,6 +126,8 @@ export const ANIME_STORIES: AnimeStory[] = [
     level: '1as',
     minutes: 4,
     chapterId: 'c1-numbers',
+    video: '/anime/ep-sqrt2.mp4',
+    videoDuration: '٢:١٧',
     isFree: true,
     scenes: [
       {
