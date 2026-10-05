@@ -609,3 +609,22 @@ Work Log:
 Stage Summary:
 - الجسر مبني ومنشور ومجرّب (تجاوز الحظر الجغرافي مؤكد بـ 200) — جاهز للعمل فور توفر مفتاح AIza بحصة
 - سكربتات: scripts/veo_bridge_test.py + veo_image_test.py، السر في .veo-secret و.key في .gemini-key (gitignored)
+
+---
+Task ID: anime-ep-sqrt2-1
+Agent: main
+Task: إنتاج الحلقة المتحركة الأولى (جذر 2 — العدد المحظور، 1AS) ودمجها بالمنصة
+
+Work Log:
+- اكتشاف: تنظيف البيئة حذف أصول بايكن القديمة (download/ فارغ وسكربتات الحلقة 1 بلا أثر في git) — صور القصص الثلاث في public/anime سليمة
+- قرار إنتاجي: بناء الجيل الجديد حول صور القصة المولدة بالذكاء الاصطناعي (أجود من إطارات PIL القديمة)
+- تثبيت edge-tts + تنزيل Tajawal (Regular/Medium/Bold) إلى assets/fonts
+- سكربت scripts/render_ep_sqrt2.py: 6 مشاهد (مقدمة + 4 قصة + خاتمة) — صوت ar-DZ-IsmaelNeural + إطارات 1080×1920 (PIL+raqm شريط ترجمة عربي مشكّل + شارة ذهبية + توقيع المنصة) + Ken Burns zoompan + concat + faststart
+- إصلاح انفجار zoompan (إطار واحد مدخل بدل -loop -t الذي يضاعف كل إطار d مرة)
+- الناتج: public/anime/ep-sqrt2.mp4 — 136.8s (2:17)، 10.5MB، H.264+AAC
+- الدمج: AnimeStory.video + videoDuration → بطاقة مشغل <video> داخل StoryPlayer (بإطار ذهبي) + شارة «حلقة متحركة» على StoryCard
+- بناء محلي نظيف (16.4s) → commit → نشر → تحقق حي: ملف 206 Range ✓ + المشغل والمدة في الحزمة الإنتاجية ✓
+
+Stage Summary:
+- أول حلقة أنمي متحركة كاملة حية على المنصة لمستوى 1AS (قصة √2) — تعليق صوتي جزائري ورياضيات القصة في المشاهد التفاعلية أسفلها
+- خط إنتاج قابل لإعادة الاستخدام: scripts/render_ep_sqrt2.py (تغيير SCENES ينتج حلقة أي قصة — جاهز لنسخة القفزة الكبرى 2AS)
