@@ -58,6 +58,8 @@ export const ANIME_STORIES: AnimeStory[] = [
     level: '3as',
     minutes: 4,
     chapterId: 'complex',
+    video: '/anime/ep-complex.mp4',
+    videoDuration: '٢:٥٧',
     isFree: true,
     scenes: [
       {
@@ -186,6 +188,8 @@ export const ANIME_STORIES: AnimeStory[] = [
     level: '2as',
     minutes: 4,
     chapterId: 'c2-func',
+    video: '/anime/ep-quadratic.mp4',
+    videoDuration: '٢:٤٣',
     isFree: true,
     scenes: [
       {
