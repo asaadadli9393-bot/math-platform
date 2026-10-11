@@ -1,0 +1,3467 @@
+[
+ {
+  "file": "chains/ln2027.pdf",
+  "pages": 17,
+  "verdict": "clean",
+  "chars": 3122,
+  "cid": 39,
+  "arabic": 1175,
+  "presforms": 0
+ },
+ {
+  "file": "chains/derivablite.pdf",
+  "pages": 15,
+  "verdict": "clean",
+  "chars": 3244,
+  "cid": 0,
+  "arabic": 1595,
+  "presforms": 0
+ },
+ {
+  "file": "chains/limit.pdf",
+  "pages": 19,
+  "verdict": "clean",
+  "chars": 3237,
+  "cid": 49,
+  "arabic": 1479,
+  "presforms": 0
+ },
+ {
+  "file": "chains/intgra2027.pdf",
+  "pages": 14,
+  "verdict": "clean",
+  "chars": 2857,
+  "cid": 27,
+  "arabic": 1162,
+  "presforms": 2
+ },
+ {
+  "file": "chains/complex2027.pdf",
+  "pages": 13,
+  "verdict": "clean",
+  "chars": 3094,
+  "cid": 10,
+  "arabic": 1329,
+  "presforms": 0
+ },
+ {
+  "file": "chains/proba2027.pdf",
+  "pages": 14,
+  "verdict": "clean",
+  "chars": 2915,
+  "cid": 0,
+  "arabic": 1689,
+  "presforms": 0
+ },
+ {
+  "file": "chains/exp2027.pdf",
+  "pages": 16,
+  "verdict": "clean",
+  "chars": 2408,
+  "cid": 0,
+  "arabic": 1066,
+  "presforms": 0
+ },
+ {
+  "file": "chains/suite2027.pdf",
+  "pages": 16,
+  "verdict": "clean",
+  "chars": 3161,
+  "cid": 0,
+  "arabic": 1841,
+  "presforms": 0
+ },
+ {
+  "file": "chains/fonction.pdf",
+  "pages": 16,
+  "verdict": "clean",
+  "chars": 4107,
+  "cid": 0,
+  "arabic": 2399,
+  "presforms": 0
+ },
+ {
+  "file": "chains/tadarujat-2022-2023.pdf",
+  "pages": 170,
+  "verdict": "visual-order",
+  "chars": 2367,
+  "cid": 0,
+  "arabic": 725,
+  "presforms": 1230
+ },
+ {
+  "file": "chains/dz/c1-alg.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4512,
+  "cid": 0,
+  "arabic": 2655,
+  "presforms": 12
+ },
+ {
+  "file": "chains/dz/c2-deriv.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4463,
+  "cid": 0,
+  "arabic": 2732,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c2-dot.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3823,
+  "cid": 0,
+  "arabic": 2183,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c1-func.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4448,
+  "cid": 0,
+  "arabic": 2699,
+  "presforms": 24
+ },
+ {
+  "file": "chains/dz/c2-quad.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3824,
+  "cid": 0,
+  "arabic": 2303,
+  "presforms": 15
+ },
+ {
+  "file": "chains/dz/c2-stat.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3671,
+  "cid": 0,
+  "arabic": 2424,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c1-geo.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4311,
+  "cid": 0,
+  "arabic": 2597,
+  "presforms": 7
+ },
+ {
+  "file": "chains/dz/c1-stat.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 4515,
+  "cid": 0,
+  "arabic": 2887,
+  "presforms": 12
+ },
+ {
+  "file": "chains/dz/c1-ref.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4683,
+  "cid": 0,
+  "arabic": 2789,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c2-func.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4475,
+  "cid": 0,
+  "arabic": 2629,
+  "presforms": 11
+ },
+ {
+  "file": "chains/dz/c2-limits.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3697,
+  "cid": 0,
+  "arabic": 2197,
+  "presforms": 12
+ },
+ {
+  "file": "chains/dz/c1-numbers.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 4418,
+  "cid": 0,
+  "arabic": 2653,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c2-seq.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 4318,
+  "cid": 0,
+  "arabic": 2528,
+  "presforms": 16
+ },
+ {
+  "file": "chains/dz/c2-ang.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3766,
+  "cid": 0,
+  "arabic": 1903,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c2-prob.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 5242,
+  "cid": 0,
+  "arabic": 3420,
+  "presforms": 4
+ },
+ {
+  "file": "chains/dz/c2-ratio.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 4157,
+  "cid": 0,
+  "arabic": 2640,
+  "presforms": 9
+ },
+ {
+  "file": "chains/dz/c1-space.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 4913,
+  "cid": 0,
+  "arabic": 3074,
+  "presforms": 31
+ },
+ {
+  "file": "chains/dz/c2-space.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3892,
+  "cid": 0,
+  "arabic": 2460,
+  "presforms": 13
+ },
+ {
+  "file": "chains/dz/c2-trans.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3950,
+  "cid": 0,
+  "arabic": 2433,
+  "presforms": 0
+ },
+ {
+  "file": "chains/dz/c1-rn.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4804,
+  "cid": 0,
+  "arabic": 2861,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_mutataliyat.pdf",
+  "pages": 15,
+  "verdict": "clean",
+  "chars": 5320,
+  "cid": 0,
+  "arabic": 2620,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_complexes.pdf",
+  "pages": 12,
+  "verdict": "clean",
+  "chars": 6267,
+  "cid": 0,
+  "arabic": 3208,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_ihtimalat.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 7307,
+  "cid": 0,
+  "arabic": 5074,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_geometrie_espace.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 6421,
+  "cid": 0,
+  "arabic": 3438,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_primitives_integrales.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 6557,
+  "cid": 0,
+  "arabic": 3490,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_dawal_log.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 5766,
+  "cid": 0,
+  "arabic": 2892,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_dawal_adadiya.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 5795,
+  "cid": 0,
+  "arabic": 2864,
+  "presforms": 0
+ },
+ {
+  "file": "chains/bac/bac_dawal_asiya.pdf",
+  "pages": 9,
+  "verdict": "clean",
+  "chars": 6748,
+  "cid": 0,
+  "arabic": 3286,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-quad-3.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2093,
+  "cid": 0,
+  "arabic": 922,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-exp-log-4.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 7623,
+  "cid": 350,
+  "arabic": 1665,
+  "presforms": 678
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ratio-1.pdf",
+  "pages": 11,
+  "verdict": "clean",
+  "chars": 5041,
+  "cid": 0,
+  "arabic": 3217,
+  "presforms": 2
+ },
+ {
+  "file": "chains/library/lib-2as-c2-prob-2.pdf",
+  "pages": 17,
+  "verdict": "clean",
+  "chars": 3295,
+  "cid": 0,
+  "arabic": 1807,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-stat-2.pdf",
+  "pages": 8,
+  "verdict": "visual-order",
+  "chars": 3976,
+  "cid": 125,
+  "arabic": 539,
+  "presforms": 1094
+ },
+ {
+  "file": "chains/library/lib-1as-c1-func-2.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 7206,
+  "cid": 405,
+  "arabic": 1844,
+  "presforms": 217
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-5.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 17282,
+  "cid": 1675,
+  "arabic": 539,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-limits-2.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 5492,
+  "cid": 18,
+  "arabic": 83,
+  "presforms": 1527
+ },
+ {
+  "file": "chains/library/lib-3as-space-2.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2532,
+  "cid": 0,
+  "arabic": 1382,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-1as-c1-ref-2.pdf",
+  "pages": 14,
+  "verdict": "sparse",
+  "chars": 18255,
+  "cid": 1913,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-13.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 503,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 311
+ },
+ {
+  "file": "chains/library/lib-2as-c2-seq-4.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 9037,
+  "cid": 585,
+  "arabic": 1579,
+  "presforms": 102
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-9.pdf",
+  "pages": 3,
+  "verdict": "visual-order",
+  "chars": 5444,
+  "cid": 325,
+  "arabic": 525,
+  "presforms": 1358
+ },
+ {
+  "file": "chains/library/lib2-1as-c1-numbers-1.pdf",
+  "pages": 14,
+  "verdict": "clean",
+  "chars": 6524,
+  "cid": 425,
+  "arabic": 1203,
+  "presforms": 201
+ },
+ {
+  "file": "chains/library/lib-2as-c2-quad-1.pdf",
+  "pages": 18,
+  "verdict": "clean",
+  "chars": 2518,
+  "cid": 0,
+  "arabic": 1574,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-deriv-3.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 4935,
+  "cid": 193,
+  "arabic": 1515,
+  "presforms": 27
+ },
+ {
+  "file": "chains/library/lib-3as-probability-4.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 5968,
+  "cid": 212,
+  "arabic": 2258,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-5.pdf",
+  "pages": 18,
+  "verdict": "visual-order",
+  "chars": 7038,
+  "cid": 283,
+  "arabic": 665,
+  "presforms": 1466
+ },
+ {
+  "file": "chains/library/lib-1as-c1-func-1.pdf",
+  "pages": 15,
+  "verdict": "sparse",
+  "chars": 25061,
+  "cid": 2739,
+  "arabic": 48,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-7.pdf",
+  "pages": 24,
+  "verdict": "visual-order",
+  "chars": 2776,
+  "cid": 0,
+  "arabic": 25,
+  "presforms": 1423
+ },
+ {
+  "file": "chains/library/lib2-3as-probability-3.pdf",
+  "pages": 12,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-prob-4.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 873,
+  "cid": 0,
+  "arabic": 213,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-func-deriv-4.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4564,
+  "cid": 53,
+  "arabic": 2078,
+  "presforms": 88
+ },
+ {
+  "file": "chains/library/lib-2as-c2-seq-3.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 11398,
+  "cid": 743,
+  "arabic": 2023,
+  "presforms": 115
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-4.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4366,
+  "cid": 0,
+  "arabic": 3032,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-deriv-1.pdf",
+  "pages": 4,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-dot-3.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 8028,
+  "cid": 617,
+  "arabic": 901,
+  "presforms": 129
+ },
+ {
+  "file": "chains/library/lib-1as-c1-numbers-2.pdf",
+  "pages": 15,
+  "verdict": "sparse",
+  "chars": 25534,
+  "cid": 2796,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-9.pdf",
+  "pages": 24,
+  "verdict": "clean",
+  "chars": 2293,
+  "cid": 0,
+  "arabic": 1098,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-3.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4332,
+  "cid": 0,
+  "arabic": 2861,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-8.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 6224,
+  "cid": 341,
+  "arabic": 1125,
+  "presforms": 151
+ },
+ {
+  "file": "chains/library/lib2-1as-c1-numbers-2.pdf",
+  "pages": 92,
+  "verdict": "clean",
+  "chars": 2248,
+  "cid": 160,
+  "arabic": 441,
+  "presforms": 17
+ },
+ {
+  "file": "chains/library/lib-3as-exp-log-1.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 7675,
+  "cid": 314,
+  "arabic": 2351,
+  "presforms": 211
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-3.pdf",
+  "pages": 5,
+  "verdict": "visual-order",
+  "chars": 8093,
+  "cid": 0,
+  "arabic": 895,
+  "presforms": 2819
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ratio-4.pdf",
+  "pages": 6,
+  "verdict": "visual-order",
+  "chars": 7393,
+  "cid": 291,
+  "arabic": 996,
+  "presforms": 2053
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-1.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 2162,
+  "cid": 0,
+  "arabic": 1165,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ratio-2.pdf",
+  "pages": 14,
+  "verdict": "visual-order",
+  "chars": 4609,
+  "cid": 146,
+  "arabic": 1000,
+  "presforms": 1288
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-5.pdf",
+  "pages": 13,
+  "verdict": "clean",
+  "chars": 4002,
+  "cid": 0,
+  "arabic": 1617,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-1as-c1-rn-1.pdf",
+  "pages": 25,
+  "verdict": "sparse",
+  "chars": 17952,
+  "cid": 1834,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-1.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 8924,
+  "cid": 220,
+  "arabic": 1476,
+  "presforms": 3598
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-5.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 1491,
+  "cid": 0,
+  "arabic": 256,
+  "presforms": 559
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-3.pdf",
+  "pages": 20,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ratio-3.pdf",
+  "pages": 17,
+  "verdict": "clean",
+  "chars": 6363,
+  "cid": 252,
+  "arabic": 2432,
+  "presforms": 198
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-10.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 2560,
+  "cid": 0,
+  "arabic": 1195,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-limits-3.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4603,
+  "cid": 210,
+  "arabic": 1167,
+  "presforms": 185
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-7.pdf",
+  "pages": 95,
+  "verdict": "clean",
+  "chars": 947,
+  "cid": 0,
+  "arabic": 710,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-seq-1.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 8506,
+  "cid": 481,
+  "arabic": 1709,
+  "presforms": 111
+ },
+ {
+  "file": "chains/library/lib-3as-func-deriv-3.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 6725,
+  "cid": 0,
+  "arabic": 3169,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-6.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 5025,
+  "cid": 201,
+  "arabic": 1210,
+  "presforms": 281
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-11.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 4486,
+  "cid": 0,
+  "arabic": 2300,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-prob-1.pdf",
+  "pages": 24,
+  "verdict": "sparse",
+  "chars": 14864,
+  "cid": 1129,
+  "arabic": 1564,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-2.pdf",
+  "pages": 28,
+  "verdict": "visual-order",
+  "chars": 5557,
+  "cid": 240,
+  "arabic": 593,
+  "presforms": 1487
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ang-1.pdf",
+  "pages": 19,
+  "verdict": "sparse",
+  "chars": 11898,
+  "cid": 748,
+  "arabic": 1972,
+  "presforms": 786
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-6.pdf",
+  "pages": 19,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-func-2.pdf",
+  "pages": 33,
+  "verdict": "clean",
+  "chars": 1560,
+  "cid": 0,
+  "arabic": 938,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-prob-3.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 3616,
+  "cid": 0,
+  "arabic": 1376,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-4.pdf",
+  "pages": 17,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-quad-4.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 6432,
+  "cid": 203,
+  "arabic": 1801,
+  "presforms": 314
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-3.pdf",
+  "pages": 14,
+  "verdict": "clean",
+  "chars": 3407,
+  "cid": 0,
+  "arabic": 1765,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-func-deriv-1.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 6705,
+  "cid": 9,
+  "arabic": 2473,
+  "presforms": 521
+ },
+ {
+  "file": "chains/library/lib-2as-c2-seq-2.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 31679,
+  "cid": 3327,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-seq-1.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 8557,
+  "cid": 5,
+  "arabic": 3408,
+  "presforms": 502
+ },
+ {
+  "file": "chains/library/lib-3as-space-3.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1648,
+  "cid": 0,
+  "arabic": 761,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-7.pdf",
+  "pages": 11,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-limits-2.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 6856,
+  "cid": 0,
+  "arabic": 1928,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-1as-c1-ref-3.pdf",
+  "pages": 19,
+  "verdict": "sparse",
+  "chars": 21875,
+  "cid": 2315,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-sequences-1.pdf",
+  "pages": 21,
+  "verdict": "clean",
+  "chars": 1251,
+  "cid": 0,
+  "arabic": 531,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-func-4.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 10202,
+  "cid": 388,
+  "arabic": 1058,
+  "presforms": 2625
+ },
+ {
+  "file": "chains/library/lib-2as-c2-deriv-2.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2181,
+  "cid": 0,
+  "arabic": 1008,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-exp-log-3.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 7286,
+  "cid": 332,
+  "arabic": 1571,
+  "presforms": 428
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-7.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 5651,
+  "cid": 0,
+  "arabic": 2458,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-dot-2.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 10239,
+  "cid": 646,
+  "arabic": 1984,
+  "presforms": 135
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-seq-2.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 6433,
+  "cid": 247,
+  "arabic": 721,
+  "presforms": 1359
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-5.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-func-1.pdf",
+  "pages": 37,
+  "verdict": "clean",
+  "chars": 2672,
+  "cid": 0,
+  "arabic": 1245,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-probability-1.pdf",
+  "pages": 50,
+  "verdict": "visual-order",
+  "chars": 3082,
+  "cid": 0,
+  "arabic": 473,
+  "presforms": 653
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-6.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 7385,
+  "cid": 120,
+  "arabic": 3447,
+  "presforms": 171
+ },
+ {
+  "file": "chains/library/lib-3as-sequences-2.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 1033,
+  "cid": 0,
+  "arabic": 103,
+  "presforms": 204
+ },
+ {
+  "file": "chains/library/lib-2as-c2-dot-4.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 7691,
+  "cid": 501,
+  "arabic": 1084,
+  "presforms": 131
+ },
+ {
+  "file": "chains/library/lib-3as-limits-4.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 2702,
+  "cid": 103,
+  "arabic": 276,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-limits-1.pdf",
+  "pages": 16,
+  "verdict": "clean",
+  "chars": 4945,
+  "cid": 233,
+  "arabic": 1014,
+  "presforms": 262
+ },
+ {
+  "file": "chains/library/lib-2as-c2-limits-1.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2219,
+  "cid": 0,
+  "arabic": 696,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-limits-1.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 9293,
+  "cid": 473,
+  "arabic": 2323,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-probability-2.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 6755,
+  "cid": 36,
+  "arabic": 4452,
+  "presforms": 116
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-4.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 2034,
+  "cid": 0,
+  "arabic": 719,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-2.pdf",
+  "pages": 11,
+  "verdict": "sparse",
+  "chars": 21765,
+  "cid": 1960,
+  "arabic": 449,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-8.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 6112,
+  "cid": 0,
+  "arabic": 2746,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-stat-4.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 3779,
+  "cid": 243,
+  "arabic": 126,
+  "presforms": 495
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-1.pdf",
+  "pages": 10,
+  "verdict": "visual-order",
+  "chars": 7075,
+  "cid": 366,
+  "arabic": 491,
+  "presforms": 1469
+ },
+ {
+  "file": "chains/library/lib-2as-c2-limits-2.pdf",
+  "pages": 3,
+  "verdict": "visual-order",
+  "chars": 3184,
+  "cid": 0,
+  "arabic": 518,
+  "presforms": 1033
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-3.pdf",
+  "pages": 3,
+  "verdict": "visual-order",
+  "chars": 4483,
+  "cid": 248,
+  "arabic": 160,
+  "presforms": 937
+ },
+ {
+  "file": "chains/library/lib2-1as-c1-ref-1.pdf",
+  "pages": 29,
+  "verdict": "clean",
+  "chars": 1197,
+  "cid": 0,
+  "arabic": 543,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-func-deriv-2.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 4842,
+  "cid": 0,
+  "arabic": 2575,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-6.pdf",
+  "pages": 23,
+  "verdict": "visual-order",
+  "chars": 2570,
+  "cid": 1,
+  "arabic": 534,
+  "presforms": 785
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-ang-1.pdf",
+  "pages": 13,
+  "verdict": "visual-order",
+  "chars": 1890,
+  "cid": 0,
+  "arabic": 234,
+  "presforms": 483
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-1.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 6005,
+  "cid": 0,
+  "arabic": 3023,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-4.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 27920,
+  "cid": 2935,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-exp-log-2.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 7532,
+  "cid": 345,
+  "arabic": 1580,
+  "presforms": 774
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-8.pdf",
+  "pages": 16,
+  "verdict": "visual-order",
+  "chars": 9674,
+  "cid": 485,
+  "arabic": 1070,
+  "presforms": 2593
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-6.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 2425,
+  "cid": 0,
+  "arabic": 1086,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-9.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 6946,
+  "cid": 347,
+  "arabic": 1215,
+  "presforms": 343
+ },
+ {
+  "file": "chains/library/lib-2as-c2-limits-4.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4558,
+  "cid": 209,
+  "arabic": 1160,
+  "presforms": 171
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-1.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 8281,
+  "cid": 0,
+  "arabic": 4648,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-probability-1.pdf",
+  "pages": 9,
+  "verdict": "visual-order",
+  "chars": 7789,
+  "cid": 385,
+  "arabic": 429,
+  "presforms": 2510
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-deriv-2.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 6914,
+  "cid": 0,
+  "arabic": 3363,
+  "presforms": 328
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-dot-1.pdf",
+  "pages": 32,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-4.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 9395,
+  "cid": 485,
+  "arabic": 1868,
+  "presforms": 287
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-stat-1.pdf",
+  "pages": 19,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-stat-2.pdf",
+  "pages": 8,
+  "verdict": "visual-order",
+  "chars": 7957,
+  "cid": 349,
+  "arabic": 1071,
+  "presforms": 2380
+ },
+ {
+  "file": "chains/library/lib-1as-c1-rn-2.pdf",
+  "pages": 14,
+  "verdict": "clean",
+  "chars": 6046,
+  "cid": 323,
+  "arabic": 1411,
+  "presforms": 335
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-limits-1.pdf",
+  "pages": 9,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ang-4.pdf",
+  "pages": 2,
+  "verdict": "empty",
+  "chars": 2,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-5.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 4570,
+  "cid": 208,
+  "arabic": 795,
+  "presforms": 304
+ },
+ {
+  "file": "chains/library/lib-3as-probability-3.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 66791,
+  "cid": 7255,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-10.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4257,
+  "cid": 180,
+  "arabic": 1059,
+  "presforms": 290
+ },
+ {
+  "file": "chains/library/lib-1as-c1-numbers-1.pdf",
+  "pages": 18,
+  "verdict": "sparse",
+  "chars": 25222,
+  "cid": 2739,
+  "arabic": 24,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-7.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 3303,
+  "cid": 174,
+  "arabic": 599,
+  "presforms": 113
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ang-2.pdf",
+  "pages": 8,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-3.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 3394,
+  "cid": 0,
+  "arabic": 1180,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-stat-1.pdf",
+  "pages": 20,
+  "verdict": "clean",
+  "chars": 3901,
+  "cid": 0,
+  "arabic": 2834,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-func-1.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 7336,
+  "cid": 125,
+  "arabic": 2988,
+  "presforms": 352
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-stat-3.pdf",
+  "pages": 9,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-func-3.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4343,
+  "cid": 0,
+  "arabic": 2084,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-12.pdf",
+  "pages": 15,
+  "verdict": "clean",
+  "chars": 5124,
+  "cid": 0,
+  "arabic": 2549,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-exp-log-2.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 6504,
+  "cid": 33,
+  "arabic": 2402,
+  "presforms": 639
+ },
+ {
+  "file": "chains/library/lib-2as-c2-dot-1.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 10239,
+  "cid": 646,
+  "arabic": 1984,
+  "presforms": 135
+ },
+ {
+  "file": "chains/library/lib-3as-probability-2.pdf",
+  "pages": 49,
+  "verdict": "visual-order",
+  "chars": 3616,
+  "cid": 28,
+  "arabic": 179,
+  "presforms": 1984
+ },
+ {
+  "file": "chains/library/lib-1as-c1-numbers-3.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 9192,
+  "cid": 140,
+  "arabic": 4039,
+  "presforms": 480
+ },
+ {
+  "file": "chains/library/lib-3as-space-1.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2954,
+  "cid": 0,
+  "arabic": 1757,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-deriv-4.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3024,
+  "cid": 105,
+  "arabic": 970,
+  "presforms": 27
+ },
+ {
+  "file": "chains/library/lib2-2as-c2-prob-2.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 873,
+  "cid": 0,
+  "arabic": 213,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-3as-limits-3.pdf",
+  "pages": 29,
+  "verdict": "sparse",
+  "chars": 2202,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-6.pdf",
+  "pages": 5,
+  "verdict": "sparse",
+  "chars": 28994,
+  "cid": 2629,
+  "arabic": 589,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-func-deriv-2.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 6184,
+  "cid": 0,
+  "arabic": 615,
+  "presforms": 1898
+ },
+ {
+  "file": "chains/library/lib-2as-c2-ang-3.pdf",
+  "pages": 36,
+  "verdict": "clean",
+  "chars": 663,
+  "cid": 0,
+  "arabic": 256,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib-2as-c2-quad-2.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 3482,
+  "cid": 0,
+  "arabic": 1725,
+  "presforms": 0
+ },
+ {
+  "file": "chains/library/lib2-3as-arithmetic-4.pdf",
+  "pages": 15,
+  "verdict": "clean",
+  "chars": 3982,
+  "cid": 0,
+  "arabic": 1701,
+  "presforms": 0
+ },
+ {
+  "file": "courses/ln2027.pdf",
+  "pages": 8,
+  "verdict": "visual-order",
+  "chars": 1184,
+  "cid": 0,
+  "arabic": 142,
+  "presforms": 503
+ },
+ {
+  "file": "courses/complex2027.pdf",
+  "pages": 7,
+  "verdict": "visual-order",
+  "chars": 1082,
+  "cid": 0,
+  "arabic": 139,
+  "presforms": 509
+ },
+ {
+  "file": "courses/proba2027.pdf",
+  "pages": 7,
+  "verdict": "visual-order",
+  "chars": 1190,
+  "cid": 0,
+  "arabic": 187,
+  "presforms": 550
+ },
+ {
+  "file": "courses/exp2027.pdf",
+  "pages": 9,
+  "verdict": "visual-order",
+  "chars": 1124,
+  "cid": 0,
+  "arabic": 142,
+  "presforms": 525
+ },
+ {
+  "file": "courses/suite2027.pdf",
+  "pages": 9,
+  "verdict": "visual-order",
+  "chars": 1958,
+  "cid": 0,
+  "arabic": 234,
+  "presforms": 937
+ },
+ {
+  "file": "courses/solutions/exp-2027-solutions.pdf",
+  "pages": 10,
+  "verdict": "visual-order",
+  "chars": 1135,
+  "cid": 0,
+  "arabic": 126,
+  "presforms": 471
+ },
+ {
+  "file": "courses/solutions/complex-2027-solutions.pdf",
+  "pages": 8,
+  "verdict": "visual-order",
+  "chars": 1174,
+  "cid": 0,
+  "arabic": 125,
+  "presforms": 455
+ },
+ {
+  "file": "courses/solutions/ln-2027-solutions.pdf",
+  "pages": 9,
+  "verdict": "visual-order",
+  "chars": 1159,
+  "cid": 0,
+  "arabic": 133,
+  "presforms": 459
+ },
+ {
+  "file": "courses/solutions/proba-2027-solutions.pdf",
+  "pages": 7,
+  "verdict": "visual-order",
+  "chars": 2105,
+  "cid": 0,
+  "arabic": 277,
+  "presforms": 823
+ },
+ {
+  "file": "courses/solutions/suites-2027-solutions.pdf",
+  "pages": 10,
+  "verdict": "visual-order",
+  "chars": 2016,
+  "cid": 0,
+  "arabic": 223,
+  "presforms": 811
+ },
+ {
+  "file": "series/ln2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 3122,
+  "cid": 39,
+  "arabic": 1175,
+  "presforms": 0
+ },
+ {
+  "file": "series/derivablite.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 3244,
+  "cid": 0,
+  "arabic": 1595,
+  "presforms": 0
+ },
+ {
+  "file": "series/limit.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 3237,
+  "cid": 49,
+  "arabic": 1479,
+  "presforms": 0
+ },
+ {
+  "file": "series/intgra2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 2857,
+  "cid": 27,
+  "arabic": 1162,
+  "presforms": 2
+ },
+ {
+  "file": "series/complex2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 3094,
+  "cid": 10,
+  "arabic": 1329,
+  "presforms": 0
+ },
+ {
+  "file": "series/proba2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 2915,
+  "cid": 0,
+  "arabic": 1689,
+  "presforms": 0
+ },
+ {
+  "file": "series/exp2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 2408,
+  "cid": 0,
+  "arabic": 1066,
+  "presforms": 0
+ },
+ {
+  "file": "series/suite2027.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 3161,
+  "cid": 0,
+  "arabic": 1841,
+  "presforms": 0
+ },
+ {
+  "file": "series/fonction.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 4107,
+  "cid": 0,
+  "arabic": 2399,
+  "presforms": 0
+ },
+ {
+  "file": "series/solutions/ln-solutions.pdf",
+  "pages": 16,
+  "verdict": "visual-order",
+  "chars": 2486,
+  "cid": 0,
+  "arabic": 209,
+  "presforms": 612
+ },
+ {
+  "file": "series/solutions/complex-solutions.pdf",
+  "pages": 11,
+  "verdict": "visual-order",
+  "chars": 2534,
+  "cid": 0,
+  "arabic": 262,
+  "presforms": 783
+ },
+ {
+  "file": "series/solutions/integra-solutions.pdf",
+  "pages": 9,
+  "verdict": "visual-order",
+  "chars": 3131,
+  "cid": 0,
+  "arabic": 293,
+  "presforms": 1005
+ },
+ {
+  "file": "series/solutions/limit-solutions.pdf",
+  "pages": 15,
+  "verdict": "visual-order",
+  "chars": 2816,
+  "cid": 0,
+  "arabic": 265,
+  "presforms": 875
+ },
+ {
+  "file": "series/solutions/suite-solutions.pdf",
+  "pages": 13,
+  "verdict": "visual-order",
+  "chars": 3491,
+  "cid": 0,
+  "arabic": 363,
+  "presforms": 1226
+ },
+ {
+  "file": "series/solutions/fonction-solutions.pdf",
+  "pages": 14,
+  "verdict": "visual-order",
+  "chars": 2473,
+  "cid": 0,
+  "arabic": 253,
+  "presforms": 992
+ },
+ {
+  "file": "series/solutions/derivabilite-solutions.pdf",
+  "pages": 15,
+  "verdict": "visual-order",
+  "chars": 4855,
+  "cid": 0,
+  "arabic": 585,
+  "presforms": 1943
+ },
+ {
+  "file": "series/solutions/proba-solutions.pdf",
+  "pages": 11,
+  "verdict": "visual-order",
+  "chars": 2882,
+  "cid": 0,
+  "arabic": 370,
+  "presforms": 1110
+ },
+ {
+  "file": "series/solutions/exp-solutions.pdf",
+  "pages": 16,
+  "verdict": "visual-order",
+  "chars": 2805,
+  "cid": 0,
+  "arabic": 271,
+  "presforms": 863
+ },
+ {
+  "file": "devoirs/2as/d2-2as-030.pdf",
+  "pages": 88,
+  "verdict": "clean",
+  "chars": 4120,
+  "cid": 0,
+  "arabic": 2262,
+  "presforms": 33
+ },
+ {
+  "file": "devoirs/2as/d-2as-151.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 3296,
+  "cid": 313,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/2as/d2-2as-031.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 2768,
+  "cid": 0,
+  "arabic": 1386,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-019.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 1416,
+  "cid": 0,
+  "arabic": 651,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-113.pdf",
+  "pages": 6,
+  "verdict": "visual-order",
+  "chars": 2837,
+  "cid": 0,
+  "arabic": 96,
+  "presforms": 1195
+ },
+ {
+  "file": "devoirs/3as/d2-3as-022.pdf",
+  "pages": 3,
+  "verdict": "visual-order",
+  "chars": 3009,
+  "cid": 0,
+  "arabic": 257,
+  "presforms": 1003
+ },
+ {
+  "file": "devoirs/3as/d2-3as-017.pdf",
+  "pages": 12,
+  "verdict": "visual-order",
+  "chars": 4483,
+  "cid": 0,
+  "arabic": 541,
+  "presforms": 1982
+ },
+ {
+  "file": "devoirs/3as/d-3as-094.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 821,
+  "cid": 0,
+  "arabic": 453,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-095.pdf",
+  "pages": 3,
+  "verdict": "visual-order",
+  "chars": 5071,
+  "cid": 0,
+  "arabic": 850,
+  "presforms": 1259
+ },
+ {
+  "file": "devoirs/3as/d-3as-002.pdf",
+  "pages": 12,
+  "verdict": "visual-order",
+  "chars": 4483,
+  "cid": 0,
+  "arabic": 541,
+  "presforms": 1982
+ },
+ {
+  "file": "devoirs/3as/d-3as-126.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 3621,
+  "cid": 6,
+  "arabic": 1700,
+  "presforms": 131
+ },
+ {
+  "file": "devoirs/3as/d2-3as-020.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 6583,
+  "cid": 552,
+  "arabic": 151,
+  "presforms": 141
+ },
+ {
+  "file": "devoirs/3as/d2-3as-023.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-018.pdf",
+  "pages": 4,
+  "verdict": "sparse",
+  "chars": 19994,
+  "cid": 2131,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-147.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2509,
+  "cid": 0,
+  "arabic": 1291,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-088.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3447,
+  "cid": 0,
+  "arabic": 2264,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-002.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-127.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2063,
+  "cid": 0,
+  "arabic": 1177,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-124.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 1798,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-135.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2392,
+  "cid": 0,
+  "arabic": 1249,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-026.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2632,
+  "cid": 0,
+  "arabic": 1482,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-062.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2591,
+  "cid": 0,
+  "arabic": 395,
+  "presforms": 918
+ },
+ {
+  "file": "devoirs/3as/d-3as-098.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2839,
+  "cid": 0,
+  "arabic": 1,
+  "presforms": 158
+ },
+ {
+  "file": "devoirs/3as/d-3as-145.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 3446,
+  "cid": 0,
+  "arabic": 1850,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-060.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1766,
+  "cid": 0,
+  "arabic": 906,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-148.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3132,
+  "cid": 0,
+  "arabic": 1556,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-086.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 944,
+  "cid": 0,
+  "arabic": 112,
+  "presforms": 61
+ },
+ {
+  "file": "devoirs/3as/d-3as-138.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1479,
+  "cid": 0,
+  "arabic": 185,
+  "presforms": 597
+ },
+ {
+  "file": "devoirs/3as/d-3as-061.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4335,
+  "cid": 0,
+  "arabic": 2944,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-106.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 1959,
+  "cid": 0,
+  "arabic": 73,
+  "presforms": 856
+ },
+ {
+  "file": "devoirs/3as/d-3as-107.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 3072,
+  "cid": 0,
+  "arabic": 1323,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-056.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-037.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 2767,
+  "cid": 0,
+  "arabic": 248,
+  "presforms": 140
+ },
+ {
+  "file": "devoirs/3as/d-3as-010.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 6270,
+  "cid": 0,
+  "arabic": 2635,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-027.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2632,
+  "cid": 0,
+  "arabic": 1482,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-001.pdf",
+  "pages": 12,
+  "verdict": "clean",
+  "chars": 6852,
+  "cid": 188,
+  "arabic": 2072,
+  "presforms": 409
+ },
+ {
+  "file": "devoirs/3as/d2-3as-021.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1652,
+  "cid": 0,
+  "arabic": 363,
+  "presforms": 570
+ },
+ {
+  "file": "devoirs/3as/d-3as-005.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1959,
+  "cid": 0,
+  "arabic": 965,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-035.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4209,
+  "cid": 0,
+  "arabic": 2219,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-103.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2906,
+  "cid": 0,
+  "arabic": 1528,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-099.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3777,
+  "cid": 0,
+  "arabic": 1974,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-008.pdf",
+  "pages": 4,
+  "verdict": "empty",
+  "chars": 3,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-039.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3101,
+  "cid": 0,
+  "arabic": 1653,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-046.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 5065,
+  "cid": 480,
+  "arabic": 314,
+  "presforms": 40
+ },
+ {
+  "file": "devoirs/3as/d-3as-078.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 3101,
+  "cid": 0,
+  "arabic": 471,
+  "presforms": 1060
+ },
+ {
+  "file": "devoirs/3as/d-3as-036.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 2767,
+  "cid": 0,
+  "arabic": 248,
+  "presforms": 140
+ },
+ {
+  "file": "devoirs/3as/d-3as-121.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 10239,
+  "cid": 1155,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-017.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 17498,
+  "cid": 1948,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-146.pdf",
+  "pages": 6,
+  "verdict": "visual-order",
+  "chars": 4149,
+  "cid": 0,
+  "arabic": 531,
+  "presforms": 937
+ },
+ {
+  "file": "devoirs/3as/d2-3as-003.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-024.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2632,
+  "cid": 0,
+  "arabic": 1482,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-089.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1300,
+  "cid": 0,
+  "arabic": 731,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-081.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 1598,
+  "cid": 0,
+  "arabic": 91,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-132.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1080,
+  "cid": 0,
+  "arabic": 597,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-008.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 3405,
+  "cid": 0,
+  "arabic": 1612,
+  "presforms": 21
+ },
+ {
+  "file": "devoirs/3as/d-3as-055.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1638,
+  "cid": 0,
+  "arabic": 802,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-071.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3379,
+  "cid": 0,
+  "arabic": 1747,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-077.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 3469,
+  "cid": 0,
+  "arabic": 2060,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-033.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 2964,
+  "cid": 0,
+  "arabic": 374,
+  "presforms": 7
+ },
+ {
+  "file": "devoirs/3as/d-3as-125.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1833,
+  "cid": 0,
+  "arabic": 941,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-044.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 2006,
+  "cid": 0,
+  "arabic": 313,
+  "presforms": 955
+ },
+ {
+  "file": "devoirs/3as/d-3as-087.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 944,
+  "cid": 0,
+  "arabic": 112,
+  "presforms": 61
+ },
+ {
+  "file": "devoirs/3as/d-3as-117.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2246,
+  "cid": 0,
+  "arabic": 288,
+  "presforms": 674
+ },
+ {
+  "file": "devoirs/3as/d-3as-084.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1333,
+  "cid": 0,
+  "arabic": 191,
+  "presforms": 562
+ },
+ {
+  "file": "devoirs/3as/d2-3as-012.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 5787,
+  "cid": 80,
+  "arabic": 732,
+  "presforms": 1807
+ },
+ {
+  "file": "devoirs/3as/d-3as-141.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1633,
+  "cid": 0,
+  "arabic": 935,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-109.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1446,
+  "cid": 0,
+  "arabic": 870,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-024.pdf",
+  "pages": 11,
+  "verdict": "clean",
+  "chars": 4348,
+  "cid": 11,
+  "arabic": 1866,
+  "presforms": 527
+ },
+ {
+  "file": "devoirs/3as/d-3as-142.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3488,
+  "cid": 0,
+  "arabic": 1802,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-026.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1870,
+  "cid": 0,
+  "arabic": 1132,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-092.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1761,
+  "cid": 0,
+  "arabic": 788,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-013.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 5982,
+  "cid": 502,
+  "arabic": 516,
+  "presforms": 407
+ },
+ {
+  "file": "devoirs/3as/d-3as-057.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 4808,
+  "cid": 263,
+  "arabic": 1349,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-115.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 125,
+  "cid": 0,
+  "arabic": 27,
+  "presforms": 47
+ },
+ {
+  "file": "devoirs/3as/d-3as-042.pdf",
+  "pages": 5,
+  "verdict": "visual-order",
+  "chars": 5893,
+  "cid": 0,
+  "arabic": 674,
+  "presforms": 2071
+ },
+ {
+  "file": "devoirs/3as/d-3as-016.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1178,
+  "cid": 0,
+  "arabic": 843,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-065.pdf",
+  "pages": 4,
+  "verdict": "sparse",
+  "chars": 1474,
+  "cid": 0,
+  "arabic": 232,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-111.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1024,
+  "cid": 0,
+  "arabic": 94,
+  "presforms": 470
+ },
+ {
+  "file": "devoirs/3as/d-3as-052.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 3892,
+  "cid": 0,
+  "arabic": 1951,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-047.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1805,
+  "cid": 0,
+  "arabic": 1045,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-123.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 6583,
+  "cid": 552,
+  "arabic": 151,
+  "presforms": 141
+ },
+ {
+  "file": "devoirs/3as/d-3as-068.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 3390,
+  "cid": 132,
+  "arabic": 345,
+  "presforms": 765
+ },
+ {
+  "file": "devoirs/3as/d-3as-048.pdf",
+  "pages": 4,
+  "verdict": "sparse",
+  "chars": 1598,
+  "cid": 0,
+  "arabic": 91,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-030.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2386,
+  "cid": 0,
+  "arabic": 1326,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-131.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1514,
+  "cid": 0,
+  "arabic": 813,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-012.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2295,
+  "cid": 0,
+  "arabic": 1299,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-027.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4642,
+  "cid": 0,
+  "arabic": 1856,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-043.pdf",
+  "pages": 5,
+  "verdict": "visual-order",
+  "chars": 5893,
+  "cid": 0,
+  "arabic": 674,
+  "presforms": 2071
+ },
+ {
+  "file": "devoirs/3as/d-3as-070.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2162,
+  "cid": 0,
+  "arabic": 405,
+  "presforms": 784
+ },
+ {
+  "file": "devoirs/3as/d-3as-082.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2680,
+  "cid": 8,
+  "arabic": 1232,
+  "presforms": 162
+ },
+ {
+  "file": "devoirs/3as/d-3as-136.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2681,
+  "cid": 0,
+  "arabic": 522,
+  "presforms": 939
+ },
+ {
+  "file": "devoirs/3as/d-3as-066.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 2006,
+  "cid": 0,
+  "arabic": 313,
+  "presforms": 955
+ },
+ {
+  "file": "devoirs/3as/d2-3as-009.pdf",
+  "pages": 45,
+  "verdict": "sparse",
+  "chars": 8372,
+  "cid": 687,
+  "arabic": 339,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-091.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2080,
+  "cid": 0,
+  "arabic": 355,
+  "presforms": 780
+ },
+ {
+  "file": "devoirs/3as/d-3as-067.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2469,
+  "cid": 0,
+  "arabic": 470,
+  "presforms": 880
+ },
+ {
+  "file": "devoirs/3as/d-3as-105.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 654,
+  "cid": 0,
+  "arabic": 134,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-133.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 2109,
+  "cid": 0,
+  "arabic": 1053,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-144.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 5370,
+  "cid": 372,
+  "arabic": 906,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-034.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4209,
+  "cid": 0,
+  "arabic": 2219,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-064.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4030,
+  "cid": 0,
+  "arabic": 2660,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-053.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 5882,
+  "cid": 0,
+  "arabic": 3022,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-049.pdf",
+  "pages": 2,
+  "verdict": "empty",
+  "chars": 52,
+  "cid": 0,
+  "arabic": 20,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-085.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1509,
+  "cid": 0,
+  "arabic": 998,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-102.pdf",
+  "pages": 7,
+  "verdict": "clean",
+  "chars": 4537,
+  "cid": 0,
+  "arabic": 2116,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-022.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2865,
+  "cid": 0,
+  "arabic": 617,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-007.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 1,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-108.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2203,
+  "cid": 0,
+  "arabic": 1431,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-093.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1908,
+  "cid": 0,
+  "arabic": 1140,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-007.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1064,
+  "cid": 0,
+  "arabic": 575,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-097.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2134,
+  "cid": 93,
+  "arabic": 676,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-069.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 5982,
+  "cid": 502,
+  "arabic": 516,
+  "presforms": 407
+ },
+ {
+  "file": "devoirs/3as/d-3as-028.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2409,
+  "cid": 0,
+  "arabic": 1370,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-025.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 4808,
+  "cid": 263,
+  "arabic": 1349,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-128.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2028,
+  "cid": 0,
+  "arabic": 1053,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-013.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1765,
+  "cid": 0,
+  "arabic": 1027,
+  "presforms": 4
+ },
+ {
+  "file": "devoirs/3as/d2-3as-028.pdf",
+  "pages": 1,
+  "verdict": "sparse",
+  "chars": 6187,
+  "cid": 659,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-011.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1701,
+  "cid": 58,
+  "arabic": 550,
+  "presforms": 47
+ },
+ {
+  "file": "devoirs/3as/d2-3as-004.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 340,
+  "cid": 8,
+  "arabic": 80,
+  "presforms": 124
+ },
+ {
+  "file": "devoirs/3as/d-3as-021.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3773,
+  "cid": 0,
+  "arabic": 2059,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-004.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 2400,
+  "cid": 0,
+  "arabic": 287,
+  "presforms": 996
+ },
+ {
+  "file": "devoirs/3as/d2-3as-016.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1462,
+  "cid": 0,
+  "arabic": 848,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-032.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 2964,
+  "cid": 0,
+  "arabic": 374,
+  "presforms": 7
+ },
+ {
+  "file": "devoirs/3as/d-3as-074.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3846,
+  "cid": 0,
+  "arabic": 2162,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-104.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2485,
+  "cid": 0,
+  "arabic": 1367,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-137.pdf",
+  "pages": 8,
+  "verdict": "clean",
+  "chars": 4806,
+  "cid": 0,
+  "arabic": 2187,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-020.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3773,
+  "cid": 0,
+  "arabic": 2059,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-075.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3379,
+  "cid": 0,
+  "arabic": 1747,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-072.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1908,
+  "cid": 0,
+  "arabic": 1164,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-032.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2306,
+  "cid": 0,
+  "arabic": 1209,
+  "presforms": 218
+ },
+ {
+  "file": "devoirs/3as/d-3as-149.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 3249,
+  "cid": 110,
+  "arabic": 279,
+  "presforms": 645
+ },
+ {
+  "file": "devoirs/3as/d2-3as-005.pdf",
+  "pages": 6,
+  "verdict": "clean",
+  "chars": 4207,
+  "cid": 0,
+  "arabic": 1855,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-019.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2682,
+  "cid": 0,
+  "arabic": 1913,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-031.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4647,
+  "cid": 0,
+  "arabic": 2192,
+  "presforms": 137
+ },
+ {
+  "file": "devoirs/3as/d-3as-116.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2032,
+  "cid": 0,
+  "arabic": 209,
+  "presforms": 824
+ },
+ {
+  "file": "devoirs/3as/d-3as-076.pdf",
+  "pages": 3,
+  "verdict": "sparse",
+  "chars": 22400,
+  "cid": 2432,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-079.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2326,
+  "cid": 0,
+  "arabic": 1254,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-029.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 17498,
+  "cid": 1948,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-015.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2384,
+  "cid": 0,
+  "arabic": 1460,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-023.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2626,
+  "cid": 0,
+  "arabic": 1885,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-083.pdf",
+  "pages": 5,
+  "verdict": "clean",
+  "chars": 3307,
+  "cid": 0,
+  "arabic": 1725,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-101.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 2138,
+  "cid": 0,
+  "arabic": 1364,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-001.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3808,
+  "cid": 0,
+  "arabic": 1913,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-050.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 1796,
+  "cid": 192,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-038.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 2767,
+  "cid": 0,
+  "arabic": 248,
+  "presforms": 140
+ },
+ {
+  "file": "devoirs/3as/d-3as-025.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2632,
+  "cid": 0,
+  "arabic": 1482,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-045.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2632,
+  "cid": 0,
+  "arabic": 1482,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-040.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3101,
+  "cid": 0,
+  "arabic": 1653,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-041.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 2006,
+  "cid": 0,
+  "arabic": 313,
+  "presforms": 955
+ },
+ {
+  "file": "devoirs/3as/d-3as-003.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 3615,
+  "cid": 0,
+  "arabic": 2351,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-011.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2656,
+  "cid": 0,
+  "arabic": 1538,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-029.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2409,
+  "cid": 0,
+  "arabic": 1370,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-058.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 2766,
+  "cid": 0,
+  "arabic": 1492,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-096.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 195,
+  "cid": 0,
+  "arabic": 145,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-139.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 1409,
+  "cid": 0,
+  "arabic": 750,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-150.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 2077,
+  "cid": 0,
+  "arabic": 1493,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-010.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3344,
+  "cid": 0,
+  "arabic": 1851,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-009.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 2452,
+  "cid": 0,
+  "arabic": 1434,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-006.pdf",
+  "pages": 4,
+  "verdict": "visual-order",
+  "chars": 5823,
+  "cid": 45,
+  "arabic": 1125,
+  "presforms": 1978
+ },
+ {
+  "file": "devoirs/3as/d-3as-143.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1181,
+  "cid": 0,
+  "arabic": 510,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-080.pdf",
+  "pages": 10,
+  "verdict": "clean",
+  "chars": 4305,
+  "cid": 0,
+  "arabic": 2361,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-059.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 2591,
+  "cid": 0,
+  "arabic": 395,
+  "presforms": 918
+ },
+ {
+  "file": "devoirs/3as/d-3as-134.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1231,
+  "cid": 0,
+  "arabic": 540,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-114.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1899,
+  "cid": 0,
+  "arabic": 342,
+  "presforms": 586
+ },
+ {
+  "file": "devoirs/3as/d2-3as-015.pdf",
+  "pages": 2,
+  "verdict": "sparse",
+  "chars": 7029,
+  "cid": 584,
+  "arabic": 330,
+  "presforms": 34
+ },
+ {
+  "file": "devoirs/3as/d-3as-100.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 3275,
+  "cid": 0,
+  "arabic": 663,
+  "presforms": 1088
+ },
+ {
+  "file": "devoirs/3as/d-3as-014.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 5011,
+  "cid": 0,
+  "arabic": 1749,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-122.pdf",
+  "pages": 7,
+  "verdict": "visual-order",
+  "chars": 4339,
+  "cid": 0,
+  "arabic": 420,
+  "presforms": 1210
+ },
+ {
+  "file": "devoirs/3as/d-3as-110.pdf",
+  "pages": 2,
+  "verdict": "empty",
+  "chars": 2,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-119.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 2262,
+  "cid": 0,
+  "arabic": 1271,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-051.pdf",
+  "pages": 13,
+  "verdict": "visual-order",
+  "chars": 5094,
+  "cid": 0,
+  "arabic": 610,
+  "presforms": 2084
+ },
+ {
+  "file": "devoirs/3as/d-3as-063.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 4030,
+  "cid": 0,
+  "arabic": 2660,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-129.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 3182,
+  "cid": 0,
+  "arabic": 1707,
+  "presforms": 2
+ },
+ {
+  "file": "devoirs/3as/d-3as-090.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1652,
+  "cid": 0,
+  "arabic": 363,
+  "presforms": 570
+ },
+ {
+  "file": "devoirs/3as/d-3as-006.pdf",
+  "pages": 1,
+  "verdict": "empty",
+  "chars": 22,
+  "cid": 0,
+  "arabic": 0,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-073.pdf",
+  "pages": 6,
+  "verdict": "sparse",
+  "chars": 4494,
+  "cid": 0,
+  "arabic": 494,
+  "presforms": 377
+ },
+ {
+  "file": "devoirs/3as/d-3as-118.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 512,
+  "cid": 0,
+  "arabic": 238,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-120.pdf",
+  "pages": 1,
+  "verdict": "visual-order",
+  "chars": 1768,
+  "cid": 0,
+  "arabic": 223,
+  "presforms": 775
+ },
+ {
+  "file": "devoirs/3as/d-3as-054.pdf",
+  "pages": 3,
+  "verdict": "clean",
+  "chars": 2130,
+  "cid": 0,
+  "arabic": 1178,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-112.pdf",
+  "pages": 1,
+  "verdict": "clean",
+  "chars": 1721,
+  "cid": 0,
+  "arabic": 906,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-130.pdf",
+  "pages": 2,
+  "verdict": "clean",
+  "chars": 1280,
+  "cid": 0,
+  "arabic": 697,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d-3as-018.pdf",
+  "pages": 4,
+  "verdict": "clean",
+  "chars": 4209,
+  "cid": 0,
+  "arabic": 2219,
+  "presforms": 0
+ },
+ {
+  "file": "devoirs/3as/d2-3as-014.pdf",
+  "pages": 2,
+  "verdict": "visual-order",
+  "chars": 315,
+  "cid": 7,
+  "arabic": 79,
+  "presforms": 112
+ }
+]
