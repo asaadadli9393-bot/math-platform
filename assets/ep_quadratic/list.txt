@@ -1,0 +1,6 @@
+file '/home/z/my-project/assets/ep_quadratic/segs/seg0.mp4'
+file '/home/z/my-project/assets/ep_quadratic/segs/seg1.mp4'
+file '/home/z/my-project/assets/ep_quadratic/segs/seg2.mp4'
+file '/home/z/my-project/assets/ep_quadratic/segs/seg3.mp4'
+file '/home/z/my-project/assets/ep_quadratic/segs/seg4.mp4'
+file '/home/z/my-project/assets/ep_quadratic/segs/seg5.mp4'

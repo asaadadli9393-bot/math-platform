@@ -1,0 +1,7 @@
+file '/home/z/my-project/assets/ep_complex/segs/seg0.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg1.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg2.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg3.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg4.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg5.mp4'
+file '/home/z/my-project/assets/ep_complex/segs/seg6.mp4'

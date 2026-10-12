@@ -1,0 +1,29 @@
+[
+  {
+    "url": "https://en.wikipedia.org",
+    "name": "Mathematics",
+    "snippet": "Mathematics is a field of knowledge concerned with abstract concepts such as numbers, geometric shapes, sets, functions, and probabilities. Read more",
+    "host_name": "en.wikipedia.org",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.khanacademy.org",
+    "name": "Math",
+    "snippet": "This Basic geometry and measurement course is a refresher of length, area, perimeter, volume, angle measure, and transformations of 2D and 3D figures.",
+    "host_name": "www.khanacademy.org",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.ixl.com",
+    "name": "IXL Math | Learn math online",
+    "snippet": "Discover thousands of math skills covering pre-K to 12th grade , from counting to calculus, with infinite questions that adapt to each student's level.",
+    "host_name": "www.ixl.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  }
+]
