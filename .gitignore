@@ -73,3 +73,9 @@ backup/vercel-env*
 .vercel-token
 .veo-secret
 .gemini-key
+
+# أصول إنتاج v2 القابلة لإعادة التوليد (تبقى السكربتات والصور الخام والموسيقى)
+assets/pro_v2/hilbert/
+assets/pro_v2/zero/
+assets/pro_v2/voice_test/
+assets/pro_v2/qa/
