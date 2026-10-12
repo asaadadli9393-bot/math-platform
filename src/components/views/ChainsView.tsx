@@ -18,6 +18,7 @@ import { MathText } from '@/components/math-renderer';
 import { RichText } from '@/lib/tex';
 import { ChapterIcon } from '@/components/shared';
 import { IconTile } from '@/components/icon-tile';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 import type { YearId } from '@/data/curriculum';
 import { chaptersOfYear } from '@/data/chapters';
 import {
@@ -185,13 +186,20 @@ function ChainPdfCard({
         <p className="flex-1 text-xs leading-5 text-stone-600">{pdf.description}</p>
         {pdf.source && <p className="text-[10px] font-bold text-stone-400">{pdf.source}</p>}
         {locked ? (
-          <Button
-            onClick={onSubscribe}
-            className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
-          >
-            <Lock className="h-4 w-4" />
-            اشترك لفتح السلسلة كاملة
-          </Button>
+          SUBSCRIPTION_OPEN ? (
+            <Button
+              onClick={onSubscribe}
+              className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
+            >
+              <Lock className="h-4 w-4" />
+              اشترك لفتح السلسلة كاملة
+            </Button>
+          ) : (
+            <div className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-extrabold text-amber-700 ring-1 ring-amber-200">
+              <Lock className="h-4 w-4" />
+              متاح للمشتركين المميزين
+            </div>
+          )
         ) : isHosted ? (
           <div className="space-y-1.5">
             <SmartReadButton src={pdf.file} title={pdf.title} subtitle={pdf.badge ?? undefined} className="w-full" />
@@ -551,16 +559,20 @@ function InteractiveChainCard({
                     : 'حلول هذه السلسلة للمشتركين المميزين'}
                 </p>
                 <p className="text-xs leading-6 text-amber-700">
-                  اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وحلول البكالوريا وبنك الفروض.
+                  {SUBSCRIPTION_OPEN
+                    ? 'اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وحلول البكالوريا وبنك الفروض.'
+                    : 'الحلول النموذجية المفصلة لكل تمارين السلسلة متاحة للمشتركين المميزين، مع كل سلاسل الأستاذ وحلول البكالوريا وبنك الفروض.'}
                 </p>
               </div>
-              <button
-                onClick={onSubscribe}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
-              >
-                <Lock className="h-4 w-4" />
-                اشترك الآن
-              </button>
+              {SUBSCRIPTION_OPEN && (
+                <button
+                  onClick={onSubscribe}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                >
+                  <Lock className="h-4 w-4" />
+                  اشترك الآن
+                </button>
+              )}
             </div>
           )}
         </div>

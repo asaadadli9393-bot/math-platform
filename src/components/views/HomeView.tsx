@@ -36,6 +36,7 @@ import { BAC_OFFICIAL_STATS } from '@/data/bac-official';
 import { ChapterIconTile, SectionTitle, THEME_STYLES } from '@/components/shared';
 import { IconTile } from '@/components/icon-tile';
 import { MathText } from '@/components/math-renderer';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 
 /* موعد بكالوريا 2027 (تقريبي — أول أسبوع يونيو) لحساب العدّ التنازلي */
 const BAC_2027_ISO = '2027-06-06T08:00:00+01:00';
@@ -188,10 +189,6 @@ export default function HomeView({
     {
       q: 'هل المحتوى المجاني كافٍ للمذاكرة؟',
       a: 'نعم — بنك التمارين كاملاً بحلوله النموذجية، والفصول والملخصات، والفروض والاختبارات التفاعلية، والمدرس الذكي (بحد يومي): كلها مجانية بدون تسجيل. المميز يفتح مكتبة الأستاذ الكاملة (117 وثيقة)، وحلول البكالوريا الكاملة، والسلاسل الحصرية، والحصص المباشرة عند إطلاقها (قريباً).',
-    },
-    {
-      q: 'كيف أدفع ثمن الاشتراك؟',
-      a: 'أرسل طلبك أولاً عبر نموذج صفحة الاشتراك، وسيوافيك الأستاذ بتفاصيل التحويل (بريدي موب BaridiMob / CCP) مباشرة على بريدك: حوّل المبلغ ثم أرسل صورة الوصل، وبعد تأكيد الدفع يصلك كود التفعيل في بريدك وتُفتح كل المزايا فوراً.',
     },
     {
       q: 'هل الحلول مفصّلة فعلاً؟',
@@ -364,12 +361,14 @@ export default function HomeView({
                       هذا التمرين مجاني للمعاينة — باقي الـ {BAC_SOLUTION_STATS.totalExercises} حلاً النموذجياً لمواضيع البكالوريا
                       2008–2026 بانتظارك مع الاشتراك المميز.
                     </p>
-                    <button
-                      onClick={() => onNavigate('subscribe')}
-                      className="shrink-0 rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
-                    >
-                      اشترك وافتح كل الحلول
-                    </button>
+                    {SUBSCRIPTION_OPEN && (
+                      <button
+                        onClick={() => onNavigate('subscribe')}
+                        className="shrink-0 rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                      >
+                        اشترك وافتح كل الحلول
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -635,7 +634,7 @@ export default function HomeView({
             title="ابدأ مجاناً — وارقِ فقط عندما تحتاج المكتبة الكاملة"
             sub="لا فخ ولا رسوم خفية: المحتوى الأساسي مجاني للأبد بدون تسجيل، والاشتراك يفتح أرشيف الأستاذ الكامل وحلول البكالوريا التفصيلية."
           />
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className={`grid gap-5 ${SUBSCRIPTION_OPEN ? 'md:grid-cols-2' : 'mx-auto max-w-2xl'}`}>
             <div className="rounded-2xl border-2 border-stone-200 bg-white p-6 sm:p-8">
               <div className="mb-1 flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600" />
@@ -666,7 +665,8 @@ export default function HomeView({
               </button>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400 bg-gradient-to-b from-amber-50/80 to-white p-6 shadow-lg shadow-amber-400/10 sm:p-8">
+            {SUBSCRIPTION_OPEN && (
+              <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400 bg-gradient-to-b from-amber-50/80 to-white p-6 shadow-lg shadow-amber-400/10 sm:p-8">
               <div className="absolute left-0 top-0 rounded-br-xl bg-amber-400 px-3 py-1 text-xs font-black text-emerald-950">
                 للمتفوقين الجديين
               </div>
@@ -700,7 +700,8 @@ export default function HomeView({
               >
                 اشترك الآن — تفعيل فوري بالكود
               </button>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -743,13 +744,15 @@ export default function HomeView({
               <BookOpenCheck className="h-5 w-5" />
               ابدأ التمرن مجاناً
             </button>
-            <button
-              onClick={() => onNavigate('subscribe')}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/30 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.98]"
-            >
-              <Crown className="h-5 w-5 text-amber-300" />
-              افتح المحتوى المميز
-            </button>
+            {SUBSCRIPTION_OPEN && (
+              <button
+                onClick={() => onNavigate('subscribe')}
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/30 bg-white/5 px-7 py-3.5 text-base font-bold text-white backdrop-blur transition hover:bg-white/10 active:scale-[0.98]"
+              >
+                <Crown className="h-5 w-5 text-amber-300" />
+                افتح المحتوى المميز
+              </button>
+            )}
           </div>
           <p className="mt-6 text-[11px] text-emerald-200/60">
             محتوى المنصة موائم مع التدرجات السنوية الرسمية لمادة الرياضيات (2022-2023) الصادرة عن المفتشية العامة — وزارة التربية الوطنية.

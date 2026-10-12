@@ -17,6 +17,7 @@ import { SectionTitle } from '@/components/shared';
 import { RichText } from '@/lib/tex';
 import type { YearId } from '@/data/curriculum';
 import { CHAPTERS } from '@/data/chapters';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 
 // ============================================================
 //  المدرّس الذكي — تدرّج AI
@@ -657,16 +658,19 @@ export default function AITutorView({
           <div className="mx-3 mb-2 rounded-2xl bg-emerald-800 px-4 py-4 text-white sm:mx-5">
             <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
               <p className="text-center text-sm font-extrabold sm:text-right">
-                أكملت أسئلتك المجانية لهذا اليوم ({FREE_DAILY_LIMIT} أسئلة)! اشترك لتحصل على مدرّس
-                ذكي بلا حدود كل يوم.
+                {SUBSCRIPTION_OPEN
+                  ? `أكملت أسئلتك المجانية لهذا اليوم (${FREE_DAILY_LIMIT} أسئلة)! اشترك لتحصل على مدرّس ذكي بلا حدود كل يوم.`
+                  : `أكملت أسئلتك المجانية لهذا اليوم (${FREE_DAILY_LIMIT} أسئلة)! عاود غداً — المدرّس الذكي في خدمتك يومياً.`}
               </p>
-              <button
-                onClick={onSubscribe}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-xs font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300"
-              >
-                <Crown className="h-4 w-4" />
-                اشترك الآن
-              </button>
+              {SUBSCRIPTION_OPEN && (
+                <button
+                  onClick={onSubscribe}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-xs font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300"
+                >
+                  <Crown className="h-4 w-4" />
+                  اشترك الآن
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -740,7 +744,7 @@ export default function AITutorView({
                 }
               }}
               rows={1}
-              placeholder={blocked ? 'اشترك لتتابع الأسئلة…' : pendingImages.length > 0 ? 'اكتب سؤالك عن الصورة أو أرسل مباشرة…' : 'اكتب سؤالك أو صوّر التمرين…'}
+              placeholder={blocked ? (SUBSCRIPTION_OPEN ? 'اشترك لتتابع الأسئلة…' : 'أكملت أسئلة اليوم المجانية — عاود غداً…') : pendingImages.length > 0 ? 'اكتب سؤالك عن الصورة أو أرسل مباشرة…' : 'اكتب سؤالك أو صوّر التمرين…'}
               disabled={blocked || streaming}
               className="custom-scroll max-h-30 min-h-11 flex-1 resize-none rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-semibold text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-emerald-400 focus:bg-white disabled:opacity-50"
             />

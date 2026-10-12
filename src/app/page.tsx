@@ -22,7 +22,7 @@ import AITutorView from '@/components/views/AITutorView';
 import { NavTile } from '@/components/icon-tile';
 import { useProgress } from '@/lib/progress';
 import { useLevel } from '@/lib/level';
-import { useSubscription, PROFESSOR_EMAIL } from '@/lib/subscription';
+import { useSubscription, PROFESSOR_EMAIL, SUBSCRIPTION_OPEN } from '@/lib/subscription';
 import { LEVELS, type StreamId, type YearId } from '@/data/curriculum';
 import { EXERCISE_COUNT } from '@/data/exercises';
 
@@ -45,8 +45,8 @@ const NAV: { id: View; label: string; short?: string; icon: React.ComponentType<
   { id: 'dashboard', label: 'تقدمي', icon: BarChart3 },
 ];
 
-/** قائمة الهاتف = القائمة الأساسية + الاشتراك */
-const NAV_MOBILE: typeof NAV = [...NAV, { id: 'subscribe', label: 'الاشتراك', icon: Crown }];
+/** قائمة الهاتف = القائمة الأساسية (+ الاشتراك فقط حين يكون الباب مفتوحاً) */
+const NAV_MOBILE: typeof NAV = SUBSCRIPTION_OPEN ? [...NAV, { id: 'subscribe', label: 'الاشتراك', icon: Crown }] : [...NAV];
 
 /** مبدّل المستوى الدراسي (أولى / ثانية / ثالثة) */
 function LevelSwitcher({
@@ -136,27 +136,29 @@ export default function Page() {
             <LevelSwitcher year={year} onSelect={selectLevel} />
           </div>
 
-          {/* حالة الاشتراك / زر الاشتراك (سطح المكتب) */}
-          <div className="hidden shrink-0 xl:block">
-            {isPremium ? (
-              <button
-                onClick={() => navigate('subscribe')}
-                title={daysLeft === null ? 'اشتراك دائم' : `متبقٍ ${daysLeft} يوماً`}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 ring-1 ring-emerald-200 transition hover:bg-emerald-100"
-              >
-                <Crown className="h-4 w-4 text-amber-500" />
-                مميز{daysLeft === null ? ' — دائم' : ''}
-              </button>
-            ) : (
-              <button
-                onClick={() => navigate('subscribe')}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-3 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
-              >
-                <Crown className="h-4 w-4" />
-                اشترك الآن
-              </button>
-            )}
-          </div>
+          {/* حالة الاشتراك / زر الاشتراك (سطح المكتب) — يظهر فقط حين يكون باب الاشتراك مفتوحاً */}
+          {SUBSCRIPTION_OPEN && (
+            <div className="hidden shrink-0 xl:block">
+              {isPremium ? (
+                <button
+                  onClick={() => navigate('subscribe')}
+                  title={daysLeft === null ? 'اشتراك دائم' : `متبقٍ ${daysLeft} يوماً`}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 ring-1 ring-emerald-200 transition hover:bg-emerald-100"
+                >
+                  <Crown className="h-4 w-4 text-amber-500" />
+                  مميز{daysLeft === null ? ' — دائم' : ''}
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate('subscribe')}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-3 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                >
+                  <Crown className="h-4 w-4" />
+                  اشترك الآن
+                </button>
+              )}
+            </div>
+          )}
 
           <nav className="hidden min-w-0 items-center gap-1 xl:flex" aria-label="التنقل الرئيسي">
             {NAV.map((n) => (
@@ -342,7 +344,9 @@ export default function Page() {
                   <li><button onClick={() => navigate('bank')} className="hover:text-emerald-700">بنك التمارين</button></li>
                   <li><button onClick={() => navigate('chains')} className="hover:text-emerald-700">سلاسل الأستاذ</button></li>
                   <li><button onClick={() => navigate('library')} className="font-black text-emerald-700 hover:text-emerald-800">الموسوعة المعرفية — كل محاورك مشروحة داخل المنصة</button></li>
-                  <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
+                  {SUBSCRIPTION_OPEN && (
+                    <li><button onClick={() => navigate('subscribe')} className="font-black text-amber-600 hover:text-amber-700">الاشتراك المميز</button></li>
+                  )}
                 </ul>
               </div>
               <div>

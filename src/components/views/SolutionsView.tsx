@@ -22,6 +22,7 @@ import {
   GraduationCap,
 } from 'lucide-react';
 import { CHAIN_PDFS } from '@/data/chain-pdfs';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 import { SmartReadButton } from '@/components/doc-reader';
 import { CHAPTERS } from '@/data/chapters';
 
@@ -92,13 +93,20 @@ function SolutionCard({
 
         {/* الأزرار */}
         {locked ? (
-          <Button
-            onClick={onSubscribe}
-            className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
-          >
-            <Crown className="h-4 w-4" />
-            اشترك لفتح الحلول + السلسلة
-          </Button>
+          SUBSCRIPTION_OPEN ? (
+            <Button
+              onClick={onSubscribe}
+              className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
+            >
+              <Crown className="h-4 w-4" />
+              اشترك لفتح الحلول + السلسلة
+            </Button>
+          ) : (
+            <div className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-extrabold text-amber-700 ring-1 ring-amber-200">
+              <Lock className="h-4 w-4" />
+              متاح للمشتركين المميزين
+            </div>
+          )
         ) : pdf.ppt ? (
           <div className="space-y-1.5">
             <SmartReadButton src={pdf.file} title={pdf.title} className="w-full" />
@@ -231,13 +239,15 @@ export default function SolutionsView({
               بالاشتراك تفتح كل السلاسل وملفات PPT الخاصة بحلولها، إضافة إلى بقية المحتوى المميز:
               الدورات والفروض والاختبارات.
             </p>
-            <Button
-              onClick={onSubscribe}
-              className="mt-4 gap-2 bg-gradient-to-l from-amber-600 to-amber-500 px-8 font-black text-white hover:from-amber-700 hover:to-amber-600"
-            >
-              <Crown className="h-4 w-4" />
-              اشترك الآن
-            </Button>
+            {SUBSCRIPTION_OPEN && (
+              <Button
+                onClick={onSubscribe}
+                className="mt-4 gap-2 bg-gradient-to-l from-amber-600 to-amber-500 px-8 font-black text-white hover:from-amber-700 hover:to-amber-600"
+              >
+                <Crown className="h-4 w-4" />
+                اشترك الآن
+              </Button>
+            )}
           </div>
         </>
       )}

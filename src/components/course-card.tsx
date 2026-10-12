@@ -22,6 +22,7 @@ import {
   FileText,
 } from "lucide-react";
 import type { Course, CourseModule } from "@/data/courses";
+import { SUBSCRIPTION_OPEN } from "@/lib/subscription";
 import {
   courseStreamLabels,
   courseLevelLabels,
@@ -133,10 +134,17 @@ export function CourseCard({ course, onOpen, isSubscribed = true, onSubscribe }:
         </div>
 
         {isLocked ? (
-          <Button variant="outline" className="w-full mt-2 gap-2 border-amber-500 text-amber-700" onClick={(e) => { e.stopPropagation(); onSubscribe?.(); }}>
-            <Lock className="w-4 h-4" />
-            اشترك لفتح الدورة
-          </Button>
+          SUBSCRIPTION_OPEN ? (
+            <Button variant="outline" className="w-full mt-2 gap-2 border-amber-500 text-amber-700" onClick={(e) => { e.stopPropagation(); onSubscribe?.(); }}>
+              <Lock className="w-4 h-4" />
+              اشترك لفتح الدورة
+            </Button>
+          ) : (
+            <Button variant="outline" className="w-full mt-2 gap-2 border-amber-500 text-amber-700" disabled>
+              <Lock className="w-4 h-4" />
+              متاح للمشتركين المميزين
+            </Button>
+          )
         ) : (
           <Button className="w-full mt-2 gap-2" onClick={(e) => { e.stopPropagation(); onOpen(course); }}>
             <PlayCircle className="w-4 h-4" />

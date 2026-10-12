@@ -21,6 +21,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { chainPdfsOfYear, type ChainPdf } from '@/data/chain-pdfs';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 import type { YearId } from '@/data/curriculum';
 
 function ChainPdfCard({
@@ -111,13 +112,20 @@ function ChainPdfCard({
 
         {/* الأزرار */}
         {locked ? (
-          <Button
-            onClick={onSubscribe}
-            className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
-          >
-            <Crown className="h-4 w-4" />
-            اشترك لفتح السلسلة كاملة
-          </Button>
+          SUBSCRIPTION_OPEN ? (
+            <Button
+              onClick={onSubscribe}
+              className="w-full gap-2 bg-gradient-to-l from-amber-600 to-amber-500 font-black text-white hover:from-amber-700 hover:to-amber-600"
+            >
+              <Crown className="h-4 w-4" />
+              اشترك لفتح السلسلة كاملة
+            </Button>
+          ) : (
+            <div className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-extrabold text-amber-700 ring-1 ring-amber-200">
+              <Lock className="h-4 w-4" />
+              متاح للمشتركين المميزين
+            </div>
+          )
         ) : isExternal ? (
           <Button
             asChild

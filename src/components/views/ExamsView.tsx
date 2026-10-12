@@ -25,6 +25,7 @@ import { chaptersOfYear } from '@/data/chapters';
 import { type ExamExercise, type ExamKind, type ExamPaper } from '@/data/exams';
 import { examPapersOfYear } from '@/data/exams-docs';
 import { DEVOIR_PAPERS, DEVOIR_SEASONS, type DevoirPaper } from '@/data/devoir-pdfs';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 
 const KIND_BADGE: Record<ExamKind, string> = {
   'فرض مراقبة مستمرة': 'bg-emerald-50 text-emerald-800 ring-emerald-200',
@@ -218,16 +219,20 @@ function ExamCard({
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-extrabold text-amber-900">الحلول النموذجية لهذه الورقة للمشتركين المميزين</p>
                 <p className="text-xs leading-6 text-amber-700">
-                  اشترك للوصول الفوري إلى الحل المفصل خطوة بخطوة لكل تمارين الورقة، مع كل بنك السلاسل والاختبارات.
+                  {SUBSCRIPTION_OPEN
+                    ? 'اشترك للوصول الفوري إلى الحل المفصل خطوة بخطوة لكل تمارين الورقة، مع كل بنك السلاسل والاختبارات.'
+                    : 'الحل المفصل خطوة بخطوة لكل تمارين الورقة متاح للمشتركين المميزين، مع كل بنك السلاسل والاختبارات.'}
                 </p>
               </div>
-              <button
-                onClick={onSubscribe}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
-              >
-                <Lock className="h-4 w-4" />
-                اشترك الآن
-              </button>
+              {SUBSCRIPTION_OPEN && (
+                <button
+                  onClick={onSubscribe}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                >
+                  <Lock className="h-4 w-4" />
+                  اشترك الآن
+                </button>
+              )}
             </div>
           )}
         </div>

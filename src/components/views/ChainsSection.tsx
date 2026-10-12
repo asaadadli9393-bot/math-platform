@@ -14,6 +14,7 @@ import { chainsOfYear, chainChapter, CHAINS_COUNT, CHAIN_EXERCISES_COUNT, type C
 import { chaptersOfYear } from '@/data/chapters';
 import type { YearId } from '@/data/curriculum';
 import { RichText } from '@/lib/tex';
+import { SUBSCRIPTION_OPEN } from '@/lib/subscription';
 
 /* ============================ بطاقة سلسلة ============================ */
 
@@ -134,16 +135,20 @@ function ChainCard({ chain, isPremium, onSubscribe }: { chain: Chain; isPremium:
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-extrabold text-amber-900">حلول هذه السلسلة للمشتركين المميزين</p>
                 <p className="text-xs leading-6 text-amber-700">
-                  اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وبنك الفروض.
+                  {SUBSCRIPTION_OPEN
+                    ? 'اشترك للوصول الفوري إلى الحلول النموذجية المفصلة لكل تمارين السلسلة، مع كل سلاسل الأستاذ وبنك الفروض.'
+                    : 'الحلول النموذجية المفصلة لكل تمارين السلسلة متاحة للمشتركين المميزين، مع كل سلاسل الأستاذ وبنك الفروض.'}
                 </p>
               </div>
-              <button
-                onClick={onSubscribe}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
-              >
-                <Crown className="h-4 w-4" />
-                اشترك الآن
-              </button>
+              {SUBSCRIPTION_OPEN && (
+                <button
+                  onClick={onSubscribe}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-extrabold text-emerald-950 shadow-md shadow-amber-400/25 transition hover:bg-amber-300 active:scale-[0.98]"
+                >
+                  <Crown className="h-4 w-4" />
+                  اشترك الآن
+                </button>
+              )}
             </div>
           )}
         </div>
